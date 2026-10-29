@@ -20,8 +20,8 @@ Teil der Nodestro-Plattform; den Überblick gibt
 ```python
 import nodestro_examples as examples
 
-ids = examples.template_ids()                         # die 24 Beispiele
-workflow = examples.build("financial-analysis", "de") # ein unabhängiger Workflow (WorkflowIn) auf Deutsch
+ids = examples.template_ids()  # die 24 Beispiele
+workflow = examples.build("financial-analysis", "de")  # ein unabhängiger Workflow (WorkflowIn) auf Deutsch
 ```
 
 ## Entwicklung
