@@ -1,0 +1,51 @@
+{
+  "name": "Blogartikel",
+  "field": "Marketing und Content",
+  "description": "Zielgruppe recherchieren, Gliederung entwerfen, Artikel schreiben und redaktionell prüfen.",
+  "start": "Thema",
+  "output": "Artikel",
+  "file_name": "Blogartikel",
+  "input": "Warum visuelle Workflow-Editoren KI-Agenten zugänglicher machen",
+  "guide": {
+    "problem": "Gute Artikel entstehen aus einer klaren Zielgruppe und einer durchdachten Gliederung. Der Workflow teilt die Arbeit wie in einer Redaktion auf und prüft das Ergebnis, bevor es veröffentlicht wird.",
+    "flow": "Zielgruppe und Gliederung entstehen parallel mit einem schnellen Modell. Der Autor schreibt daraus den Artikel; eine eingebaute Qualitätsprüfung kontrolliert, ob er der Gliederung folgt und die Fragen der Leser beantwortet. Das Lektorat prüft Länge und Lesbarkeit mit dem Textstatistik-Tool und kennzeichnet ungeprüfte Behauptungen.",
+    "input": "Ein Thema in einem Satz. Optional ergänzt du Zielgruppe, Tonalität oder gewünschte Länge direkt in der Eingabe.",
+    "result": "Ein fertiger Artikel in Markdown mit Überschriften, eine Meta-Beschreibung und kurze Lektoratsnotizen mit Wortzahl und Hinweisen auf Aussagen, die vor der Veröffentlichung belegt werden sollten. Der Lauf speichert das Ergebnis zusätzlich als Markdown- und HTML-Datei, die du in dein CMS übernehmen kannst.",
+    "adapt": "Ändere das Thema in der Eingabe. Euren Styleguide kannst du als Wissen hochladen und Autor und Lektorat zuweisen. Die gewünschte Länge stellst du im System-Prompt des Autors ein."
+  },
+  "agents": {
+    "audience": {
+      "name": "Zielgruppe",
+      "description": "Beschreibt Leser, ihre Fragen und ihren Wissensstand.",
+      "system": "Du beschreibst die Zielgruppe eines Artikels: wer die Leser sind, was sie schon wissen und welche drei Fragen sie mitbringen. Fasse dich kurz.",
+      "task": "{{input}}"
+    },
+    "outline": {
+      "name": "Gliederung",
+      "description": "Entwirft Titel und Gliederung.",
+      "system": "Du entwirfst einen packenden Titel und eine fünfteilige Gliederung für einen Artikel. Nenne zu jedem Abschnitt in einem Satz, was er leisten soll.",
+      "task": "{{input}}"
+    },
+    "writer": {
+      "name": "Autor",
+      "description": "Schreibt den Artikel aus Gliederung und Zielgruppe.",
+      "system": "Du bist erfahrene Tech-Journalistin. Schreibe einen klaren, anschaulichen Artikel mit etwa 700 Wörtern und Markdown-Überschriften. Erkläre Fachbegriffe beim ersten Vorkommen und nutze konkrete Beispiele. Erfinde keine Studien, Zahlen oder Zitate.",
+      "task": "Schreibe den Artikel zum Thema „{{run.input}}“.\n\nZielgruppe:\n{{node:audience}}\n\nGliederung:\n{{node:outline}}",
+      "criteria": {
+        "follows_outline": "Der Artikel folgt der Gliederung.",
+        "audience": "Der Artikel beantwortet die Fragen der Zielgruppe."
+      }
+    },
+    "editor": {
+      "name": "Lektorat",
+      "description": "Prüft Länge und Lesbarkeit und liefert die Endfassung.",
+      "system": "Du bist Lektor. Ermittle Wortzahl und Satzanzahl des Artikels mit dem Textstatistik-Tool. Verbessere Verständlichkeit, Rechtschreibung und Fluss, ohne Inhalt oder Gliederung zu verändern. Gib zuerst die überarbeitete Endfassung in Markdown aus, dann eine Meta-Beschreibung mit höchstens 155 Zeichen und zuletzt Lektoratsnotizen: Wortzahl, wichtigste Änderungen und Aussagen, die vor der Veröffentlichung belegt werden sollten.",
+      "task": "Lektoriere diesen Artikel:\n\n{{input}}"
+    }
+  },
+  "tests": {
+    "topic": {
+      "name": "Thema in einem Satz"
+    }
+  }
+}

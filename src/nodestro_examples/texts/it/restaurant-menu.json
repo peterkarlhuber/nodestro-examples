@@ -1,0 +1,144 @@
+{
+  "name": "Sviluppare e calcolare un menù",
+  "field": "Ristorazione",
+  "description": "Sviluppare piatti per un target, calcolare il food cost e i prezzi e scrivere i testi del menù.",
+  "start": "Concept",
+  "output": "Menù",
+  "file_name": "Menù del pranzo",
+  "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nLocale: bistrot \"Il Mulino Esempio\", 40 coperti, polo produttivo con molti uffici\nTarget: impiegati in pausa pranzo (45 minuti), vogliono mangiare in fretta e fresco, spesso vegetariano\nIncarico: menù del pranzo con 6 piatti, almeno 2 vegetariani e 1 vegano; cambia ogni due settimane\nFood cost obiettivo: al massimo il 30 % del prezzo di vendita netto; fascia di prezzo da 9,50 a 14,50 EUR lordi (IVA 7 %)\n\nPrezzi d'acquisto (netti):\n- Petto di pollo 9,80 EUR/kg, carne macinata di manzo 8,90 EUR/kg, filetto di salmone 21,00 EUR/kg\n- Pasta 1,60 EUR/kg, riso 1,90 EUR/kg, patate 0,90 EUR/kg, lenticchie 2,40 EUR/kg\n- Verdure di stagione in media 2,80 EUR/kg, insalata 4,50 EUR/kg, ceci 2,20 EUR/kg\n- Feta 8,50 EUR/kg, panna 3,20 EUR/l, latte di cocco 3,90 EUR/l, olio d'oliva 7,50 EUR/l\n- Spezie, erbe e piccoli ingredienti forfait 0,35 EUR a porzione",
+  "guide": {
+    "problem": "Un menù deve piacere agli ospiti e rendere. Il workflow sviluppa piatti per un target, calcola food cost e prezzi e scrive testi del menù invitanti.",
+    "flow": "Una catena di tre agenti: lo sviluppatore del concept compone piatti con ricette, il calcolo dei costi determina food cost e prezzi di vendita con lo strumento di calcolo, il redattore del menù scrive il menù. Un controllo qualità verifica target, prezzi e l'avvertenza sugli allergeni. Il risultato contiene il calcolo e il menù.",
+    "input": "Tipo di locale, target, numero e tipo di piatti, food cost obiettivo, fascia di prezzo e prezzi d'acquisto. I prezzi d'acquisto puoi incollarli o allegarli come file CSV o Excel, come mostra il file di esempio.",
+    "result": "Una tabella di calcolo con food cost e prezzo per piatto e un menù del pranzo pronto con brevi descrizioni, anche come file Word da impaginare e come file Excel con le tabelle di calcolo. Allergeni e additivi vanno verificati e indicati in base alle ricette effettive.",
+    "adapt": "Allega il tuo listino attuale dei prezzi d'acquisto e descrivi il tuo target. Le vostre ricette standard puoi caricarle come conoscenza e assegnarle al calcolo dei costi; regole della casa come le porzioni si aggiungono nello sviluppatore del concept. Per il cambio ogni due settimane puoi pianificare la copia."
+  },
+  "agents": {
+    "concept": {
+      "name": "Sviluppatore del concept",
+      "description": "Compone piatti adatti con ricette e quantità.",
+      "system": "Sei uno chef esperto nella ristorazione del pranzo. Sviluppa piatti adatti al target, preparabili e servibili nel tempo disponibile. Per ogni piatto indica un nome, una breve descrizione e una ricetta per porzione con quantità in grammi o millilitri. Usa principalmente ingredienti della lista d'acquisto e segnala quelli che non sono in lista.",
+      "task": "Sviluppa i piatti per questo concept:\n\n{{input}}"
+    },
+    "costing": {
+      "name": "Calcolo dei costi",
+      "description": "Calcola food cost e prezzi di vendita con la calcolatrice.",
+      "system": "Sei uno specialista del calcolo dei costi nella ristorazione. Per ogni piatto usa la calcolatrice per calcolare il food cost per porzione dalla ricetta e dai prezzi d'acquisto, il prezzo netto con un food cost massimo del 30 % e il prezzo lordo con IVA al 7 %, arrotondato a prezzi da menù sensati. Verifica la fascia di prezzo e proponi adeguamenti se un piatto non rientra. Mostra tutto in una tabella.",
+      "task": "Calcola i costi di questi piatti.\n\nConcept e prezzi d'acquisto:\n{{run.input}}\n\nPiatti:\n{{node:concept}}"
+    },
+    "menu": {
+      "name": "Redattore del menù",
+      "description": "Scrive il menù del pranzo con descrizioni invitanti.",
+      "system": "Scrivi menù. Per ogni piatto scrivi un nome invitante e una descrizione di al massimo 20 parole adatta al target. Aggiungi il prezzo, un'indicazione vegetariano o vegano e un avviso che gli allergeni vanno verificati e indicati sulla base delle ricette. Prendi i prezzi solo dal calcolo dei costi. Infine riporta senza modifiche la tabella di calcolo.",
+      "task": "Scrivi il menù del pranzo a partire da questo calcolo:\n\n{{node:costing}}",
+      "criteria": {
+        "target_group": "Piatti e testi sono chiaramente adatti al target descritto.",
+        "prices_match": "Tutti i prezzi corrispondono al calcolo e rientrano nella fascia di prezzo.",
+        "allergen_note": "Il menù contiene un avviso sulla verifica e l'indicazione degli allergeni."
+      }
+    }
+  },
+  "form": {
+    "purchase_prices": {
+      "label": "Prezzi d'acquisto come file",
+      "description": "Facoltativo: il vostro listino dei prezzi d'acquisto in CSV o Excel, al massimo 5 MB. Senza file valgono i prezzi nel testo."
+    }
+  },
+  "samples": {
+    "prices": {
+      "name": "Prezzi_acquisto_Mulino_Esempio",
+      "description": "I prezzi d'acquisto fittizi dell'attività di prova in CSV.",
+      "content": [
+        [
+          "Ingrediente",
+          "Unità",
+          "Prezzo netto (EUR)"
+        ],
+        [
+          "Petto di pollo",
+          "kg",
+          9.8
+        ],
+        [
+          "Carne macinata di manzo",
+          "kg",
+          8.9
+        ],
+        [
+          "Filetto di salmone",
+          "kg",
+          21.0
+        ],
+        [
+          "Pasta",
+          "kg",
+          1.6
+        ],
+        [
+          "Riso",
+          "kg",
+          1.9
+        ],
+        [
+          "Patate",
+          "kg",
+          0.9
+        ],
+        [
+          "Lenticchie",
+          "kg",
+          2.4
+        ],
+        [
+          "Verdure di stagione (media)",
+          "kg",
+          2.8
+        ],
+        [
+          "Insalata",
+          "kg",
+          4.5
+        ],
+        [
+          "Ceci",
+          "kg",
+          2.2
+        ],
+        [
+          "Feta",
+          "kg",
+          8.5
+        ],
+        [
+          "Panna",
+          "l",
+          3.2
+        ],
+        [
+          "Latte di cocco",
+          "l",
+          3.9
+        ],
+        [
+          "Olio d'oliva",
+          "l",
+          7.5
+        ],
+        [
+          "Spezie, erbe, piccoli ingredienti (forfait)",
+          "porzione",
+          0.35
+        ]
+      ]
+    }
+  },
+  "tests": {
+    "lunch_menu": {
+      "name": "Menù del pranzo con prezzi nel testo"
+    },
+    "price_file": {
+      "name": "Prezzi d'acquisto in CSV",
+      "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nLocale: bistrot \"Il Mulino Esempio\", 40 coperti, polo produttivo con molti uffici\nTarget: impiegati in pausa pranzo (45 minuti), vogliono mangiare in fretta e fresco, spesso vegetariano\nIncarico: menù del pranzo con 6 piatti, almeno 2 vegetariani e 1 vegano; cambia ogni due settimane\nFood cost obiettivo: al massimo il 30 % del prezzo di vendita netto; fascia di prezzo da 9,50 a 14,50 EUR lordi (IVA 7 %)\n\nI prezzi d'acquisto sono allegati come file CSV."
+    }
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "id": "household-budget",
+  "number": 14,
+  "category": "private",
+  "level": "beginner",
+  "featured": true,
+  "sensitive": true,
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160,
+      "form": [
+        {
+          "name": "transactions",
+          "type": "file",
+          "accept": [
+            "csv",
+            "xlsx"
+          ],
+          "multiple": true,
+          "max_files": 6,
+          "max_size_mb": 10
+        }
+      ]
+    },
+    {
+      "id": "budget",
+      "type": "agent",
+      "x": 340,
+      "y": 160,
+      "role": "analysis",
+      "icon": "calculator",
+      "tools": [
+        "calculator"
+      ]
+    },
+    {
+      "id": "savings",
+      "type": "agent",
+      "x": 680,
+      "y": 160,
+      "role": "planning",
+      "icon": "idea",
+      "tools": [
+        "calculator"
+      ]
+    },
+    {
+      "id": "check",
+      "type": "agent",
+      "x": 1020,
+      "y": 160,
+      "role": "review",
+      "icon": "check",
+      "effort": "low",
+      "output_name": "BudgetCheck",
+      "output_fields": [
+        {
+          "name": "monthly_surplus",
+          "type": "number"
+        },
+        {
+          "name": "savings_potential",
+          "type": "number"
+        },
+        {
+          "name": "measures",
+          "type": "string_list"
+        },
+        {
+          "name": "quick_wins",
+          "type": "string_list"
+        },
+        {
+          "name": "caveats",
+          "type": "string_list"
+        }
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1360,
+      "y": 160,
+      "files": [
+        "xlsx"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "budget"
+    ],
+    [
+      "budget",
+      "savings"
+    ],
+    [
+      "budget",
+      "check"
+    ],
+    [
+      "savings",
+      "check"
+    ],
+    [
+      "check",
+      "output"
+    ]
+  ],
+  "samples": [
+    {
+      "id": "transactions",
+      "format": "csv",
+      "field": "transactions"
+    }
+  ],
+  "tests": [
+    {
+      "id": "budget_text",
+      "checks": [
+        {
+          "field": "monthly_surplus",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "measures",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "caveats",
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "transactions_file",
+      "input": "own",
+      "samples": [
+        "transactions"
+      ],
+      "checks": [
+        {
+          "field": "monthly_surplus",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "measures",
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

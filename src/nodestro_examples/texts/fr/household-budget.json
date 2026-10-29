@@ -1,0 +1,246 @@
+{
+  "name": "Vérifier un budget familial et économiser",
+  "field": "Particuliers – finances",
+  "description": "Évaluer les revenus et les dépenses d'un foyer et trouver des pistes d'économies réalistes.",
+  "start": "Budget du foyer",
+  "output": "Bilan budgétaire",
+  "file_name": "Budget familial",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – un foyer entièrement fictif, uniquement pour essayer.\n\nFoyer : deux adultes, un enfant (7 ans), appartement en location\nRevenus nets par mois : 2 900 EUR + 1 450 EUR (temps partiel) + 255 EUR d'allocations familiales\nObjectif : épargner 400 EUR par mois pour constituer en deux ans une réserve de trois mois de revenus nets.\n\nCharges fixes par mois :\n- Loyer chauffage compris 1 380 EUR, électricité 95 EUR, internet et mobile (3 contrats) 112 EUR\n- Voiture : mensualité de crédit 289 EUR, assurance 74 EUR, taxes 18 EUR\n- Assurances : responsabilité civile 7 EUR, habitation 14 EUR, prévoyance invalidité 68 EUR\n- Garderie/périscolaire 210 EUR, club de sport de l'enfant 25 EUR\n- Streaming et abonnements : 4 services, 52 EUR au total ; salle de sport 2 × 39 EUR (une inutilisée depuis 5 mois)\n\nDépenses variables, moyenne des 3 derniers mois :\n- Courses 780 EUR, restaurants et livraisons 240 EUR, carburant 160 EUR\n- Vêtements 130 EUR, loisirs 150 EUR, divers 260 EUR\nSolde actuel du compte épargne : 1 800 EUR",
+  "guide": {
+    "problem": "En fin de mois, il reste souvent moins que prévu. Le workflow recalcule un budget familial, trouve des potentiels d'économies et vérifie si les propositions sont réalistes au quotidien.",
+    "flow": "L'analyste budgétaire calcule totaux, excédent et parts par catégorie avec la calculatrice. Le conseiller en économies estime des économies concrètes, également recalculées. Le contrôle de réalisme reçoit les deux résultats, vérifie la faisabilité et livre un résultat structuré.",
+    "input": "Les revenus, les dépenses fixes et variables d'un foyer et un objectif d'épargne. Au lieu de tout saisir, vous pouvez joindre des relevés bancaires ou un cahier de comptes en fichier CSV ou Excel ; le fichier d'exemple contient un mois fictif.",
+    "result": "Un bilan budgétaire structuré avec l'excédent mensuel actuel, le potentiel d'économies, des mesures, des premières étapes rapides et des remarques, aussi en fichier Excel. Il ne remplace pas un conseil financier ni un accompagnement en cas de surendettement.",
+    "adapt": "Joignez vos propres relevés bancaires ou saisissez vos chiffres ; ajoutez vos priorités personnelles, comme « on garde la voiture », dans le texte. Les relevés bancaires contiennent des données personnelles : ils restent chez vous et ne sont transmis au modèle que pour cette exécution."
+  },
+  "agents": {
+    "budget": {
+      "name": "Analyste budgétaire",
+      "description": "Calcule revenus, dépenses, excédent et parts avec la calculatrice.",
+      "system": "Tu es conseiller en budget familial. Utilise la calculatrice pour calculer : total des revenus, total des charges fixes et variables, excédent mensuel, taux d'épargne et part de chaque catégorie dans le revenu net. Compare avec l'objectif d'épargne et montre l'écart. Présente les résultats dans un tableau clair.",
+      "task": "Évalue ce budget familial :\n\n{{input}}"
+    },
+    "savings": {
+      "name": "Conseiller en économies",
+      "description": "Trouve des pistes d'économies concrètes et estime leur effet.",
+      "system": "Tu es conseiller en consommation. Trouve des pistes d'économies concrètes : contrats inutilisés, changements de tarif, dépenses variables avec de la marge et habitudes. Estime prudemment l'économie mensuelle de chaque mesure et additionne-les avec la calculatrice. Ne recommande ni produits financiers, ni crédits, ni placements, et ne propose pas de résilier des assurances importantes.",
+      "task": "Trouve des pistes d'économies à partir de cette évaluation :\n\n{{node:budget}}"
+    },
+    "check": {
+      "name": "Contrôle de réalisme",
+      "description": "Vérifie la faisabilité des propositions et les résume.",
+      "system": "Tu vérifies des plans d'économies sous l'angle du quotidien. Contrôle les chiffres, écarte les propositions irréalistes et classe les autres par effort. Indique en euros l'excédent mensuel actuel et le potentiel d'économies réaliste. Nomme les limites de l'analyse et indique quand un conseil financier indépendant ou un accompagnement en surendettement est utile.",
+      "task": "Vérifie le plan d'économies.\n\nÉvaluation budgétaire :\n{{node:budget}}\n\nPropositions d'économies :\n{{node:savings}}",
+      "fields": {
+        "monthly_surplus": "Excédent actuel par mois en euros",
+        "savings_potential": "Potentiel d'économies supplémentaire réaliste par mois en euros",
+        "measures": "Mesures avec économie estimée",
+        "quick_wins": "Étapes réalisables dès cette semaine",
+        "caveats": "Limites de l'analyse et remarques"
+      }
+    }
+  },
+  "form": {
+    "transactions": {
+      "label": "Relevés bancaires ou cahier de comptes",
+      "description": "Facultatif : un export de la banque en ligne ou de votre cahier de comptes en CSV ou Excel, jusqu'à 6 fichiers de 10 Mo chacun. Sans fichier, les indications du texte font foi."
+    }
+  },
+  "samples": {
+    "transactions": {
+      "name": "Releve_bancaire_mars_2026",
+      "description": "Opérations bancaires fictives d'un mois avec catégories en CSV, correspondant au foyer de la tâche de test.",
+      "content": [
+        [
+          "Date",
+          "Libellé",
+          "Catégorie",
+          "Montant (EUR)"
+        ],
+        [
+          "2026-03-01",
+          "Salaire employeur A",
+          "Revenus",
+          2900.0
+        ],
+        [
+          "2026-03-01",
+          "Salaire employeur B (temps partiel)",
+          "Revenus",
+          1450.0
+        ],
+        [
+          "2026-03-02",
+          "Allocations familiales",
+          "Revenus",
+          255.0
+        ],
+        [
+          "2026-03-01",
+          "Loyer chauffage compris",
+          "Logement",
+          -1380.0
+        ],
+        [
+          "2026-03-02",
+          "Mensualité électricité",
+          "Logement",
+          -95.0
+        ],
+        [
+          "2026-03-03",
+          "Mobile et internet (3 contrats)",
+          "Contrats",
+          -112.0
+        ],
+        [
+          "2026-03-03",
+          "Mensualité crédit auto",
+          "Voiture",
+          -289.0
+        ],
+        [
+          "2026-03-03",
+          "Assurance auto",
+          "Voiture",
+          -74.0
+        ],
+        [
+          "2026-03-05",
+          "Garderie et périscolaire",
+          "Enfants",
+          -210.0
+        ],
+        [
+          "2026-03-05",
+          "Club de sport de l'enfant",
+          "Enfants",
+          -25.0
+        ],
+        [
+          "2026-03-06",
+          "Service de streaming 1",
+          "Abonnements",
+          -17.99
+        ],
+        [
+          "2026-03-06",
+          "Service de streaming 2",
+          "Abonnements",
+          -13.99
+        ],
+        [
+          "2026-03-07",
+          "Abonnement musique",
+          "Abonnements",
+          -10.99
+        ],
+        [
+          "2026-03-07",
+          "Appli de magazines",
+          "Abonnements",
+          -9.03
+        ],
+        [
+          "2026-03-08",
+          "Salle de sport personne 1",
+          "Loisirs",
+          -39.0
+        ],
+        [
+          "2026-03-08",
+          "Salle de sport personne 2 (inutilisée depuis 5 mois)",
+          "Loisirs",
+          -39.0
+        ],
+        [
+          "2026-03-04",
+          "Supermarché",
+          "Courses",
+          -186.4
+        ],
+        [
+          "2026-03-11",
+          "Supermarché",
+          "Courses",
+          -201.15
+        ],
+        [
+          "2026-03-18",
+          "Supermarché",
+          "Courses",
+          -174.8
+        ],
+        [
+          "2026-03-25",
+          "Supermarché",
+          "Courses",
+          -219.65
+        ],
+        [
+          "2026-03-09",
+          "Livraison pizza",
+          "Restaurants",
+          -38.5
+        ],
+        [
+          "2026-03-14",
+          "Restaurant",
+          "Restaurants",
+          -86.0
+        ],
+        [
+          "2026-03-21",
+          "Livraison sushi",
+          "Restaurants",
+          -54.2
+        ],
+        [
+          "2026-03-28",
+          "Café et boulangerie",
+          "Restaurants",
+          -61.3
+        ],
+        [
+          "2026-03-10",
+          "Station-service",
+          "Voiture",
+          -78.4
+        ],
+        [
+          "2026-03-24",
+          "Station-service",
+          "Voiture",
+          -81.6
+        ],
+        [
+          "2026-03-15",
+          "Vêtements en ligne",
+          "Vêtements",
+          -129.9
+        ],
+        [
+          "2026-03-19",
+          "Cinéma et parc de loisirs",
+          "Loisirs",
+          -148.0
+        ],
+        [
+          "2026-03-27",
+          "Droguerie et divers",
+          "Divers",
+          -263.1
+        ]
+      ]
+    }
+  },
+  "tests": {
+    "budget_text": {
+      "name": "Budget dans le texte"
+    },
+    "transactions_file": {
+      "name": "Relevé bancaire en CSV",
+      "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – un foyer entièrement fictif, uniquement pour essayer.\n\nFoyer : deux adultes, un enfant (7 ans), appartement en location\nObjectif : épargner 400 EUR par mois pour constituer en deux ans une réserve de trois mois de revenus nets.\nLes opérations bancaires du mois dernier sont jointes en fichier CSV. Taxes et assurances prélevées une fois par an : taxe auto 216 EUR, responsabilité civile 84 EUR, habitation 168 EUR, prévoyance invalidité 816 EUR."
+    }
+  }
+}

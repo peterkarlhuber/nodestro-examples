@@ -1,0 +1,52 @@
+{
+  "name": "Organizzare la festa di un'associazione",
+  "field": "Associazioni",
+  "description": "Pianificare calendario, compiti e budget della festa di un'associazione, preparare la comunicazione e redigere un documento per il consiglio direttivo.",
+  "start": "Dati principali",
+  "output": "Documento per il direttivo",
+  "file_name": "Documento per il direttivo",
+  "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nAssociazione: SC Paese Esempio, 420 soci, di cui 130 bambini e ragazzi\nOccasione: festa d'estate per i 75 anni sabato 2026-07-11, dalle 14 alle 22, campo sportivo\nData di pianificazione: 2026-05-04\nOspiti attesi: circa 300\nDesideri per il programma: olimpiadi per bambini, premiazione dei soci storici, band dal vivo la sera\nVolontari: 25 volontari hanno dato disponibilità, ciascuno in turni da 3 ore\nBudget: fondi dell'associazione 3.000 EUR, sponsorizzazione confermata 1.500 EUR (Bevande Campione), entrate attese\ndalle vendite: bevande 2.400 EUR, cibo 1.800 EUR, lotteria 600 EUR\nCosti noti: band 1.200 EUR, noleggio tensostruttura 900 EUR, castello gonfiabile 250 EUR, acquisto di cibo e bevande\ncirca 1.900 EUR, coppe e premi 300 EUR",
+  "guide": {
+    "problem": "Le feste delle associazioni sono organizzate da volontari nel tempo libero. Il workflow crea calendario, compiti, budget e comunicazione e riassume tutto in un documento per la riunione del consiglio direttivo.",
+    "flow": "Il pianificatore del calendario e il pianificatore del budget lavorano in parallelo; uno fa il conto alla rovescia dalla festa con lo strumento delle date, l'altro calcola il budget con la calcolatrice. Il pianificatore della comunicazione prepara inviti e post in linea con il calendario. Il documento per il direttivo unisce tutto; un controllo qualità verifica completezza e responsabilità.",
+    "input": "Occasione, data, luogo, numero di ospiti, desideri per il programma, volontari, budget e costi noti.",
+    "result": "Un documento per il direttivo con calendario fino alla festa, compiti e responsabili, piano dei turni, budget con avanzo o disavanzo, piano di comunicazione e proposte di delibera, anche come file Word da inviare al direttivo.",
+    "adapt": "Inserisci i dati principali della tua festa. Permessi e prescrizioni variano da comune a comune; aggiungi i requisiti noti nell'input. Loghi e modelli di locandina possono essere salvati come conoscenza."
+  },
+  "agents": {
+    "schedule": {
+      "name": "Pianificatore del calendario",
+      "description": "Pianifica a ritroso dal giorno della festa calendario, compiti e turni.",
+      "system": "Organizzi eventi associativi. Calcola il tempo che manca alla festa con lo strumento days_between e pianifica a ritroso: traguardi con date, compiti con responsabilità indicata come ruolo, programma del giorno della festa e piano dei turni per i volontari. Pensa a permessi, assicurazione, igiene, primo soccorso e smontaggio, e segnala i punti da chiarire con il comune.",
+      "task": "Pianifica calendario e compiti di questa festa:\n\n{{input}}"
+    },
+    "budget": {
+      "name": "Pianificatore del budget",
+      "description": "Calcola entrate, uscite e riserva con la calcolatrice.",
+      "system": "Sei il tesoriere dell'associazione. Usa la calcolatrice per creare un budget: entrate, uscite, una riserva del 10 % per gli imprevisti e il risultato atteso. Calcola uno scenario prudente con il 30 % in meno di entrate dalle vendite, per esempio in caso di maltempo. Proponi come si potrebbe coprire un disavanzo.",
+      "task": "Crea il budget di questa festa:\n\n{{input}}"
+    },
+    "communication": {
+      "name": "Pianificatore della comunicazione",
+      "description": "Prepara inviti, post e un comunicato stampa.",
+      "system": "Ti occupi di relazioni pubbliche per associazioni. In linea con il calendario crea un piano di comunicazione con date e canali (lettera ai soci, bacheca, social media, giornale locale) e scrivi testi: un invito ai soci, un post per i social media e un breve comunicato stampa. Scrivi in modo caloroso e invitante.",
+      "task": "Pianifica la comunicazione per questo calendario:\n\n{{node:schedule}}"
+    },
+    "board_paper": {
+      "name": "Documento per il direttivo",
+      "description": "Riassume pianificazione, budget e comunicazione per il consiglio direttivo.",
+      "system": "Prepari documenti decisionali per i consigli direttivi delle associazioni. Riassumi in modo chiaro calendario, compiti, budget e comunicazione, in al massimo due pagine. Concludi con proposte di delibera concrete, punti aperti e le prossime tre date. Prendi i numeri solo dal budget.",
+      "task": "Redigi il documento per il direttivo.\n\nCalendario e compiti:\n{{node:schedule}}\n\nBudget:\n{{node:budget}}\n\nComunicazione:\n{{node:communication}}",
+      "criteria": {
+        "complete": "Il documento contiene calendario, compiti, budget, comunicazione e proposte di delibera.",
+        "responsibilities": "Ogni compito ha un ruolo responsabile e una data.",
+        "budget_consistent": "Tutti i numeri corrispondono al budget."
+      }
+    }
+  },
+  "tests": {
+    "summer_party": {
+      "name": "Festa d'estate per l'anniversario dell'associazione"
+    }
+  }
+}

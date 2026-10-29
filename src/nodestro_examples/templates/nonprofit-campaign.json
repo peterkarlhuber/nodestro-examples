@@ -1,0 +1,124 @@
+{
+  "id": "nonprofit-campaign",
+  "number": 23,
+  "category": "private",
+  "level": "advanced",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 180
+    },
+    {
+      "id": "campaign",
+      "type": "agent",
+      "x": 360,
+      "y": 40,
+      "role": "planning",
+      "icon": "sparkles"
+    },
+    {
+      "id": "impact",
+      "type": "agent",
+      "x": 360,
+      "y": 320,
+      "role": "analysis",
+      "icon": "target",
+      "tools": [
+        "calculator"
+      ],
+      "proposals": "generated"
+    },
+    {
+      "id": "integrity",
+      "type": "agent",
+      "x": 720,
+      "y": 180,
+      "role": "review",
+      "icon": "shield",
+      "output_name": "CampaignReview",
+      "output_fields": [
+        {
+          "name": "credible",
+          "type": "boolean"
+        },
+        {
+          "name": "overstated_claims",
+          "type": "string_list"
+        },
+        {
+          "name": "ethical_notes",
+          "type": "string_list"
+        },
+        {
+          "name": "suggested_changes",
+          "type": "string_list"
+        },
+        {
+          "name": "measurement_plan",
+          "type": "string_list"
+        }
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1080,
+      "y": 180,
+      "files": [
+        "docx"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "campaign"
+    ],
+    [
+      "start",
+      "impact"
+    ],
+    [
+      "campaign",
+      "integrity"
+    ],
+    [
+      "impact",
+      "integrity"
+    ],
+    [
+      "campaign",
+      "output"
+    ],
+    [
+      "impact",
+      "output"
+    ],
+    [
+      "integrity",
+      "output"
+    ]
+  ],
+  "tests": [
+    {
+      "id": "reading_mentors",
+      "checks": [
+        {
+          "node": "campaign",
+          "operator": "is_not_empty"
+        },
+        {
+          "node": "impact",
+          "operator": "is_not_empty"
+        },
+        {
+          "node": "integrity",
+          "field": "measurement_plan",
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

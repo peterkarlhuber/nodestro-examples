@@ -1,0 +1,158 @@
+{
+  "id": "real-estate",
+  "number": 18,
+  "category": "business",
+  "level": "advanced",
+  "sensitive": true,
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 180,
+      "form": [
+        {
+          "name": "documents",
+          "type": "file",
+          "accept": [
+            "pdf",
+            "docx",
+            "image"
+          ],
+          "multiple": true,
+          "max_files": 8
+        }
+      ]
+    },
+    {
+      "id": "returns",
+      "type": "agent",
+      "x": 360,
+      "y": 40,
+      "role": "analysis",
+      "icon": "calculator",
+      "tools": [
+        "calculator"
+      ]
+    },
+    {
+      "id": "property",
+      "type": "agent",
+      "x": 360,
+      "y": 320,
+      "role": "analysis",
+      "icon": "search"
+    },
+    {
+      "id": "assessment",
+      "type": "agent",
+      "x": 720,
+      "y": 180,
+      "role": "review",
+      "icon": "scale",
+      "output_name": "PropertyAssessment",
+      "output_fields": [
+        {
+          "name": "comparison",
+          "type": "string_list"
+        },
+        {
+          "name": "preferred_offer",
+          "type": "string"
+        },
+        {
+          "name": "opportunities",
+          "type": "string_list"
+        },
+        {
+          "name": "risks",
+          "type": "string_list"
+        },
+        {
+          "name": "checks_before_decision",
+          "type": "string_list"
+        }
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1080,
+      "y": 180,
+      "files": [
+        "pdf"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "returns"
+    ],
+    [
+      "start",
+      "property"
+    ],
+    [
+      "returns",
+      "assessment"
+    ],
+    [
+      "property",
+      "assessment"
+    ],
+    [
+      "assessment",
+      "output"
+    ]
+  ],
+  "samples": [
+    {
+      "id": "expose",
+      "format": "pdf",
+      "field": "documents"
+    },
+    {
+      "id": "floor_plan",
+      "format": "png",
+      "field": "documents",
+      "file": "floor-plan.png"
+    }
+  ],
+  "tests": [
+    {
+      "id": "two_offers",
+      "checks": [
+        {
+          "field": "preferred_offer",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "risks",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "checks_before_decision",
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "with_documents",
+      "samples": [
+        "expose",
+        "floor_plan"
+      ],
+      "checks": [
+        {
+          "field": "comparison",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "checks_before_decision",
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,177 @@
+{
+  "name": "Forschungsfrage in Hypothesen übersetzen",
+  "field": "Forschung und Entwicklung",
+  "description": "Forschungsfrage analysieren, prüfbare Hypothesen entwickeln, kritisch prüfen und einen Versuchsplan ableiten.",
+  "start": "Forschungsfrage",
+  "output": "Versuchsplan",
+  "file_name": "Versuchsplan",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nForschungsfrage: Kann die Aushärtetemperatur unseres Pulverlacks PL-7 von 180 °C auf 165 °C gesenkt werden,\nohne dass die Haftung auf verzinktem Stahl leidet? Ziel ist, rund 10 % Energie im Ofen zu sparen.\n\nVorversuch (je 5 Bleche, Gitterschnitt-Kennwert nach ISO 2409, 0 = beste Haftung, 5 = schlechteste):\n- 180 °C, 15 min: 0, 0, 1, 0, 1\n- 165 °C, 15 min: 1, 0, 2, 1, 1\n- 165 °C, 20 min: 0, 1, 0, 1, 0\n\nRahmenbedingungen: 40 Prüfbleche pro Woche verfügbar, Ofen zwei Tage pro Woche für Versuche frei,\nVorbehandlung der Bleche erfolgte bisher an zwei verschiedenen Tagen.",
+  "guide": {
+    "problem": "Gute Forschung beginnt mit einer präzisen, prüfbaren Frage. Der Workflow zerlegt eine Forschungsfrage, formuliert Hypothesen, lässt sie methodisch kritisieren und leitet einen realistischen Versuchsplan ab.",
+    "flow": "Eine sequenzielle Kette mit Rückgriff: Der Analyst klärt Variablen und Annahmen, der Hypothesen-Agent formuliert prüfbare Hypothesen mit Nullhypothesen, der Methodenkritiker prüft sie mit dem Rechner-Tool an den Vorversuchsdaten und benennt Störgrößen. Der Versuchsplaner nutzt Hypothesen und Kritik zusammen.",
+    "input": "Eine Forschungsfrage mit Ziel, vorhandenen Daten aus Vorversuchen und Rahmenbedingungen wie Material, Zeit und Geräte. Messdaten und Unterlagen kannst du als Dateien anhängen; die Beispieldatei enthält die Vorversuchswerte je Blech.",
+    "result": "Ein Versuchsplan mit Hypothesen, Faktoren und Stufen, Stichprobengröße, Messmethode, Auswertung und Abbruchkriterien sowie den offenen Risiken, zusätzlich als Word-Datei. Der Versuchsplaner schlägt den Plan für das Wissen vor; ob er gespeichert wird, entscheidest du.",
+    "adapt": "Ersetze Frage und Vorversuch durch deine eigenen und hänge Messdaten direkt an. Fachliteratur, die du immer wieder brauchst, lädst du als Wissen im Modus „Volltextsuche“ hoch und weist sie dem Analysten zu, damit er mit Zitaten arbeitet. Eure Statistikvorgaben ergänzt du beim Methodenkritiker."
+  },
+  "agents": {
+    "framing": {
+      "name": "Fragestellungsanalyst",
+      "description": "Klärt Ziel, Variablen, Rahmenbedingungen und Wissenslücken.",
+      "system": "Du bist wissenschaftlicher Mitarbeiter und strukturierst Forschungsfragen. Zerlege die Frage in Ziel, unabhängige und abhängige Variablen, mögliche Störgrößen und Rahmenbedingungen. Fasse zusammen, was die vorhandenen Daten zeigen und was nicht, und trenne gesichertes Wissen von Vermutungen.",
+      "task": "Analysiere diese Forschungsfrage:\n\n{{input}}"
+    },
+    "hypotheses": {
+      "name": "Hypothesenentwickler",
+      "description": "Formuliert prüfbare Hypothesen mit Vorhersagen und Nullhypothesen.",
+      "system": "Du formulierst wissenschaftliche Hypothesen. Leite aus der Analyse drei bis fünf prüfbare Hypothesen ab. Nenne je Hypothese die Nullhypothese, eine messbare Vorhersage, das Messverfahren und was als Bestätigung oder Widerlegung gilt. Ordne sie nach Relevanz für das Ziel.",
+      "task": "Entwickle Hypothesen auf Grundlage dieser Analyse:\n\n{{node:framing}}"
+    },
+    "critic": {
+      "name": "Methodenkritiker",
+      "description": "Prüft Hypothesen auf Prüfbarkeit, Störgrößen und Datenlage.",
+      "system": "Du bist ein strenger Methodiker und Gutachter. Prüfe jede Hypothese auf Falsifizierbarkeit, Messbarkeit, Störgrößen und Verzerrungen. Werte vorhandene Vorversuchsdaten mit dem Rechner-Tool aus (zum Beispiel Mittelwerte und Spannweiten) und beurteile, ob die Datenlage eine Aussage erlaubt. Nenne, welche Hypothesen verworfen, geschärft oder beibehalten werden sollten.",
+      "task": "Prüfe diese Hypothesen kritisch.\n\nForschungsfrage und Daten:\n{{run.input}}\n\nHypothesen:\n{{node:hypotheses}}"
+    },
+    "design": {
+      "name": "Versuchsplaner",
+      "description": "Leitet aus Hypothesen und Kritik einen Versuchsplan ab.",
+      "system": "Du planst Versuche nach den Grundsätzen der statistischen Versuchsplanung. Entwirf für die beibehaltenen Hypothesen einen Versuchsplan: Faktoren und Stufen, Wiederholungen, Randomisierung und Blockbildung gegen Störgrößen, Messmethode, Auswertungsverfahren, Abbruch- und Erfolgskriterien sowie einen Zeitplan, der zu den Rahmenbedingungen passt. Schließe mit offenen Risiken.",
+      "task": "Entwirf den Versuchsplan.\n\nHypothesen:\n{{node:hypotheses}}\n\nMethodenkritik:\n{{node:critic}}"
+    }
+  },
+  "form": {
+    "research_files": {
+      "label": "Forschungsunterlagen",
+      "description": "Optional: Messdaten (CSV, Excel, JSON) und Unterlagen wie Versuchsberichte oder Fachartikel (PDF, Word, Markdown), bis zu 6 Dateien. Ohne Dateien gelten die Angaben im Text."
+    }
+  },
+  "samples": {
+    "pretest": {
+      "name": "Vorversuch_PL-7",
+      "description": "Die erfundenen Gitterschnitt-Werte des Vorversuchs je Blech, mit Vorbehandlungstag, als CSV.",
+      "content": [
+        [
+          "Temperatur_C",
+          "Zeit_min",
+          "Blech",
+          "Vorbehandlungstag",
+          "Gitterschnitt_ISO2409"
+        ],
+        [
+          180,
+          15,
+          1,
+          "Tag 1",
+          0
+        ],
+        [
+          180,
+          15,
+          2,
+          "Tag 1",
+          0
+        ],
+        [
+          180,
+          15,
+          3,
+          "Tag 2",
+          1
+        ],
+        [
+          180,
+          15,
+          4,
+          "Tag 2",
+          0
+        ],
+        [
+          180,
+          15,
+          5,
+          "Tag 2",
+          1
+        ],
+        [
+          165,
+          15,
+          6,
+          "Tag 1",
+          1
+        ],
+        [
+          165,
+          15,
+          7,
+          "Tag 1",
+          0
+        ],
+        [
+          165,
+          15,
+          8,
+          "Tag 2",
+          2
+        ],
+        [
+          165,
+          15,
+          9,
+          "Tag 2",
+          1
+        ],
+        [
+          165,
+          15,
+          10,
+          "Tag 2",
+          1
+        ],
+        [
+          165,
+          20,
+          11,
+          "Tag 1",
+          0
+        ],
+        [
+          165,
+          20,
+          12,
+          "Tag 1",
+          1
+        ],
+        [
+          165,
+          20,
+          13,
+          "Tag 1",
+          0
+        ],
+        [
+          165,
+          20,
+          14,
+          "Tag 2",
+          1
+        ],
+        [
+          165,
+          20,
+          15,
+          "Tag 2",
+          0
+        ]
+      ]
+    }
+  },
+  "tests": {
+    "question_text": {
+      "name": "Frage und Vorversuch im Text"
+    },
+    "pretest_file": {
+      "name": "Vorversuchsdaten als CSV",
+      "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nForschungsfrage: Kann die Aushärtetemperatur unseres Pulverlacks PL-7 von 180 °C auf 165 °C gesenkt werden, ohne dass die Haftung auf verzinktem Stahl leidet? Ziel ist, rund 10 % Energie im Ofen zu sparen.\n\nDie Werte des Vorversuchs (Gitterschnitt nach ISO 2409, 0 = beste Haftung) liegen als CSV-Datei bei.\n\nRahmenbedingungen: 40 Prüfbleche pro Woche verfügbar, Ofen zwei Tage pro Woche für Versuche frei."
+    }
+  }
+}

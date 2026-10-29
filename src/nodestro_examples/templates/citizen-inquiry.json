@@ -1,0 +1,127 @@
+{
+  "id": "citizen-inquiry",
+  "number": 24,
+  "category": "administration",
+  "level": "beginner",
+  "featured": true,
+  "sensitive": true,
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160,
+      "form": [
+        {
+          "name": "documents",
+          "type": "file",
+          "accept": [
+            "pdf",
+            "docx",
+            "md",
+            "txt",
+            "image"
+          ],
+          "multiple": true,
+          "max_files": 5
+        }
+      ]
+    },
+    {
+      "id": "triage",
+      "type": "agent",
+      "x": 340,
+      "y": 160,
+      "role": "analysis",
+      "icon": "list",
+      "model": "claude-haiku-5-5",
+      "effort": "low"
+    },
+    {
+      "id": "rules",
+      "type": "agent",
+      "x": 680,
+      "y": 160,
+      "role": "research",
+      "icon": "book",
+      "proposals": "extracted"
+    },
+    {
+      "id": "reply",
+      "type": "agent",
+      "x": 1020,
+      "y": 160,
+      "role": "writing",
+      "icon": "mail",
+      "criteria": [
+        "only_given_rules",
+        "plain_language",
+        "no_binding_commitment"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1360,
+      "y": 160,
+      "files": [
+        "docx"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "triage"
+    ],
+    [
+      "triage",
+      "rules"
+    ],
+    [
+      "triage",
+      "reply"
+    ],
+    [
+      "rules",
+      "reply"
+    ],
+    [
+      "reply",
+      "output"
+    ],
+    [
+      "start",
+      "rules"
+    ]
+  ],
+  "samples": [
+    {
+      "id": "guidance",
+      "format": "pdf",
+      "field": "documents"
+    }
+  ],
+  "tests": [
+    {
+      "id": "two_concerns",
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "guidance_file",
+      "input": "own",
+      "samples": [
+        "guidance"
+      ],
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

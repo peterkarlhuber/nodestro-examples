@@ -1,0 +1,141 @@
+{
+  "name": "Pianificazione colturale di un'azienda agricola",
+  "field": "Agricoltura",
+  "description": "Pianificare la rotazione colturale sugli appezzamenti di un'azienda, calcolare i margini lordi e verificare il piano.",
+  "start": "Dati aziendali",
+  "output": "Piano colturale",
+  "file_name": "Piano colturale",
+  "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare. Prezzi e costi sono ipotesi.\n\nAzienda: azienda cerealicola Fattoria Esempio, 60 ha in cinque appezzamenti, convenzionale, senza allevamento\n| Appezzamento | Superficie | Suolo | Coltura precedente 2026 |\n|---|---|---|---|\n| F1 | 15 ha | franco-limoso, buono | frumento invernale |\n| F2 | 12 ha | franco-limoso, buono | colza invernale |\n| F3 | 10 ha | franco-sabbioso | orzo invernale |\n| F4 | 13 ha | franco-limoso, buono | barbabietola da zucchero |\n| F5 | 10 ha | sabbioso, secco | segale invernale |\n\nRegole di pianificazione: niente frumento dopo frumento; colza al massimo ogni 4 anni sullo stesso appezzamento\n(F2 aveva colza nel 2026); barbabietola da zucchero solo su suolo franco-limoso buono, contratto di fornitura per\n13 ha; quota di cereali al massimo 66 %.\n\nIpotesi per ha (ricavo / costi variabili):\n- Frumento invernale 1.900 EUR / 1.050 EUR; orzo invernale 1.550 EUR / 950 EUR; segale invernale 1.250 EUR / 780 EUR\n- Colza invernale 1.800 EUR / 1.100 EUR; barbabietola da zucchero 3.300 EUR / 1.900 EUR; favino 1.150 EUR / 650 EUR",
+  "guide": {
+    "problem": "La pianificazione colturale deve tenere conto contemporaneamente di rotazione, suoli, contratti e redditività. Il workflow propone una rotazione, calcola i margini lordi e verifica il piano rispetto alle tue regole.",
+    "flow": "Una catena di tre agenti: il pianificatore della rotazione assegna una coltura a ogni appezzamento, il calcolo dei margini lordi calcola ogni appezzamento e il totale con la calcolatrice e il controllo di plausibilità verifica regole e rischi e fornisce un esito strutturato.",
+    "input": "Appezzamenti con superficie, suolo e coltura precedente, le vostre regole di pianificazione e ipotesi su ricavi e costi per ettaro. Appezzamenti e ipotesi puoi allegarli come file Excel o CSV; il file di esempio contiene entrambe le tabelle dell'attività di prova.",
+    "result": "Un piano colturale per appezzamento con margine lordo, una verifica delle regole, rischi e domande aperte, anche come file Excel. I requisiti di legge, per esempio su concimazione o condizioni per i contributi, vanno verificati in base alle regole locali vigenti.",
+    "adapt": "Allega il tuo schedario degli appezzamenti e i dati di calcolo in Excel e inserisci le tue regole di pianificazione. Le analisi del suolo che ti servono ogni anno puoi caricarle come conoscenza e assegnarle al pianificatore della rotazione."
+  },
+  "agents": {
+    "rotation": {
+      "name": "Pianificatore della rotazione",
+      "description": "Assegna una coltura a ogni appezzamento secondo regole e suolo.",
+      "system": "Sei un consulente per la produzione vegetale. Assegna una coltura a ogni appezzamento per l'anno di pianificazione, tenendo conto di coltura precedente, suolo, contratti, regole di pianificazione e di una rotazione sana. Motiva ogni assegnazione in una frase e indica alternative dove una regola è rispettata solo di poco. Rispetta le regole indicate anche se comportano svantaggi economici.",
+      "task": "Pianifica la rotazione colturale per questa azienda:\n\n{{input}}"
+    },
+    "margins": {
+      "name": "Calcolo dei margini lordi",
+      "description": "Calcola i margini lordi per appezzamento e in totale con la calcolatrice.",
+      "system": "Sei un economista agrario. Usa la calcolatrice per calcolare il margine lordo di ogni appezzamento (ricavo meno costi variabili, per la superficie) e il totale dell'azienda. Usa solo le ipotesi indicate. Mostra anche come cambia il margine lordo totale con ricavi inferiori del 15 %.",
+      "task": "Calcola i margini lordi.\n\nDati aziendali e ipotesi:\n{{run.input}}\n\nRotazione colturale:\n{{node:rotation}}"
+    },
+    "review": {
+      "name": "Controllo di plausibilità",
+      "description": "Verifica il piano rispetto a regole e rischi e lo riassume.",
+      "system": "Verifichi piani colturali. Controlla ogni regola di pianificazione singolarmente e indica se è rispettata, verifica la plausibilità del calcolo e indica rischi come meteo, prezzi e picchi di lavoro. Fai presente che requisiti di legge e condizioni dei contributi vanno verificati secondo le regole vigenti.",
+      "task": "Verifica questo piano colturale.\n\nRotazione colturale:\n{{node:rotation}}\n\nMargini lordi:\n{{node:margins}}",
+      "fields": {
+        "plan_summary": "Piano colturale per appezzamento in breve",
+        "total_margin_eur": "Margine lordo totale in euro",
+        "rule_checks": "Verifica di ogni regola di pianificazione",
+        "risks": "Rischi del piano",
+        "open_questions": "Domande aperte prima dell'attuazione"
+      }
+    }
+  },
+  "form": {
+    "field_data": {
+      "label": "Schedario degli appezzamenti e dati di calcolo",
+      "description": "Facoltativo: appezzamenti e ipotesi in Excel o CSV, fino a 3 file da 10 MB ciascuno. Senza file valgono le tabelle nel testo."
+    }
+  },
+  "samples": {
+    "fields": {
+      "name": "Schedario_appezzamenti_Fattoria_Esempio",
+      "description": "Gli appezzamenti e le ipotesi di calcolo fittizi dell'attività di prova come file Excel con due fogli.",
+      "content": {
+        "Appezzamenti": [
+          [
+            "Appezzamento",
+            "Superficie (ha)",
+            "Suolo",
+            "Coltura precedente 2026"
+          ],
+          [
+            "F1",
+            15,
+            "franco-limoso, buono",
+            "frumento invernale"
+          ],
+          [
+            "F2",
+            12,
+            "franco-limoso, buono",
+            "colza invernale"
+          ],
+          [
+            "F3",
+            10,
+            "franco-sabbioso",
+            "orzo invernale"
+          ],
+          [
+            "F4",
+            13,
+            "franco-limoso, buono",
+            "barbabietola da zucchero"
+          ],
+          [
+            "F5",
+            10,
+            "sabbioso, secco",
+            "segale invernale"
+          ]
+        ],
+        "Ipotesi": [
+          [
+            "Coltura",
+            "Ricavo (EUR/ha)",
+            "Costi variabili (EUR/ha)"
+          ],
+          [
+            "Frumento invernale",
+            1900,
+            1050
+          ],
+          [
+            "Orzo invernale",
+            1550,
+            950
+          ],
+          [
+            "Segale invernale",
+            1250,
+            780
+          ],
+          [
+            "Colza invernale",
+            1800,
+            1100
+          ],
+          [
+            "Barbabietola da zucchero",
+            3300,
+            1900
+          ],
+          [
+            "Favino",
+            1150,
+            650
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "farm_text": {
+      "name": "Azienda nel testo"
+    },
+    "field_file": {
+      "name": "Schedario degli appezzamenti come file Excel",
+      "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare. Prezzi e costi sono ipotesi.\n\nAzienda: azienda cerealicola Fattoria Esempio, 60 ha in cinque appezzamenti, convenzionale, senza allevamento. Appezzamenti e ipotesi di calcolo sono nel file Excel allegato.\n\nRegole di pianificazione: niente frumento dopo frumento; colza al massimo ogni 4 anni sullo stesso appezzamento (F2 aveva colza nel 2026);\nbarbabietola da zucchero solo su suolo franco-limoso buono, contratto di fornitura per 13 ha; quota di cereali al massimo 66 %."
+    }
+  }
+}

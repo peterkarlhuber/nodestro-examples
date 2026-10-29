@@ -1,0 +1,68 @@
+{
+  "name": "Criar um plano de estudos pessoal",
+  "field": "Educação e formação",
+  "description": "Avaliar o nível atual, elaborar um plano de estudos, explicar os conteúdos e criar uma verificação de conhecimentos.",
+  "start": "Objetivo de aprendizagem",
+  "output": "Pacote de estudos",
+  "file_name": "Plano de estudos",
+  "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nAprendiz: Sam Exemplo, assistente de compras, usa Excel diariamente para listas e somas simples.\nObjetivo: usar tabelas dinâmicas com segurança em quatro semanas para analisar pedidos por fornecedor e por mês.\nTempo: cerca de 3 horas por semana, de preferência em sessões de 30 a 45 minutos.\nConhecimentos prévios: já usou PROCV, domina filtrar e classificar; quase nenhum gráfico.\nEstilo de aprendizagem: aprende melhor com exemplos do próprio trabalho, gosta de exercícios curtos.",
+  "guide": {
+    "problem": "Aprender funciona melhor com um plano que começa de onde você está. O workflow cria um plano de estudos pessoal, explica os primeiros temas e verifica a compreensão com um quiz.",
+    "flow": "O diagnóstico de aprendizagem determina o ponto de partida e as lacunas, e o planejador de estudos cria com isso um plano semanal. Com base nele, o tutor (conteúdos da semana escolhida, apoiados no seu material do curso se você quiser) e o autor do quiz (verificação de conhecimentos com gabarito) trabalham em paralelo. O resultado contém as três partes.",
+    "input": "Quem está aprendendo, o objetivo, o tempo disponível, os conhecimentos prévios e o estilo de aprendizagem preferido. No formulário você escolhe a semana a ser elaborada e pode anexar material próprio; o arquivo de exemplo é um guia curto sobre tabelas dinâmicas.",
+    "result": "Um plano de estudos de quatro semanas com objetivos por semana, explicações claras com exercícios para a semana escolhida e um quiz com gabarito e explicações, também em PDF para imprimir.",
+    "adapt": "Descreva o seu próprio objetivo; funciona para quase qualquer tema. Para as semanas seguintes, inicie o workflow de novo e mude a semana no formulário. Material que você usa sempre pode ser carregado como conhecimento e atribuído ao tutor."
+  },
+  "agents": {
+    "assessment": {
+      "name": "Diagnóstico de aprendizagem",
+      "description": "Determina o ponto de partida, o objetivo de aprendizagem e as lacunas.",
+      "system": "Você é orientador de aprendizagem. A partir da descrição, determine o nível inicial, o objetivo de aprendizagem concreto de forma verificável, as lacunas entre os dois e possíveis obstáculos. Leve em conta o tempo disponível e o estilo de aprendizagem. Seja breve e estruturado.",
+      "task": "Avalie o nível de aprendizagem:\n\n{{input}}"
+    },
+    "plan": {
+      "name": "Planejador de estudos",
+      "description": "Cria um plano semanal com objetivos de aprendizagem e exercícios.",
+      "system": "Você é designer instrucional e planeja formações. Crie um plano de estudos em semanas: para cada semana, os objetivos de aprendizagem, os temas, as sessões com duração, um exercício prático do dia a dia de trabalho e um critério pelo qual a pessoa reconhece seu progresso. Respeite o tempo disponível e inclua revisões.",
+      "task": "Crie o plano de estudos com base neste diagnóstico:\n\n{{node:assessment}}"
+    },
+    "tutor": {
+      "name": "Tutor",
+      "description": "Explica o conteúdo da primeira semana com exemplos e exercícios.",
+      "system": "Você é um tutor paciente. Explique passo a passo os temas da semana do plano de estudos indicada na tarefa, com um exemplo contínuo da vida profissional da pessoa, exercícios curtos e erros típicos. Se houver material do curso anexado, siga os termos e a abordagem dele e indique as seções correspondentes. Escreva de forma clara e encorajadora, sem jargões que você não explique.",
+      "task": "Explique o conteúdo da semana {{form.week}} deste plano de estudos.\n\nAprendiz e objetivo:\n{{run.input}}\n\nPlano de estudos:\n{{node:plan}}"
+    },
+    "quiz": {
+      "name": "Autor do quiz",
+      "description": "Cria uma verificação de conhecimentos com respostas para a primeira semana.",
+      "system": "Você cria verificações de conhecimentos. Escreva oito tarefas para a semana do plano de estudos indicada na tarefa: perguntas de múltipla escolha com uma resposta correta, tarefas curtas de aplicação e uma tarefa de transferência. Depois apresente o gabarito com uma breve explicação para cada tarefa. Avalie a compreensão, não a memorização.",
+      "task": "Crie a verificação de conhecimentos para a semana {{form.week}} deste plano de estudos:\n\n{{node:plan}}"
+    }
+  },
+  "form": {
+    "week": {
+      "label": "Semana para explicação e quiz",
+      "description": "A semana do plano para a qual o tutor e o autor do quiz elaboram os conteúdos.",
+      "default": "1"
+    },
+    "materials": {
+      "label": "Material do curso",
+      "description": "Opcional: material próprio em PDF, Word, Markdown ou texto, até 5 arquivos. O tutor se baseia nele quando houver."
+    }
+  },
+  "samples": {
+    "guide": {
+      "name": "Guia_rapido_tabelas_dinamicas",
+      "description": "Um material de curso fictício sobre tabelas dinâmicas como documento Word.",
+      "content": "# Guia rápido: tabelas dinâmicas no Excel\n\nDADOS DE EXEMPLO SINTÉTICOS – material de curso fictício, apenas para testar.\n\n## 1. Preparar os dados\n\n- Uma linha de cabeçalho, sem linhas ou colunas vazias.\n- Apenas um tipo de valor por coluna (por exemplo, só datas).\n- Formatar os dados como tabela (Ctrl+Alt+T); assim a tabela dinâmica cresce junto.\n\n## 2. Criar a tabela dinâmica\n\n1. Clicar dentro da tabela.\n2. Inserir > Tabela Dinâmica.\n3. Escolher \"Nova Planilha\".\n\n## 3. Organizar os campos\n\n| Área | Para que serve | Exemplo |\n|---|---|---|\n| Linhas | Grupos um embaixo do outro | Fornecedor |\n| Colunas | Grupos lado a lado | Mês |\n| Valores | O que é calculado | Soma do valor do pedido |\n| Filtros | Seleção para a tabela toda | Unidade |\n\n## 4. Erros típicos\n\n- Os valores são contados em vez de somados: Configurações do Campo de Valor > Soma.\n- Faltam dados novos: atualizar a tabela dinâmica (Alt+F5).\n- Datas não agrupadas: botão direito > Agrupar > Meses."
+    }
+  },
+  "tests": {
+    "week_one": {
+      "name": "Semana 1 sem material"
+    },
+    "week_two_material": {
+      "name": "Semana 2 com material do curso"
+    }
+  }
+}

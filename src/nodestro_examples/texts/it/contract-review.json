@@ -1,0 +1,93 @@
+{
+  "name": "Strutturare un contratto e individuare i punti da verificare",
+  "field": "Diritto e amministrazione",
+  "description": "Strutturare un contratto, spiegarne le clausole in linguaggio semplice e raccogliere punti per un esame professionale.",
+  "start": "Testo del contratto",
+  "output": "Sintesi del contratto",
+  "file_name": "Sintesi del contratto",
+  "input": "DATI DI ESEMPIO SINTETICI – un contratto completamente fittizio, solo per provare.\n\nContratto di servizio software tra Esempio Cloud S.r.l. (fornitore) e Commercio Campione S.a.s. (cliente)\n\n§ 1 Oggetto: il fornitore mette a disposizione del cliente il software \"ShopPilot\" come servizio cloud e lo gestisce.\n§ 2 Durata: il contratto inizia il 1° aprile 2026 e dura 24 mesi. Si rinnova automaticamente di 12 mesi ogni volta\nse non viene disdetto per iscritto 6 mesi prima della scadenza.\n§ 3 Corrispettivo: 1.200 EUR netti al mese, pagabili annualmente in anticipo. Il fornitore può adeguare i prezzi una\nvolta all'anno a sua ragionevole discrezione.\n§ 4 Disponibilità: il fornitore mira a una disponibilità del 99 % in media mensile. Le finestre di manutenzione non sono conteggiate.\n§ 5 Responsabilità: la responsabilità del fornitore è limitata a tre canoni mensili, salvo dolo.\n§ 6 Dati: il fornitore tratta i dati del cliente per conto di quest'ultimo. Possono essere impiegati subfornitori senza\npreavviso. Al termine del contratto i dati vengono cancellati dopo 30 giorni.\n§ 7 Recesso straordinario: in caso di ritardo nei pagamenti superiore a 14 giorni il fornitore può bloccare l'accesso.\n§ 8 Foro competente: sede del fornitore.",
+  "guide": {
+    "problem": "I contratti sono lunghi e le clausole importanti si nascondono nei dettagli. Il workflow struttura un contratto, lo spiega in linguaggio semplice e raccoglie i punti che una persona qualificata dovrebbe verificare. Non sostituisce una consulenza legale.",
+    "flow": "Lo strutturatore rileva parti, durata, prestazioni e scadenze. Su questa base lavorano in parallelo l'esplicatore delle clausole (linguaggio semplice) e l'analista dei punti da verificare (disposizioni insolite o sbilanciate); entrambi leggono il contratto da sé, come testo o come file caricato. Se l'analista trova clausole critiche, un nodo decisionale aggiunge un esame approfondito di quelle clausole. L'agente del rapporto riunisce tutto in una sintesi strutturata con domande per la consulenza legale.",
+    "input": "Il contratto come file (PDF, Word, Markdown o testo) nel campo \"Contratto come file\" oppure come testo, possibilmente con la numerazione degli articoli. Il file lo carichi direttamente all'avvio; non ti serve una raccolta di conoscenza. Il file di esempio contiene il contratto fittizio dell'attività di prova.",
+    "result": "Una sintesi strutturata con riepilogo, dati principali, clausole spiegate, punti da verificare e domande per un'avvocata o un avvocato, anche in PDF e come file Word modificabile. Lo strutturatore propone i dati principali del contratto per la conoscenza, per esempio per un registro dei contratti; viene salvato solo ciò che confermi.",
+    "adapt": "Carica il tuo contratto come file all'avvio o incollalo. I tuoi criteri, per esempio requisiti minimi su responsabilità o protezione dei dati, si aggiungono nel prompt di sistema dell'analista dei punti da verificare. Contratti tipo con cui confrontare puoi salvarli come conoscenza e assegnarli a questo analista."
+  },
+  "agents": {
+    "structure": {
+      "name": "Strutturatore del contratto",
+      "description": "Rileva parti, oggetto, durata, corrispettivi e scadenze.",
+      "system": "Strutturi contratti. Rileva le parti, l'oggetto, la durata e il rinnovo, i termini di disdetta, i corrispettivi e le condizioni di pagamento, gli impegni di servizio, la responsabilità, la protezione dei dati e il foro competente. Indica per ogni elemento la sua posizione nel contratto e annota ciò che il contratto non regola.",
+      "task": "Struttura questo contratto:\n\n{{input}}"
+    },
+    "explain": {
+      "name": "Esplicatore delle clausole",
+      "description": "Spiega ogni clausola in linguaggio semplice.",
+      "system": "Spieghi i contratti a persone senza formazione giuridica. Spiega ogni clausola in una-tre frasi semplici: cosa regola e cosa significa in pratica per il cliente, con un breve esempio se aiuta. Non giudicare se una clausola è valida.",
+      "task": "Spiega le clausole di questo contratto.\n\nContratto:\n{{run.input}}\n\nStruttura:\n{{node:structure}}"
+    },
+    "checkpoints": {
+      "name": "Analista dei punti da verificare",
+      "description": "Individua disposizioni insolite, squilibrate o mancanti.",
+      "system": "Prepari i contratti per un esame legale. Segnala disposizioni insolite, squilibrate, poco chiare o mancanti, per esempio rinnovo automatico, modifiche unilaterali dei prezzi, impegni di servizio deboli, limiti di responsabilità, subfornitori o restituzione dei dati. Spiega per ogni punto perché va verificato e formula una domanda in merito. Non dare una valutazione giuridica definitiva. Per ogni punto da verificare, riporta il testo letterale della clausola interessata con il riferimento, così che i passi successivi possano lavorarci senza il documento originale.",
+      "task": "Raccogli i punti da verificare di questo contratto.\n\nContratto:\n{{run.input}}\n\nStruttura:\n{{node:structure}}",
+      "fields": {
+        "points": "Punti di verifica con motivazione e domanda",
+        "critical_count": "Numero di clausole critiche (ad es. responsabilità illimitata o molto bassa, rinnovo automatico, modifiche di prezzo unilaterali, trattamento dei dati senza accordo)"
+      }
+    },
+    "report": {
+      "name": "Sintesi del contratto",
+      "description": "Unisce spiegazioni e punti da verificare in una panoramica strutturata.",
+      "system": "Riassumi analisi contrattuali per chi deve decidere. Crea una panoramica strutturata dalle spiegazioni e dai punti da verificare, senza aggiungere nuove valutazioni giuridiche. Formula le domande in modo che un avvocato possa rispondere direttamente.",
+      "task": "Crea la sintesi del contratto.\n\nClausole spiegate:\n{{node:explain}}\n\nPunti da verificare:\n{{node:checkpoints}}\n\nClausole critiche in dettaglio:\n{{node:critical}}",
+      "fields": {
+        "overview": "Sintesi del contratto in tre-cinque frasi",
+        "key_terms": "Condizioni chiave con posizione (durata, scadenze, corrispettivi)",
+        "clauses_explained": "Clausole in linguaggio semplice",
+        "check_points": "Punti da verificare con motivazione",
+        "questions_for_expert": "Domande per un legale"
+      }
+    },
+    "critical": {
+      "name": "Clausole critiche",
+      "description": "Esamina a fondo le clausole critiche e prepara domande per la negoziazione.",
+      "system": "Prepari negoziazioni contrattuali. Esamina a fondo ogni clausola critica: cosa significa in pratica, il caso peggiore realistico, come clausole simili sono di solito formulate in contratti comparabili e quale formulazione alternativa si potrebbe proporre. Formula domande per la consulenza legale. Non dare una valutazione giuridica definitiva.",
+      "task": "Esamina a fondo le clausole critiche.\n\nContratto:\n{{run.input}}\n\nPunti di verifica:\n{{node:checkpoints}}"
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "Clausole critiche?",
+      "branches": {
+        "critical": "Clausole critiche"
+      },
+      "default": "Nessuna"
+    }
+  },
+  "form": {
+    "contract_file": {
+      "label": "Contratto come file",
+      "description": "Facoltativo: il contratto in PDF, Word (DOCX), Markdown o testo, al massimo 20 MB. Basta caricare il file qui; non serve una raccolta di conoscenza. Senza file vale il testo del contratto qui sotto."
+    }
+  },
+  "samples": {
+    "contract": {
+      "name": "Contratto_servizio_software_esempio",
+      "description": "Il contratto fittizio dell'attività di prova come documento Word.",
+      "content": "# Contratto di servizio software\n\nDATI DI ESEMPIO SINTETICI – un contratto completamente fittizio, solo per provare.\n\ntra **Esempio Cloud S.r.l.** (fornitore) e **Commercio Campione S.a.s.** (cliente)\n\n## § 1 Oggetto\n\nIl fornitore mette a disposizione del cliente il software \"ShopPilot\" come servizio cloud e lo gestisce.\n\n## § 2 Durata\n\nIl contratto inizia il 1° aprile 2026 e dura 24 mesi. Si rinnova automaticamente di 12 mesi ogni volta se non viene disdetto per iscritto 6 mesi prima della scadenza.\n\n## § 3 Corrispettivo\n\n1.200 EUR netti al mese, pagabili annualmente in anticipo. Il fornitore può adeguare i prezzi una volta all'anno a sua ragionevole discrezione.\n\n## § 4 Disponibilità\n\nIl fornitore mira a una disponibilità del 99 % in media mensile. Le finestre di manutenzione non sono conteggiate.\n\n## § 5 Responsabilità\n\nLa responsabilità del fornitore è limitata a tre canoni mensili, salvo dolo.\n\n## § 6 Dati\n\nIl fornitore tratta i dati del cliente per conto di quest'ultimo. Possono essere impiegati subfornitori senza preavviso. Al termine del contratto i dati vengono cancellati dopo 30 giorni.\n\n## § 7 Recesso straordinario\n\nIn caso di ritardo nei pagamenti superiore a 14 giorni il fornitore può bloccare l'accesso.\n\n## § 8 Foro competente\n\nSede del fornitore."
+    }
+  },
+  "tests": {
+    "contract_text": {
+      "name": "Contratto nel testo, con clausole critiche"
+    },
+    "contract_file": {
+      "name": "Contratto come file Word, senza testo"
+    },
+    "balanced_contract": {
+      "name": "Contratto di manutenzione equilibrato",
+      "input": "DATI DI ESEMPIO SINTETICI – un contratto completamente fittizio, solo per provare.\n\nContratto di manutenzione tra Esempio Tecnica S.r.l. (appaltatore) e Studio Medico Campione (committente)\n\n§ 1 Oggetto: manutenzione semestrale di due condizionatori nell'edificio dello studio.\n§ 2 Durata: 12 mesi dal 1° maggio 2026; poi recedibile in qualsiasi momento con un mese di preavviso per la fine del mese.\n§ 3 Corrispettivo: 380 EUR netti per intervento, pagabili a 14 giorni dalla fattura. Variazioni di prezzo solo con il consenso di entrambe le parti.\n§ 4 Guasti: intervento entro 2 giorni lavorativi; ricambi solo previa approvazione del committente.\n§ 5 Responsabilità: secondo le disposizioni di legge.\n§ 6 Protezione dei dati: non vengono trattati dati personali."
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "name": "Vereinsfest planen",
+  "field": "Vereine",
+  "description": "Ablauf, Aufgaben und Budget eines Vereinsfests planen, Kommunikation vorbereiten und eine Vorstandsvorlage erstellen.",
+  "start": "Eckdaten",
+  "output": "Vorstandsvorlage",
+  "file_name": "Vorstandsvorlage",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nVerein: TSV Beispieldorf, 420 Mitglieder, davon 130 Kinder und Jugendliche\nAnlass: Sommerfest zum 75-jährigen Bestehen am Samstag, 2026-07-11, 14 bis 22 Uhr, Sportgelände\nPlanungsstand: 2026-05-04\nErwartete Gäste: etwa 300\nProgrammwünsche: Kinderolympiade, Ehrung langjähriger Mitglieder, Live-Band am Abend\nHelfende: 25 Freiwillige haben zugesagt, jeweils für Schichten von 3 Stunden\nBudget: Vereinskasse 3.000 EUR, Sponsoring zugesagt 1.500 EUR (Getränke Muster), erwartete Einnahmen\naus Verkauf: Getränke 2.400 EUR, Essen 1.800 EUR, Tombola 600 EUR\nBekannte Kosten: Band 1.200 EUR, Zeltmiete 900 EUR, Hüpfburg 250 EUR, Einkauf Essen und Getränke etwa 1.900 EUR,\nPokale und Ehrungen 300 EUR",
+  "guide": {
+    "problem": "Vereinsfeste werden von Ehrenamtlichen in ihrer Freizeit organisiert. Der Workflow erstellt Zeitplan, Aufgaben, Budget und Kommunikation und fasst alles in einer Vorlage für die Vorstandssitzung zusammen.",
+    "flow": "Ablaufplaner und Budgetplaner arbeiten parallel; der eine rechnet mit dem Datums-Tool rückwärts vom Festtag, der andere rechnet das Budget mit dem Rechner-Tool. Der Kommunikationsplaner bereitet Einladungen und Beiträge passend zum Zeitplan vor. Die Vorstandsvorlage führt alles zusammen; eine Qualitätsprüfung achtet auf Vollständigkeit und Zuständigkeiten.",
+    "input": "Anlass, Datum, Ort, Gästezahl, Programmwünsche, Helfende, Budget und bekannte Kosten.",
+    "result": "Eine Vorstandsvorlage mit Zeitplan bis zum Fest, Aufgaben und Zuständigkeiten, Schichtplan, Budget mit Überschuss oder Fehlbetrag, Kommunikationsplan und Beschlussvorschlägen, zusätzlich als Word-Datei zum Verschicken an den Vorstand.",
+    "adapt": "Trage die Eckdaten deines Festes ein. Genehmigungen und Auflagen unterscheiden sich je nach Gemeinde; ergänze bekannte Vorgaben in der Eingabe. Logos und Vorlagen für Plakate können als Wissen hinterlegt werden."
+  },
+  "agents": {
+    "schedule": {
+      "name": "Ablaufplaner",
+      "description": "Plant Zeitplan, Aufgaben und Schichten rückwärts vom Festtag.",
+      "system": "Du organisierst Vereinsveranstaltungen. Berechne mit dem Tool days_between die verbleibende Zeit bis zum Fest und plane rückwärts: Meilensteine mit Datum, Aufgaben mit Zuständigkeit als Rolle, ein Programmablauf für den Festtag und ein Schichtplan für die Helfenden. Denke an Genehmigungen, Versicherung, Hygiene, Erste Hilfe und Aufräumen und kennzeichne Punkte, die bei der Gemeinde zu klären sind.",
+      "task": "Plane Ablauf und Aufgaben für dieses Fest:\n\n{{input}}"
+    },
+    "budget": {
+      "name": "Budgetplaner",
+      "description": "Rechnet Einnahmen, Ausgaben und Puffer mit dem Rechner-Tool.",
+      "system": "Du bist Kassenwart. Erstelle mit dem Rechner-Tool einen Budgetplan: Einnahmen, Ausgaben, Puffer von 10 % für Unvorhergesehenes und das erwartete Ergebnis. Rechne ein vorsichtiges Szenario mit 30 % weniger Verkaufseinnahmen, etwa bei schlechtem Wetter. Schlage vor, wie ein Fehlbetrag gedeckt werden kann.",
+      "task": "Erstelle das Budget für dieses Fest:\n\n{{input}}"
+    },
+    "communication": {
+      "name": "Kommunikationsplaner",
+      "description": "Bereitet Einladungen, Beiträge und eine Pressemitteilung vor.",
+      "system": "Du machst Öffentlichkeitsarbeit für Vereine. Erstelle passend zum Zeitplan einen Kommunikationsplan mit Terminen und Kanälen (Mitgliederbrief, Aushang, Social Media, Lokalzeitung) sowie Textentwürfe: eine Einladung an die Mitglieder, einen Social-Media-Beitrag und eine kurze Pressemitteilung. Schreibe herzlich und einladend.",
+      "task": "Plane die Kommunikation zu diesem Zeitplan:\n\n{{node:schedule}}"
+    },
+    "board_paper": {
+      "name": "Vorstandsvorlage",
+      "description": "Fasst Planung, Budget und Kommunikation für den Vorstand zusammen.",
+      "system": "Du bereitest Beschlussvorlagen für Vereinsvorstände vor. Fasse Zeitplan, Aufgaben, Budget und Kommunikation übersichtlich zusammen, höchstens zwei Seiten. Schließe mit konkreten Beschlussvorschlägen, offenen Punkten und den nächsten drei Terminen. Übernimm Zahlen nur aus dem Budgetplan.",
+      "task": "Erstelle die Vorstandsvorlage.\n\nAblauf und Aufgaben:\n{{node:schedule}}\n\nBudget:\n{{node:budget}}\n\nKommunikation:\n{{node:communication}}",
+      "criteria": {
+        "complete": "Die Vorlage enthält Zeitplan, Aufgaben, Budget, Kommunikation und Beschlussvorschläge.",
+        "responsibilities": "Jede Aufgabe hat eine zuständige Rolle und einen Termin.",
+        "budget_consistent": "Alle Zahlen stimmen mit dem Budgetplan überein."
+      }
+    }
+  },
+  "tests": {
+    "summer_party": {
+      "name": "Sommerfest zum Vereinsjubiläum"
+    }
+  }
+}

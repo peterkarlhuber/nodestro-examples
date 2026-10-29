@@ -1,0 +1,106 @@
+{
+  "id": "club-event",
+  "number": 22,
+  "category": "private",
+  "level": "beginner",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 180
+    },
+    {
+      "id": "schedule",
+      "type": "agent",
+      "x": 360,
+      "y": 40,
+      "role": "planning",
+      "icon": "list",
+      "tools": [
+        "days_between"
+      ]
+    },
+    {
+      "id": "budget",
+      "type": "agent",
+      "x": 360,
+      "y": 320,
+      "role": "analysis",
+      "icon": "calculator",
+      "tools": [
+        "calculator"
+      ]
+    },
+    {
+      "id": "communication",
+      "type": "agent",
+      "x": 720,
+      "y": 40,
+      "role": "writing",
+      "icon": "mail"
+    },
+    {
+      "id": "board_paper",
+      "type": "agent",
+      "x": 1080,
+      "y": 180,
+      "role": "writing",
+      "icon": "file",
+      "criteria": [
+        "complete",
+        "responsibilities",
+        "budget_consistent"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1420,
+      "y": 180,
+      "files": [
+        "docx"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "schedule"
+    ],
+    [
+      "start",
+      "budget"
+    ],
+    [
+      "schedule",
+      "communication"
+    ],
+    [
+      "schedule",
+      "board_paper"
+    ],
+    [
+      "budget",
+      "board_paper"
+    ],
+    [
+      "communication",
+      "board_paper"
+    ],
+    [
+      "board_paper",
+      "output"
+    ]
+  ],
+  "tests": [
+    {
+      "id": "summer_party",
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

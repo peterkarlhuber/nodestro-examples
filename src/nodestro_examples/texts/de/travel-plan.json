@@ -1,0 +1,95 @@
+{
+  "name": "Individuelle Reise planen",
+  "field": "Privatpersonen – Reisen",
+  "description": "Reiseroute nach Interessen planen, Budget nachrechnen und eine Organisations-Checkliste erstellen.",
+  "start": "Reisewunsch",
+  "output": "Reiseplan",
+  "file_name": "Reiseplan",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nReisende: zwei Erwachsene und ein Kind (9 Jahre)\nZiel: Lissabon, Anreise am 2026-07-06, Abreise am 2026-07-11\nBudget: 2.200 EUR gesamt ohne Flüge (Flüge sind bereits gebucht)\nInteressen: Aquarium, Strand, Altstadt, gutes Essen ohne Schickimicki; das Kind liebt Straßenbahnen\nRahmenbedingungen: Ein Erwachsener hat Knieprobleme, lange steile Fußwege vermeiden; maximal zwei\nProgrammpunkte pro Tag; Unterkunft noch nicht gebucht, gewünscht ist eine Ferienwohnung mit Küche.",
+  "guide": {
+    "problem": "Eine gute Reise passt zu Interessen, Budget und Einschränkungen aller Mitreisenden. Der Workflow plant eine Route, rechnet das Budget nach und erstellt eine Checkliste für die Organisation.",
+    "flow": "Der Routenplaner entwirft einen Tagesplan nach Interessen und Rahmenbedingungen. Der Budgetplaner rechnet mit Rechner- und Datums-Tool Nächte und Kosten. Der Organisationsplaner führt alles zu einem Reiseplan mit Checkliste zusammen; eine Qualitätsprüfung kontrolliert Budget und Einschränkungen. Ein Eingabeformular nimmt Ziel, Daten, Reisende und Budget auf. Bei Auslandsreisen ergänzt ein Entscheidungsknoten eine Checkliste für Dokumente und Einreiseregeln.",
+    "input": "Wer reist, Ziel und Reisedaten, Budget, Interessen und Einschränkungen.",
+    "result": "Ein Reiseplan mit Tagesablauf, Budgettabelle und Checkliste, zusätzlich als PDF zum Mitnehmen. Preise und Öffnungszeiten sind Schätzungen aus allgemeinem Wissen und müssen vor der Buchung geprüft werden, denn der Workflow nutzt keine Live-Daten.",
+    "adapt": "Trage deinen Reisewunsch ein. Wer aktuelle Preise und Öffnungszeiten möchte, kann dem Routenplaner das Server-Tool „Websuche“ hinzufügen; das kostet zusätzlich pro Suche."
+  },
+  "agents": {
+    "itinerary": {
+      "name": "Routenplaner",
+      "description": "Entwirft einen Tagesplan nach Interessen und Einschränkungen.",
+      "system": "Du bist erfahrener Reiseplaner. Entwirf einen Tagesplan mit höchstens der gewünschten Anzahl an Programmpunkten pro Tag, kurzen Wegen und Pausen. Berücksichtige Interessen und Einschränkungen aller Reisenden, schlage geeignete Stadtteile für die Unterkunft vor und nenne für jeden Tag eine Alternative bei schlechtem Wetter. Kennzeichne Angaben zu Preisen und Öffnungszeiten als ungeprüft.",
+      "task": "Plane die Route für diesen Reisewunsch:\n\n{{input}}"
+    },
+    "budget": {
+      "name": "Budgetplaner",
+      "description": "Rechnet Nächte und Kosten mit Rechner- und Datums-Tool nach.",
+      "system": "Du planst Reisebudgets. Ermittle die Anzahl der Nächte mit dem Tool days_between und schätze Kosten für Unterkunft, Verpflegung, Nahverkehr, Eintritte und Puffer auf Basis allgemeiner Preisniveaus. Rechne alle Summen mit dem Rechner-Tool. Vergleiche mit dem Budget und schlage Anpassungen vor, wenn es nicht reicht. Kennzeichne alle Preise als Schätzung.",
+      "task": "Erstelle das Budget.\n\nReisewunsch:\n{{run.input}}\n\nRoute:\n{{node:itinerary}}"
+    },
+    "organizer": {
+      "name": "Organisationsplaner",
+      "description": "Führt Route und Budget zu einem Reiseplan mit Checkliste zusammen.",
+      "system": "Du stellst Reiseunterlagen zusammen. Erstelle einen übersichtlichen Reiseplan: Tagesablauf, Budgettabelle, Buchungs- und Packliste mit Fristen und eine Liste der Angaben, die vor der Buchung geprüft werden müssen, etwa Öffnungszeiten, Preise und Barrierefreiheit. Bleib im Budget und halte alle Einschränkungen ein.",
+      "task": "Erstelle den Reiseplan.\n\nRoute:\n{{node:itinerary}}\n\nBudget:\n{{node:budget}}\n\nReiseunterlagen (nur bei Auslandsreisen):\n{{node:documents}}",
+      "criteria": {
+        "within_budget": "Der Plan bleibt im angegebenen Budget oder nennt klar, wo und warum er es überschreitet.",
+        "constraints": "Der Plan hält alle genannten Einschränkungen der Reisenden ein.",
+        "verify_notes": "Ungeprüfte Angaben wie Preise und Öffnungszeiten sind als zu prüfen gekennzeichnet."
+      }
+    },
+    "documents": {
+      "name": "Reiseunterlagen",
+      "description": "Listet Dokumente, Versicherung und Einreiseregeln für Auslandsreisen.",
+      "system": "Du bereitest Auslandsreisen vor. Liste, was die Reisenden brauchen: Ausweisdokumente (auch für Kinder), Einreiseregeln, Auslandskrankenversicherung, Notrufnummern, Zahlungsmittel und Steckdosen. Nenne die offiziellen Stellen, bei denen die Angaben zu prüfen sind, weil sich Regeln ändern, und kennzeichne jeden Punkt als zu prüfen.",
+      "task": "Stelle die Checkliste der Reiseunterlagen für diese Reise zusammen:\n\n{{input}}"
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "Ausland?",
+      "branches": {
+        "abroad": "Ausland"
+      },
+      "default": "Inland"
+    }
+  },
+  "form": {
+    "destination": {
+      "label": "Reiseziel",
+      "default": "Lissabon"
+    },
+    "arrival": {
+      "label": "Anreise",
+      "default": "2026-07-06"
+    },
+    "departure": {
+      "label": "Abreise",
+      "default": "2026-07-11"
+    },
+    "travellers": {
+      "label": "Reisende",
+      "default": "3"
+    },
+    "budget": {
+      "label": "Budget ohne Flüge (EUR)",
+      "default": "2200"
+    },
+    "abroad": {
+      "label": "Reise ins Ausland",
+      "description": "Ergänzt eine Checkliste für Reisedokumente, Versicherung und Einreiseregeln",
+      "default": "true"
+    }
+  },
+  "tests": {
+    "abroad": {
+      "name": "Familienreise nach Lissabon (Ausland)"
+    },
+    "domestic": {
+      "name": "Wochenende im Inland",
+      "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nZwei Erwachsene, ein Wochenende in Hamburg. Interessen: Hafen, Museen, gutes Essen. Keine Einschränkungen, Anreise mit der Bahn.",
+      "values": {
+        "destination": "Hamburg"
+      }
+    }
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "id": "financial-analysis",
+  "number": 5,
+  "category": "business",
+  "level": "beginner",
+  "featured": true,
+  "sensitive": true,
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 120,
+      "form": [
+        {
+          "name": "figures",
+          "type": "file",
+          "accept": [
+            "xlsx",
+            "csv",
+            "pdf"
+          ],
+          "multiple": true,
+          "max_files": 3
+        }
+      ]
+    },
+    {
+      "id": "research",
+      "type": "agent",
+      "x": 320,
+      "y": 60,
+      "role": "research",
+      "icon": "search",
+      "effort": "low",
+      "proposals": "extracted"
+    },
+    {
+      "id": "analysis",
+      "type": "agent",
+      "x": 660,
+      "y": 60,
+      "role": "analysis",
+      "icon": "calculator",
+      "model": "claude-opus-5-5",
+      "tools": [
+        "calculator"
+      ]
+    },
+    {
+      "id": "review",
+      "type": "agent",
+      "x": 1000,
+      "y": 60,
+      "role": "review",
+      "icon": "check",
+      "effort": "low",
+      "output_name": "Review",
+      "output_fields": [
+        {
+          "name": "summary",
+          "type": "string"
+        },
+        {
+          "name": "key_figures",
+          "type": "string_list"
+        },
+        {
+          "name": "issues",
+          "type": "string_list"
+        },
+        {
+          "name": "limitations",
+          "type": "string_list"
+        },
+        {
+          "name": "approved",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1340,
+      "y": 120,
+      "files": [
+        "pdf",
+        "xlsx"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "research"
+    ],
+    [
+      "research",
+      "analysis"
+    ],
+    [
+      "analysis",
+      "review"
+    ],
+    [
+      "review",
+      "output"
+    ]
+  ],
+  "samples": [
+    {
+      "id": "figures",
+      "format": "xlsx",
+      "field": "figures"
+    }
+  ],
+  "tests": [
+    {
+      "id": "figures_text",
+      "checks": [
+        {
+          "field": "summary",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "key_figures",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "limitations",
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "figures_file",
+      "input": "own",
+      "samples": [
+        "figures"
+      ],
+      "checks": [
+        {
+          "field": "summary",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "key_figures",
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

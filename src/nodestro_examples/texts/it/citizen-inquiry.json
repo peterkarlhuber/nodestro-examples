@@ -1,0 +1,63 @@
+{
+  "name": "Rispondere a una richiesta di un cittadino",
+  "field": "Enti pubblici",
+  "description": "Analizzare la richiesta di un cittadino, cercare le regole applicabili e preparare una bozza di risposta oggettiva.",
+  "start": "Richiesta del cittadino",
+  "output": "Bozza di risposta",
+  "file_name": "Bozza di risposta",
+  "input": "DATI DI ESEMPIO SINTETICI – un comune e regole completamente fittizi, solo per provare.\n\nE-mail al Comune di Città Esempio del 2026-04-14, mittente: sig. Paolo Esempio, Via dei Tigli 12:\n\"Gentili Signori, vorrei installare nel mio giardino una casetta da giardino di circa 4 x 3 metri, altezza\n2,60 metri, a circa 1 metro dalla recinzione del mio vicino. Mi serve un permesso? Inoltre il lampione davanti al\nnumero 14 è guasto da settimane e la sera è buio pesto. Quando verrà riparato? L'avevo già segnalato per\ntelefono a marzo.\"\n\nEstratto delle informazioni interne del comune (fittizio):\n- Regolamento edilizio (estratto): le costruzioni senza locali abitabili fino a 30 m³ di volume lordo non\n  richiedono permesso. Gli interventi senza permesso devono comunque rispettare le distanze; al confine sono\n  ammessi fabbricati accessori fino a 3 m di altezza della parete e 9 m di lunghezza complessiva. I piani\n  urbanistici possono prevedere diversamente.\n- Per Via dei Tigli vale il piano urbanistico n. 17 \"Am Lindenhain\"; è necessaria una verifica da parte\n  dell'ufficio tecnico.\n- Illuminazione pubblica: competente è il servizio manutenzioni comunale; segnalazioni tramite modulo online o al\n  telefono 0000-123, di norma evase entro 10 giorni lavorativi. Nel sistema non risulta alcuna segnalazione su Via\n  dei Tigli a marzo.",
+  "guide": {
+    "problem": "Le richieste dei cittadini contengono spesso più questioni e vanno risposte in modo corretto, chiaro e senza impegni affrettati. Il workflow scompone la richiesta, trova le regole pertinenti nelle informazioni fornite e prepara una risposta.",
+    "flow": "Una catena di tre agenti: l'analisi delle questioni separa le questioni e assegna le competenze, la preparazione delle informazioni cerca le regole pertinenti solo nell'estratto fornito e la bozza di risposta scrive una risposta comprensibile per il cittadino. Un controllo qualità verifica che si citino solo regole documentate e che non si assumano impegni vincolanti.",
+    "input": "La richiesta della cittadina o del cittadino e le informazioni interne, regole e competenze pertinenti, come estratto nel testo o come file. Puoi allegare anche foto della richiesta. Il file di esempio è una scheda informativa fittizia del comune.",
+    "result": "Una bozza di risposta in linguaggio semplice con competenze, prossimi passi e indicazioni per chi gestisce la pratica, anche come file Word per la vostra carta intestata. La preparazione delle informazioni propone le regole trovate, con il riferimento, per la conoscenza, così le richieste successive possono usarle; viene salvato solo ciò che confermi. La bozza va verificata e approvata nel merito prima dell'invio.",
+    "adapt": "Allega i vostri regolamenti e schede informative oppure caricali in modo permanente come conoscenza (modalità \"Ricerca\" con citazioni) e assegnali alla preparazione delle informazioni. Carta intestata e formula di saluto si aggiungono nel prompt di sistema della bozza di risposta. Per molte richieste insieme usa l'elaborazione in batch."
+  },
+  "agents": {
+    "triage": {
+      "name": "Analisi delle questioni",
+      "description": "Separa le questioni e assegna competenze e urgenza.",
+      "system": "Lavori alla comunicazione con i cittadini in un'amministrazione pubblica. Scomponi la richiesta in singole questioni e indica per ciascuna: tipo (informazione, reclamo, segnalazione, istanza), ufficio probabilmente competente, urgenza e domande a cui bisogna rispondere. Sii breve e scrivi un elenco.",
+      "task": "{{input}}"
+    },
+    "rules": {
+      "name": "Preparazione delle informazioni",
+      "description": "Cerca le regole pertinenti solo nelle informazioni fornite.",
+      "system": "Sei un addetto alle pratiche in un'amministrazione pubblica. Assegna a ogni questione le regole e le competenze pertinenti e cita il passaggio dell'estratto fornito. Usa solo le informazioni fornite e non inventare regolamenti, termini o numeri di telefono. Indica cosa non si può rispondere senza un'ulteriore verifica e quali informazioni mancano da parte del cittadino.",
+      "task": "Prepara le informazioni.\n\nRichiesta e informazioni interne:\n{{run.input}}\n\nQuestioni:\n{{node:triage}}"
+    },
+    "reply": {
+      "name": "Bozza di risposta",
+      "description": "Scrive una risposta oggettiva e comprensibile da approvare.",
+      "system": "Scrivi le risposte di un'amministrazione pubblica ai cittadini: cortesi, oggettive, in linguaggio semplice e senza burocratese. Rispondi a ogni questione, indica l'ufficio competente e il passo successivo e spiega cosa è ancora in verifica. Non assumere impegni vincolanti e non rilasciare autorizzazioni. Inizia con la nota \"BOZZA – da verificare prima dell'invio\" e concludi con note per l'addetto alla pratica.",
+      "task": "Scrivi la bozza di risposta.\n\nQuestioni:\n{{node:triage}}\n\nInformazioni preparate:\n{{node:rules}}",
+      "criteria": {
+        "only_given_rules": "La risposta cita solo regole, termini e contatti dalle informazioni fornite.",
+        "plain_language": "La risposta è cortese e scritta in un linguaggio semplice e comprensibile.",
+        "no_binding_commitment": "La risposta non contiene impegni vincolanti né autorizzazioni ed è contrassegnata come bozza."
+      }
+    }
+  },
+  "form": {
+    "documents": {
+      "label": "Documenti",
+      "description": "Facoltativo: regolamenti, schede informative o elenchi delle competenze (PDF, Word, Markdown, testo) e foto allegate alla richiesta (PNG, JPEG, WebP), fino a 5 file. Senza file vale l'estratto nel testo."
+    }
+  },
+  "samples": {
+    "guidance": {
+      "name": "Scheda_fabbricati_accessori_e_illuminazione",
+      "description": "Una scheda informativa fittizia del comune con regole sulle casette da giardino e la competenza per i lampioni, in PDF.",
+      "content": "# Scheda informativa del Comune di Città Esempio (fittizia)\n\nDATI DI ESEMPIO SINTETICI – regole completamente fittizie, solo per provare.\n\n## Casette da giardino e altri fabbricati accessori\n\n1. Le costruzioni senza locali abitabili fino a 30 m³ di volume lordo non richiedono permesso (art. 12 c. 1 del regolamento edilizio tipo, fittizio).\n2. Anche gli interventi senza permesso devono rispettare le distanze. Al confine sono ammessi fabbricati accessori fino a 3 m di altezza della parete e 9 m di lunghezza complessiva (art. 6 c. 7).\n3. I piani urbanistici possono prevedere diversamente. Per Via dei Tigli vale il piano n. 17 \"Am Lindenhain\"; lì è necessaria una verifica da parte dell'ufficio tecnico.\n4. Informazioni: ufficio tecnico, stanza 2.14, ricevimento martedì e giovedì dalle 9 alle 12.\n\n## Illuminazione pubblica\n\n- Competente è il servizio manutenzioni comunale.\n- Segnalazioni tramite il modulo online \"Segnala un guasto\" o al telefono 0000-123.\n- Evasione di norma entro 10 giorni lavorativi dal ricevimento della segnalazione.\n- Le segnalazioni telefoniche vengono registrate nel sistema; se non risulta alcuna registrazione, segnalare di nuovo."
+    }
+  },
+  "tests": {
+    "two_concerns": {
+      "name": "Casetta da giardino e lampione"
+    },
+    "guidance_file": {
+      "name": "Regole come file della scheda informativa",
+      "input": "DATI DI ESEMPIO SINTETICI – un comune e regole completamente fittizi, solo per provare.\n\nE-mail al Comune di Città Esempio del 2026-04-14, mittente: sig. Paolo Esempio, Via dei Tigli 12:\n\"Gentili Signori, vorrei installare nel mio giardino una casetta da giardino di circa 4 x 3 metri, altezza\n2,60 metri, a circa 1 metro dalla recinzione del mio vicino. Mi serve un permesso? Inoltre il lampione davanti al\nnumero 14 è guasto da settimane e la sera è buio pesto. Quando verrà riparato? L'avevo già segnalato per\ntelefono a marzo.\"\n\nLe regole pertinenti sono nella scheda informativa allegata."
+    }
+  }
+}

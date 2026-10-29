@@ -1,0 +1,95 @@
+{
+  "name": "Planejar uma viagem pessoal",
+  "field": "Pessoas físicas – viagens",
+  "description": "Planejar um roteiro conforme os interesses, recalcular o orçamento e criar uma checklist de organização.",
+  "start": "Desejos de viagem",
+  "output": "Plano de viagem",
+  "file_name": "Plano de viagem",
+  "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nViajantes: dois adultos e uma criança (9 anos)\nDestino: Lisboa, chegada em 2026-07-06, partida em 2026-07-11\nOrçamento: 2.200 EUR no total sem as passagens aéreas (os voos já estão reservados)\nInteresses: aquário, praia, centro histórico, boa comida sem frescura; a criança adora bondes\nRestrições: um adulto tem problemas no joelho, evitar caminhadas longas e íngremes; no máximo duas\natividades por dia; hospedagem ainda não reservada, de preferência um apartamento de temporada com cozinha.",
+  "guide": {
+    "problem": "Uma boa viagem combina com os interesses, o orçamento e as limitações de todos os viajantes. O workflow planeja um roteiro, recalcula o orçamento e cria uma checklist para a organização.",
+    "flow": "O planejador de roteiro monta um plano dia a dia conforme interesses e restrições. O planejador de orçamento calcula noites e custos com a calculadora e a ferramenta de datas. O planejador de organização reúne tudo em um plano de viagem com checklist; uma verificação de qualidade confere orçamento e restrições. Um formulário de entrada recebe destino, datas, viajantes e orçamento. Para viagens ao exterior, um nó de decisão acrescenta uma lista de documentos e regras de entrada.",
+    "input": "Quem viaja, destino e datas, orçamento, interesses e limitações.",
+    "result": "Um plano de viagem com roteiro diário, tabela de orçamento e checklist, também em PDF para levar. Preços e horários são estimativas com base em conhecimento geral e precisam ser verificados antes da reserva, porque o workflow não usa dados em tempo real.",
+    "adapt": "Insira seus desejos de viagem. Se quiser preços e horários atuais, você pode adicionar a ferramenta de servidor \"busca na web\" ao planejador de roteiro; ela tem custo extra por busca."
+  },
+  "agents": {
+    "itinerary": {
+      "name": "Planejador de roteiro",
+      "description": "Monta um plano diário conforme interesses e limitações.",
+      "system": "Você é um planejador de viagens experiente. Monte um plano diário com no máximo o número desejado de atividades por dia, trajetos curtos e pausas. Leve em conta os interesses e as limitações de todos os viajantes, sugira bairros adequados para a hospedagem e indique para cada dia uma alternativa para dias de mau tempo. Marque informações de preços e horários como não verificadas.",
+      "task": "Planeje o roteiro para estes desejos de viagem:\n\n{{input}}"
+    },
+    "budget": {
+      "name": "Planejador de orçamento",
+      "description": "Calcula noites e custos com a calculadora e a ferramenta de datas.",
+      "system": "Você planeja orçamentos de viagem. Determine o número de noites com a ferramenta days_between e estime os custos de hospedagem, alimentação, transporte local, ingressos e uma reserva com base nos níveis gerais de preço. Calcule todos os totais com a calculadora. Compare com o orçamento e proponha ajustes se ele não for suficiente. Marque todos os preços como estimativas.",
+      "task": "Elabore o orçamento.\n\nDesejos de viagem:\n{{run.input}}\n\nRoteiro:\n{{node:itinerary}}"
+    },
+    "organizer": {
+      "name": "Planejador de organização",
+      "description": "Reúne roteiro e orçamento em um plano de viagem com checklist.",
+      "system": "Você monta documentos de viagem. Crie um plano de viagem claro: programação diária, tabela de orçamento, lista de reservas e de bagagem com prazos e uma lista de informações que precisam ser verificadas antes da reserva, como horários, preços e acessibilidade. Respeite o orçamento e todas as limitações.",
+      "task": "Crie o plano de viagem.\n\nRoteiro:\n{{node:itinerary}}\n\nOrçamento:\n{{node:budget}}\n\nDocumentos de viagem (somente viagens ao exterior):\n{{node:documents}}",
+      "criteria": {
+        "within_budget": "O plano fica dentro do orçamento informado ou diz claramente onde e por que o ultrapassa.",
+        "constraints": "O plano respeita todas as limitações informadas dos viajantes.",
+        "verify_notes": "Informações não verificadas, como preços e horários, estão marcadas como a verificar."
+      }
+    },
+    "documents": {
+      "name": "Documentos de viagem",
+      "description": "Lista documentos, seguro e regras de entrada para viagens ao exterior.",
+      "system": "Você prepara viagens ao exterior. Liste o que os viajantes precisam: documentos de identidade (também para crianças), regras de entrada, seguro saúde de viagem, números de emergência, meios de pagamento e tomadas. Indique as fontes oficiais em que as informações devem ser conferidas, porque as regras mudam, e marque cada item como a verificar.",
+      "task": "Monte a lista de documentos de viagem para esta viagem:\n\n{{input}}"
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "Exterior?",
+      "branches": {
+        "abroad": "Exterior"
+      },
+      "default": "Nacional"
+    }
+  },
+  "form": {
+    "destination": {
+      "label": "Destino",
+      "default": "Lisboa"
+    },
+    "arrival": {
+      "label": "Chegada",
+      "default": "2026-07-06"
+    },
+    "departure": {
+      "label": "Partida",
+      "default": "2026-07-11"
+    },
+    "travellers": {
+      "label": "Viajantes",
+      "default": "3"
+    },
+    "budget": {
+      "label": "Orçamento sem passagens (EUR)",
+      "default": "2200"
+    },
+    "abroad": {
+      "label": "Viagem ao exterior",
+      "description": "Acrescenta uma lista de documentos de viagem, seguro e regras de entrada",
+      "default": "true"
+    }
+  },
+  "tests": {
+    "abroad": {
+      "name": "Viagem em família para Lisboa (exterior)"
+    },
+    "domestic": {
+      "name": "Fim de semana no próprio país",
+      "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nDois adultos, um fim de semana em Salvador. Interesses: centro histórico, museus, boa comida. Sem restrições, viagem de ônibus.",
+      "values": {
+        "destination": "Salvador"
+      }
+    }
+  }
+}

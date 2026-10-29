@@ -1,0 +1,206 @@
+{
+  "id": "production-downtime",
+  "number": 1,
+  "category": "industry",
+  "level": "advanced",
+  "featured": true,
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 180,
+      "form": [
+        {
+          "name": "log_file",
+          "type": "file",
+          "accept": [
+            "csv",
+            "xlsx"
+          ],
+          "multiple": false,
+          "max_size_mb": 10
+        }
+      ]
+    },
+    {
+      "id": "downtime",
+      "type": "agent",
+      "x": 360,
+      "y": 40,
+      "role": "analysis",
+      "icon": "calculator",
+      "tools": [
+        "calculator"
+      ],
+      "output_name": "Downtime",
+      "output_fields": [
+        {
+          "name": "analysis",
+          "type": "string"
+        },
+        {
+          "name": "downtime_share_percent",
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "id": "causes",
+      "type": "agent",
+      "x": 360,
+      "y": 320,
+      "role": "analysis",
+      "icon": "brain"
+    },
+    {
+      "id": "measures",
+      "type": "agent",
+      "x": 720,
+      "y": 180,
+      "role": "planning",
+      "icon": "target",
+      "criteria": [
+        "linked_to_findings",
+        "prioritised",
+        "owners_and_metrics"
+      ]
+    },
+    {
+      "id": "gate",
+      "type": "condition",
+      "x": 1080,
+      "y": 360,
+      "condition": {
+        "source": "downtime",
+        "rules": [
+          {
+            "id": "above_target",
+            "field": "downtime_share_percent",
+            "operator": "gt",
+            "value": 3
+          }
+        ]
+      }
+    },
+    {
+      "id": "quality",
+      "type": "subworkflow",
+      "x": 1440,
+      "y": 360,
+      "part": "quality-check"
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1800,
+      "y": 180,
+      "files": [
+        "md",
+        "xlsx"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "downtime"
+    ],
+    [
+      "start",
+      "causes"
+    ],
+    [
+      "downtime",
+      "measures"
+    ],
+    [
+      "causes",
+      "measures"
+    ],
+    [
+      "downtime",
+      "gate"
+    ],
+    [
+      "measures",
+      "gate"
+    ],
+    [
+      "gate",
+      "quality",
+      "above_target"
+    ],
+    [
+      "measures",
+      "output"
+    ],
+    [
+      "quality",
+      "output"
+    ],
+    [
+      "downtime",
+      "output"
+    ]
+  ],
+  "samples": [
+    {
+      "id": "log",
+      "format": "xlsx",
+      "field": "log_file"
+    }
+  ],
+  "tests": [
+    {
+      "id": "above_target",
+      "checks": [
+        {
+          "node": "downtime",
+          "field": "downtime_share_percent",
+          "operator": "gt",
+          "value": 3
+        },
+        {
+          "node": "quality",
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "within_target",
+      "input": "own",
+      "checks": [
+        {
+          "node": "downtime",
+          "field": "downtime_share_percent",
+          "operator": "lte",
+          "value": 3
+        },
+        {
+          "node": "quality",
+          "operator": "is_empty"
+        }
+      ]
+    },
+    {
+      "id": "log_file",
+      "input": "own",
+      "samples": [
+        "log"
+      ],
+      "checks": [
+        {
+          "node": "downtime",
+          "field": "downtime_share_percent",
+          "operator": "gt",
+          "value": 3
+        },
+        {
+          "node": "measures",
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

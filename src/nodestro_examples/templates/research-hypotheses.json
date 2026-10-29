@@ -1,0 +1,136 @@
+{
+  "id": "research-hypotheses",
+  "number": 10,
+  "category": "knowledge",
+  "level": "advanced",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160,
+      "form": [
+        {
+          "name": "research_files",
+          "type": "file",
+          "accept": [
+            "csv",
+            "xlsx",
+            "json",
+            "pdf",
+            "docx",
+            "md",
+            "txt"
+          ],
+          "multiple": true,
+          "max_files": 6
+        }
+      ]
+    },
+    {
+      "id": "framing",
+      "type": "agent",
+      "x": 340,
+      "y": 160,
+      "role": "analysis",
+      "icon": "search"
+    },
+    {
+      "id": "hypotheses",
+      "type": "agent",
+      "x": 680,
+      "y": 160,
+      "role": "planning",
+      "icon": "idea"
+    },
+    {
+      "id": "critic",
+      "type": "agent",
+      "x": 1020,
+      "y": 40,
+      "role": "review",
+      "icon": "scale",
+      "tools": [
+        "calculator"
+      ],
+      "effort": "high"
+    },
+    {
+      "id": "design",
+      "type": "agent",
+      "x": 1360,
+      "y": 160,
+      "role": "planning",
+      "icon": "list",
+      "proposals": "generated"
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1700,
+      "y": 160,
+      "files": [
+        "docx"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "framing"
+    ],
+    [
+      "framing",
+      "hypotheses"
+    ],
+    [
+      "hypotheses",
+      "critic"
+    ],
+    [
+      "hypotheses",
+      "design"
+    ],
+    [
+      "critic",
+      "design"
+    ],
+    [
+      "design",
+      "output"
+    ],
+    [
+      "start",
+      "critic"
+    ]
+  ],
+  "samples": [
+    {
+      "id": "pretest",
+      "format": "csv",
+      "field": "research_files"
+    }
+  ],
+  "tests": [
+    {
+      "id": "question_text",
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "pretest_file",
+      "input": "own",
+      "samples": [
+        "pretest"
+      ],
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

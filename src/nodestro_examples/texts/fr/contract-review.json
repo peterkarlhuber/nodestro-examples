@@ -1,0 +1,93 @@
+{
+  "name": "Structurer un contrat et repérer les points à vérifier",
+  "field": "Droit et administration",
+  "description": "Structurer un contrat, expliquer ses clauses en langage simple et rassembler des points pour un examen professionnel.",
+  "start": "Texte du contrat",
+  "output": "Synthèse du contrat",
+  "file_name": "Synthèse du contrat",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – un contrat entièrement fictif, uniquement pour essayer.\n\nContrat de service logiciel entre Exemple Cloud SAS (prestataire) et Commerce Exemple SARL (client)\n\n§ 1 Objet : le prestataire met le logiciel « ShopPilot » à disposition du client en tant que service cloud et l'exploite.\n§ 2 Durée : le contrat commence le 1er avril 2026 et dure 24 mois. Il est reconduit automatiquement pour 12 mois à\nchaque fois s'il n'est pas résilié par écrit 6 mois avant son échéance.\n§ 3 Prix : 1 200 EUR HT par mois, payables annuellement d'avance. Le prestataire peut ajuster les prix une fois par\nan selon son appréciation raisonnable.\n§ 4 Disponibilité : le prestataire vise une disponibilité de 99 % en moyenne mensuelle. Les fenêtres de maintenance ne sont pas comptées.\n§ 5 Responsabilité : la responsabilité du prestataire est limitée à trois mois de redevance, sauf faute intentionnelle.\n§ 6 Données : le prestataire traite les données du client pour le compte de celui-ci. Des sous-traitants peuvent être\nutilisés sans information préalable. À la fin du contrat, les données sont supprimées après 30 jours.\n§ 7 Résiliation pour motif grave : en cas de retard de paiement de plus de 14 jours, le prestataire peut bloquer l'accès.\n§ 8 Juridiction compétente : siège du prestataire.",
+  "guide": {
+    "problem": "Les contrats sont longs et les clauses importantes se cachent dans les détails. Le workflow structure un contrat, l'explique en langage simple et rassemble les points qu'une personne qualifiée devrait vérifier. Il ne remplace pas un conseil juridique.",
+    "flow": "Le structureur relève parties, durée, prestations et délais. Sur cette base, l'explicateur de clauses (langage simple) et l'analyste des points à vérifier (dispositions inhabituelles ou déséquilibrées) travaillent en parallèle ; tous deux lisent eux-mêmes le contrat, en texte ou en fichier chargé. Si l'analyste trouve des clauses critiques, un nœud de décision ajoute un examen approfondi de ces clauses. L'agent de rapport rassemble le tout dans une synthèse structurée avec des questions pour un conseil juridique.",
+    "input": "Le contrat en fichier (PDF, Word, Markdown ou texte) dans le champ « Contrat en fichier » ou en texte, idéalement avec les numéros d'articles. Vous chargez le fichier directement au démarrage ; aucune collection de connaissances n'est nécessaire. Le fichier d'exemple contient le contrat fictif de la tâche de test.",
+    "result": "Une synthèse structurée avec résumé, données clés, clauses expliquées, points à vérifier et questions pour un avocat ou une avocate, aussi en PDF et en fichier Word modifiable. Le structureur propose les données clés du contrat pour la connaissance, par exemple pour un registre des contrats ; seul ce que vous confirmez est enregistré.",
+    "adapt": "Chargez votre contrat en fichier au démarrage ou collez-le. Vos propres critères, par exemple vos exigences minimales en matière de responsabilité ou de protection des données, s'ajoutent dans le prompt système de l'analyste des points à vérifier. Des contrats types servant de comparaison peuvent être enregistrés comme connaissance et attribués à cet analyste."
+  },
+  "agents": {
+    "structure": {
+      "name": "Structureur de contrat",
+      "description": "Relève les parties, l'objet, la durée, les prix et les délais.",
+      "system": "Tu structures des contrats. Relève les parties, l'objet, la durée et la reconduction, les délais de préavis, les prix et conditions de paiement, les engagements de service, la responsabilité, la protection des données et la juridiction compétente. Indique pour chaque élément son emplacement dans le contrat et note ce que le contrat ne règle pas.",
+      "task": "Structure ce contrat :\n\n{{input}}"
+    },
+    "explain": {
+      "name": "Explicateur de clauses",
+      "description": "Explique chaque clause en langage simple.",
+      "system": "Tu expliques des contrats à des personnes sans formation juridique. Explique chaque clause en une à trois phrases simples : ce qu'elle règle et ce qu'elle signifie concrètement pour le client, avec un court exemple si cela aide. Ne juge pas de la validité d'une clause.",
+      "task": "Explique les clauses de ce contrat.\n\nContrat :\n{{run.input}}\n\nStructure :\n{{node:structure}}"
+    },
+    "checkpoints": {
+      "name": "Analyste des points à vérifier",
+      "description": "Repère les dispositions inhabituelles, déséquilibrées ou manquantes.",
+      "system": "Tu prépares des contrats pour un examen juridique. Signale les dispositions inhabituelles, déséquilibrées, floues ou manquantes, par exemple reconduction automatique, modifications unilatérales des prix, engagements de service faibles, plafonds de responsabilité, sous-traitants ou restitution des données. Explique pour chaque point pourquoi il doit être vérifié et formule une question à son sujet. Ne donne pas d'appréciation juridique définitive. Pour chaque point à vérifier, reprends le texte exact de la clause concernée avec sa référence, afin que les étapes suivantes puissent travailler sans le document original.",
+      "task": "Rassemble les points à vérifier de ce contrat.\n\nContrat :\n{{run.input}}\n\nStructure :\n{{node:structure}}",
+      "fields": {
+        "points": "Points à vérifier avec motif et question",
+        "critical_count": "Nombre de clauses critiques (p. ex. responsabilité illimitée ou très faible, reconduction tacite, modifications de prix unilatérales, traitement de données sans accord)"
+      }
+    },
+    "report": {
+      "name": "Synthèse du contrat",
+      "description": "Réunit explications et points à vérifier en un aperçu structuré.",
+      "system": "Tu résumes des analyses de contrats pour des décideurs. Crée un aperçu structuré à partir des explications et des points à vérifier, sans ajouter de nouvelles appréciations juridiques. Formule les questions de façon à ce qu'un avocat puisse y répondre directement.",
+      "task": "Crée la synthèse du contrat.\n\nClauses expliquées :\n{{node:explain}}\n\nPoints à vérifier :\n{{node:checkpoints}}\n\nClauses critiques en détail :\n{{node:critical}}",
+      "fields": {
+        "overview": "Résumé du contrat en trois à cinq phrases",
+        "key_terms": "Conditions clés avec emplacement (durée, délais, prix)",
+        "clauses_explained": "Clauses en langage simple",
+        "check_points": "Points à vérifier avec justification",
+        "questions_for_expert": "Questions pour un conseil juridique"
+      }
+    },
+    "critical": {
+      "name": "Clauses critiques",
+      "description": "Examine en profondeur les clauses critiques et prépare des questions de négociation.",
+      "system": "Tu prépares des négociations de contrats. Examine en profondeur chaque clause critique : ce qu'elle signifie en pratique, le pire cas réaliste, comment de telles clauses sont habituellement rédigées dans des contrats comparables et quelle autre formulation pourrait être proposée. Formule des questions pour le conseil juridique. Ne donne pas d'appréciation juridique définitive.",
+      "task": "Examine en profondeur les clauses critiques.\n\nContrat :\n{{run.input}}\n\nPoints à vérifier :\n{{node:checkpoints}}"
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "Clauses critiques ?",
+      "branches": {
+        "critical": "Clauses critiques"
+      },
+      "default": "Aucune"
+    }
+  },
+  "form": {
+    "contract_file": {
+      "label": "Contrat en fichier",
+      "description": "Facultatif : le contrat en PDF, Word (DOCX), Markdown ou texte, 20 Mo au maximum. Chargez simplement le fichier ici ; aucune collection de connaissances n'est nécessaire. Sans fichier, le texte du contrat ci-dessous fait foi."
+    }
+  },
+  "samples": {
+    "contract": {
+      "name": "Contrat_service_logiciel_exemple",
+      "description": "Le contrat fictif de la tâche de test en document Word.",
+      "content": "# Contrat de service logiciel\n\nDONNÉES D'EXEMPLE SYNTHÉTIQUES – un contrat entièrement fictif, uniquement pour essayer.\n\nentre **Exemple Cloud SAS** (prestataire) et **Commerce Exemple SARL** (client)\n\n## § 1 Objet\n\nLe prestataire met le logiciel « ShopPilot » à disposition du client en tant que service cloud et l'exploite.\n\n## § 2 Durée\n\nLe contrat commence le 1er avril 2026 et dure 24 mois. Il est reconduit automatiquement pour 12 mois à chaque fois s'il n'est pas résilié par écrit 6 mois avant son échéance.\n\n## § 3 Prix\n\n1 200 EUR HT par mois, payables annuellement d'avance. Le prestataire peut ajuster les prix une fois par an selon son appréciation raisonnable.\n\n## § 4 Disponibilité\n\nLe prestataire vise une disponibilité de 99 % en moyenne mensuelle. Les fenêtres de maintenance ne sont pas comptées.\n\n## § 5 Responsabilité\n\nLa responsabilité du prestataire est limitée à trois mois de redevance, sauf faute intentionnelle.\n\n## § 6 Données\n\nLe prestataire traite les données du client pour le compte de celui-ci. Des sous-traitants peuvent être utilisés sans information préalable. À la fin du contrat, les données sont supprimées après 30 jours.\n\n## § 7 Résiliation pour motif grave\n\nEn cas de retard de paiement de plus de 14 jours, le prestataire peut bloquer l'accès.\n\n## § 8 Juridiction compétente\n\nSiège du prestataire."
+    }
+  },
+  "tests": {
+    "contract_text": {
+      "name": "Contrat dans le texte, avec clauses critiques"
+    },
+    "contract_file": {
+      "name": "Contrat en fichier Word, sans texte"
+    },
+    "balanced_contract": {
+      "name": "Contrat de maintenance équilibré",
+      "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – un contrat entièrement fictif, uniquement pour essayer.\n\nContrat de maintenance entre Exemple Technique SARL (prestataire) et Cabinet Modèle SCM (client)\n\n§ 1 Objet : maintenance semestrielle de deux climatiseurs dans le bâtiment du cabinet.\n§ 2 Durée : 12 mois à compter du 1er mai 2026 ; ensuite résiliable à tout moment avec un préavis d'un mois pour la fin du mois.\n§ 3 Prix : 380 EUR HT par intervention, payables 14 jours après facture. Modifications de prix uniquement avec l'accord des deux parties.\n§ 4 Pannes : intervention sous 2 jours ouvrés ; pièces de rechange uniquement après accord préalable du client.\n§ 5 Responsabilité : selon les dispositions légales.\n§ 6 Protection des données : aucune donnée personnelle n'est traitée."
+    }
+  }
+}

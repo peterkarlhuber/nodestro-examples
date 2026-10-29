@@ -1,0 +1,119 @@
+{
+  "id": "creator-strategy",
+  "number": 17,
+  "category": "customers",
+  "level": "beginner",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160,
+      "form": [
+        {
+          "name": "insights",
+          "type": "file",
+          "accept": [
+            "image",
+            "csv",
+            "xlsx"
+          ],
+          "multiple": true,
+          "max_files": 6,
+          "max_size_mb": 10
+        }
+      ]
+    },
+    {
+      "id": "strategy",
+      "type": "agent",
+      "x": 340,
+      "y": 160,
+      "role": "planning",
+      "icon": "target"
+    },
+    {
+      "id": "ideas",
+      "type": "agent",
+      "x": 680,
+      "y": 160,
+      "role": "writing",
+      "icon": "idea",
+      "memory": {
+        "space": "creator-ideas"
+      }
+    },
+    {
+      "id": "calendar",
+      "type": "agent",
+      "x": 1020,
+      "y": 160,
+      "role": "planning",
+      "icon": "list",
+      "criteria": [
+        "realistic_frequency",
+        "pillars_balanced",
+        "matches_goals"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1360,
+      "y": 160,
+      "files": [
+        "xlsx"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "strategy"
+    ],
+    [
+      "strategy",
+      "ideas"
+    ],
+    [
+      "strategy",
+      "calendar"
+    ],
+    [
+      "ideas",
+      "calendar"
+    ],
+    [
+      "calendar",
+      "output"
+    ]
+  ],
+  "samples": [
+    {
+      "id": "insights",
+      "format": "csv",
+      "field": "insights"
+    }
+  ],
+  "tests": [
+    {
+      "id": "profile",
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "insights_export",
+      "samples": [
+        "insights"
+      ],
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

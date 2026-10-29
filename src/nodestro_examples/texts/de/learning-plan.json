@@ -1,0 +1,68 @@
+{
+  "name": "Persönlichen Lernplan erstellen",
+  "field": "Bildung und Weiterbildung",
+  "description": "Lernstand einschätzen, einen Lernplan entwickeln, Inhalte erklären und eine Wissenskontrolle erstellen.",
+  "start": "Lernziel",
+  "output": "Lernpaket",
+  "file_name": "Lernplan",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nLernende: Sam Beispiel, Sachbearbeitung im Einkauf, nutzt Excel täglich für einfache Listen und Summen.\nZiel: In vier Wochen Pivot-Tabellen sicher anwenden, um Bestellungen nach Lieferant und Monat auszuwerten.\nZeit: etwa 3 Stunden pro Woche, am liebsten in Einheiten von 30 bis 45 Minuten.\nVorwissen: SVERWEIS schon einmal benutzt, Filter und Sortieren sicher; Diagramme kaum.\nLernstil: lernt am besten mit Beispielen aus dem eigenen Arbeitsalltag, mag kurze Übungen.",
+  "guide": {
+    "problem": "Lernen klappt besser mit einem Plan, der beim eigenen Stand ansetzt. Der Workflow erstellt einen persönlichen Lernplan, erklärt die ersten Inhalte und prüft das Verständnis mit einem Quiz.",
+    "flow": "Die Lernstandsanalyse bestimmt Ausgangslage und Lücken, der Lernplaner erstellt daraus einen Wochenplan. Auf dieser Grundlage arbeiten parallel der Erklärer (Lerninhalte der gewählten Woche, auf Wunsch gestützt auf deine Kursunterlagen) und der Prüfungsautor (Wissenskontrolle mit Lösungen). Das Ergebnis enthält alle drei Teile.",
+    "input": "Wer lernt, das Lernziel, verfügbare Zeit, Vorwissen und bevorzugter Lernstil. Im Formular wählst du die Woche, die ausgearbeitet wird, und kannst eigene Kursunterlagen anhängen; die Beispieldatei ist eine kurze Anleitung zu Pivot-Tabellen.",
+    "result": "Ein vierwöchiger Lernplan mit Lernzielen je Woche, verständliche Erklärungen mit Übungen für die gewählte Woche und ein Quiz mit Lösungen und Erklärungen, zusätzlich als PDF zum Ausdrucken.",
+    "adapt": "Beschreibe dein eigenes Lernziel, es funktioniert für fast jedes Thema. Für die nächsten Wochen startest du den Workflow erneut und änderst im Formular die Woche. Kursunterlagen, die du dauerhaft nutzt, lädst du als Wissen hoch und weist sie dem Erklärer zu."
+  },
+  "agents": {
+    "assessment": {
+      "name": "Lernstandsanalyse",
+      "description": "Bestimmt Ausgangslage, Lernziel und Lücken.",
+      "system": "Du bist Lernberaterin. Bestimme aus der Beschreibung den Ausgangsstand, das konkrete Lernziel in überprüfbarer Form, die Lücken dazwischen und mögliche Stolpersteine. Berücksichtige Zeitbudget und Lernstil. Fasse dich kurz und strukturiert.",
+      "task": "Analysiere den Lernstand:\n\n{{input}}"
+    },
+    "plan": {
+      "name": "Lernplaner",
+      "description": "Erstellt einen Wochenplan mit Lernzielen und Übungen.",
+      "system": "Du bist Didaktiker und planst Weiterbildungen. Erstelle einen Lernplan in Wochen: je Woche Lernziele, Themen, Einheiten mit Dauer, eine praktische Übung aus dem Arbeitsalltag und ein Kriterium, an dem die lernende Person ihren Fortschritt erkennt. Halte das Zeitbudget ein und baue Wiederholungen ein.",
+      "task": "Erstelle den Lernplan auf Grundlage dieser Analyse:\n\n{{node:assessment}}"
+    },
+    "tutor": {
+      "name": "Erklärer",
+      "description": "Erklärt die Inhalte der ersten Woche mit Beispielen und Übungen.",
+      "system": "Du bist ein geduldiger Tutor. Erkläre die Themen der im Auftrag genannten Woche des Lernplans Schritt für Schritt, mit einem durchgehenden Beispiel aus dem Arbeitsalltag der lernenden Person, kurzen Übungen und typischen Fehlern. Liegen Kursunterlagen bei, halte dich an deren Begriffe und Vorgehen und verweise auf die passenden Abschnitte. Schreibe verständlich und ermutigend, ohne Fachjargon, den du nicht erklärst.",
+      "task": "Erkläre die Inhalte der Woche {{form.week}} dieses Lernplans.\n\nLernende Person und Ziel:\n{{run.input}}\n\nLernplan:\n{{node:plan}}"
+    },
+    "quiz": {
+      "name": "Prüfungsautor",
+      "description": "Erstellt eine Wissenskontrolle mit Lösungen zur ersten Woche.",
+      "system": "Du erstellst Wissenskontrollen. Schreibe zur im Auftrag genannten Woche des Lernplans acht Aufgaben: Multiple-Choice-Fragen mit einer richtigen Antwort, kurze Anwendungsaufgaben und eine Transferaufgabe. Gib danach den Lösungsschlüssel mit einer kurzen Erklärung je Aufgabe an. Prüfe Verständnis, nicht Auswendiglernen.",
+      "task": "Erstelle die Wissenskontrolle zur Woche {{form.week}} dieses Lernplans:\n\n{{node:plan}}"
+    }
+  },
+  "form": {
+    "week": {
+      "label": "Woche für Erklärung und Quiz",
+      "description": "Für welche Woche des Plans Erklärer und Prüfungsautor die Inhalte ausarbeiten.",
+      "default": "1"
+    },
+    "materials": {
+      "label": "Kursunterlagen",
+      "description": "Optional: eigene Unterlagen als PDF, Word, Markdown oder Text, bis zu 5 Dateien. Der Erklärer stützt sich darauf, wenn sie vorhanden sind."
+    }
+  },
+  "samples": {
+    "guide": {
+      "name": "Kurzanleitung_Pivot-Tabellen",
+      "description": "Eine erfundene Kursunterlage zu Pivot-Tabellen als Word-Dokument.",
+      "content": "# Kurzanleitung: Pivot-Tabellen in Excel\n\nSYNTHETISCHE BEISPIELDATEN – erfundene Kursunterlage, nur zum Ausprobieren.\n\n## 1. Daten vorbereiten\n\n- Eine Kopfzeile, keine leeren Zeilen oder Spalten.\n- Je Spalte nur eine Art von Werten (zum Beispiel nur Datumswerte).\n- Die Daten als Tabelle formatieren (Strg+T), dann wächst die Pivot-Tabelle mit.\n\n## 2. Pivot-Tabelle anlegen\n\n1. In die Tabelle klicken.\n2. Einfügen > PivotTable.\n3. „Neues Arbeitsblatt“ wählen.\n\n## 3. Felder anordnen\n\n| Bereich | Wofür | Beispiel |\n|---|---|---|\n| Zeilen | Gruppen untereinander | Lieferant |\n| Spalten | Gruppen nebeneinander | Monat |\n| Werte | Was berechnet wird | Summe von Bestellwert |\n| Filter | Auswahl für die ganze Tabelle | Standort |\n\n## 4. Typische Fehler\n\n- Werte werden gezählt statt summiert: Feldeinstellungen > Summe.\n- Neue Daten fehlen: Pivot-Tabelle aktualisieren (Alt+F5).\n- Datumswerte nicht gruppiert: Rechtsklick > Gruppieren > Monate."
+    }
+  },
+  "tests": {
+    "week_one": {
+      "name": "Woche 1 ohne Unterlagen"
+    },
+    "week_two_material": {
+      "name": "Woche 2 mit Kursunterlage"
+    }
+  }
+}

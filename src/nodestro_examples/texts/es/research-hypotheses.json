@@ -1,0 +1,177 @@
+{
+  "name": "Convertir una pregunta de investigación en hipótesis",
+  "field": "Investigación y desarrollo",
+  "description": "Analizar una pregunta de investigación, desarrollar hipótesis comprobables, revisarlas críticamente y derivar un plan experimental.",
+  "start": "Pregunta de investigación",
+  "output": "Plan experimental",
+  "file_name": "Plan experimental",
+  "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nPregunta de investigación: ¿Se puede reducir la temperatura de curado de nuestra pintura en polvo PL-7 de 180 °C a\n165 °C sin que se resienta la adherencia sobre acero galvanizado? El objetivo es ahorrar alrededor de un 10 % de\nenergía en el horno.\n\nEnsayo previo (5 chapas por condición, valor de corte cruzado según ISO 2409, 0 = mejor adherencia, 5 = peor):\n- 180 °C, 15 min: 0, 0, 1, 0, 1\n- 165 °C, 15 min: 1, 0, 2, 1, 1\n- 165 °C, 20 min: 0, 1, 0, 1, 0\n\nCondiciones: 40 chapas de ensayo disponibles por semana, horno libre para ensayos dos días por semana,\nel pretratamiento de las chapas se ha hecho hasta ahora en dos días distintos.",
+  "guide": {
+    "problem": "La buena investigación empieza con una pregunta precisa y comprobable. El flujo descompone una pregunta de investigación, formula hipótesis, las somete a una crítica metodológica y deriva un plan experimental realista.",
+    "flow": "Una cadena secuencial con retroceso: el analista aclara variables y supuestos, el agente de hipótesis formula hipótesis comprobables con hipótesis nulas y el crítico metodológico las contrasta con los datos del ensayo previo usando la calculadora y señala variables de confusión. El planificador de experimentos usa juntas las hipótesis y la crítica.",
+    "input": "Una pregunta de investigación con su objetivo, datos de ensayos previos y condiciones como material, tiempo y equipos. Puedes adjuntar datos de medición y documentos como archivos; el archivo de ejemplo contiene los valores del ensayo previo por chapa.",
+    "result": "Un plan experimental con hipótesis, factores y niveles, tamaño de muestra, método de medición, análisis y criterios de interrupción, además de los riesgos abiertos, también como archivo de Word. El planificador de experimentos propone el plan para el conocimiento; tú decides si se guarda.",
+    "adapt": "Sustituye la pregunta y el ensayo previo por los tuyos y adjunta los datos de medición directamente. La literatura que necesitas una y otra vez puedes subirla como conocimiento en modo «Búsqueda» y asignarla al analista de la pregunta para que trabaje con citas. Vuestras directrices estadísticas se añaden en el crítico metodológico."
+  },
+  "agents": {
+    "framing": {
+      "name": "Analista de la pregunta",
+      "description": "Aclara objetivo, variables, condiciones y lagunas de conocimiento.",
+      "system": "Eres investigador y estructuras preguntas de investigación. Descompón la pregunta en objetivo, variables independientes y dependientes, posibles variables de confusión y condiciones. Resume lo que muestran los datos disponibles y lo que no, y separa el conocimiento establecido de las conjeturas.",
+      "task": "Analiza esta pregunta de investigación:\n\n{{input}}"
+    },
+    "hypotheses": {
+      "name": "Desarrollador de hipótesis",
+      "description": "Formula hipótesis comprobables con predicciones e hipótesis nulas.",
+      "system": "Formulas hipótesis científicas. Deriva del análisis entre tres y cinco hipótesis comprobables. Indica para cada una la hipótesis nula, una predicción medible, el método de medición y qué cuenta como confirmación o refutación. Ordénalas por relevancia para el objetivo.",
+      "task": "Desarrolla hipótesis a partir de este análisis:\n\n{{node:framing}}"
+    },
+    "critic": {
+      "name": "Crítico metodológico",
+      "description": "Comprueba la contrastabilidad de las hipótesis, las variables de confusión y los datos.",
+      "system": "Eres un metodólogo y revisor exigente. Comprueba cada hipótesis en cuanto a falsabilidad, medibilidad, variables de confusión y sesgos. Evalúa con la calculadora los datos disponibles del ensayo previo (por ejemplo medias y rangos) y juzga si los datos permiten una afirmación. Indica qué hipótesis conviene descartar, afinar o mantener.",
+      "task": "Revisa críticamente estas hipótesis.\n\nPregunta de investigación y datos:\n{{run.input}}\n\nHipótesis:\n{{node:hypotheses}}"
+    },
+    "design": {
+      "name": "Planificador de experimentos",
+      "description": "Deriva un plan experimental de las hipótesis y la crítica.",
+      "system": "Planificas experimentos según los principios del diseño de experimentos. Para las hipótesis que se mantienen, diseña un plan: factores y niveles, repeticiones, aleatorización y bloques frente a variables de confusión, método de medición, método de análisis, criterios de parada y de éxito, y un calendario que se ajuste a las condiciones. Termina con los riesgos abiertos.",
+      "task": "Diseña el plan experimental.\n\nHipótesis:\n{{node:hypotheses}}\n\nCrítica metodológica:\n{{node:critic}}"
+    }
+  },
+  "form": {
+    "research_files": {
+      "label": "Documentación de investigación",
+      "description": "Opcional: datos de medición (CSV, Excel, JSON) y documentos como informes de ensayo o artículos (PDF, Word, Markdown), hasta 6 archivos. Sin archivos valen los datos del texto."
+    }
+  },
+  "samples": {
+    "pretest": {
+      "name": "Ensayo_previo_PL-7",
+      "description": "Los valores de corte cruzado inventados del ensayo previo por chapa, con día de pretratamiento, en CSV.",
+      "content": [
+        [
+          "Temperatura_C",
+          "Tiempo_min",
+          "Chapa",
+          "Dia_pretratamiento",
+          "Corte_cruzado_ISO2409"
+        ],
+        [
+          180,
+          15,
+          1,
+          "Día 1",
+          0
+        ],
+        [
+          180,
+          15,
+          2,
+          "Día 1",
+          0
+        ],
+        [
+          180,
+          15,
+          3,
+          "Día 2",
+          1
+        ],
+        [
+          180,
+          15,
+          4,
+          "Día 2",
+          0
+        ],
+        [
+          180,
+          15,
+          5,
+          "Día 2",
+          1
+        ],
+        [
+          165,
+          15,
+          6,
+          "Día 1",
+          1
+        ],
+        [
+          165,
+          15,
+          7,
+          "Día 1",
+          0
+        ],
+        [
+          165,
+          15,
+          8,
+          "Día 2",
+          2
+        ],
+        [
+          165,
+          15,
+          9,
+          "Día 2",
+          1
+        ],
+        [
+          165,
+          15,
+          10,
+          "Día 2",
+          1
+        ],
+        [
+          165,
+          20,
+          11,
+          "Día 1",
+          0
+        ],
+        [
+          165,
+          20,
+          12,
+          "Día 1",
+          1
+        ],
+        [
+          165,
+          20,
+          13,
+          "Día 1",
+          0
+        ],
+        [
+          165,
+          20,
+          14,
+          "Día 2",
+          1
+        ],
+        [
+          165,
+          20,
+          15,
+          "Día 2",
+          0
+        ]
+      ]
+    }
+  },
+  "tests": {
+    "question_text": {
+      "name": "Pregunta y ensayo previo en el texto"
+    },
+    "pretest_file": {
+      "name": "Datos del ensayo previo en CSV",
+      "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nPregunta de investigación: ¿Se puede reducir la temperatura de curado de nuestra pintura en polvo PL-7 de 180 °C a 165 °C sin que se resienta la adherencia sobre acero galvanizado? El objetivo es ahorrar alrededor de un 10 % de energía en el horno.\n\nLos valores del ensayo previo (corte cruzado según ISO 2409, 0 = mejor adherencia) se adjuntan como archivo CSV.\n\nCondiciones: 40 chapas de ensayo disponibles por semana, horno libre para ensayos dos días por semana."
+    }
+  }
+}

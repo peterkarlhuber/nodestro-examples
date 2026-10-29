@@ -1,0 +1,129 @@
+{
+  "name": "Compare supplier offers",
+  "field": "Logistics and purchasing",
+  "description": "Compare offers by total cost and supply risk and derive a justified recommendation.",
+  "start": "Offers",
+  "output": "Recommendation",
+  "file_name": "Supplier comparison",
+  "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nDemand: stainless steel turned part DT-40, 24,000 pieces per year, call-off of 2,000 pieces per month\nTarget price: EUR 2.10 per piece delivered to the plant\n\nOffer A – Example Precision GmbH (Germany, 80 km away)\n- Price EUR 2.35/piece, delivered to the plant, lead time 2 weeks\n- Minimum order 1,000 pieces, payment terms 30 days\n- Complaint rate last year 0.4 %, certified to IATF 16949\n\nOffer B – Example Components Ltd. (Far East, sea freight)\n- Price EUR 1.62/piece ex works, freight and duty estimated at EUR 0.28/piece, lead time 10 weeks\n- Minimum order 12,000 pieces, payment 30 % in advance, balance on shipment\n- No delivery history yet, ISO 9001, samples passed\n\nOffer C – Sample Metal Parts s.r.o. (Czech Republic, 450 km away)\n- Price EUR 1.98/piece, freight EUR 0.07/piece, lead time 4 weeks\n- Minimum order 4,000 pieces, payment terms 45 days\n- Complaint rate last year 1.1 %, ISO 9001, capacity 90 % utilised according to the supplier\n\nInternal assumptions: cost of capital 8 % per year, storage cost EUR 0.03 per piece and month,\ncost per complaint case (inspection, sorting) EUR 0.90 per defective part.",
+  "guide": {
+    "problem": "The lowest unit price is rarely the cheapest offer. The workflow compares offers by total cost and supply risk and justifies a recommendation for purchasing.",
+    "flow": "The cost analyst and the risk analyst work in parallel. One calculates the total cost of ownership per offer with the calculator tool, the other assesses lead time, dependencies and quality. The purchasing recommendation weighs both and delivers a structured result.",
+    "input": "Several offers with price, freight, lead time, minimum quantity, payment terms and quality data, plus your internal cost rates. You can write the offers into the text or attach them as files, even mixed as PDF, Word and Excel; the three sample files show exactly that.",
+    "result": "A structured recommendation with ranking, reasons, risks, negotiation points and the assumptions made. The run also saves it as a PDF report and as an Excel file with one sheet per list.",
+    "adapt": "Attach your offers as files and enter demand and cost rates in the text. If you have fixed weightings (for example 50 % cost, 30 % risk, 20 % quality), add them to the system prompt of the purchasing recommendation. Framework agreements or supplier ratings can be stored as knowledge and assigned to the risk analyst."
+  },
+  "agents": {
+    "cost": {
+      "name": "Cost analyst",
+      "description": "Calculates the total cost per offer with the calculator tool.",
+      "system": "You are a cost analyst in purchasing. Calculate the total cost per piece and per year for each offer: price, freight and duty, capital tied up by minimum orders and advance payments, storage cost and expected cost of complaints. Use the calculator tool for every calculation and show how you got there. Compare the result with the target price and show which assumptions influence the result most.",
+      "task": "Calculate the total cost of these offers:\n\n{{input}}"
+    },
+    "risk": {
+      "name": "Risk analyst",
+      "description": "Assesses lead time, dependencies, capacity and quality risks.",
+      "system": "You are a supply chain risk manager. Assess the supply risks of each offer: lead time and flexibility, transport route, capacity utilisation, quality history and certification, financial commitment and dependency. Rate each risk by likelihood and impact (high, medium, low) and propose safeguards, for example safety stock or a second source.",
+      "task": "Assess the supply risks of these offers:\n\n{{input}}"
+    },
+    "recommendation": {
+      "name": "Purchasing recommendation",
+      "description": "Weighs costs and risks and recommends a supplier.",
+      "system": "You are head of purchasing and prepare a sourcing decision. Weigh total cost against risk and recommend a supplier or a combination, for example a main source with a second source. Justify the ranking clearly, name the remaining risks and concrete points for negotiation. List every assumption the recommendation depends on.",
+      "task": "Derive a recommendation.\n\nCost analysis:\n{{node:cost}}\n\nRisk analysis:\n{{node:risk}}",
+      "fields": {
+        "recommended_supplier": "Recommended supplier or combination",
+        "ranking": "Ranking of the offers with a short reason",
+        "reasons": "Main reasons for the recommendation",
+        "risks": "Remaining risks and safeguards",
+        "negotiation_points": "Points for the negotiation",
+        "assumptions": "Assumptions the recommendation depends on"
+      }
+    }
+  },
+  "form": {
+    "offers": {
+      "label": "Offer files",
+      "description": "Optional: the offers as PDF, Word, Excel or CSV, up to 10 files. Without files, the offers in the text apply; with files, the text only needs demand, target price and internal assumptions."
+    }
+  },
+  "samples": {
+    "offer_a": {
+      "name": "Offer_A_Example_Precision",
+      "description": "Offer A as a PDF letter (fictional).",
+      "content": "# Offer no. 2026-0412\n\n**Example Precision GmbH**, Germany (80 km from your plant)\n\nDear Sir or Madam, thank you for your enquiry about the stainless steel turned part DT-40. We offer:\n\n| Item | Detail |\n|---|---|\n| Price | EUR 2.35 per piece, delivered to the plant |\n| Lead time | 2 weeks |\n| Minimum order | 1,000 pieces |\n| Payment terms | 30 days net |\n| Certification | IATF 16949 |\n| Complaint rate last year | 0.4 % |\n\nThe offer is valid for 60 days. Kind regards, Sales (fictional)"
+    },
+    "offer_b": {
+      "name": "Offer_B_Example_Components",
+      "description": "Offer B as a Word document (fictional).",
+      "content": "# Quotation Q-77-DT40\n\n**Example Components Ltd.** (Far East, sea freight)\n\n## Terms\n\n- Price: EUR 1.62 per piece ex works\n- Freight and duty: estimated by us at EUR 0.28 per piece\n- Lead time: 10 weeks including sea freight\n- Minimum order: 12,000 pieces\n- Payment: 30 % in advance on order, balance on shipment\n\n## Quality\n\nCertified to ISO 9001. First samples passed. There is no delivery history with you yet."
+    },
+    "offer_c": {
+      "name": "Offer_C_Sample_Metal_Parts",
+      "description": "Offer C as an Excel table (fictional).",
+      "content": {
+        "Offer": [
+          [
+            "Item",
+            "Value",
+            "Unit"
+          ],
+          [
+            "Supplier",
+            "Sample Metal Parts s.r.o. (Czech Republic, 450 km)",
+            ""
+          ],
+          [
+            "Price",
+            1.98,
+            "EUR/piece"
+          ],
+          [
+            "Freight",
+            0.07,
+            "EUR/piece"
+          ],
+          [
+            "Lead time",
+            4,
+            "weeks"
+          ],
+          [
+            "Minimum order",
+            4000,
+            "pieces"
+          ],
+          [
+            "Payment terms",
+            45,
+            "days"
+          ],
+          [
+            "Complaint rate last year",
+            1.1,
+            "%"
+          ],
+          [
+            "Certification",
+            "ISO 9001",
+            ""
+          ],
+          [
+            "Capacity utilisation according to supplier",
+            90,
+            "%"
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "offers_text": {
+      "name": "Three offers in the text"
+    },
+    "offers_files": {
+      "name": "Three offers as PDF, Word and Excel",
+      "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nDemand: stainless steel turned part DT-40, 24,000 pieces per year, call-off of 2,000 pieces per month\nTarget price: EUR 2.10 per piece delivered to the plant\n\nThe three offers are attached as files.\n\nInternal assumptions: cost of capital 8 % per year, storage cost EUR 0.03 per piece and month,\ncost per complaint case (inspection, sorting) EUR 0.90 per defective part."
+    }
+  }
+}

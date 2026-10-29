@@ -1,0 +1,151 @@
+{
+  "name": "Social-Media-Strategie entwickeln",
+  "field": "Influencer und Content Creator",
+  "description": "Positionierung und Content-Säulen festlegen, Ideen entwickeln und einen Veröffentlichungsplan erstellen.",
+  "start": "Creator-Profil",
+  "output": "Content-Plan",
+  "file_name": "Redaktionsplan",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nCreator: „Kochen mit Kim“ (fiktiv), Instagram 8.400 Follower, TikTok 3.100 Follower, kein YouTube-Kanal\nInhalte bisher: schnelle Feierabendrezepte, unregelmäßig 1–2 Beiträge pro Woche\nBeste Beiträge: 15-Minuten-Pasta (Reel, 92.000 Aufrufe), Meal-Prep für die Woche (Karussell, 1.400 Speicherungen)\nZielgruppe laut Statistik: 25–40 Jahre, überwiegend berufstätig, 70 % Frauen\nZiel in drei Monaten: 15.000 Follower auf Instagram und erste Kooperation mit einer regionalen Marke\nZeit: etwa 6 Stunden pro Woche für Planung, Dreh und Schnitt\nStartdatum des Plans: Montag, 2026-05-04",
+  "guide": {
+    "problem": "Wer regelmäßig veröffentlicht, braucht eine klare Linie und einen Plan, der zum eigenen Zeitbudget passt. Der Workflow leitet aus Kennzahlen eine Strategie ab, sammelt passende Ideen und plant die Veröffentlichung.",
+    "flow": "Eine Kette aus drei Agenten: Der Strategieagent legt Positionierung, Content-Säulen und Ziele fest und wertet dazu angehängte Statistiken aus, der Ideenentwickler formuliert konkrete Beitragsideen mit Hook, der Redaktionsplaner verteilt sie auf vier Wochen. Der Ideenentwickler merkt sich seine Vorschläge in einem Gedächtnis, damit spätere Läufe keine Ideen wiederholen. Eine Qualitätsprüfung kontrolliert, ob Frequenz und Mischung realistisch sind.",
+    "input": "Profil mit Plattformen, Kennzahlen, erfolgreichen Beiträgen, Zielgruppe, Zielen, verfügbarer Zeit und Startdatum. Statistiken kannst du zusätzlich als Screenshots oder als CSV-/Excel-Export anhängen; die Beispieldatei ist ein solcher Export.",
+    "result": "Ein vierwöchiger Redaktionsplan mit Datum, Plattform, Format, Idee, Hook und Call-to-Action, eingeleitet von einer kurzen Zusammenfassung der Strategie, zusätzlich als Excel-Datei zum Weiterplanen.",
+    "adapt": "Trage dein Profil und deine Kennzahlen ein oder hänge Screenshots deiner Statistiken an. Deinen Markenstil und Tabuthemen ergänzt du im System-Prompt des Ideenentwicklers. Das Gedächtnis „creator-ideas“ findest du unter Memory; leere es, wenn du neu anfangen willst. Für einen monatlichen Plan kannst du die Kopie zeitgesteuert starten."
+  },
+  "agents": {
+    "strategy": {
+      "name": "Strategieagent",
+      "description": "Legt Positionierung, Content-Säulen und messbare Ziele fest.",
+      "system": "Du bist Social-Media-Stratege für Creator. Leite aus Kennzahlen und Zielen eine Positionierung in einem Satz ab, drei bis vier Content-Säulen mit Anteil, passende Formate je Plattform und messbare Ziele für drei Monate. Begründe jede Entscheidung mit den vorhandenen Daten und berücksichtige das Zeitbudget.",
+      "task": "Entwickle die Strategie für dieses Profil:\n\n{{input}}"
+    },
+    "ideas": {
+      "name": "Ideenentwickler",
+      "description": "Entwickelt konkrete Beitragsideen mit Hook und Format.",
+      "system": "Du bist kreativer Content-Entwickler. Entwickle zu jeder Content-Säule vier konkrete Beitragsideen mit Arbeitstitel, Format, Hook für die ersten drei Sekunden und Call-to-Action. Achte auf Abwechslung und darauf, dass Ideen mit wenig Aufwand produzierbar sind. Kennzeichne Ideen, die sich für eine Markenkooperation eignen. Nutze dein Gedächtnis: Lies vor dem Entwickeln, welche Ideen in früheren Läufen schon vorgeschlagen wurden, und vermeide Wiederholungen. Speichere am Ende die Arbeitstitel der neuen Ideen mit Datum. Ist das Gedächtnis leer, beginne einfach neu.",
+      "task": "Entwickle Beitragsideen zu dieser Strategie:\n\n{{node:strategy}}"
+    },
+    "calendar": {
+      "name": "Redaktionsplaner",
+      "description": "Verteilt die Ideen auf einen realistischen Vierwochenplan.",
+      "system": "Du planst Redaktionskalender. Beginne mit einer Zusammenfassung der Strategie in drei Sätzen. Erstelle dann einen Plan für vier Wochen ab dem Startdatum als Tabelle mit Datum, Wochentag, Plattform, Format, Idee, Hook und Call-to-Action. Plane die Produktion so, dass sie ins Zeitbudget passt, etwa durch Drehtage für mehrere Beiträge.",
+      "task": "Erstelle den Redaktionsplan.\n\nStrategie:\n{{node:strategy}}\n\nIdeen:\n{{node:ideas}}",
+      "criteria": {
+        "realistic_frequency": "Die Veröffentlichungsfrequenz passt zum angegebenen Zeitbudget.",
+        "pillars_balanced": "Die Content-Säulen sind entsprechend der Strategie verteilt.",
+        "matches_goals": "Der Plan unterstützt die genannten Ziele erkennbar."
+      }
+    }
+  },
+  "form": {
+    "insights": {
+      "label": "Statistiken",
+      "description": "Optional: Screenshots deiner Statistiken (PNG, JPEG, WebP) oder ein Export als CSV oder Excel, bis zu 6 Dateien. Ohne Dateien gelten die Kennzahlen im Text."
+    }
+  },
+  "samples": {
+    "insights": {
+      "name": "Beitragsstatistik_Maerz",
+      "description": "Ein erfundener Statistik-Export mit sieben Beiträgen als CSV.",
+      "content": [
+        [
+          "Datum",
+          "Plattform",
+          "Format",
+          "Thema",
+          "Aufrufe",
+          "Likes",
+          "Speicherungen",
+          "Kommentare",
+          "Neue Follower"
+        ],
+        [
+          "2026-03-02",
+          "Instagram",
+          "Reel",
+          "15-Minuten-Pasta",
+          92000,
+          4100,
+          2300,
+          160,
+          610
+        ],
+        [
+          "2026-03-05",
+          "Instagram",
+          "Karussell",
+          "Meal-Prep für die Woche",
+          18500,
+          1200,
+          1400,
+          75,
+          140
+        ],
+        [
+          "2026-03-09",
+          "TikTok",
+          "Video",
+          "Ofengemüse ohne Schnippeln",
+          7400,
+          380,
+          90,
+          22,
+          35
+        ],
+        [
+          "2026-03-14",
+          "Instagram",
+          "Reel",
+          "Frühstück zum Mitnehmen",
+          6100,
+          290,
+          160,
+          18,
+          20
+        ],
+        [
+          "2026-03-19",
+          "Instagram",
+          "Story",
+          "Wochenmarkt-Einkauf",
+          2100,
+          0,
+          0,
+          12,
+          4
+        ],
+        [
+          "2026-03-23",
+          "TikTok",
+          "Video",
+          "Dreierlei Dips",
+          11800,
+          640,
+          210,
+          41,
+          66
+        ],
+        [
+          "2026-03-28",
+          "Instagram",
+          "Karussell",
+          "Resteküche-Ideen",
+          9900,
+          720,
+          980,
+          54,
+          85
+        ]
+      ]
+    }
+  },
+  "tests": {
+    "profile": {
+      "name": "Profil im Text"
+    },
+    "insights_export": {
+      "name": "Profil mit Statistik-Export"
+    }
+  }
+}

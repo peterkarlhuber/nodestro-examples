@@ -1,0 +1,51 @@
+{
+  "name": "Blog article",
+  "field": "Marketing and content",
+  "description": "Research the audience, draft an outline, write the article and edit it.",
+  "start": "Topic",
+  "output": "Article",
+  "file_name": "Blog article",
+  "input": "Why visual workflow editors make AI agents more accessible",
+  "guide": {
+    "problem": "Good articles grow from a clear audience and a well-thought-out outline. The workflow splits the work like an editorial team and checks the result before it is published.",
+    "flow": "Audience and outline are created in parallel with a fast model. The writer turns them into the article; a built-in quality check makes sure it follows the outline and answers the readers' questions. The editor checks length and readability with the text statistics tool and marks unverified claims.",
+    "input": "A topic in one sentence. Optionally add the audience, tone or desired length directly in the input.",
+    "result": "A finished article in Markdown with headings, a meta description and short editorial notes with word count and pointers to claims that should be backed up before publication. The run also saves the result as a Markdown and an HTML file that you can paste into your CMS.",
+    "adapt": "Change the topic in the input. You can upload your style guide as knowledge and assign it to the writer and the editor. Set the desired length in the writer's system prompt."
+  },
+  "agents": {
+    "audience": {
+      "name": "Audience",
+      "description": "Describes the readers, their questions and what they already know.",
+      "system": "You describe the target readers of an article: who they are, what they already know and which three questions they bring. Be concise.",
+      "task": "{{input}}"
+    },
+    "outline": {
+      "name": "Outline",
+      "description": "Drafts the title and the outline.",
+      "system": "You draft a compelling title and a five-part outline for an article. State in one sentence what each section should achieve.",
+      "task": "{{input}}"
+    },
+    "writer": {
+      "name": "Writer",
+      "description": "Writes the article from the outline and the audience.",
+      "system": "You are an experienced tech journalist. Write a clear, vivid article of about 700 words with Markdown headings. Explain technical terms when they first appear and use concrete examples. Do not invent studies, figures or quotes.",
+      "task": "Write the article on “{{run.input}}”.\n\nAudience:\n{{node:audience}}\n\nOutline:\n{{node:outline}}",
+      "criteria": {
+        "follows_outline": "The article follows the outline.",
+        "audience": "The article answers the audience's questions."
+      }
+    },
+    "editor": {
+      "name": "Editor",
+      "description": "Checks length and readability and delivers the final version.",
+      "system": "You are an editor. Determine the article's word and sentence count with the text statistics tool. Improve clarity, spelling and flow without changing the content or the structure. First output the revised final version in Markdown, then a meta description of at most 155 characters, and finally editing notes: word count, main changes and claims that should be backed up before publication.",
+      "task": "Edit this article:\n\n{{input}}"
+    }
+  },
+  "tests": {
+    "topic": {
+      "name": "Topic in one sentence"
+    }
+  }
+}

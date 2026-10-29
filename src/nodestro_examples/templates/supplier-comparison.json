@@ -1,0 +1,169 @@
+{
+  "id": "supplier-comparison",
+  "number": 3,
+  "category": "industry",
+  "level": "advanced",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 180,
+      "form": [
+        {
+          "name": "offers",
+          "type": "file",
+          "accept": [
+            "pdf",
+            "docx",
+            "xlsx",
+            "csv"
+          ],
+          "multiple": true,
+          "max_files": 10
+        }
+      ]
+    },
+    {
+      "id": "cost",
+      "type": "agent",
+      "x": 360,
+      "y": 40,
+      "role": "analysis",
+      "icon": "calculator",
+      "tools": [
+        "calculator"
+      ]
+    },
+    {
+      "id": "risk",
+      "type": "agent",
+      "x": 360,
+      "y": 320,
+      "role": "analysis",
+      "icon": "shield"
+    },
+    {
+      "id": "recommendation",
+      "type": "agent",
+      "x": 720,
+      "y": 180,
+      "role": "planning",
+      "icon": "scale",
+      "output_name": "SupplierRecommendation",
+      "output_fields": [
+        {
+          "name": "recommended_supplier",
+          "type": "string"
+        },
+        {
+          "name": "ranking",
+          "type": "string_list"
+        },
+        {
+          "name": "reasons",
+          "type": "string_list"
+        },
+        {
+          "name": "risks",
+          "type": "string_list"
+        },
+        {
+          "name": "negotiation_points",
+          "type": "string_list"
+        },
+        {
+          "name": "assumptions",
+          "type": "string_list"
+        }
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1080,
+      "y": 180,
+      "files": [
+        "pdf",
+        "xlsx"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "cost"
+    ],
+    [
+      "start",
+      "risk"
+    ],
+    [
+      "cost",
+      "recommendation"
+    ],
+    [
+      "risk",
+      "recommendation"
+    ],
+    [
+      "recommendation",
+      "output"
+    ]
+  ],
+  "samples": [
+    {
+      "id": "offer_a",
+      "format": "pdf",
+      "field": "offers"
+    },
+    {
+      "id": "offer_b",
+      "format": "docx",
+      "field": "offers"
+    },
+    {
+      "id": "offer_c",
+      "format": "xlsx",
+      "field": "offers"
+    }
+  ],
+  "tests": [
+    {
+      "id": "offers_text",
+      "checks": [
+        {
+          "field": "recommended_supplier",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "ranking",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "assumptions",
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "offers_files",
+      "input": "own",
+      "samples": [
+        "offer_a",
+        "offer_b",
+        "offer_c"
+      ],
+      "checks": [
+        {
+          "field": "recommended_supplier",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "ranking",
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

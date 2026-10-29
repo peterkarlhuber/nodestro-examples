@@ -1,0 +1,105 @@
+{
+  "id": "blog-article",
+  "number": 6,
+  "category": "customers",
+  "level": "beginner",
+  "featured": true,
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160
+    },
+    {
+      "id": "audience",
+      "type": "agent",
+      "x": 320,
+      "y": 20,
+      "role": "research",
+      "icon": "users",
+      "model": "claude-haiku-5-5",
+      "effort": "low"
+    },
+    {
+      "id": "outline",
+      "type": "agent",
+      "x": 320,
+      "y": 300,
+      "role": "planning",
+      "icon": "list",
+      "model": "claude-haiku-5-5",
+      "effort": "low"
+    },
+    {
+      "id": "writer",
+      "type": "agent",
+      "x": 680,
+      "y": 160,
+      "role": "writing",
+      "icon": "pen",
+      "criteria": [
+        "follows_outline",
+        "audience"
+      ]
+    },
+    {
+      "id": "editor",
+      "type": "agent",
+      "x": 1020,
+      "y": 160,
+      "role": "review",
+      "icon": "check",
+      "effort": "low",
+      "tools": [
+        "text_statistics"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1360,
+      "y": 160,
+      "files": [
+        "md",
+        "html"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "audience"
+    ],
+    [
+      "start",
+      "outline"
+    ],
+    [
+      "audience",
+      "writer"
+    ],
+    [
+      "outline",
+      "writer"
+    ],
+    [
+      "writer",
+      "editor"
+    ],
+    [
+      "editor",
+      "output"
+    ]
+  ],
+  "tests": [
+    {
+      "id": "topic",
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

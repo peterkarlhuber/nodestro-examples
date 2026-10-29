@@ -1,0 +1,68 @@
+{
+  "name": "Créer un plan d'apprentissage personnel",
+  "field": "Éducation et formation",
+  "description": "Évaluer le niveau actuel, élaborer un plan d'apprentissage, expliquer les contenus et créer un contrôle des connaissances.",
+  "start": "Objectif d'apprentissage",
+  "output": "Kit d'apprentissage",
+  "file_name": "Plan d'apprentissage",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nApprenant : Sam Exemple, acheteur, utilise Excel au quotidien pour des listes et des totaux simples.\nObjectif : utiliser les tableaux croisés dynamiques avec assurance d'ici quatre semaines pour analyser les commandes par fournisseur et par mois.\nTemps : environ 3 heures par semaine, de préférence en séances de 30 à 45 minutes.\nConnaissances préalables : a déjà utilisé RECHERCHEV, à l'aise avec le filtrage et le tri ; presque jamais de graphiques.\nStyle d'apprentissage : apprend mieux avec des exemples tirés de son travail, aime les exercices courts.",
+  "guide": {
+    "problem": "On apprend mieux avec un plan qui part de là où l'on en est. Le workflow crée un plan d'apprentissage personnel, explique les premiers thèmes et vérifie la compréhension avec un quiz.",
+    "flow": "Le bilan d'apprentissage détermine le point de départ et les lacunes, le planificateur en tire un plan hebdomadaire. Sur cette base, le tuteur (contenus de la semaine choisie, appuyés si vous le souhaitez sur vos supports de cours) et l'auteur du quiz (contrôle des connaissances avec corrigé) travaillent en parallèle. Le résultat contient les trois parties.",
+    "input": "Qui apprend, l'objectif, le temps disponible, les connaissances préalables et le style d'apprentissage préféré. Dans le formulaire, vous choisissez la semaine à élaborer et pouvez joindre vos propres supports ; le fichier d'exemple est un court guide sur les tableaux croisés dynamiques.",
+    "result": "Un plan d'apprentissage sur quatre semaines avec des objectifs par semaine, des explications claires avec exercices pour la semaine choisie et un quiz avec corrigé et explications, aussi en PDF à imprimer.",
+    "adapt": "Décrivez votre propre objectif ; cela fonctionne pour presque tous les sujets. Pour les semaines suivantes, relancez le workflow et changez la semaine dans le formulaire. Les supports que vous utilisez durablement peuvent être chargés comme connaissance et attribués au tuteur."
+  },
+  "agents": {
+    "assessment": {
+      "name": "Bilan d'apprentissage",
+      "description": "Détermine le point de départ, l'objectif d'apprentissage et les lacunes.",
+      "system": "Tu es conseiller en formation. À partir de la description, détermine le niveau de départ, l'objectif d'apprentissage concret sous une forme vérifiable, les lacunes entre les deux et les obstacles possibles. Tiens compte du budget temps et du style d'apprentissage. Sois bref et structuré.",
+      "task": "Fais le bilan du niveau d'apprentissage :\n\n{{input}}"
+    },
+    "plan": {
+      "name": "Planificateur d'apprentissage",
+      "description": "Crée un plan hebdomadaire avec objectifs et exercices.",
+      "system": "Tu es ingénieur pédagogique et tu planifies des formations. Crée un plan d'apprentissage par semaines : pour chaque semaine, les objectifs, les thèmes, les séances avec leur durée, un exercice pratique tiré du quotidien professionnel et un critère qui permet à l'apprenant de reconnaître ses progrès. Respecte le budget temps et prévois des répétitions.",
+      "task": "Crée le plan d'apprentissage à partir de ce bilan :\n\n{{node:assessment}}"
+    },
+    "tutor": {
+      "name": "Tuteur",
+      "description": "Explique les contenus de la première semaine avec exemples et exercices.",
+      "system": "Tu es un tuteur patient. Explique pas à pas les thèmes de la semaine du plan d'apprentissage indiquée dans la consigne, avec un exemple suivi tiré de la vie professionnelle de l'apprenant, des exercices courts et les erreurs typiques. Si des supports de cours sont joints, respecte leurs termes et leur démarche et renvoie aux sections correspondantes. Écris de façon claire et encourageante, sans jargon que tu n'expliques pas.",
+      "task": "Explique les contenus de la semaine {{form.week}} de ce plan d'apprentissage.\n\nApprenant et objectif :\n{{run.input}}\n\nPlan d'apprentissage :\n{{node:plan}}"
+    },
+    "quiz": {
+      "name": "Auteur du quiz",
+      "description": "Crée un contrôle des connaissances avec réponses pour la première semaine.",
+      "system": "Tu crées des contrôles des connaissances. Rédige huit exercices pour la semaine du plan d'apprentissage indiquée dans la consigne : questions à choix multiple avec une seule bonne réponse, courts exercices d'application et un exercice de transfert. Donne ensuite le corrigé avec une courte explication pour chaque exercice. Évalue la compréhension, pas la mémorisation.",
+      "task": "Crée le contrôle des connaissances pour la semaine {{form.week}} de ce plan d'apprentissage :\n\n{{node:plan}}"
+    }
+  },
+  "form": {
+    "week": {
+      "label": "Semaine pour l'explication et le quiz",
+      "description": "La semaine du plan pour laquelle le tuteur et l'auteur du quiz élaborent les contenus.",
+      "default": "1"
+    },
+    "materials": {
+      "label": "Supports de cours",
+      "description": "Facultatif : vos propres supports en PDF, Word, Markdown ou texte, jusqu'à 5 fichiers. Le tuteur s'y appuie lorsqu'ils sont fournis."
+    }
+  },
+  "samples": {
+    "guide": {
+      "name": "Guide_rapide_tableaux_croises",
+      "description": "Un support de cours fictif sur les tableaux croisés dynamiques en document Word.",
+      "content": "# Guide rapide : tableaux croisés dynamiques dans Excel\n\nDONNÉES D'EXEMPLE SYNTHÉTIQUES – support de cours fictif, uniquement pour essayer.\n\n## 1. Préparer les données\n\n- Une ligne d'en-tête, pas de lignes ni de colonnes vides.\n- Un seul type de valeur par colonne (par exemple uniquement des dates).\n- Mettre les données sous forme de tableau (Ctrl+L) ; le tableau croisé suit alors.\n\n## 2. Créer le tableau croisé dynamique\n\n1. Cliquer dans le tableau.\n2. Insertion > Tableau croisé dynamique.\n3. Choisir « Nouvelle feuille de calcul ».\n\n## 3. Disposer les champs\n\n| Zone | À quoi elle sert | Exemple |\n|---|---|---|\n| Lignes | Groupes les uns sous les autres | Fournisseur |\n| Colonnes | Groupes côte à côte | Mois |\n| Valeurs | Ce qui est calculé | Somme du montant de commande |\n| Filtres | Sélection pour tout le tableau | Site |\n\n## 4. Erreurs typiques\n\n- Les valeurs sont comptées au lieu d'être additionnées : Paramètres des champs de valeurs > Somme.\n- Nouvelles données absentes : actualiser le tableau croisé (Alt+F5).\n- Dates non groupées : clic droit > Grouper > Mois."
+    }
+  },
+  "tests": {
+    "week_one": {
+      "name": "Semaine 1 sans support"
+    },
+    "week_two_material": {
+      "name": "Semaine 2 avec support de cours"
+    }
+  }
+}

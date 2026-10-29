@@ -1,0 +1,55 @@
+{
+  "name": "Avaliar uma ideia de negócio",
+  "field": "Autônomos e empreendedores",
+  "description": "Avaliar em paralelo o potencial de mercado, a rentabilidade e os riscos de uma ideia de negócio e chegar a um parecer.",
+  "start": "Ideia de negócio",
+  "output": "Avaliação",
+  "file_name": "Avaliacao_ideia_de_negocio",
+  "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nIdeia: serviço móvel de conserto de bicicletas \"Socorro Bike\" em uma cidade de 180.000 habitantes.\nUma bicicleta de carga com ferramentas vai até os clientes em casa ou no escritório; agendamento por um site simples.\n\nPremissas do fundador:\n- Serviço médio 65 EUR líquidos, participação de material 30 %\n- Capacidade de 6 serviços por dia, 20 dias úteis por mês; em média 50 % de ocupação no primeiro ano\n- Investimento inicial 18.000 EUR (bicicleta de carga, ferramentas, site), financiado com recursos próprios\n- Custos fixos 1.400 EUR por mês (seguro, depósito, telefone, software, marketing)\n- Pró-labore desejado 2.500 EUR por mês\n- Públicos-alvo: quem vai de bicicleta ao trabalho, famílias com bicicletas de carga, empresas com leasing de bicicletas para funcionários\n- Conhecido: três lojas de bicicletas na cidade com espera de duas a três semanas na primavera",
+  "guide": {
+    "problem": "Antes de abrir um negócio vale a pena olhar com sobriedade para o mercado, os números e os riscos. O workflow faz três especialistas examinarem a ideia ao mesmo tempo e um júri chegar a um parecer fundamentado.",
+    "flow": "Três agentes trabalham em paralelo: o analista de mercado estima públicos-alvo e concorrência, o calculista de rentabilidade determina o ponto de equilíbrio e cenários com a calculadora, o analista de riscos busca pontos fracos. O júri de investidores pondera tudo e entrega um parecer estruturado com nota.",
+    "input": "Uma descrição da ideia com oferta, públicos-alvo, preços, custos, capacidade e concorrentes conhecidos.",
+    "result": "Um veredito estruturado (seguir, ajustar ou descartar) com pontuação, pontos fortes, riscos, premissas a testar e próximos passos concretos para validar a ideia, também como relatório em PDF.",
+    "adapt": "Descreva sua ideia com seus números. Quanto mais honestas as premissas, mais útil o parecer. Carregue seus próprios dados de mercado ou resultados de pesquisas como conhecimento e atribua-os ao analista de mercado."
+  },
+  "agents": {
+    "market": {
+      "name": "Analista de mercado",
+      "description": "Estima públicos-alvo, demanda e concorrência.",
+      "system": "Você é analista de mercado para startups. Descreva os públicos-alvo, suas necessidades e disposição a pagar, estime o potencial de mercado com um cálculo aproximado transparente e cauteloso e analise a concorrência. Indique quais informações vêm da descrição e quais se baseiam em conhecimento geral e precisam ser verificadas localmente.",
+      "task": "Analise o mercado para esta ideia:\n\n{{input}}"
+    },
+    "economics": {
+      "name": "Calculista de rentabilidade",
+      "description": "Calcula margem de contribuição, ponto de equilíbrio e cenários com a calculadora.",
+      "system": "Você é consultor de empreendedorismo com foco em finanças. Use a calculadora para calcular a margem de contribuição por serviço, a receita e o lucro mensais, o ponto de equilíbrio em serviços por mês (incluindo o pró-labore) e o retorno do investimento inicial. Calcule três cenários (cauteloso, esperado, otimista) e mostre quão sensível o resultado é à ocupação e ao preço.",
+      "task": "Calcule a rentabilidade desta ideia:\n\n{{input}}"
+    },
+    "risks": {
+      "name": "Analista de riscos",
+      "description": "Busca pontos fracos e riscos da ideia.",
+      "system": "Você é um mentor de startups experiente e faz deliberadamente o papel de advogado do diabo. Busque os maiores riscos: demanda, sazonalidade, dependência de uma pessoa, concorrência, exigências legais, escalabilidade e financiamento. Avalie cada risco por probabilidade e impacto e proponha uma forma barata de testá-lo antes de abrir o negócio.",
+      "task": "Analise os riscos desta ideia:\n\n{{input}}"
+    },
+    "jury": {
+      "name": "Júri de investidores",
+      "description": "Pondera mercado, números e riscos e chega a um parecer.",
+      "system": "Você é um júri de fundadores e investidores experientes. Pondere mercado, rentabilidade e riscos entre si e chegue a um parecer: seguir, adaptar ou abandonar. Dê uma nota de 1 a 10 e justifique-a. Indique as premissas que precisam ser testadas primeiro e próximos passos concretos e baratos. Seja honesto, mas justo.",
+      "task": "Avalie a ideia.\n\nAnálise de mercado:\n{{node:market}}\n\nRentabilidade:\n{{node:economics}}\n\nRiscos:\n{{node:risks}}",
+      "fields": {
+        "verdict": "Parecer (seguir, adaptar ou abandonar) com justificativa",
+        "score": "Nota de 1 a 10",
+        "strengths": "Pontos fortes da ideia",
+        "risks": "Principais riscos",
+        "assumptions_to_test": "Premissas que precisam ser testadas primeiro",
+        "next_steps": "Próximos passos concretos"
+      }
+    }
+  },
+  "tests": {
+    "idea": {
+      "name": "Serviço móvel de conserto de bicicletas"
+    }
+  }
+}

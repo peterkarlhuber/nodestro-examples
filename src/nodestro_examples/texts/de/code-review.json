@@ -1,0 +1,70 @@
+{
+  "name": "Code-Review mit Tests",
+  "field": "Softwareentwicklung",
+  "description": "Quellcode auf Fehler und Sicherheitsprobleme prüfen und eine verbesserte Fassung mit Tests vorschlagen.",
+  "start": "Quellcode",
+  "output": "Review und Tests",
+  "file_name": "Code-Review",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nKontext: Funktion aus einem internen Werkzeug, das Rabatte für Bestellungen berechnet und Bestellungen sucht.\nPython 3.12, Datenbank SQLite.\n\n```python\nimport sqlite3\n\ndef apply_discount(total, customer_type, coupon=None):\n    \"\"\"Return the price after discounts. Regular customers get 5 %, premium 10 %.\n    A coupon like \"SAVE20\" takes a further 20 % off, but the price must never drop below 0.\"\"\"\n    if customer_type == \"premium\":\n        total = total * 0.9\n    elif customer_type == \"regular\":\n        total = total * 0.95\n    if coupon:\n        percent = int(coupon[4:])\n        total = total - total * percent / 100\n    return round(total, 1)\n\ndef average_order_value(orders):\n    return sum(o[\"total\"] for o in orders) / len(orders)\n\ndef find_orders(db_path, customer_name):\n    conn = sqlite3.connect(db_path)\n    query = f\"SELECT id, total FROM orders WHERE customer = '{customer_name}'\"\n    rows = conn.execute(query).fetchall()\n    return rows\n```",
+  "guide": {
+    "problem": "Ein zweiter Blick findet Fehler, bevor sie in Produktion gehen. Der Workflow prüft Code gleichzeitig auf Logikfehler und Sicherheitsprobleme und liefert eine verbesserte Fassung samt Tests.",
+    "flow": "Fehleranalyst und Sicherheitsprüfer arbeiten parallel am selben Code. Der Verbesserungs-Agent führt die Befunde zusammen, schreibt korrigierten Code und pytest-Tests; eine eingebaute Qualitätsprüfung kontrolliert, dass jeder Befund behandelt und durch Tests abgedeckt ist.",
+    "input": "Ein Codeausschnitt mit kurzem Kontext: Sprache, Zweck und Umgebung, oder ein ganzes Projekt als ZIP-Archiv bzw. einzelne Dateien im Dateifeld. Archive werden nur gelesen, nie ausgeführt. Der Code bleibt unverändert in seiner Sprache; Erklärungen erscheinen in der Oberflächensprache. Die Beispieldatei ist ein kleines Python-Projekt mit eingebauten Fehlern.",
+    "result": "Eine nach Schwere geordnete Liste der Befunde, der korrigierte Code und pytest-Tests, die jeden Befund abdecken, zusätzlich als Markdown-Datei. Die Tests werden nicht automatisch ausgeführt; führe sie lokal aus.",
+    "adapt": "Hänge dein Projekt als ZIP an oder füge Code ein und nenne Sprache und Framework. Für andere Sprachen passe im Verbesserungs-Agenten das Testframework an, zum Beispiel Jest oder JUnit. Eure Coding-Guidelines kannst du als Wissen hinterlegen. Über die Workflow-API lässt sich das Review auch aus einer CI-Pipeline anstoßen."
+  },
+  "agents": {
+    "bugs": {
+      "name": "Fehleranalyst",
+      "description": "Sucht Logikfehler, Randfälle und Abweichungen von der Beschreibung.",
+      "system": "Du bist Senior-Softwareentwickler und machst Code-Reviews. Suche Logikfehler, nicht behandelte Randfälle, Abweichungen zwischen Dokumentation und Verhalten, Fehlerbehandlung und Ressourcenlecks. Nenne zu jedem Befund Zeile oder Funktion, ein konkretes Eingabebeispiel, das den Fehler zeigt, die Schwere (kritisch, hoch, mittel, gering) und einen Lösungsvorschlag.",
+      "task": "Prüfe diesen Code auf Fehler:\n\n{{input}}"
+    },
+    "security": {
+      "name": "Sicherheitsprüfer",
+      "description": "Prüft den Code auf Sicherheitslücken und unsichere Muster.",
+      "system": "Du bist Application-Security-Spezialist. Prüfe den Code auf Sicherheitsprobleme, zum Beispiel Injection, unsichere Eingabeverarbeitung, fehlende Validierung, Geheimnisse im Code oder unsicheren Umgang mit Ressourcen. Ordne Befunde nach Schwere, beschreibe ein mögliches Angriffsszenario in einem Satz und nenne die sichere Alternative. Melde keine Befunde ohne Bezug zum gezeigten Code.",
+      "task": "Prüfe diesen Code auf Sicherheitsprobleme:\n\n{{input}}"
+    },
+    "fix": {
+      "name": "Verbesserung und Tests",
+      "description": "Schreibt korrigierten Code und pytest-Tests zu allen Befunden.",
+      "system": "Du bist Entwickler mit Fokus auf Testqualität. Führe die Befunde zusammen und entferne Dubletten. Gib aus: erstens eine Tabelle der Befunde nach Schwere, zweitens den vollständigen korrigierten Code, drittens pytest-Tests, die jeden Befund abdecken, einschließlich Randfällen. Code, Bezeichner und Kommentare im Code bleiben Englisch. Weise darauf hin, dass die Tests lokal ausgeführt werden müssen. Liegt ein Projekt mit mehreren Dateien vor, gib für jede geänderte Datei den Pfad und die vollständige neue Fassung an und lass unveränderte Dateien weg.",
+      "task": "Erstelle die verbesserte Fassung mit Tests.\n\nUrsprünglicher Code:\n{{run.input}}\n\nFehleranalyse:\n{{node:bugs}}\n\nSicherheitsprüfung:\n{{node:security}}",
+      "criteria": {
+        "every_finding_addressed": "Jeder Befund aus Fehleranalyse und Sicherheitsprüfung ist im Code behoben oder begründet zurückgestellt.",
+        "tests_cover_findings": "Zu jedem behobenen Befund gibt es mindestens einen Test.",
+        "runnable": "Code und Tests sind vollständig und ohne Platzhalter lauffähig."
+      }
+    }
+  },
+  "form": {
+    "code_files": {
+      "label": "Code als Dateien",
+      "description": "Optional: ein Projekt als ZIP-Archiv oder einzelne Quelldateien, bis zu 20 Dateien. Archive werden nur gelesen, nie ausgeführt; die Agenten sehen zuerst die Struktur und lesen gezielt die nötigen Dateien."
+    }
+  },
+  "samples": {
+    "project": {
+      "name": "rabattrechner",
+      "description": "Ein kleines, ungefährliches Python-Projekt als ZIP mit eingebauten Fehlern: Rabattberechnung, SQL-Abfrage und ein Test.",
+      "content": {
+        "rabattrechner/README.md": "# Rabattrechner (Beispielprojekt)\n\nSYNTHETISCHE BEISPIELDATEN – frei erfundenes Projekt, nur zum Ausprobieren.\n\nEin kleines internes Werkzeug: Es berechnet Rabatte für Bestellungen und sucht Bestellungen in einer SQLite-Datenbank.\n\n- Python 3.12, keine weiteren Abhängigkeiten\n- Tests mit pytest: `pytest`\n",
+        "rabattrechner/shop/__init__.py": "",
+        "rabattrechner/shop/discounts.py": "def apply_discount(total, customer_type, coupon=None):\n    \"\"\"Return the price after discounts. Regular customers get 5 %, premium 10 %.\n    A coupon like \"SAVE20\" takes a further 20 % off, but the price must never drop below 0.\"\"\"\n    if customer_type == \"premium\":\n        total = total * 0.9\n    elif customer_type == \"regular\":\n        total = total * 0.95\n    if coupon:\n        percent = int(coupon[4:])\n        total = total - total * percent / 100\n    return round(total, 1)\n\n\ndef average_order_value(orders):\n    return sum(o[\"total\"] for o in orders) / len(orders)\n",
+        "rabattrechner/shop/orders.py": "import sqlite3\n\nADMIN_PASSWORD = \"admin123\"\n\n\ndef find_orders(db_path, customer_name):\n    conn = sqlite3.connect(db_path)\n    query = f\"SELECT id, total FROM orders WHERE customer = '{customer_name}'\"\n    rows = conn.execute(query).fetchall()\n    return rows\n",
+        "rabattrechner/tests/test_discounts.py": "from shop.discounts import apply_discount\n\n\ndef test_premium():\n    assert apply_discount(100, \"premium\") == 90\n",
+        "rabattrechner/requirements.txt": "pytest>=8\n"
+      }
+    }
+  },
+  "tests": {
+    "snippet": {
+      "name": "Codeausschnitt im Text"
+    },
+    "project_zip": {
+      "name": "Projekt als ZIP-Archiv",
+      "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nPrüfe das Projekt im ZIP-Archiv: ein internes Werkzeug, das Rabatte berechnet und Bestellungen sucht. Python 3.12, Datenbank SQLite."
+    }
+  }
+}

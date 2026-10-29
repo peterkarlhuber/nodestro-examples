@@ -1,0 +1,151 @@
+{
+  "name": "Develop a social media strategy",
+  "field": "Influencers and content creators",
+  "description": "Define positioning and content pillars, develop ideas and create a publishing plan.",
+  "start": "Creator profile",
+  "output": "Content plan",
+  "file_name": "Content plan",
+  "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nCreator: \"Cooking with Kim\" (fictional), Instagram 8,400 followers, TikTok 3,100 followers, no YouTube channel\nContent so far: quick after-work recipes, irregularly 1–2 posts per week\nBest posts: 15-minute pasta (reel, 92,000 views), meal prep for the week (carousel, 1,400 saves)\nAudience according to statistics: aged 25–40, mostly working, 70 % women\nGoal in three months: 15,000 followers on Instagram and a first collaboration with a regional brand\nTime: about 6 hours per week for planning, filming and editing\nStart date of the plan: Monday, 2026-05-04",
+  "guide": {
+    "problem": "Publishing regularly needs a clear direction and a plan that fits your own time budget. The workflow derives a strategy from the metrics, collects suitable ideas and plans publication.",
+    "flow": "A chain of three agents: the strategy agent sets positioning, content pillars and goals and evaluates attached statistics for this, the idea developer formulates concrete post ideas with a hook, and the content planner spreads them over four weeks. The idea developer remembers its suggestions in a memory so that later runs do not repeat ideas. A quality check verifies that frequency and mix are realistic.",
+    "input": "Profile with platforms, figures, successful posts, audience, goals, available time and start date. You can also attach statistics as screenshots or as a CSV/Excel export; the sample file is such an export.",
+    "result": "A four-week content plan with date, platform, format, idea, hook and call to action, introduced by a short summary of the strategy, also as an Excel file for further planning.",
+    "adapt": "Enter your profile and figures or attach screenshots of your statistics. Add your brand style and no-go topics in the system prompt of the idea developer. You can find the memory “creator-ideas” under Memory; clear it if you want to start afresh. For a monthly plan you can run the copy on a schedule."
+  },
+  "agents": {
+    "strategy": {
+      "name": "Strategy agent",
+      "description": "Defines positioning, content pillars and measurable goals.",
+      "system": "You are a social media strategist for creators. From the metrics and goals, derive a one-sentence positioning, three to four content pillars with their share, suitable formats per platform and measurable goals for three months. Justify every decision with the available data and take the time budget into account.",
+      "task": "Develop the strategy for this profile:\n\n{{input}}"
+    },
+    "ideas": {
+      "name": "Idea developer",
+      "description": "Develops concrete post ideas with hook and format.",
+      "system": "You are a creative content developer. For each content pillar, develop four concrete post ideas with a working title, format, a hook for the first three seconds and a call to action. Aim for variety and for ideas that can be produced with little effort. Mark ideas that suit a brand collaboration. Use your memory: before developing ideas, read which ideas were already proposed in earlier runs and avoid repeating them. At the end, save the working titles of the new ideas with the date. If the memory is empty, simply start afresh.",
+      "task": "Develop post ideas for this strategy:\n\n{{node:strategy}}"
+    },
+    "calendar": {
+      "name": "Content planner",
+      "description": "Spreads the ideas over a realistic four-week plan.",
+      "system": "You plan content calendars. Start with a three-sentence summary of the strategy. Then create a plan for four weeks from the start date as a table with date, weekday, platform, format, idea, hook and call to action. Plan production so that it fits the time budget, for example with filming days for several posts.",
+      "task": "Create the content calendar.\n\nStrategy:\n{{node:strategy}}\n\nIdeas:\n{{node:ideas}}",
+      "criteria": {
+        "realistic_frequency": "The publishing frequency fits the stated time budget.",
+        "pillars_balanced": "The content pillars are distributed according to the strategy.",
+        "matches_goals": "The plan visibly supports the stated goals."
+      }
+    }
+  },
+  "form": {
+    "insights": {
+      "label": "Statistics",
+      "description": "Optional: screenshots of your statistics (PNG, JPEG, WebP) or an export as CSV or Excel, up to 6 files. Without files, the figures in the text apply."
+    }
+  },
+  "samples": {
+    "insights": {
+      "name": "Post_statistics_March",
+      "description": "A fictional statistics export with seven posts as CSV.",
+      "content": [
+        [
+          "Date",
+          "Platform",
+          "Format",
+          "Topic",
+          "Views",
+          "Likes",
+          "Saves",
+          "Comments",
+          "New followers"
+        ],
+        [
+          "2026-03-02",
+          "Instagram",
+          "Reel",
+          "15-minute pasta",
+          92000,
+          4100,
+          2300,
+          160,
+          610
+        ],
+        [
+          "2026-03-05",
+          "Instagram",
+          "Carousel",
+          "Meal prep for the week",
+          18500,
+          1200,
+          1400,
+          75,
+          140
+        ],
+        [
+          "2026-03-09",
+          "TikTok",
+          "Video",
+          "Tray-bake vegetables without chopping",
+          7400,
+          380,
+          90,
+          22,
+          35
+        ],
+        [
+          "2026-03-14",
+          "Instagram",
+          "Reel",
+          "Breakfast to go",
+          6100,
+          290,
+          160,
+          18,
+          20
+        ],
+        [
+          "2026-03-19",
+          "Instagram",
+          "Story",
+          "Farmers' market shopping",
+          2100,
+          0,
+          0,
+          12,
+          4
+        ],
+        [
+          "2026-03-23",
+          "TikTok",
+          "Video",
+          "Three quick dips",
+          11800,
+          640,
+          210,
+          41,
+          66
+        ],
+        [
+          "2026-03-28",
+          "Instagram",
+          "Carousel",
+          "Leftover ideas",
+          9900,
+          720,
+          980,
+          54,
+          85
+        ]
+      ]
+    }
+  },
+  "tests": {
+    "profile": {
+      "name": "Profile in the text"
+    },
+    "insights_export": {
+      "name": "Profile with statistics export"
+    }
+  }
+}

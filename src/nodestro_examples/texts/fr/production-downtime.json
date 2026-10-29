@@ -1,0 +1,203 @@
+{
+  "name": "Analyser les arrêts machine",
+  "field": "Production et industrie",
+  "description": "Exploiter un journal des arrêts, développer des hypothèses de causes et prioriser les mesures d'amélioration.",
+  "start": "Journal des arrêts",
+  "output": "Plan d'actions",
+  "file_name": "Analyse des arrêts",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nUsine : Usine Exemple Nord, ligne de remplissage L2 (boissons, 3 équipes)\nPériode : semaines 14–15, temps de production planifié total 14 400 minutes\nObjectif : arrêts inférieurs à 3 % du temps de production planifié\n\n| N° | Date | Équipe | Machine | Durée (min) | Code défaut | Note de l'opérateur |\n|---|---|---|---|---|---|---|\n| 1 | 01/04 | Matin | Étiqueteuse | 45 | E-17 rupture d'étiquette | Nouvelle bobine d'étiquettes du fournisseur B |\n| 2 | 01/04 | Après-midi | Remplisseuse | 120 | F-03 fuite de vanne | Joint remplacé, pièce de rechange à chercher au magasin central |\n| 3 | 02/04 | Nuit | Étiqueteuse | 30 | E-17 rupture d'étiquette | De nouveau bobine du fournisseur B |\n| 4 | 03/04 | Matin | Encartonneuse | 25 | P-08 bourrage de cartons | Les cartons semblent humides |\n| 5 | 03/04 | Après-midi | Étiqueteuse | 50 | E-17 rupture d'étiquette | Tension de bande réajustée |\n| 6 | 04/04 | Matin | Remplisseuse | 90 | F-11 changement de format | Passage de 0,5 l à 1 l, temps standard 45 min |\n| 7 | 07/04 | Nuit | Étiqueteuse | 40 | E-17 rupture d'étiquette | Nouvel opérateur en formation |\n| 8 | 08/04 | Matin | Encartonneuse | 35 | P-08 bourrage de cartons | Toit du stock de cartons du hall 3 qui fuit ? |\n| 9 | 09/04 | Après-midi | Remplisseuse | 60 | F-03 fuite de vanne | Même groupe de vannes que le 01/04 |\n| 10 | 10/04 | Matin | Étiqueteuse | 55 | E-17 rupture d'étiquette | Bobine du fournisseur B, colle qui semble faible |\n| 11 | 11/04 | Après-midi | Remplisseuse | 95 | F-11 changement de format | Pièce de format à chercher |\n| 12 | 14/04 | Nuit | Encartonneuse | 20 | P-02 défaut capteur | Barrière lumineuse nettoyée |",
+  "guide": {
+    "problem": "Les arrêts coûtent du temps de production, mais dans les longs journaux les schémas passent facilement inaperçus. Le workflow transforme un journal des arrêts en une liste de mesures justifiée et priorisée.",
+    "flow": "Deux agents travaillent en parallèle : l'analyste des arrêts calcule totaux, parts et un classement de Pareto avec la calculatrice, l'analyste des causes développe des hypothèses selon les 5M. Le planificateur d'actions réunit les deux, et une vérification qualité intégrée contrôle que chaque mesure est justifiée. Si la part des arrêts dépasse l'objectif de 3 %, un nœud de décision lance un sous-workflow qualité qui évalue les risques des mesures et planifie leur sécurisation.",
+    "input": "Un journal des arrêts (date, équipe, machine, durée, code défaut, note) et le temps de production planifié. Vous pouvez coller le journal dans le texte sous forme de tableau ou le déposer dans le champ de fichier facultatif en CSV ou Excel ; le fichier d'exemple « Journal_arrets_L2_semaines14-15.xlsx » contient les mêmes douze entrées fictives que la tâche de test.",
+    "result": "Un tableau priorisé d'actions immédiates, de vérifications et d'actions durables, chacune avec effet attendu, effort, rôle responsable et indicateur, ainsi que l'analyse des données avec la part d'arrêts et les trois prochaines étapes les plus importantes. L'exécution enregistre aussi le tout en Markdown et dans un fichier Excel avec les tableaux.",
+    "adapt": "Déposez un export de votre MES ou de votre tableur dans le champ de fichier ; les longs journaux fonctionnent aussi, car les agents lisent les gros fichiers de façon ciblée. Pour une analyse hebdomadaire, vous pouvez planifier la copie. Dans le prompt système du planificateur d'actions, vous pouvez ajouter votre méthode, par exemple les piliers TPM ou une grille d'évaluation fixe."
+  },
+  "agents": {
+    "downtime": {
+      "name": "Analyste des arrêts",
+      "description": "Exploite le journal de manière quantitative et calcule avec la calculatrice.",
+      "system": "Tu es analyste de données en maintenance. Exploite les journaux d'arrêts de manière quantitative : totaux et parts par machine, code défaut et équipe, fréquence et durée moyenne, un classement de Pareto et la part du temps de production planifié par rapport à l'objectif. Vérifie chaque chiffre avec la calculatrice au lieu de l'estimer. Présente les résultats dans des tableaux compacts et signale les anomalies comme des répétitions ou des concentrations dans certaines équipes.",
+      "task": "Exploite ce journal des arrêts de manière quantitative :\n\n{{input}}",
+      "fields": {
+        "analysis": "L'analyse quantitative sous forme de texte avec tableaux",
+        "downtime_share_percent": "Part des arrêts dans le temps de production planifié, en pour cent"
+      }
+    },
+    "causes": {
+      "name": "Analyste des causes",
+      "description": "Développe des hypothèses de causes selon les 5M et propose des vérifications.",
+      "system": "Tu es ingénieur de production expérimenté et tu animes des analyses de causes. Déduis des entrées et des notes des hypothèses de causes et classe-les selon les 5M : main-d'œuvre, machine, matière, méthode, milieu, en ajoutant la mesure si utile. Indique pour chaque hypothèse les entrées qui la soutiennent, sa plausibilité (élevée, moyenne, faible) et une vérification qui la confirme ou l'écarte. Formule des hypothèses, pas des causes établies.",
+      "task": "Développe des hypothèses de causes pour ces arrêts :\n\n{{input}}"
+    },
+    "measures": {
+      "name": "Planificateur d'actions",
+      "description": "Réunit analyse et hypothèses en mesures priorisées.",
+      "system": "Tu es expert en lean manufacturing et en TPM. Développe des mesures d'amélioration concrètes à partir de l'analyse des données et des hypothèses de causes. Distingue actions immédiates, vérifications qui confirment des hypothèses et mesures correctives durables. Évalue chaque mesure selon l'effet attendu (minutes gagnées, si on peut le déduire), l'effort et le délai de mise en œuvre, et priorise-les dans un tableau. Indique pour chaque mesure un rôle responsable et un indicateur pour vérifier son efficacité. Termine par les trois prochaines étapes les plus importantes.",
+      "task": "Déduis des mesures d'amélioration priorisées.\n\nAnalyse des données :\n{{node:downtime}}\n\nHypothèses de causes :\n{{node:causes}}",
+      "criteria": {
+        "linked_to_findings": "Chaque mesure se rapporte de façon traçable à un constat de l'analyse des données ou à une hypothèse de cause.",
+        "prioritised": "Les mesures sont priorisées de façon justifiée selon l'effet et l'effort.",
+        "owners_and_metrics": "Chaque mesure indique un rôle responsable et un indicateur pour vérifier son efficacité."
+      }
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "Objectif manqué ?",
+      "branches": {
+        "above_target": "Plus de 3 %"
+      },
+      "default": "Dans l'objectif"
+    },
+    "quality": {
+      "name": "Assurance qualité"
+    }
+  },
+  "form": {
+    "log_file": {
+      "label": "Journal des arrêts en fichier",
+      "description": "Facultatif : un export du MES ou d'un tableur en CSV ou Excel (XLSX), 10 Mo au maximum. Sans fichier, les agents analysent le tableau du texte."
+    }
+  },
+  "samples": {
+    "log": {
+      "name": "Journal_arrets_L2_semaines14-15",
+      "description": "Export Excel des douze arrêts fictifs de la ligne de remplissage L2 de la tâche de test.",
+      "content": {
+        "Arrêts": [
+          [
+            "N°",
+            "Date",
+            "Équipe",
+            "Machine",
+            "Durée (min)",
+            "Code défaut",
+            "Note de l'opérateur"
+          ],
+          [
+            1,
+            "2026-04-01",
+            "Matin",
+            "Étiqueteuse",
+            45,
+            "E-17 rupture d'étiquette",
+            "Nouvelle bobine d'étiquettes du fournisseur B"
+          ],
+          [
+            2,
+            "2026-04-01",
+            "Après-midi",
+            "Remplisseuse",
+            120,
+            "F-03 fuite de vanne",
+            "Joint remplacé, pièce de rechange à chercher au magasin central"
+          ],
+          [
+            3,
+            "2026-04-02",
+            "Nuit",
+            "Étiqueteuse",
+            30,
+            "E-17 rupture d'étiquette",
+            "De nouveau bobine du fournisseur B"
+          ],
+          [
+            4,
+            "2026-04-03",
+            "Matin",
+            "Encartonneuse",
+            25,
+            "P-08 bourrage de cartons",
+            "Les cartons semblent humides"
+          ],
+          [
+            5,
+            "2026-04-03",
+            "Après-midi",
+            "Étiqueteuse",
+            50,
+            "E-17 rupture d'étiquette",
+            "Tension de bande réajustée"
+          ],
+          [
+            6,
+            "2026-04-04",
+            "Matin",
+            "Remplisseuse",
+            90,
+            "F-11 changement de format",
+            "Passage de 0,5 l à 1 l, temps standard 45 min"
+          ],
+          [
+            7,
+            "2026-04-07",
+            "Nuit",
+            "Étiqueteuse",
+            40,
+            "E-17 rupture d'étiquette",
+            "Nouvel opérateur en formation"
+          ],
+          [
+            8,
+            "2026-04-08",
+            "Matin",
+            "Encartonneuse",
+            35,
+            "P-08 bourrage de cartons",
+            "Toit du stock de cartons du hall 3 qui fuit ?"
+          ],
+          [
+            9,
+            "2026-04-09",
+            "Après-midi",
+            "Remplisseuse",
+            60,
+            "F-03 fuite de vanne",
+            "Même groupe de vannes que le 01/04"
+          ],
+          [
+            10,
+            "2026-04-10",
+            "Matin",
+            "Étiqueteuse",
+            55,
+            "E-17 rupture d'étiquette",
+            "Bobine du fournisseur B, colle qui semble faible"
+          ],
+          [
+            11,
+            "2026-04-11",
+            "Après-midi",
+            "Remplisseuse",
+            95,
+            "F-11 changement de format",
+            "Pièce de format à chercher"
+          ],
+          [
+            12,
+            "2026-04-14",
+            "Nuit",
+            "Encartonneuse",
+            20,
+            "P-02 défaut capteur",
+            "Barrière lumineuse nettoyée"
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "above_target": {
+      "name": "Journal dans le texte, objectif manqué (4,6 %)"
+    },
+    "within_target": {
+      "name": "Quinzaine calme, objectif tenu",
+      "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nUsine : Usine Exemple Nord, ligne de remplissage L2 (boissons, 3 équipes)\nPériode : semaines 16–17, temps de production planifié total 14 400 minutes\nObjectif : arrêts inférieurs à 3 % du temps de production planifié\n\n| N° | Date | Équipe | Machine | Durée (min) | Code défaut | Note de l'opérateur |\n|---|---|---|---|---|---|---|\n| 1 | 15/04 | Matin | Remplisseuse | 70 | F-11 changement de format | Passage de 0,5 l à 1 l avec la nouvelle check-list |\n| 2 | 17/04 | Après-midi | Étiqueteuse | 25 | E-17 rupture d'étiquette | Bobine du fournisseur A |\n| 3 | 21/04 | Nuit | Encartonneuse | 20 | P-02 défaut capteur | Barrière lumineuse nettoyée |\n| 4 | 23/04 | Matin | Remplisseuse | 60 | F-11 changement de format | Passage de 1 l à 0,5 l |\n| 5 | 24/04 | Après-midi | Étiqueteuse | 30 | E-04 encollage | Buse de colle nettoyée |"
+    },
+    "log_file": {
+      "name": "Journal en fichier Excel",
+      "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nUsine : Usine Exemple Nord, ligne de remplissage L2 (boissons, 3 équipes)\nPériode : semaines 14–15, temps de production planifié total 14 400 minutes\nObjectif : arrêts inférieurs à 3 % du temps de production planifié\n\nLe journal des arrêts est joint en fichier Excel."
+    }
+  }
+}

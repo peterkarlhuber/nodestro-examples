@@ -1,0 +1,141 @@
+{
+  "name": "Anbauplanung für einen Betrieb",
+  "field": "Landwirtschaft",
+  "description": "Fruchtfolge für die Schläge eines Betriebs planen, Deckungsbeiträge rechnen und den Plan prüfen.",
+  "start": "Betriebsdaten",
+  "output": "Anbauplan",
+  "file_name": "Anbauplan",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren. Preise und Kosten sind Annahmen.\n\nBetrieb: Ackerbaubetrieb Beispielhof, 60 ha in fünf Schlägen, konventionell, keine Tierhaltung\n| Schlag | Größe | Boden | Vorfrucht 2026 |\n|---|---|---|---|\n| S1 | 15 ha | Lehm, gut | Winterweizen |\n| S2 | 12 ha | Lehm, gut | Winterraps |\n| S3 | 10 ha | sandiger Lehm | Wintergerste |\n| S4 | 13 ha | Lehm, gut | Zuckerrüben |\n| S5 | 10 ha | sandig, trocken | Winterroggen |\n\nPlanungsregeln: kein Weizen nach Weizen; Raps höchstens alle 4 Jahre auf demselben Schlag (S2 hatte 2026 Raps);\nZuckerrüben nur auf gutem Lehm, Liefervertrag über 13 ha; Getreideanteil höchstens 66 %.\n\nAnnahmen je ha (Erlös / variable Kosten):\n- Winterweizen 1.900 EUR / 1.050 EUR; Wintergerste 1.550 EUR / 950 EUR; Winterroggen 1.250 EUR / 780 EUR\n- Winterraps 1.800 EUR / 1.100 EUR; Zuckerrüben 3.300 EUR / 1.900 EUR; Ackerbohnen 1.150 EUR / 650 EUR",
+  "guide": {
+    "problem": "Die Anbauplanung muss Fruchtfolge, Böden, Verträge und Wirtschaftlichkeit zugleich berücksichtigen. Der Workflow schlägt eine Fruchtfolge vor, rechnet Deckungsbeiträge und prüft den Plan gegen die eigenen Regeln.",
+    "flow": "Eine Kette aus drei Agenten: Der Fruchtfolgeplaner ordnet jedem Schlag eine Kultur zu, die Deckungsbeitragsrechnung rechnet je Schlag und gesamt mit dem Rechner-Tool, und die Plausibilitätsprüfung kontrolliert Regeln und Risiken und liefert ein strukturiertes Ergebnis.",
+    "input": "Schläge mit Größe, Boden und Vorfrucht, eure Planungsregeln und Annahmen zu Erlösen und Kosten je Hektar. Schläge und Annahmen kannst du als Excel- oder CSV-Datei anhängen; die Beispieldatei enthält beide Tabellen der Testaufgabe.",
+    "result": "Ein Anbauplan je Schlag mit Deckungsbeitrag, eine Regelprüfung, Risiken und offene Fragen, zusätzlich als Excel-Datei. Rechtliche Vorgaben, etwa zu Düngung oder Förderbedingungen, müssen anhand der aktuellen Regeln vor Ort geprüft werden.",
+    "adapt": "Hänge deine Schlagkartei und Kalkulationsdaten als Excel an und trage deine Planungsregeln ein. Bodenproben, die du jedes Jahr brauchst, lädst du als Wissen hoch und weist sie dem Fruchtfolgeplaner zu."
+  },
+  "agents": {
+    "rotation": {
+      "name": "Fruchtfolgeplaner",
+      "description": "Ordnet jedem Schlag eine Kultur nach Regeln und Boden zu.",
+      "system": "Du bist Pflanzenbauberater. Ordne jedem Schlag für das Planungsjahr eine Kultur zu und beachte Vorfrucht, Boden, Liefer- und Planungsregeln sowie eine gesunde Fruchtfolge. Begründe jede Zuordnung in einem Satz und nenne Alternativen, wenn eine Regel knapp eingehalten wird. Halte dich an die angegebenen Regeln, auch wenn sie wirtschaftlich Nachteile haben.",
+      "task": "Plane die Fruchtfolge für diesen Betrieb:\n\n{{input}}"
+    },
+    "margins": {
+      "name": "Deckungsbeitragsrechnung",
+      "description": "Rechnet Deckungsbeiträge je Schlag und gesamt mit dem Rechner-Tool.",
+      "system": "Du bist Betriebswirt für Landwirtschaft. Berechne mit dem Rechner-Tool für jeden Schlag den Deckungsbeitrag (Erlös minus variable Kosten, mal Fläche) und die Summe für den Betrieb. Nutze nur die angegebenen Annahmen. Zeige außerdem, wie sich der Gesamtdeckungsbeitrag bei 15 % niedrigeren Erlösen verändert.",
+      "task": "Rechne die Deckungsbeiträge.\n\nBetriebsdaten und Annahmen:\n{{run.input}}\n\nFruchtfolge:\n{{node:rotation}}"
+    },
+    "review": {
+      "name": "Plausibilitätsprüfung",
+      "description": "Prüft den Plan gegen Regeln und Risiken und fasst zusammen.",
+      "system": "Du prüfst Anbaupläne. Kontrolliere jede Planungsregel einzeln und gib an, ob sie eingehalten ist, prüfe die Rechnung auf Plausibilität und nenne Risiken wie Witterung, Preise und Arbeitsspitzen. Weise darauf hin, dass rechtliche Vorgaben und Förderbedingungen anhand der aktuellen Regeln geprüft werden müssen.",
+      "task": "Prüfe diesen Anbauplan.\n\nFruchtfolge:\n{{node:rotation}}\n\nDeckungsbeiträge:\n{{node:margins}}",
+      "fields": {
+        "plan_summary": "Anbauplan je Schlag in Kurzform",
+        "total_margin_eur": "Gesamtdeckungsbeitrag in Euro",
+        "rule_checks": "Prüfung jeder Planungsregel",
+        "risks": "Risiken des Plans",
+        "open_questions": "Offene Fragen vor der Umsetzung"
+      }
+    }
+  },
+  "form": {
+    "field_data": {
+      "label": "Schlagkartei und Kalkulationsdaten",
+      "description": "Optional: Schläge und Annahmen als Excel oder CSV, bis zu 3 Dateien und je 10 MB. Ohne Datei gelten die Tabellen im Text."
+    }
+  },
+  "samples": {
+    "fields": {
+      "name": "Schlagkartei_Beispielhof",
+      "description": "Die erfundenen Schläge und Kalkulationsannahmen der Testaufgabe als Excel-Datei mit zwei Blättern.",
+      "content": {
+        "Schläge": [
+          [
+            "Schlag",
+            "Größe (ha)",
+            "Boden",
+            "Vorfrucht 2026"
+          ],
+          [
+            "S1",
+            15,
+            "Lehm, gut",
+            "Winterweizen"
+          ],
+          [
+            "S2",
+            12,
+            "Lehm, gut",
+            "Winterraps"
+          ],
+          [
+            "S3",
+            10,
+            "sandiger Lehm",
+            "Wintergerste"
+          ],
+          [
+            "S4",
+            13,
+            "Lehm, gut",
+            "Zuckerrüben"
+          ],
+          [
+            "S5",
+            10,
+            "sandig, trocken",
+            "Winterroggen"
+          ]
+        ],
+        "Annahmen": [
+          [
+            "Kultur",
+            "Erlös (EUR/ha)",
+            "Variable Kosten (EUR/ha)"
+          ],
+          [
+            "Winterweizen",
+            1900,
+            1050
+          ],
+          [
+            "Wintergerste",
+            1550,
+            950
+          ],
+          [
+            "Winterroggen",
+            1250,
+            780
+          ],
+          [
+            "Winterraps",
+            1800,
+            1100
+          ],
+          [
+            "Zuckerrüben",
+            3300,
+            1900
+          ],
+          [
+            "Ackerbohnen",
+            1150,
+            650
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "farm_text": {
+      "name": "Betrieb im Text"
+    },
+    "field_file": {
+      "name": "Schlagkartei als Excel-Datei",
+      "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren. Preise und Kosten sind Annahmen.\n\nBetrieb: Ackerbaubetrieb Beispielhof, 60 ha in fünf Schlägen, konventionell, keine Tierhaltung. Schläge und Kalkulationsannahmen stehen in der angehängten Excel-Datei.\n\nPlanungsregeln: kein Weizen nach Weizen; Raps höchstens alle 4 Jahre auf demselben Schlag (S2 hatte 2026 Raps);\nZuckerrüben nur auf gutem Lehm, Liefervertrag über 13 ha; Getreideanteil höchstens 66 %."
+    }
+  }
+}

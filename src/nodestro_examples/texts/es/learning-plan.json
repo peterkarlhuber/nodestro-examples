@@ -1,0 +1,68 @@
+{
+  "name": "Crear un plan de aprendizaje personal",
+  "field": "Educación y formación",
+  "description": "Evaluar el nivel actual, desarrollar un plan de aprendizaje, explicar los contenidos y crear una prueba de conocimientos.",
+  "start": "Objetivo de aprendizaje",
+  "output": "Paquete de aprendizaje",
+  "file_name": "Plan de aprendizaje",
+  "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nPersona que aprende: Sam Ejemplo, administrativo de compras, usa Excel a diario para listas y sumas sencillas.\nObjetivo: dominar las tablas dinámicas en cuatro semanas para analizar pedidos por proveedor y mes.\nTiempo: unas 3 horas por semana, preferiblemente en sesiones de 30 a 45 minutos.\nConocimientos previos: ha usado BUSCARV alguna vez, domina filtrar y ordenar; casi no usa gráficos.\nEstilo de aprendizaje: aprende mejor con ejemplos de su propio trabajo y le gustan los ejercicios cortos.",
+  "guide": {
+    "problem": "Se aprende mejor con un plan que parte del nivel propio. El flujo crea un plan de aprendizaje personal, explica los primeros contenidos y comprueba la comprensión con un cuestionario.",
+    "flow": "La evaluación del nivel determina el punto de partida y las lagunas, y el planificador elabora con ello un plan semanal. Sobre esa base trabajan en paralelo el tutor (contenidos de la semana elegida, apoyados en tu material del curso si quieres) y el autor de pruebas (prueba de conocimientos con soluciones). El resultado contiene las tres partes.",
+    "input": "Quién aprende, el objetivo, el tiempo disponible, los conocimientos previos y el estilo de aprendizaje preferido. En el formulario eliges la semana que se elabora y puedes adjuntar material propio; el archivo de ejemplo es una guía breve sobre tablas dinámicas.",
+    "result": "Un plan de aprendizaje de cuatro semanas con objetivos por semana, explicaciones claras con ejercicios para la semana elegida y una prueba con soluciones y explicaciones, además en PDF para imprimir.",
+    "adapt": "Describe tu propio objetivo; funciona para casi cualquier tema. Para las semanas siguientes, vuelve a iniciar el flujo de trabajo y cambia la semana en el formulario. El material que uses de forma permanente puedes subirlo como conocimiento y asignarlo al tutor."
+  },
+  "agents": {
+    "assessment": {
+      "name": "Evaluación del nivel",
+      "description": "Determina el punto de partida, el objetivo y las lagunas.",
+      "system": "Eres orientadora de aprendizaje. A partir de la descripción, determina el nivel de partida, el objetivo concreto de forma verificable, las lagunas intermedias y los posibles obstáculos. Ten en cuenta el tiempo disponible y el estilo de aprendizaje. Sé breve y estructurada.",
+      "task": "Evalúa el nivel de aprendizaje:\n\n{{input}}"
+    },
+    "plan": {
+      "name": "Planificador de aprendizaje",
+      "description": "Crea un plan semanal con objetivos y ejercicios.",
+      "system": "Eres diseñador instruccional y planificas formaciones. Crea un plan de aprendizaje por semanas: para cada semana, objetivos, temas, sesiones con su duración, un ejercicio práctico del trabajo diario y un criterio con el que la persona reconozca su progreso. Respeta el tiempo disponible e incluye repasos.",
+      "task": "Crea el plan de aprendizaje a partir de esta evaluación:\n\n{{node:assessment}}"
+    },
+    "tutor": {
+      "name": "Tutor",
+      "description": "Explica los contenidos de la primera semana con ejemplos y ejercicios.",
+      "system": "Eres un tutor paciente. Explica paso a paso los temas de la semana del plan indicada en el encargo, con un ejemplo continuo del trabajo diario de la persona, ejercicios cortos y errores típicos. Si hay material del curso adjunto, respeta sus términos y su forma de proceder y remite a las secciones correspondientes. Escribe de forma clara y alentadora, sin jerga que no expliques.",
+      "task": "Explica los contenidos de la semana {{form.week}} de este plan de aprendizaje.\n\nPersona que aprende y objetivo:\n{{run.input}}\n\nPlan de aprendizaje:\n{{node:plan}}"
+    },
+    "quiz": {
+      "name": "Autor de pruebas",
+      "description": "Crea una prueba de conocimientos con soluciones para la primera semana.",
+      "system": "Creas pruebas de conocimientos. Escribe ocho ejercicios sobre la semana del plan indicada en el encargo: preguntas de opción múltiple con una respuesta correcta, ejercicios breves de aplicación y un ejercicio de transferencia. Después da las soluciones con una breve explicación de cada ejercicio. Comprueba la comprensión, no la memorización.",
+      "task": "Crea la prueba de conocimientos de la semana {{form.week}} de este plan de aprendizaje:\n\n{{node:plan}}"
+    }
+  },
+  "form": {
+    "week": {
+      "label": "Semana para explicación y prueba",
+      "description": "La semana del plan para la que el tutor y el autor de pruebas elaboran los contenidos.",
+      "default": "1"
+    },
+    "materials": {
+      "label": "Material del curso",
+      "description": "Opcional: material propio en PDF, Word, Markdown o texto, hasta 5 archivos. El tutor se basa en él si está disponible."
+    }
+  },
+  "samples": {
+    "guide": {
+      "name": "Guia_rapida_tablas_dinamicas",
+      "description": "Un material de curso inventado sobre tablas dinámicas como documento de Word.",
+      "content": "# Guía rápida: tablas dinámicas en Excel\n\nDATOS DE EJEMPLO SINTÉTICOS – material de curso inventado, solo para probar.\n\n## 1. Preparar los datos\n\n- Una fila de encabezado, sin filas ni columnas vacías.\n- Un solo tipo de valor por columna (por ejemplo, solo fechas).\n- Dar formato de tabla a los datos (Ctrl+T); así la tabla dinámica crece con ellos.\n\n## 2. Crear la tabla dinámica\n\n1. Hacer clic dentro de la tabla.\n2. Insertar > Tabla dinámica.\n3. Elegir «Nueva hoja de cálculo».\n\n## 3. Organizar los campos\n\n| Área | Para qué | Ejemplo |\n|---|---|---|\n| Filas | Grupos uno debajo de otro | Proveedor |\n| Columnas | Grupos uno al lado de otro | Mes |\n| Valores | Lo que se calcula | Suma del importe del pedido |\n| Filtros | Selección para toda la tabla | Sede |\n\n## 4. Errores típicos\n\n- Los valores se cuentan en lugar de sumarse: Configuración de campo de valor > Suma.\n- Faltan datos nuevos: actualizar la tabla dinámica (Alt+F5).\n- Fechas sin agrupar: clic derecho > Agrupar > Meses."
+    }
+  },
+  "tests": {
+    "week_one": {
+      "name": "Semana 1 sin material"
+    },
+    "week_two_material": {
+      "name": "Semana 2 con material del curso"
+    }
+  }
+}

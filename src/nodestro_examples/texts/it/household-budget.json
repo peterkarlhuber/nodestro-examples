@@ -1,0 +1,246 @@
+{
+  "name": "Verificare il bilancio familiare e risparmiare",
+  "field": "Privati – finanze",
+  "description": "Analizzare entrate e uscite di una famiglia e trovare possibilità di risparmio realistiche.",
+  "start": "Bilancio familiare",
+  "output": "Verifica del bilancio",
+  "file_name": "Bilancio familiare",
+  "input": "DATI DI ESEMPIO SINTETICI – una famiglia completamente fittizia, solo per provare.\n\nFamiglia: due adulti, un bambino (7 anni), appartamento in affitto\nEntrate nette mensili: 2.900 EUR + 1.450 EUR (part-time) + 255 EUR di assegno per i figli\nObiettivo: risparmiare 400 EUR al mese per costituire in due anni una riserva di emergenza pari a tre mesi di entrate nette.\n\nSpese fisse mensili:\n- Affitto riscaldamento incluso 1.380 EUR, elettricità 95 EUR, internet e cellulare (3 contratti) 112 EUR\n- Auto: rata del finanziamento 289 EUR, assicurazione 74 EUR, bollo 18 EUR\n- Assicurazioni: responsabilità civile 7 EUR, casa 14 EUR, invalidità 68 EUR\n- Asilo/doposcuola 210 EUR, società sportiva del bambino 25 EUR\n- Streaming e abbonamenti: 4 servizi, 52 EUR in totale; palestra 2 × 39 EUR (una inutilizzata da 5 mesi)\n\nSpese variabili, media degli ultimi 3 mesi:\n- Spesa alimentare 780 EUR, ristoranti e consegne a domicilio 240 EUR, carburante 160 EUR\n- Abbigliamento 130 EUR, tempo libero 150 EUR, varie 260 EUR\nSaldo attuale del conto di risparmio: 1.800 EUR",
+  "guide": {
+    "problem": "A fine mese spesso resta meno del previsto. Il workflow ricalcola un bilancio familiare, trova potenziali di risparmio e verifica se le proposte sono realistiche nella vita di tutti i giorni.",
+    "flow": "L'analista del bilancio calcola totali, avanzo e quote per categoria con la calcolatrice. Il consulente del risparmio stima risparmi concreti, anch'essi ricalcolati. Il controllo di realtà riceve entrambi i risultati, ne verifica la fattibilità e fornisce un esito strutturato.",
+    "input": "Entrate, spese fisse e variabili di una famiglia e un obiettivo di risparmio. Invece di digitare tutto, puoi allegare i movimenti del conto o un registro delle spese come file CSV o Excel; il file di esempio contiene un mese fittizio.",
+    "result": "Una verifica strutturata del bilancio con l'avanzo mensile attuale, il potenziale di risparmio, misure, primi passi rapidi e avvertenze, anche come file Excel. Non sostituisce una consulenza finanziaria o sul sovraindebitamento.",
+    "adapt": "Allega i tuoi movimenti del conto o inserisci i tuoi numeri; priorità personali, come \"l'auto resta\", vanno nel testo. Gli estratti conto contengono dati personali: restano a te e vengono passati al modello solo per questa esecuzione."
+  },
+  "agents": {
+    "budget": {
+      "name": "Analista del bilancio",
+      "description": "Calcola entrate, uscite, avanzo e quote con la calcolatrice.",
+      "system": "Sei un consulente per il bilancio familiare. Usa la calcolatrice per calcolare: entrate totali, totale delle spese fisse e variabili, avanzo mensile, tasso di risparmio e quota di ogni categoria sulle entrate nette. Confronta con l'obiettivo di risparmio e mostra la differenza. Presenta i risultati in una tabella chiara.",
+      "task": "Analizza questo bilancio familiare:\n\n{{input}}"
+    },
+    "savings": {
+      "name": "Consulente del risparmio",
+      "description": "Trova possibilità di risparmio concrete e ne stima l'effetto.",
+      "system": "Sei un consulente per i consumatori. Trova possibilità di risparmio concrete: contratti inutilizzati, cambi di tariffa, spese variabili con margine e abitudini. Stima con prudenza il risparmio mensile di ogni misura e sommali con la calcolatrice. Non raccomandare prodotti finanziari, prestiti o investimenti e non proporre di disdire assicurazioni importanti.",
+      "task": "Trova possibilità di risparmio sulla base di questa analisi:\n\n{{node:budget}}"
+    },
+    "check": {
+      "name": "Controllo di realtà",
+      "description": "Verifica la fattibilità delle proposte e le riassume.",
+      "system": "Verifichi i piani di risparmio dal punto di vista della vita quotidiana. Controlla i numeri, scarta le proposte irrealistiche e ordina le altre per impegno. Indica l'avanzo mensile attuale e il potenziale di risparmio realistico come importi in euro. Indica i limiti dell'analisi e quando ha senso una consulenza finanziaria indipendente o sul sovraindebitamento.",
+      "task": "Verifica il piano di risparmio.\n\nAnalisi del bilancio:\n{{node:budget}}\n\nProposte di risparmio:\n{{node:savings}}",
+      "fields": {
+        "monthly_surplus": "Avanzo attuale al mese in euro",
+        "savings_potential": "Potenziale di risparmio aggiuntivo realistico al mese in euro",
+        "measures": "Misure con risparmio stimato",
+        "quick_wins": "Passi realizzabili già questa settimana",
+        "caveats": "Limiti dell'analisi e note"
+      }
+    }
+  },
+  "form": {
+    "transactions": {
+      "label": "Movimenti del conto o registro delle spese",
+      "description": "Facoltativo: un'esportazione dall'home banking o dal vostro registro delle spese in CSV o Excel, fino a 6 file da 10 MB ciascuno. Senza file valgono le indicazioni nel testo."
+    }
+  },
+  "samples": {
+    "transactions": {
+      "name": "Movimenti_conto_marzo_2026",
+      "description": "Movimenti bancari fittizi di un mese con categorie in CSV, coerenti con la famiglia dell'attività di prova.",
+      "content": [
+        [
+          "Data",
+          "Descrizione",
+          "Categoria",
+          "Importo (EUR)"
+        ],
+        [
+          "2026-03-01",
+          "Stipendio datore di lavoro A",
+          "Entrate",
+          2900.0
+        ],
+        [
+          "2026-03-01",
+          "Stipendio datore di lavoro B (part-time)",
+          "Entrate",
+          1450.0
+        ],
+        [
+          "2026-03-02",
+          "Assegno per i figli",
+          "Entrate",
+          255.0
+        ],
+        [
+          "2026-03-01",
+          "Affitto riscaldamento incluso",
+          "Casa",
+          -1380.0
+        ],
+        [
+          "2026-03-02",
+          "Acconto elettricità",
+          "Casa",
+          -95.0
+        ],
+        [
+          "2026-03-03",
+          "Cellulare e internet (3 contratti)",
+          "Contratti",
+          -112.0
+        ],
+        [
+          "2026-03-03",
+          "Rata finanziamento auto",
+          "Auto",
+          -289.0
+        ],
+        [
+          "2026-03-03",
+          "Assicurazione auto",
+          "Auto",
+          -74.0
+        ],
+        [
+          "2026-03-05",
+          "Asilo e doposcuola",
+          "Figli",
+          -210.0
+        ],
+        [
+          "2026-03-05",
+          "Società sportiva del bambino",
+          "Figli",
+          -25.0
+        ],
+        [
+          "2026-03-06",
+          "Servizio di streaming 1",
+          "Abbonamenti",
+          -17.99
+        ],
+        [
+          "2026-03-06",
+          "Servizio di streaming 2",
+          "Abbonamenti",
+          -13.99
+        ],
+        [
+          "2026-03-07",
+          "Abbonamento musicale",
+          "Abbonamenti",
+          -10.99
+        ],
+        [
+          "2026-03-07",
+          "App di riviste",
+          "Abbonamenti",
+          -9.03
+        ],
+        [
+          "2026-03-08",
+          "Palestra persona 1",
+          "Tempo libero",
+          -39.0
+        ],
+        [
+          "2026-03-08",
+          "Palestra persona 2 (inutilizzata da 5 mesi)",
+          "Tempo libero",
+          -39.0
+        ],
+        [
+          "2026-03-04",
+          "Supermercato",
+          "Spesa alimentare",
+          -186.4
+        ],
+        [
+          "2026-03-11",
+          "Supermercato",
+          "Spesa alimentare",
+          -201.15
+        ],
+        [
+          "2026-03-18",
+          "Supermercato",
+          "Spesa alimentare",
+          -174.8
+        ],
+        [
+          "2026-03-25",
+          "Supermercato",
+          "Spesa alimentare",
+          -219.65
+        ],
+        [
+          "2026-03-09",
+          "Pizza a domicilio",
+          "Ristoranti",
+          -38.5
+        ],
+        [
+          "2026-03-14",
+          "Ristorante",
+          "Ristoranti",
+          -86.0
+        ],
+        [
+          "2026-03-21",
+          "Sushi a domicilio",
+          "Ristoranti",
+          -54.2
+        ],
+        [
+          "2026-03-28",
+          "Bar e panetteria",
+          "Ristoranti",
+          -61.3
+        ],
+        [
+          "2026-03-10",
+          "Distributore di carburante",
+          "Auto",
+          -78.4
+        ],
+        [
+          "2026-03-24",
+          "Distributore di carburante",
+          "Auto",
+          -81.6
+        ],
+        [
+          "2026-03-15",
+          "Abbigliamento online",
+          "Abbigliamento",
+          -129.9
+        ],
+        [
+          "2026-03-19",
+          "Cinema e parco divertimenti",
+          "Tempo libero",
+          -148.0
+        ],
+        [
+          "2026-03-27",
+          "Drogheria e varie",
+          "Varie",
+          -263.1
+        ]
+      ]
+    }
+  },
+  "tests": {
+    "budget_text": {
+      "name": "Bilancio nel testo"
+    },
+    "transactions_file": {
+      "name": "Movimenti del conto in CSV",
+      "input": "DATI DI ESEMPIO SINTETICI – una famiglia completamente fittizia, solo per provare.\n\nFamiglia: due adulti, un bambino (7 anni), appartamento in affitto\nObiettivo: risparmiare 400 EUR al mese per costituire in due anni una riserva di emergenza pari a tre mesi di entrate nette.\nI movimenti del conto dell'ultimo mese sono allegati come file CSV. Tasse e assicurazioni addebitate una volta l'anno: bollo auto 216 EUR, responsabilità civile 84 EUR, casa 168 EUR, invalidità 816 EUR."
+    }
+  }
+}

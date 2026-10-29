@@ -1,0 +1,141 @@
+{
+  "name": "Planificación de cultivos de una explotación",
+  "field": "Agricultura",
+  "description": "Planificar la rotación de cultivos de las parcelas de una explotación, calcular márgenes brutos y revisar el plan.",
+  "start": "Datos de la explotación",
+  "output": "Plan de cultivos",
+  "file_name": "Plan de cultivos",
+  "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar. Los precios y costes son supuestos.\n\nExplotación: explotación agrícola Finca Ejemplo, 60 ha en cinco parcelas, convencional, sin ganadería\n| Parcela | Superficie | Suelo | Cultivo anterior 2026 |\n|---|---|---|---|\n| P1 | 15 ha | franco, bueno | trigo de invierno |\n| P2 | 12 ha | franco, bueno | colza de invierno |\n| P3 | 10 ha | franco arenoso | cebada de invierno |\n| P4 | 13 ha | franco, bueno | remolacha azucarera |\n| P5 | 10 ha | arenoso, seco | centeno de invierno |\n\nReglas de planificación: no trigo tras trigo; colza como máximo cada 4 años en la misma parcela (P2 tuvo colza en\n2026); remolacha solo en suelo franco bueno, contrato de suministro de 13 ha; cereales como máximo el 66 %.\n\nSupuestos por ha (ingresos / costes variables):\n- Trigo de invierno 1.900 EUR / 1.050 EUR; cebada de invierno 1.550 EUR / 950 EUR; centeno de invierno 1.250 EUR / 780 EUR\n- Colza de invierno 1.800 EUR / 1.100 EUR; remolacha azucarera 3.300 EUR / 1.900 EUR; haba forrajera 1.150 EUR / 650 EUR",
+  "guide": {
+    "problem": "La planificación de cultivos debe tener en cuenta a la vez rotación, suelos, contratos y rentabilidad. El flujo propone una rotación, calcula márgenes brutos y revisa el plan frente a vuestras propias reglas.",
+    "flow": "Una cadena de tres agentes: el planificador de rotación asigna un cultivo a cada parcela, el cálculo de márgenes obtiene el margen de cada parcela y el total con la calculadora y la revisión de plausibilidad comprueba reglas y riesgos y entrega un resultado estructurado.",
+    "input": "Parcelas con superficie, suelo y cultivo anterior, vuestras reglas de planificación y supuestos de ingresos y costes por hectárea. Las parcelas y los supuestos puedes adjuntarlos como archivo de Excel o CSV; el archivo de ejemplo contiene las dos tablas de la tarea de prueba.",
+    "result": "Un plan de cultivos por parcela con margen bruto, una comprobación de reglas, riesgos y preguntas abiertas, además como archivo de Excel. Los requisitos legales, por ejemplo sobre fertilización o condiciones de ayudas, deben comprobarse según la normativa local vigente.",
+    "adapt": "Adjunta tu registro de parcelas y tus datos de cálculo en Excel e introduce tus reglas de planificación. Los análisis de suelo que necesitas cada año puedes subirlos como conocimiento y asignarlos al planificador de rotación."
+  },
+  "agents": {
+    "rotation": {
+      "name": "Planificador de rotación",
+      "description": "Asigna un cultivo a cada parcela según reglas y suelo.",
+      "system": "Eres asesor de producción vegetal. Asigna a cada parcela un cultivo para el año de planificación teniendo en cuenta el cultivo anterior, el suelo, las reglas de suministro y de planificación y una rotación sana. Justifica cada asignación en una frase e indica alternativas cuando una regla se cumpla por poco. Respeta las reglas indicadas aunque tengan desventajas económicas.",
+      "task": "Planifica la rotación de cultivos de esta explotación:\n\n{{input}}"
+    },
+    "margins": {
+      "name": "Cálculo de márgenes",
+      "description": "Calcula márgenes brutos por parcela y totales con la calculadora.",
+      "system": "Eres economista agrario. Calcula con la calculadora el margen bruto de cada parcela (ingresos menos costes variables, por superficie) y el total de la explotación. Usa solo los supuestos indicados. Muestra además cómo cambia el margen total con unos ingresos un 15 % más bajos.",
+      "task": "Calcula los márgenes brutos.\n\nDatos de la explotación y supuestos:\n{{run.input}}\n\nRotación de cultivos:\n{{node:rotation}}"
+    },
+    "review": {
+      "name": "Revisión de plausibilidad",
+      "description": "Revisa el plan frente a reglas y riesgos y lo resume.",
+      "system": "Revisas planes de cultivo. Comprueba cada regla de planificación por separado e indica si se cumple, revisa la plausibilidad del cálculo y señala riesgos como el clima, los precios y los picos de trabajo. Indica que los requisitos legales y las condiciones de las ayudas deben comprobarse según las normas vigentes.",
+      "task": "Revisa este plan de cultivos.\n\nRotación de cultivos:\n{{node:rotation}}\n\nMárgenes brutos:\n{{node:margins}}",
+      "fields": {
+        "plan_summary": "Plan de cultivos por parcela en resumen",
+        "total_margin_eur": "Margen bruto total en euros",
+        "rule_checks": "Revisión de cada regla de planificación",
+        "risks": "Riesgos del plan",
+        "open_questions": "Preguntas abiertas antes de la puesta en práctica"
+      }
+    }
+  },
+  "form": {
+    "field_data": {
+      "label": "Registro de parcelas y datos de cálculo",
+      "description": "Opcional: parcelas y supuestos en Excel o CSV, hasta 3 archivos de 10 MB cada uno. Sin archivo valen las tablas del texto."
+    }
+  },
+  "samples": {
+    "fields": {
+      "name": "Registro_parcelas_Finca_Ejemplo",
+      "description": "Las parcelas y los supuestos de cálculo inventados de la tarea de prueba como archivo de Excel con dos hojas.",
+      "content": {
+        "Parcelas": [
+          [
+            "Parcela",
+            "Superficie (ha)",
+            "Suelo",
+            "Cultivo anterior 2026"
+          ],
+          [
+            "P1",
+            15,
+            "franco, bueno",
+            "trigo de invierno"
+          ],
+          [
+            "P2",
+            12,
+            "franco, bueno",
+            "colza de invierno"
+          ],
+          [
+            "P3",
+            10,
+            "franco arenoso",
+            "cebada de invierno"
+          ],
+          [
+            "P4",
+            13,
+            "franco, bueno",
+            "remolacha azucarera"
+          ],
+          [
+            "P5",
+            10,
+            "arenoso, seco",
+            "centeno de invierno"
+          ]
+        ],
+        "Supuestos": [
+          [
+            "Cultivo",
+            "Ingresos (EUR/ha)",
+            "Costes variables (EUR/ha)"
+          ],
+          [
+            "Trigo de invierno",
+            1900,
+            1050
+          ],
+          [
+            "Cebada de invierno",
+            1550,
+            950
+          ],
+          [
+            "Centeno de invierno",
+            1250,
+            780
+          ],
+          [
+            "Colza de invierno",
+            1800,
+            1100
+          ],
+          [
+            "Remolacha azucarera",
+            3300,
+            1900
+          ],
+          [
+            "Haba forrajera",
+            1150,
+            650
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "farm_text": {
+      "name": "Explotación en el texto"
+    },
+    "field_file": {
+      "name": "Registro de parcelas como archivo de Excel",
+      "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar. Los precios y costes son supuestos.\n\nExplotación: explotación agrícola Finca Ejemplo, 60 ha en cinco parcelas, convencional, sin ganadería. Las parcelas y los supuestos de cálculo están en el archivo de Excel adjunto.\n\nReglas de planificación: no trigo tras trigo; colza como máximo cada 4 años en la misma parcela (P2 tuvo colza en 2026);\nremolacha solo en suelo franco bueno, contrato de suministro de 13 ha; cereales como máximo el 66 %."
+    }
+  }
+}

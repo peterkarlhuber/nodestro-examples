@@ -1,0 +1,135 @@
+{
+  "id": "business-idea",
+  "number": 16,
+  "category": "business",
+  "level": "advanced",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 220
+    },
+    {
+      "id": "market",
+      "type": "agent",
+      "x": 360,
+      "y": 0,
+      "role": "research",
+      "icon": "search"
+    },
+    {
+      "id": "economics",
+      "type": "agent",
+      "x": 360,
+      "y": 220,
+      "role": "analysis",
+      "icon": "calculator",
+      "tools": [
+        "calculator"
+      ]
+    },
+    {
+      "id": "risks",
+      "type": "agent",
+      "x": 360,
+      "y": 440,
+      "role": "analysis",
+      "icon": "shield"
+    },
+    {
+      "id": "jury",
+      "type": "agent",
+      "x": 720,
+      "y": 220,
+      "role": "review",
+      "icon": "scale",
+      "output_name": "IdeaVerdict",
+      "output_fields": [
+        {
+          "name": "verdict",
+          "type": "string"
+        },
+        {
+          "name": "score",
+          "type": "integer"
+        },
+        {
+          "name": "strengths",
+          "type": "string_list"
+        },
+        {
+          "name": "risks",
+          "type": "string_list"
+        },
+        {
+          "name": "assumptions_to_test",
+          "type": "string_list"
+        },
+        {
+          "name": "next_steps",
+          "type": "string_list"
+        }
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1080,
+      "y": 220,
+      "files": [
+        "pdf"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "market"
+    ],
+    [
+      "start",
+      "economics"
+    ],
+    [
+      "start",
+      "risks"
+    ],
+    [
+      "market",
+      "jury"
+    ],
+    [
+      "economics",
+      "jury"
+    ],
+    [
+      "risks",
+      "jury"
+    ],
+    [
+      "jury",
+      "output"
+    ]
+  ],
+  "tests": [
+    {
+      "id": "idea",
+      "checks": [
+        {
+          "field": "score",
+          "operator": "gte",
+          "value": 1
+        },
+        {
+          "field": "verdict",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "assumptions_to_test",
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

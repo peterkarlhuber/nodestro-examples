@@ -1,0 +1,144 @@
+{
+  "name": "Speisekarte entwickeln und kalkulieren",
+  "field": "Gastronomie",
+  "description": "Gerichte für eine Zielgruppe entwickeln, Wareneinsatz und Preise kalkulieren und Kartentexte schreiben.",
+  "start": "Konzept",
+  "output": "Speisekarte",
+  "file_name": "Mittagskarte",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nBetrieb: Bistro „Zur Beispielmühle“, 40 Plätze, Gewerbegebiet mit vielen Büros\nZielgruppe: Berufstätige in der Mittagspause (45 Minuten), wünschen schnell, frisch, gern vegetarisch\nAuftrag: Mittagskarte mit 6 Gerichten, davon mindestens 2 vegetarisch und 1 vegan; Wechsel alle zwei Wochen\nZielwareneinsatz: höchstens 30 % des Nettoverkaufspreises; Preisrahmen 9,50 bis 14,50 EUR brutto (7 % MwSt.)\n\nEinkaufspreise (netto):\n- Hähnchenbrust 9,80 EUR/kg, Rinderhack 8,90 EUR/kg, Lachsfilet 21,00 EUR/kg\n- Pasta 1,60 EUR/kg, Reis 1,90 EUR/kg, Kartoffeln 0,90 EUR/kg, Linsen 2,40 EUR/kg\n- Saisongemüse im Mittel 2,80 EUR/kg, Blattsalat 4,50 EUR/kg, Kichererbsen 2,20 EUR/kg\n- Feta 8,50 EUR/kg, Sahne 3,20 EUR/l, Kokosmilch 3,90 EUR/l, Olivenöl 7,50 EUR/l\n- Gewürze, Kräuter und Kleinteile pauschal 0,35 EUR pro Portion",
+  "guide": {
+    "problem": "Eine Speisekarte muss Gästen schmecken und sich rechnen. Der Workflow entwickelt Gerichte für eine Zielgruppe, kalkuliert Wareneinsatz und Preise und schreibt appetitliche Kartentexte.",
+    "flow": "Eine Kette aus drei Agenten: Der Konzeptentwickler stellt Gerichte mit Rezepturen zusammen, die Kalkulation rechnet Wareneinsatz und Verkaufspreise mit dem Rechner-Tool, der Kartentexter schreibt die Karte. Eine Qualitätsprüfung kontrolliert Zielgruppe, Preise und den Hinweis zu Allergenen. Das Ergebnis enthält Kalkulation und Karte.",
+    "input": "Betriebsart, Zielgruppe, Anzahl und Art der Gerichte, Zielwareneinsatz, Preisrahmen und Einkaufspreise. Die Einkaufspreise kannst du einfügen oder als CSV- bzw. Excel-Datei anhängen, wie die Beispieldatei zeigt.",
+    "result": "Eine Kalkulationstabelle mit Wareneinsatz und Preis je Gericht und eine fertige Mittagskarte mit kurzen Beschreibungen, zusätzlich als Word-Datei zum Gestalten und als Excel-Datei mit den Kalkulationstabellen. Allergene und Zusatzstoffe müssen anhand der tatsächlichen Rezepturen geprüft und gekennzeichnet werden.",
+    "adapt": "Hänge deine aktuelle Einkaufspreisliste an und beschreibe deine Zielgruppe. Eure Standardrezepturen lädst du als Wissen hoch und weist sie der Kalkulation zu; Hausregeln wie Portionsgrößen ergänzt du im Konzeptentwickler. Für den Wechsel alle zwei Wochen kannst du die Kopie zeitgesteuert starten."
+  },
+  "agents": {
+    "concept": {
+      "name": "Konzeptentwickler",
+      "description": "Stellt passende Gerichte mit Rezepturen und Mengen zusammen.",
+      "system": "Du bist Küchenchef mit Erfahrung im Mittagsgeschäft. Entwickle Gerichte, die zur Zielgruppe passen und in der verfügbaren Zeit zubereitet und serviert werden können. Gib je Gericht Name, kurze Beschreibung und eine Rezeptur pro Portion mit Mengen in Gramm oder Millilitern an. Nutze vor allem Zutaten aus der Einkaufsliste und markiere Zutaten, die nicht auf der Liste stehen.",
+      "task": "Entwickle die Gerichte für dieses Konzept:\n\n{{input}}"
+    },
+    "costing": {
+      "name": "Kalkulation",
+      "description": "Rechnet Wareneinsatz und Verkaufspreise mit dem Rechner-Tool.",
+      "system": "Du bist Kalkulator in der Gastronomie. Berechne je Gericht mit dem Rechner-Tool die Wareneinsatzkosten pro Portion aus Rezeptur und Einkaufspreisen, den Nettopreis bei höchstens 30 % Wareneinsatz und den Bruttopreis mit 7 % Mehrwertsteuer, gerundet auf psychologisch sinnvolle Preise. Prüfe den Preisrahmen und schlage Anpassungen vor, wenn ein Gericht nicht passt. Zeige alles in einer Tabelle.",
+      "task": "Kalkuliere diese Gerichte.\n\nKonzept und Einkaufspreise:\n{{run.input}}\n\nGerichte:\n{{node:concept}}"
+    },
+    "menu": {
+      "name": "Kartentexter",
+      "description": "Schreibt die Mittagskarte mit appetitlichen Beschreibungen.",
+      "system": "Du schreibst Speisekarten. Formuliere für jedes Gericht einen appetitlichen Namen und eine Beschreibung mit höchstens 20 Wörtern, passend zur Zielgruppe. Ergänze Preis, Kennzeichnung vegetarisch oder vegan und einen Hinweis, dass Allergene anhand der Rezepturen zu prüfen und zu kennzeichnen sind. Übernimm Preise nur aus der Kalkulation. Gib zum Schluss die Kalkulationstabelle unverändert wieder.",
+      "task": "Schreibe die Mittagskarte aus dieser Kalkulation:\n\n{{node:costing}}",
+      "criteria": {
+        "target_group": "Gerichte und Texte passen erkennbar zur beschriebenen Zielgruppe.",
+        "prices_match": "Alle Preise stimmen mit der Kalkulation überein und liegen im Preisrahmen.",
+        "allergen_note": "Die Karte enthält einen Hinweis zur Prüfung und Kennzeichnung von Allergenen."
+      }
+    }
+  },
+  "form": {
+    "purchase_prices": {
+      "label": "Einkaufspreise als Datei",
+      "description": "Optional: eure Einkaufspreisliste als CSV oder Excel, höchstens 5 MB. Ohne Datei gelten die Preise im Text."
+    }
+  },
+  "samples": {
+    "prices": {
+      "name": "Einkaufspreise_Beispielmuehle",
+      "description": "Die erfundenen Einkaufspreise der Testaufgabe als CSV.",
+      "content": [
+        [
+          "Zutat",
+          "Einheit",
+          "Preis netto (EUR)"
+        ],
+        [
+          "Hähnchenbrust",
+          "kg",
+          9.8
+        ],
+        [
+          "Rinderhack",
+          "kg",
+          8.9
+        ],
+        [
+          "Lachsfilet",
+          "kg",
+          21.0
+        ],
+        [
+          "Pasta",
+          "kg",
+          1.6
+        ],
+        [
+          "Reis",
+          "kg",
+          1.9
+        ],
+        [
+          "Kartoffeln",
+          "kg",
+          0.9
+        ],
+        [
+          "Linsen",
+          "kg",
+          2.4
+        ],
+        [
+          "Saisongemüse (Mittel)",
+          "kg",
+          2.8
+        ],
+        [
+          "Blattsalat",
+          "kg",
+          4.5
+        ],
+        [
+          "Kichererbsen",
+          "kg",
+          2.2
+        ],
+        [
+          "Feta",
+          "kg",
+          8.5
+        ],
+        [
+          "Sahne",
+          "l",
+          3.2
+        ],
+        [
+          "Kokosmilch",
+          "l",
+          3.9
+        ],
+        [
+          "Olivenöl",
+          "l",
+          7.5
+        ],
+        [
+          "Gewürze, Kräuter, Kleinteile (pauschal)",
+          "Portion",
+          0.35
+        ]
+      ]
+    }
+  },
+  "tests": {
+    "lunch_menu": {
+      "name": "Mittagskarte mit Preisen im Text"
+    },
+    "price_file": {
+      "name": "Einkaufspreise als CSV",
+      "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nBetrieb: Bistro „Zur Beispielmühle“, 40 Plätze, Gewerbegebiet mit vielen Büros\nZielgruppe: Berufstätige in der Mittagspause (45 Minuten), wünschen schnell, frisch, gern vegetarisch\nAuftrag: Mittagskarte mit 6 Gerichten, davon mindestens 2 vegetarisch und 1 vegan; Wechsel alle zwei Wochen\nZielwareneinsatz: höchstens 30 % des Nettoverkaufspreises; Preisrahmen 9,50 bis 14,50 EUR brutto (7 % MwSt.)\n\nDie Einkaufspreise liegen als CSV-Datei bei."
+    }
+  }
+}

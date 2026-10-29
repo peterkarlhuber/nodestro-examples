@@ -1,0 +1,129 @@
+{
+  "name": "Comparer des offres fournisseurs",
+  "field": "Logistique et achats",
+  "description": "Comparer des offres selon le coût total et le risque d'approvisionnement et en déduire une recommandation justifiée.",
+  "start": "Offres",
+  "output": "Recommandation",
+  "file_name": "Comparaison fournisseurs",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nBesoin : pièce décolletée en inox DT-40, 24 000 pièces par an, appel de 2 000 pièces par mois\nPrix cible : 2,10 EUR par pièce rendu usine\n\nOffre A – Exemple Précision GmbH (Allemagne, à 80 km)\n- Prix 2,35 EUR/pièce, rendu usine, délai 2 semaines\n- Quantité minimale 1 000 pièces, paiement à 30 jours\n- Taux de réclamation l'an dernier 0,4 %, certifié IATF 16949\n\nOffre B – Example Components Ltd. (Extrême-Orient, fret maritime)\n- Prix 1,62 EUR/pièce départ usine, fret et droits de douane estimés à 0,28 EUR/pièce, délai 10 semaines\n- Quantité minimale 12 000 pièces, paiement 30 % d'acompte, solde à l'expédition\n- Pas encore d'historique de livraison, ISO 9001, échantillons validés\n\nOffre C – Modèle Pièces Métalliques s.r.o. (Tchéquie, à 450 km)\n- Prix 1,98 EUR/pièce, fret 0,07 EUR/pièce, délai 4 semaines\n- Quantité minimale 4 000 pièces, paiement à 45 jours\n- Taux de réclamation l'an dernier 1,1 %, ISO 9001, capacité occupée à 90 % selon le fournisseur\n\nHypothèses internes : coût du capital 8 % par an, coût de stockage 0,03 EUR par pièce et par mois,\ncoût par réclamation (contrôle, tri) 0,90 EUR par pièce défectueuse.",
+  "guide": {
+    "problem": "Le prix unitaire le plus bas est rarement l'offre la moins chère. Le workflow compare les offres selon le coût total et le risque d'approvisionnement et justifie une recommandation pour les achats.",
+    "flow": "L'analyste des coûts et l'analyste des risques travaillent en parallèle. L'un calcule avec la calculatrice le coût total de possession de chaque offre, l'autre évalue délai, dépendances et qualité. La recommandation d'achat pèse les deux et fournit un résultat structuré.",
+    "input": "Plusieurs offres avec prix, fret, délai, quantité minimale, conditions de paiement et données qualité, ainsi que vos coûts internes. Vous pouvez écrire les offres dans le texte ou les joindre en fichiers, même mélangées en PDF, Word et Excel ; les trois fichiers d'exemple montrent exactement cela.",
+    "result": "Une recommandation structurée avec classement, justifications, risques, points de négociation et hypothèses retenues. L'exécution l'enregistre aussi en rapport PDF et en fichier Excel avec une feuille par liste.",
+    "adapt": "Joignez vos offres en fichiers et indiquez le besoin et les coûts dans le texte. Si vous avez des pondérations fixes (par exemple 50 % coût, 30 % risque, 20 % qualité), ajoutez-les dans le prompt système de la recommandation d'achat. Les contrats-cadres ou évaluations fournisseurs peuvent être enregistrés comme connaissance et attribués à l'analyste des risques."
+  },
+  "agents": {
+    "cost": {
+      "name": "Analyste des coûts",
+      "description": "Calcule le coût total de chaque offre avec la calculatrice.",
+      "system": "Tu es analyste des coûts aux achats. Calcule pour chaque offre le coût total par pièce et par an : prix, fret et douane, capital immobilisé par les quantités minimales et les acomptes, coût de stockage et coût attendu des réclamations. Utilise la calculatrice pour chaque calcul et montre ta démarche. Compare le résultat au prix cible et indique quelles hypothèses influencent le plus le résultat.",
+      "task": "Calcule le coût total de ces offres :\n\n{{input}}"
+    },
+    "risk": {
+      "name": "Analyste des risques",
+      "description": "Évalue délais, dépendances, capacité et risques qualité.",
+      "system": "Tu es responsable des risques de la chaîne d'approvisionnement. Évalue les risques de chaque offre : délai et flexibilité, trajet de transport, taux d'occupation, historique qualité et certification, engagement financier et dépendance. Évalue chaque risque selon sa probabilité et son impact (élevé, moyen, faible) et propose des protections, par exemple un stock de sécurité ou une deuxième source.",
+      "task": "Évalue les risques d'approvisionnement de ces offres :\n\n{{input}}"
+    },
+    "recommendation": {
+      "name": "Recommandation d'achat",
+      "description": "Pèse coûts et risques et recommande un fournisseur.",
+      "system": "Tu es directeur des achats et tu prépares une décision d'attribution. Pèse le coût total et les risques et recommande un fournisseur ou une combinaison, par exemple une source principale avec une deuxième source. Justifie clairement le classement, indique les risques restants et des points concrets pour la négociation. Liste toutes les hypothèses dont dépend la recommandation.",
+      "task": "Déduis une recommandation.\n\nAnalyse des coûts :\n{{node:cost}}\n\nAnalyse des risques :\n{{node:risk}}",
+      "fields": {
+        "recommended_supplier": "Fournisseur ou combinaison recommandé",
+        "ranking": "Classement des offres avec une brève justification",
+        "reasons": "Principales raisons de la recommandation",
+        "risks": "Risques restants et protections",
+        "negotiation_points": "Points pour la négociation",
+        "assumptions": "Hypothèses dont dépend la recommandation"
+      }
+    }
+  },
+  "form": {
+    "offers": {
+      "label": "Fichiers des offres",
+      "description": "Facultatif : les offres en PDF, Word, Excel ou CSV, jusqu'à 10 fichiers. Sans fichier, les offres du texte font foi ; avec des fichiers, le texte n'a besoin que du besoin, du prix cible et des hypothèses internes."
+    }
+  },
+  "samples": {
+    "offer_a": {
+      "name": "Offre_A_Exemple_Precision",
+      "description": "Offre A sous forme de lettre PDF (fictive).",
+      "content": "# Offre n° 2026-0412\n\n**Exemple Précision GmbH**, Allemagne (à 80 km de votre usine)\n\nMadame, Monsieur, merci pour votre demande concernant la pièce décolletée en inox DT-40. Nous vous proposons :\n\n| Poste | Détail |\n|---|---|\n| Prix | 2,35 EUR par pièce, rendu usine |\n| Délai | 2 semaines |\n| Quantité minimale | 1 000 pièces |\n| Conditions de paiement | 30 jours net |\n| Certification | IATF 16949 |\n| Taux de réclamation l'an dernier | 0,4 % |\n\nL'offre est valable 60 jours. Cordialement, Service commercial (fictif)"
+    },
+    "offer_b": {
+      "name": "Offre_B_Example_Components",
+      "description": "Offre B sous forme de document Word (fictive).",
+      "content": "# Quotation Q-77-DT40\n\n**Example Components Ltd.** (Extrême-Orient, fret maritime)\n\n## Conditions\n\n- Prix : 1,62 EUR par pièce départ usine\n- Fret et droits de douane : selon notre estimation 0,28 EUR par pièce\n- Délai : 10 semaines, fret maritime compris\n- Quantité minimale : 12 000 pièces\n- Paiement : 30 % d'acompte à la commande, solde à l'expédition\n\n## Qualité\n\nCertifié ISO 9001. Les premiers échantillons ont été validés. Il n'existe pas encore d'historique de livraison avec vous."
+    },
+    "offer_c": {
+      "name": "Offre_C_Modele_Pieces_Metalliques",
+      "description": "Offre C sous forme de tableau Excel (fictive).",
+      "content": {
+        "Offre": [
+          [
+            "Poste",
+            "Valeur",
+            "Unité"
+          ],
+          [
+            "Fournisseur",
+            "Modèle Pièces Métalliques s.r.o. (Tchéquie, 450 km)",
+            ""
+          ],
+          [
+            "Prix",
+            1.98,
+            "EUR/pièce"
+          ],
+          [
+            "Fret",
+            0.07,
+            "EUR/pièce"
+          ],
+          [
+            "Délai",
+            4,
+            "semaines"
+          ],
+          [
+            "Quantité minimale",
+            4000,
+            "pièces"
+          ],
+          [
+            "Conditions de paiement",
+            45,
+            "jours"
+          ],
+          [
+            "Taux de réclamation l'an dernier",
+            1.1,
+            "%"
+          ],
+          [
+            "Certification",
+            "ISO 9001",
+            ""
+          ],
+          [
+            "Capacité occupée selon le fournisseur",
+            90,
+            "%"
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "offers_text": {
+      "name": "Trois offres dans le texte"
+    },
+    "offers_files": {
+      "name": "Trois offres en PDF, Word et Excel",
+      "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nBesoin : pièce décolletée en inox DT-40, 24 000 pièces par an, appel de 2 000 pièces par mois\nPrix cible : 2,10 EUR par pièce rendu usine\n\nLes trois offres sont jointes en fichiers.\n\nHypothèses internes : coût du capital 8 % par an, coût de stockage 0,03 EUR par pièce et par mois,\ncoût par réclamation (contrôle, tri) 0,90 EUR par pièce défectueuse."
+    }
+  }
+}

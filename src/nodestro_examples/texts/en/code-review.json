@@ -1,0 +1,70 @@
+{
+  "name": "Code review with tests",
+  "field": "Software development",
+  "description": "Check source code for bugs and security problems and propose an improved version with tests.",
+  "start": "Source code",
+  "output": "Review and tests",
+  "file_name": "Code review",
+  "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nContext: functions from an internal tool that calculates discounts for orders and looks up orders.\nPython 3.12, SQLite database.\n\n```python\nimport sqlite3\n\ndef apply_discount(total, customer_type, coupon=None):\n    \"\"\"Return the price after discounts. Regular customers get 5 %, premium 10 %.\n    A coupon like \"SAVE20\" takes a further 20 % off, but the price must never drop below 0.\"\"\"\n    if customer_type == \"premium\":\n        total = total * 0.9\n    elif customer_type == \"regular\":\n        total = total * 0.95\n    if coupon:\n        percent = int(coupon[4:])\n        total = total - total * percent / 100\n    return round(total, 1)\n\ndef average_order_value(orders):\n    return sum(o[\"total\"] for o in orders) / len(orders)\n\ndef find_orders(db_path, customer_name):\n    conn = sqlite3.connect(db_path)\n    query = f\"SELECT id, total FROM orders WHERE customer = '{customer_name}'\"\n    rows = conn.execute(query).fetchall()\n    return rows\n```",
+  "guide": {
+    "problem": "A second look finds bugs before they reach production. The workflow checks code for logic errors and security problems at the same time and delivers an improved version with tests.",
+    "flow": "The bug analyst and the security reviewer work on the same code in parallel. The improvement agent combines the findings and writes corrected code and pytest tests; a built-in quality check makes sure every finding is handled and covered by tests.",
+    "input": "A code snippet with short context: language, purpose and environment, or a whole project as a ZIP archive or individual files in the file field. Archives are only read, never executed. The code stays unchanged in its language; explanations appear in the interface language. The sample file is a small Python project with built-in bugs.",
+    "result": "A list of findings sorted by severity, the corrected code and pytest tests covering every finding, also as a Markdown file. The tests are not run automatically; run them locally.",
+    "adapt": "Attach your project as a ZIP or paste code and name the language and framework. For other languages, adjust the test framework in the fix agent, for example Jest or JUnit. Your coding guidelines can be stored as knowledge. Through the workflow API, the review can also be triggered from a CI pipeline."
+  },
+  "agents": {
+    "bugs": {
+      "name": "Bug analyst",
+      "description": "Looks for logic errors, edge cases and deviations from the description.",
+      "system": "You are a senior software developer doing code reviews. Look for logic errors, unhandled edge cases, deviations between documentation and behaviour, error handling and resource leaks. For each finding, name the line or function, a concrete input that shows the bug, the severity (critical, high, medium, low) and a proposed fix.",
+      "task": "Check this code for bugs:\n\n{{input}}"
+    },
+    "security": {
+      "name": "Security reviewer",
+      "description": "Checks the code for security vulnerabilities and unsafe patterns.",
+      "system": "You are an application security specialist. Check the code for security problems, for example injection, unsafe input handling, missing validation, secrets in the code or unsafe handling of resources. Order findings by severity, describe a possible attack scenario in one sentence and name the safe alternative. Report nothing unrelated to the code shown.",
+      "task": "Check this code for security problems:\n\n{{input}}"
+    },
+    "fix": {
+      "name": "Fix and tests",
+      "description": "Writes corrected code and pytest tests for all findings.",
+      "system": "You are a developer focused on test quality. Combine the findings and remove duplicates. Output: first a table of findings by severity, second the complete corrected code, third pytest tests that cover every finding, including edge cases. Code, identifiers and comments in the code stay in English. Point out that the tests must be run locally. If the input is a project with several files, give the path and the complete new version for every changed file and leave out unchanged files.",
+      "task": "Create the improved version with tests.\n\nOriginal code:\n{{run.input}}\n\nBug analysis:\n{{node:bugs}}\n\nSecurity review:\n{{node:security}}",
+      "criteria": {
+        "every_finding_addressed": "Every finding of the bug analysis and the security review is fixed in the code or deferred with a reason.",
+        "tests_cover_findings": "There is at least one test for every fixed finding.",
+        "runnable": "Code and tests are complete and runnable without placeholders."
+      }
+    }
+  },
+  "form": {
+    "code_files": {
+      "label": "Code as files",
+      "description": "Optional: a project as a ZIP archive or individual source files, up to 20 files. Archives are only read, never executed; the agents first see the structure and then read the files they need."
+    }
+  },
+  "samples": {
+    "project": {
+      "name": "discount-calculator",
+      "description": "A small, harmless Python project as a ZIP with built-in bugs: discount calculation, an SQL query and a test.",
+      "content": {
+        "discount-calculator/README.md": "# Discount calculator (sample project)\n\nSYNTHETIC SAMPLE DATA – an entirely fictional project, for trying things out only.\n\nA small internal tool: it calculates discounts for orders and looks up orders in an SQLite database.\n\n- Python 3.12, no other dependencies\n- Tests with pytest: `pytest`\n",
+        "discount-calculator/shop/__init__.py": "",
+        "discount-calculator/shop/discounts.py": "def apply_discount(total, customer_type, coupon=None):\n    \"\"\"Return the price after discounts. Regular customers get 5 %, premium 10 %.\n    A coupon like \"SAVE20\" takes a further 20 % off, but the price must never drop below 0.\"\"\"\n    if customer_type == \"premium\":\n        total = total * 0.9\n    elif customer_type == \"regular\":\n        total = total * 0.95\n    if coupon:\n        percent = int(coupon[4:])\n        total = total - total * percent / 100\n    return round(total, 1)\n\n\ndef average_order_value(orders):\n    return sum(o[\"total\"] for o in orders) / len(orders)\n",
+        "discount-calculator/shop/orders.py": "import sqlite3\n\nADMIN_PASSWORD = \"admin123\"\n\n\ndef find_orders(db_path, customer_name):\n    conn = sqlite3.connect(db_path)\n    query = f\"SELECT id, total FROM orders WHERE customer = '{customer_name}'\"\n    rows = conn.execute(query).fetchall()\n    return rows\n",
+        "discount-calculator/tests/test_discounts.py": "from shop.discounts import apply_discount\n\n\ndef test_premium():\n    assert apply_discount(100, \"premium\") == 90\n",
+        "discount-calculator/requirements.txt": "pytest>=8\n"
+      }
+    }
+  },
+  "tests": {
+    "snippet": {
+      "name": "Code snippet in the text"
+    },
+    "project_zip": {
+      "name": "Project as a ZIP archive",
+      "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nReview the project in the ZIP archive: an internal tool that calculates discounts and looks up orders. Python 3.12, SQLite database."
+    }
+  }
+}

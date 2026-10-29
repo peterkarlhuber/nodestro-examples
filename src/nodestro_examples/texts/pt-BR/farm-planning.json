@@ -1,0 +1,141 @@
+{
+  "name": "Planejamento de culturas de uma propriedade",
+  "field": "Agricultura",
+  "description": "Planejar a rotação de culturas nos talhões de uma propriedade, calcular margens brutas e verificar o plano.",
+  "start": "Dados da propriedade",
+  "output": "Plano de culturas",
+  "file_name": "Plano de culturas",
+  "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar. Preços e custos são premissas.\n\nPropriedade: fazenda de grãos Fazenda Exemplo, 60 ha em cinco talhões, convencional, sem pecuária\n| Talhão | Área | Solo | Cultura anterior 2026 |\n|---|---|---|---|\n| F1 | 15 ha | argiloso, bom | trigo de inverno |\n| F2 | 12 ha | argiloso, bom | canola de inverno |\n| F3 | 10 ha | franco-arenoso | cevada de inverno |\n| F4 | 13 ha | argiloso, bom | beterraba açucareira |\n| F5 | 10 ha | arenoso, seco | centeio de inverno |\n\nRegras de planejamento: nada de trigo após trigo; canola no máximo a cada 4 anos no mesmo talhão (F2 teve canola\nem 2026); beterraba açucareira só em solo argiloso bom, contrato de fornecimento para 13 ha; participação de\ncereais no máximo 66 %.\n\nPremissas por ha (receita / custos variáveis):\n- Trigo de inverno 1.900 EUR / 1.050 EUR; cevada de inverno 1.550 EUR / 950 EUR; centeio de inverno 1.250 EUR / 780 EUR\n- Canola de inverno 1.800 EUR / 1.100 EUR; beterraba açucareira 3.300 EUR / 1.900 EUR; fava 1.150 EUR / 650 EUR",
+  "guide": {
+    "problem": "O planejamento de culturas precisa considerar ao mesmo tempo rotação, solos, contratos e rentabilidade. O workflow propõe uma rotação, calcula margens brutas e verifica o plano segundo suas próprias regras.",
+    "flow": "Uma cadeia de três agentes: o planejador de rotação atribui uma cultura a cada talhão, o cálculo de margem bruta calcula cada talhão e o total com a calculadora e a verificação de plausibilidade confere regras e riscos e entrega um resultado estruturado.",
+    "input": "Talhões com área, solo e cultura anterior, as suas regras de planejamento e premissas de receita e custos por hectare. Talhões e premissas você pode anexar como arquivo Excel ou CSV; o arquivo de exemplo contém as duas tabelas da tarefa de teste.",
+    "result": "Um plano de culturas por talhão com margem bruta, uma verificação das regras, riscos e perguntas em aberto, também como arquivo Excel. Exigências legais, por exemplo sobre adubação ou condições de incentivos, precisam ser verificadas com base nas regras locais vigentes.",
+    "adapt": "Anexe o seu cadastro de talhões e os seus dados de cálculo em Excel e informe as suas regras de planejamento. Análises de solo de que você precisa todo ano podem ser carregadas como conhecimento e atribuídas ao planejador de rotação."
+  },
+  "agents": {
+    "rotation": {
+      "name": "Planejador de rotação",
+      "description": "Atribui uma cultura a cada talhão conforme regras e solo.",
+      "system": "Você é consultor de produção vegetal. Atribua uma cultura a cada talhão para o ano de planejamento, considerando cultura anterior, solo, contratos, regras de planejamento e uma rotação saudável. Justifique cada atribuição em uma frase e indique alternativas onde uma regra é cumprida por pouco. Siga as regras informadas mesmo que tenham desvantagens econômicas.",
+      "task": "Planeje a rotação de culturas desta propriedade:\n\n{{input}}"
+    },
+    "margins": {
+      "name": "Cálculo de margem bruta",
+      "description": "Calcula as margens brutas por talhão e no total com a calculadora.",
+      "system": "Você é economista agrícola. Use a calculadora para calcular a margem bruta de cada talhão (receita menos custos variáveis, vezes a área) e o total da propriedade. Use apenas as premissas informadas. Mostre também como a margem bruta total muda com uma receita 15 % menor.",
+      "task": "Calcule as margens brutas.\n\nDados da propriedade e premissas:\n{{run.input}}\n\nRotação de culturas:\n{{node:rotation}}"
+    },
+    "review": {
+      "name": "Verificação de plausibilidade",
+      "description": "Verifica o plano quanto a regras e riscos e o resume.",
+      "system": "Você verifica planos de culturas. Verifique cada regra de planejamento separadamente e indique se é cumprida, confira a plausibilidade do cálculo e aponte riscos como clima, preços e picos de trabalho. Indique que exigências legais e condições de subsídios precisam ser verificadas segundo as regras vigentes.",
+      "task": "Verifique este plano de culturas.\n\nRotação de culturas:\n{{node:rotation}}\n\nMargens brutas:\n{{node:margins}}",
+      "fields": {
+        "plan_summary": "Plano de culturas por talhão, em resumo",
+        "total_margin_eur": "Margem bruta total em euros",
+        "rule_checks": "Verificação de cada regra de planejamento",
+        "risks": "Riscos do plano",
+        "open_questions": "Perguntas em aberto antes da implementação"
+      }
+    }
+  },
+  "form": {
+    "field_data": {
+      "label": "Cadastro de talhões e dados de cálculo",
+      "description": "Opcional: talhões e premissas em Excel ou CSV, até 3 arquivos de 10 MB cada. Sem arquivo valem as tabelas do texto."
+    }
+  },
+  "samples": {
+    "fields": {
+      "name": "Cadastro_talhoes_Fazenda_Exemplo",
+      "description": "Os talhões e premissas de cálculo fictícios da tarefa de teste como arquivo Excel com duas planilhas.",
+      "content": {
+        "Talhões": [
+          [
+            "Talhão",
+            "Área (ha)",
+            "Solo",
+            "Cultura anterior 2026"
+          ],
+          [
+            "F1",
+            15,
+            "argiloso, bom",
+            "trigo de inverno"
+          ],
+          [
+            "F2",
+            12,
+            "argiloso, bom",
+            "canola de inverno"
+          ],
+          [
+            "F3",
+            10,
+            "franco-arenoso",
+            "cevada de inverno"
+          ],
+          [
+            "F4",
+            13,
+            "argiloso, bom",
+            "beterraba açucareira"
+          ],
+          [
+            "F5",
+            10,
+            "arenoso, seco",
+            "centeio de inverno"
+          ]
+        ],
+        "Premissas": [
+          [
+            "Cultura",
+            "Receita (EUR/ha)",
+            "Custos variáveis (EUR/ha)"
+          ],
+          [
+            "Trigo de inverno",
+            1900,
+            1050
+          ],
+          [
+            "Cevada de inverno",
+            1550,
+            950
+          ],
+          [
+            "Centeio de inverno",
+            1250,
+            780
+          ],
+          [
+            "Canola de inverno",
+            1800,
+            1100
+          ],
+          [
+            "Beterraba açucareira",
+            3300,
+            1900
+          ],
+          [
+            "Fava",
+            1150,
+            650
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "farm_text": {
+      "name": "Propriedade no texto"
+    },
+    "field_file": {
+      "name": "Cadastro de talhões como arquivo Excel",
+      "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar. Preços e custos são premissas.\n\nPropriedade: fazenda de grãos Fazenda Exemplo, 60 ha em cinco talhões, convencional, sem pecuária. Os talhões e as premissas de cálculo estão no arquivo Excel anexado.\n\nRegras de planejamento: nada de trigo após trigo; canola no máximo a cada 4 anos no mesmo talhão (F2 teve canola em 2026);\nbeterraba açucareira só em solo argiloso bom, contrato de fornecimento para 13 ha; participação de cereais no máximo 66 %."
+    }
+  }
+}

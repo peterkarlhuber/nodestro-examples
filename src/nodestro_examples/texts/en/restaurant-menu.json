@@ -1,0 +1,144 @@
+{
+  "name": "Develop and cost a menu",
+  "field": "Hospitality",
+  "description": "Develop dishes for a target group, calculate food cost and prices and write menu texts.",
+  "start": "Concept",
+  "output": "Menu",
+  "file_name": "Lunch menu",
+  "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nBusiness: bistro \"The Example Mill\", 40 seats, business park with many offices\nTarget group: office workers on their lunch break (45 minutes), want quick, fresh food, often vegetarian\nAssignment: lunch menu with 6 dishes, at least 2 vegetarian and 1 vegan; changes every two weeks\nTarget food cost: at most 30 % of the net selling price; price range EUR 9.50 to 14.50 gross (7 % VAT)\n\nPurchase prices (net):\n- Chicken breast EUR 9.80/kg, minced beef EUR 8.90/kg, salmon fillet EUR 21.00/kg\n- Pasta EUR 1.60/kg, rice EUR 1.90/kg, potatoes EUR 0.90/kg, lentils EUR 2.40/kg\n- Seasonal vegetables on average EUR 2.80/kg, leaf salad EUR 4.50/kg, chickpeas EUR 2.20/kg\n- Feta EUR 8.50/kg, cream EUR 3.20/l, coconut milk EUR 3.90/l, olive oil EUR 7.50/l\n- Spices, herbs and small items a flat EUR 0.35 per portion",
+  "guide": {
+    "problem": "A menu has to please guests and pay off. The workflow develops dishes for a target group, calculates food cost and prices and writes appetising menu texts.",
+    "flow": "A chain of three agents: the concept developer puts together dishes with recipes, the costing calculates food cost and selling prices with the calculator tool, and the menu writer writes the menu. A quality check verifies target group, prices and the note on allergens. The result contains the costing and the menu.",
+    "input": "Type of business, target group, number and type of dishes, target food cost, price range and purchase prices. You can paste the purchase prices or attach them as a CSV or Excel file, as the sample file shows.",
+    "result": "A costing table with food cost and price per dish and a finished lunch menu with short descriptions, also as a Word file for layout and as an Excel file with the costing tables. Allergens and additives must be checked and labelled on the basis of the actual recipes.",
+    "adapt": "Attach your current purchase price list and describe your target group. Upload your standard recipes as knowledge and assign them to the costing; add house rules such as portion sizes in the concept developer. For the change every two weeks you can run the copy on a schedule."
+  },
+  "agents": {
+    "concept": {
+      "name": "Concept developer",
+      "description": "Puts together suitable dishes with recipes and quantities.",
+      "system": "You are a head chef experienced in the lunch trade. Develop dishes that suit the target group and can be prepared and served in the time available. For each dish, give a name, a short description and a recipe per portion with quantities in grams or millilitres. Use mainly ingredients from the purchase list and mark ingredients that are not on the list.",
+      "task": "Develop the dishes for this concept:\n\n{{input}}"
+    },
+    "costing": {
+      "name": "Costing",
+      "description": "Calculates food cost and selling prices with the calculator tool.",
+      "system": "You are a costing specialist in hospitality. For each dish, use the calculator tool to calculate the food cost per portion from the recipe and purchase prices, the net price at a food cost of at most 30 % and the gross price with 7 % VAT, rounded to sensible menu prices. Check the price range and propose adjustments if a dish does not fit. Show everything in a table.",
+      "task": "Cost these dishes.\n\nConcept and purchase prices:\n{{run.input}}\n\nDishes:\n{{node:concept}}"
+    },
+    "menu": {
+      "name": "Menu writer",
+      "description": "Writes the lunch menu with appetising descriptions.",
+      "system": "You write menus. For each dish, write an appetising name and a description of at most 20 words that suits the target group. Add the price, a vegetarian or vegan label and a note that allergens must be checked and labelled based on the recipes. Take prices only from the costing. Finally, repeat the costing table unchanged.",
+      "task": "Write the lunch menu from this costing:\n\n{{node:costing}}",
+      "criteria": {
+        "target_group": "Dishes and texts clearly suit the described target group.",
+        "prices_match": "All prices match the costing and lie within the price range.",
+        "allergen_note": "The menu contains a note on checking and labelling allergens."
+      }
+    }
+  },
+  "form": {
+    "purchase_prices": {
+      "label": "Purchase prices as a file",
+      "description": "Optional: your purchase price list as CSV or Excel, at most 5 MB. Without a file, the prices in the text apply."
+    }
+  },
+  "samples": {
+    "prices": {
+      "name": "Purchase_prices_Example_Mill",
+      "description": "The fictional purchase prices of the test task as CSV.",
+      "content": [
+        [
+          "Ingredient",
+          "Unit",
+          "Net price (EUR)"
+        ],
+        [
+          "Chicken breast",
+          "kg",
+          9.8
+        ],
+        [
+          "Minced beef",
+          "kg",
+          8.9
+        ],
+        [
+          "Salmon fillet",
+          "kg",
+          21.0
+        ],
+        [
+          "Pasta",
+          "kg",
+          1.6
+        ],
+        [
+          "Rice",
+          "kg",
+          1.9
+        ],
+        [
+          "Potatoes",
+          "kg",
+          0.9
+        ],
+        [
+          "Lentils",
+          "kg",
+          2.4
+        ],
+        [
+          "Seasonal vegetables (average)",
+          "kg",
+          2.8
+        ],
+        [
+          "Leaf salad",
+          "kg",
+          4.5
+        ],
+        [
+          "Chickpeas",
+          "kg",
+          2.2
+        ],
+        [
+          "Feta",
+          "kg",
+          8.5
+        ],
+        [
+          "Cream",
+          "l",
+          3.2
+        ],
+        [
+          "Coconut milk",
+          "l",
+          3.9
+        ],
+        [
+          "Olive oil",
+          "l",
+          7.5
+        ],
+        [
+          "Spices, herbs, small items (flat rate)",
+          "portion",
+          0.35
+        ]
+      ]
+    }
+  },
+  "tests": {
+    "lunch_menu": {
+      "name": "Lunch menu with prices in the text"
+    },
+    "price_file": {
+      "name": "Purchase prices as CSV",
+      "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nBusiness: bistro \"The Example Mill\", 40 seats, business park with many offices\nTarget group: office workers on their lunch break (45 minutes), want quick, fresh food, often vegetarian\nAssignment: lunch menu with 6 dishes, at least 2 vegetarian and 1 vegan; changes every two weeks\nTarget food cost: at most 30 % of the net selling price; price range EUR 9.50 to 14.50 gross (7 % VAT)\n\nThe purchase prices are attached as a CSV file."
+    }
+  }
+}

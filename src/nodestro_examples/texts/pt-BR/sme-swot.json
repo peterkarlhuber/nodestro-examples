@@ -1,0 +1,54 @@
+{
+  "name": "Estratégia SWOT para uma pequena empresa",
+  "field": "Empresas e PMEs",
+  "description": "Analisar a situação interna e externa de uma empresa, desenvolver uma estratégia baseada em SWOT e revisá-la criticamente.",
+  "start": "Perfil da empresa",
+  "output": "Estratégia",
+  "file_name": "Estratégia SWOT",
+  "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nEmpresa: Marcenaria Exemplo Ltda., cidade pequena no sul da Alemanha, fundada em 1987\nEquipe: 14 pessoas (incluindo 2 aprendizes), proprietário com 61 anos, sucessão não definida\nFaturamento: 2023 1,9 mi EUR, 2024 1,8 mi EUR; margem líquida mais recente 4 %\nComposição do faturamento: móveis planejados para clientes particulares 55 %, projetos comerciais (consultórios, escritórios) 30 %, reparos 15 %\nPontos fortes segundo o proprietário: alta qualidade, clientes fiéis, máquina CNC própria desde 2022\nProblemas: prazos de entrega longos (atualmente 14 semanas), duas vagas de marceneiro abertas há um ano,\nquase nenhuma presença online (site de 2015, sem redes sociais), orçamentos calculados à mão\nAmbiente: alta nos preços da madeira, programas regionais de incentivo à reforma com eficiência energética,\nnovos bairros residenciais num raio de 20 km, uma loja de móveis com estúdio de cozinhas abriu nas proximidades\nMeta do proprietário: em três anos uma empresa estável, pronta para sucessão, com margem líquida de pelo menos 7 %",
+  "guide": {
+    "problem": "Muitas pequenas empresas conhecem seus problemas, mas não a melhor ordem para enfrentá-los. O workflow cria uma análise SWOT, deriva estratégias dela e as submete a um revisor crítico.",
+    "flow": "A análise interna (forças, fraquezas) e a análise do ambiente (oportunidades, ameaças) rodam em paralelo. O desenvolvedor de estratégia combina as duas em estratégias segundo a matriz TOWS e um plano de 90 dias. O revisor crítico busca pontos fracos e informações ausentes; o resultado contém estratégia e revisão. No final, o resultado é salvo com a execução como arquivo Markdown e PDF.",
+    "input": "Um perfil curto da empresa com números-chave, oferta, pontos fortes, problemas, ambiente de mercado e metas.",
+    "result": "Uma matriz SWOT com estratégias derivadas e um plano de 90 dias, além de uma revisão crítica estruturada com parecer, pontos fracos, informações ausentes e próximos passos.",
+    "adapt": "Descreva sua empresa no mesmo estilo. Quanto mais precisos os números e as metas, mais concreta a estratégia. Você pode carregar estudos setoriais ou pesquisas com clientes como conhecimento e atribuí-los à análise do ambiente."
+  },
+  "agents": {
+    "internal": {
+      "name": "Análise interna",
+      "description": "Identifica forças e fraquezas a partir dos dados da empresa.",
+      "system": "Você é consultor de gestão para pequenas e médias empresas. Analise os fatores internos: oferta, clientes, equipe, processos, finanças, equipamentos e organização. Derive forças e fraquezas concretas e sustente cada uma com dados do perfil. Avalie a importância de cada ponto para a meta da empresa (alta, média, baixa).",
+      "task": "Analise as forças e fraquezas desta empresa:\n\n{{input}}"
+    },
+    "external": {
+      "name": "Análise do ambiente",
+      "description": "Deriva oportunidades e ameaças do mercado e do ambiente.",
+      "system": "Você é analista de mercado. Analise os fatores externos de uma empresa: demanda, concorrência, evolução de custos, mercado de trabalho, incentivos, tecnologia e regulação. Derive oportunidades e ameaças. Baseie-se nos dados do perfil e em conhecimento setorial geralmente conhecido; marque o que é conhecimento geral e deve ser verificado localmente.",
+      "task": "Analise as oportunidades e ameaças no ambiente desta empresa:\n\n{{input}}"
+    },
+    "strategy": {
+      "name": "Desenvolvedor de estratégia",
+      "description": "Desenvolve estratégias segundo a matriz TOWS e um plano de 90 dias.",
+      "system": "Você é consultor de estratégia. Resuma forças, fraquezas, oportunidades e ameaças em uma matriz SWOT e desenvolva estratégias com a lógica TOWS: SO (usar forças para aproveitar oportunidades), WO, ST e WT. Escolha as duas ou três estratégias mais eficazes para a meta e justifique a escolha. Elabore um plano de 90 dias com passos concretos, responsáveis e marcos mensuráveis.",
+      "task": "Desenvolva a estratégia.\n\nAnálise interna:\n{{node:internal}}\n\nAnálise do ambiente:\n{{node:external}}"
+    },
+    "critic": {
+      "name": "Revisor crítico",
+      "description": "Questiona a estratégia e revela pontos fracos.",
+      "system": "Você é um membro crítico de um conselho consultivo que revisa estratégias antes de uma empresa investir dinheiro. Verifique se a estratégia pode alcançar a meta, se ela combina com os recursos e quais premissas não foram testadas. Aponte contradições, riscos de implementação e informações que faltam antes de uma decisão. Seja construtivo: cada ponto fraco vem com uma sugestão.",
+      "task": "Revise esta estratégia criticamente:\n\n{{input}}",
+      "fields": {
+        "verdict": "Parecer geral em duas a três frases",
+        "robust_points": "Partes sólidas da estratégia",
+        "weak_points": "Pontos fracos com sugestões de melhoria",
+        "missing_information": "Informações que faltam antes de uma decisão",
+        "next_steps": "Próximos passos recomendados"
+      }
+    }
+  },
+  "tests": {
+    "profile": {
+      "name": "Marcenaria com sucessão não definida"
+    }
+  }
+}

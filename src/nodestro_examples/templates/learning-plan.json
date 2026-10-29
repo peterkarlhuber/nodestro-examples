@@ -1,0 +1,153 @@
+{
+  "id": "learning-plan",
+  "number": 13,
+  "category": "knowledge",
+  "level": "beginner",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 180,
+      "form": [
+        {
+          "name": "week",
+          "type": "number"
+        },
+        {
+          "name": "materials",
+          "type": "file",
+          "accept": [
+            "pdf",
+            "docx",
+            "md",
+            "txt"
+          ],
+          "multiple": true,
+          "max_files": 5
+        }
+      ]
+    },
+    {
+      "id": "assessment",
+      "type": "agent",
+      "x": 340,
+      "y": 180,
+      "role": "analysis",
+      "icon": "target",
+      "effort": "low"
+    },
+    {
+      "id": "plan",
+      "type": "agent",
+      "x": 680,
+      "y": 180,
+      "role": "planning",
+      "icon": "list"
+    },
+    {
+      "id": "tutor",
+      "type": "agent",
+      "x": 1020,
+      "y": 40,
+      "role": "writing",
+      "icon": "book"
+    },
+    {
+      "id": "quiz",
+      "type": "agent",
+      "x": 1020,
+      "y": 320,
+      "role": "review",
+      "icon": "check"
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1360,
+      "y": 180,
+      "files": [
+        "pdf"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "assessment"
+    ],
+    [
+      "assessment",
+      "plan"
+    ],
+    [
+      "plan",
+      "tutor"
+    ],
+    [
+      "plan",
+      "quiz"
+    ],
+    [
+      "plan",
+      "output"
+    ],
+    [
+      "tutor",
+      "output"
+    ],
+    [
+      "quiz",
+      "output"
+    ],
+    [
+      "start",
+      "tutor"
+    ]
+  ],
+  "samples": [
+    {
+      "id": "guide",
+      "format": "docx",
+      "field": "materials"
+    }
+  ],
+  "tests": [
+    {
+      "id": "week_one",
+      "checks": [
+        {
+          "node": "plan",
+          "operator": "is_not_empty"
+        },
+        {
+          "node": "tutor",
+          "operator": "is_not_empty"
+        },
+        {
+          "node": "quiz",
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "week_two_material",
+      "values": {
+        "week": 2
+      },
+      "samples": [
+        "guide"
+      ],
+      "checks": [
+        {
+          "node": "tutor",
+          "operator": "is_not_empty"
+        },
+        {
+          "node": "quiz",
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

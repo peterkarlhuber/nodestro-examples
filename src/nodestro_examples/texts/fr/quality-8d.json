@@ -1,0 +1,194 @@
+{
+  "name": "Traiter une réclamation avec la 8D",
+  "field": "Gestion de la qualité",
+  "description": "Traiter pas à pas une réclamation client selon la méthode 8D et la documenter dans un rapport.",
+  "start": "Réclamation",
+  "output": "Rapport 8D",
+  "file_name": "Rapport 8D",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nClient : Exemple Automobile SA, usine Sud\nPièce : boîtier plastique G-220 (PA6-GF30, injection), lot 24-117, livré le 12/03, 4 000 pièces\nRéclamation du 18/03 : au montage, les crochets d'encliquetage cassent. Le client a contrôlé 2 000 pièces, 46 sont\ndéfectueuses (2,3 %). Il exige des actions de confinement sous 24 heures et un rapport 8D sous 10 jours.\n\nInformations internes :\n- Le lot 24-117 a été produit sur la machine SG-4 avec un moule récemment révisé (maintenance le 05/03).\n- La matière provenait d'une nouvelle livraison ; le temps de séchage a été réduit de 4 à 2,5 heures à cause des délais.\n- Le contrôle final vérifie les cotes et l'aspect selon un plan d'échantillonnage, mais pas la tenue mécanique des crochets.\n- Stock : 1 200 pièces du lot 24-117 et 3 000 pièces du lot 24-121 (même moule, séchage normal).\n- Aucune réclamation comparable au cours des 12 derniers mois.",
+  "guide": {
+    "problem": "Les réclamations exigent un confinement rapide et une analyse des causes rigoureuse. La méthode 8D fixe les étapes ; le workflow les parcourt de façon structurée et les documente de manière homogène.",
+    "flow": "Une chaîne séquentielle : le premier agent décrit le problème et les actions de confinement (D1 à D3), le deuxième recherche les causes d'apparition et de non-détection (D4), le troisième planifie les actions correctives et préventives (D5 à D7). L'agent de rapport réunit le tout dans un rapport 8D structuré. Un nœud de décision vérifie la gravité : dans les cas critiques, un agent supplémentaire planifie le confinement d'urgence des 24 prochaines heures. Avant que le rapport parte chez le client, une personne le valide.",
+    "input": "La réclamation du client avec pièce, lot, défaut et taux de défaut, ainsi que les informations internes connues sur la fabrication, la matière et le contrôle. Vous pouvez aussi joindre la lettre de réclamation, des données de mesure et des photos du défaut en fichiers ; les fichiers d'exemple contiennent une lettre de réclamation fictive (PDF) et des mesures (Excel).",
+    "result": "Un rapport 8D structuré avec un champ pour chaque discipline D1 à D8 et une liste des points ouverts que l'équipe doit encore clarifier. Après validation, l'exécution enregistre le rapport en PDF et en fichier Word modifiable. L'agent de rapport propose en outre des enseignements pour la connaissance ; seul ce que vous adoptez explicitement est enregistré.",
+    "adapt": "Remplacez les données de test par votre réclamation et joignez directement procès-verbaux de contrôle, plans ou photos. Si vous utilisez votre propre formulaire, adaptez les champs de l'agent de rapport sous « Format de sortie ». Les enseignements adoptés lors de réclamations précédentes peuvent être attribués comme connaissance à l'analyse des causes."
+  },
+  "agents": {
+    "problem": {
+      "name": "Description du problème D1–D3",
+      "description": "Décrit l'équipe, le problème (est / n'est pas) et les actions de confinement.",
+      "system": "Tu es ingénieur qualité et tu pilotes des équipes 8D. Traite les étapes D1 à D3 : propose une équipe pluridisciplinaire avec des rôles, décris précisément le problème avec le QQOQCCP et une analyse est / n'est pas, et définis des actions de confinement (blocage, tri, livraison de remplacement, information du client). Indique pour chaque action de confinement comment son efficacité est vérifiée.",
+      "task": "Traite D1 à D3 pour cette réclamation :\n\n{{input}}",
+      "fields": {
+        "analysis": "D1 à D3 sous forme de texte : équipe, description du problème (5W2H, est/n'est pas) et actions de confinement avec vérification de leur efficacité",
+        "critical": "true si le cas est critique : enjeu de sécurité ou juridique, ligne du client à l'arrêt ou stock concerné encore en cours de livraison"
+      }
+    },
+    "root_cause": {
+      "name": "Analyse des causes D4",
+      "description": "Recherche les causes d'apparition et de non-détection avec les 5 pourquoi.",
+      "system": "Tu es expert en analyse des causes en fabrication. Traite D4 : analyse séparément pourquoi le défaut est apparu et pourquoi il n'a pas été détecté. Utilise pour chacun une chaîne de 5 pourquoi et appuie-toi sur les faits de la réclamation. Évalue dans quelle mesure chaque cause est étayée et indique les essais ou contrôles qui la vérifient.",
+      "task": "Analyse les causes (D4).\n\nRéclamation :\n{{run.input}}\n\nRésultat D1–D3 :\n{{node:problem}}"
+    },
+    "actions": {
+      "name": "Planification des actions D5–D7",
+      "description": "Planifie les actions correctives, leur vérification et la prévention.",
+      "system": "Tu es responsable qualité. Traite D5 à D7 : définis des actions correctives durables pour chaque cause vérifiée ou probable, décris comment leur efficacité sera démontrée et déduis des actions préventives qui évitent des défauts semblables sur d'autres produits, par exemple des mises à jour de l'AMDEC, du plan de surveillance ou des instructions de travail. Indique des responsables sous forme de rôles et des dates réalistes.",
+      "task": "Planifie D5 à D7 à partir de cette analyse des causes :\n\n{{node:root_cause}}"
+    },
+    "report": {
+      "name": "Rapport 8D",
+      "description": "Réunit toutes les étapes dans un rapport 8D structuré.",
+      "system": "Tu rédiges des rapports 8D pour les clients. Résume les résultats des étapes précédentes de façon complète et factuelle, sans ajouter de faits nouveaux. Vérifie que les étapes sont cohérentes entre elles et reporte dans les points ouverts les contradictions ou les causes pas encore vérifiées. D8 contient une note de clôture qui reconnaît le travail de l'équipe et indique ce qui manque encore avant la clôture.",
+      "task": "Rédige le rapport 8D.\n\nD1–D3 :\n{{node:problem}}\n\nD4 :\n{{node:root_cause}}\n\nD5–D7 :\n{{node:actions}}\n\nConfinement d'urgence (cas critiques uniquement) :\n{{node:containment}}",
+      "fields": {
+        "d1_team": "D1 équipe avec les rôles",
+        "d2_problem": "D2 description du problème",
+        "d3_containment": "D3 actions de confinement avec vérification de l'efficacité",
+        "d4_root_causes": "D4 causes d'apparition et de non-détection",
+        "d5_corrective_actions": "D5 actions correctives",
+        "d6_verification": "D6 preuve de l'efficacité",
+        "d7_prevention": "D7 actions préventives",
+        "d8_closure": "D8 clôture et reconnaissance",
+        "open_points": "Points ouverts et hypothèses pas encore vérifiées"
+      }
+    },
+    "containment": {
+      "name": "Confinement d'urgence",
+      "description": "Planifie le confinement des 24 prochaines heures dans les cas critiques.",
+      "system": "Tu es le responsable qualité d'astreinte. Pour une réclamation critique, planifie le confinement des 24 prochaines heures : bloquer et trier tous les stocks et lots suspects, sécuriser les livraisons en cours, organiser un contrôle à 100 % ou une livraison de remplacement et informer le client avec un point clair. Indique pour chaque action un rôle responsable, une échéance et la façon d'en vérifier l'efficacité, et liste ce qui reste ouvert.",
+      "task": "Planifie le confinement d'urgence pour cette réclamation critique.\n\nRéclamation :\n{{run.input}}\n\nD1–D3 :\n{{node:problem}}"
+    }
+  },
+  "steps": {
+    "severity": {
+      "name": "Gravité",
+      "branches": {
+        "critical": "Critique"
+      },
+      "default": "Standard"
+    },
+    "release": {
+      "name": "Valider le rapport",
+      "instructions": "Vérifie que le rapport 8D ne contient que des faits établis, que les causes non élucidées sont marquées comme ouvertes et que les actions de confinement sont réalistes. Valide-le seulement ensuite pour l'envoi au client."
+    }
+  },
+  "form": {
+    "documents": {
+      "label": "Documents de réclamation",
+      "description": "Facultatif : lettre de réclamation (PDF, Word), données de mesure (Excel, CSV) ou photos du défaut (PNG, JPEG, WebP), jusqu'à 8 fichiers. Sans fichier, le texte fait foi."
+    }
+  },
+  "samples": {
+    "complaint": {
+      "name": "Reclamation_G-220_lot_24-117",
+      "description": "Lettre de réclamation fictive du client en PDF.",
+      "content": "# Réclamation n° R-2026-031\n\n**De :** Exemple Automobile SA, usine Sud, contrôle à réception\n\n**À :** Management de la qualité, fournisseur de boîtiers plastique\n\n**Date :** 18/03/2026\n\n## Pièce concernée\n\n| Information | Valeur |\n|---|---|\n| Pièce | Boîtier plastique G-220 (PA6-GF30) |\n| Lot | 24-117 |\n| Date de livraison | 12/03/2026 |\n| Quantité livrée | 4 000 pièces |\n\n## Description du défaut\n\nAu montage, les crochets d'encliquetage des boîtiers cassent dès que le couvercle est clipsé. Nous avons contrôlé 2 000 pièces ; 46 sont défectueuses (2,3 %). Les surfaces de rupture semblent fragiles.\n\n## Nos exigences\n\n1. Des actions de confinement sous 24 heures, y compris le tri des stocks chez nous.\n2. Un rapport 8D sous 10 jours.\n3. Une indication des autres lots susceptibles d'être concernés.\n\nContact : Mme Erika Modèle, qualité fournisseurs (fictif)"
+    },
+    "measurements": {
+      "name": "Mesures_crochets",
+      "description": "Forces d'arrachement fictives des crochets par lot, avec temps de séchage, en fichier Excel.",
+      "content": {
+        "Force d'arrachement": [
+          [
+            "Échantillon",
+            "Lot",
+            "Temps de séchage (h)",
+            "Force d'arrachement (N)",
+            "Minimum (N)"
+          ],
+          [
+            1,
+            "24-117",
+            2.5,
+            38,
+            45
+          ],
+          [
+            2,
+            "24-117",
+            2.5,
+            41,
+            45
+          ],
+          [
+            3,
+            "24-117",
+            2.5,
+            47,
+            45
+          ],
+          [
+            4,
+            "24-117",
+            2.5,
+            36,
+            45
+          ],
+          [
+            5,
+            "24-117",
+            2.5,
+            44,
+            45
+          ],
+          [
+            6,
+            "24-121",
+            4,
+            58,
+            45
+          ],
+          [
+            7,
+            "24-121",
+            4,
+            61,
+            45
+          ],
+          [
+            8,
+            "24-121",
+            4,
+            57,
+            45
+          ],
+          [
+            9,
+            "24-121",
+            4,
+            60,
+            45
+          ],
+          [
+            10,
+            "24-121",
+            4,
+            59,
+            45
+          ]
+        ],
+        "Remarques": [
+          [
+            "Remarque"
+          ],
+          [
+            "Mesure en laboratoire le 19/03/2026, cinq pièces du stock par lot."
+          ],
+          [
+            "L'humidité résiduelle du granulé n'a pas été documentée pour le lot 24-117."
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "complaint_text": {
+      "name": "Réclamation dans le texte"
+    },
+    "complaint_files": {
+      "name": "Lettre de réclamation et mesures en fichiers",
+      "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nRéclamation d'Exemple Automobile SA concernant le boîtier G-220 ; la lettre de réclamation et les mesures sont jointes en fichiers.\n\nInformations internes :\n- Le lot 24-117 a été produit sur la machine SG-4 avec un moule récemment révisé (maintenance le 05/03).\n- La matière provenait d'une nouvelle livraison ; le temps de séchage a été réduit de 4 à 2,5 heures à cause des délais.\n- Le contrôle final vérifie les cotes et l'aspect selon un plan d'échantillonnage, mais pas la tenue mécanique des crochets.\n- Stock : 1 200 pièces du lot 24-117 et 3 000 pièces du lot 24-121 (même moule, séchage normal)."
+    }
+  }
+}

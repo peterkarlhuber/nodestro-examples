@@ -1,0 +1,51 @@
+{
+  "name": "Artículo de blog",
+  "field": "Marketing y contenidos",
+  "description": "Investigar el público, esbozar la estructura, escribir el artículo y revisarlo editorialmente.",
+  "start": "Tema",
+  "output": "Artículo",
+  "file_name": "Artículo de blog",
+  "input": "Por qué los editores visuales de flujos de trabajo hacen más accesibles los agentes de IA",
+  "guide": {
+    "problem": "Los buenos artículos nacen de un público claro y de un esquema bien pensado. El flujo reparte el trabajo como en una redacción y revisa el resultado antes de publicarlo.",
+    "flow": "El público y el esquema se crean en paralelo con un modelo rápido. El redactor escribe el artículo a partir de ellos; una revisión de calidad integrada comprueba que siga el esquema y responda a las preguntas de los lectores. La corrección revisa extensión y legibilidad con la herramienta de estadísticas de texto y marca las afirmaciones sin verificar.",
+    "input": "Un tema en una frase. Opcionalmente puedes añadir el público, el tono o la extensión deseada en la propia entrada.",
+    "result": "Un artículo terminado en Markdown con títulos, una meta descripción y breves notas de corrección con el número de palabras y avisos sobre afirmaciones que conviene respaldar antes de publicar. La ejecución guarda además el resultado como archivo Markdown y HTML que puedes llevar a tu CMS.",
+    "adapt": "Cambia el tema en la entrada. Puedes subir vuestra guía de estilo como conocimiento y asignarla al redactor y a la corrección. La extensión deseada se ajusta en el prompt de sistema del redactor."
+  },
+  "agents": {
+    "audience": {
+      "name": "Público",
+      "description": "Describe a los lectores, sus preguntas y lo que ya saben.",
+      "system": "Describes el público de un artículo: quiénes son los lectores, qué saben ya y qué tres preguntas traen. Sé conciso.",
+      "task": "{{input}}"
+    },
+    "outline": {
+      "name": "Esquema",
+      "description": "Redacta el título y el esquema.",
+      "system": "Redactas un título atractivo y un esquema de cinco partes para un artículo. Indica en una frase qué debe conseguir cada sección.",
+      "task": "{{input}}"
+    },
+    "writer": {
+      "name": "Redactor",
+      "description": "Escribe el artículo a partir del esquema y del público.",
+      "system": "Eres una periodista tecnológica con experiencia. Escribe un artículo claro y vivo de unas 700 palabras con títulos en Markdown. Explica los términos técnicos la primera vez que aparezcan y usa ejemplos concretos. No inventes estudios, cifras ni citas.",
+      "task": "Escribe el artículo sobre «{{run.input}}».\n\nPúblico:\n{{node:audience}}\n\nEsquema:\n{{node:outline}}",
+      "criteria": {
+        "follows_outline": "El artículo sigue el esquema.",
+        "audience": "El artículo responde a las preguntas del público."
+      }
+    },
+    "editor": {
+      "name": "Corrección",
+      "description": "Revisa extensión y legibilidad y entrega la versión final.",
+      "system": "Eres corrector. Determina el número de palabras y de frases del artículo con la herramienta de estadísticas de texto. Mejora la claridad, la ortografía y la fluidez sin cambiar el contenido ni la estructura. Entrega primero la versión final revisada en Markdown, después una meta descripción de 155 caracteres como máximo y por último notas de corrección: número de palabras, cambios principales y afirmaciones que conviene respaldar antes de publicar.",
+      "task": "Corrige este artículo:\n\n{{input}}"
+    }
+  },
+  "tests": {
+    "topic": {
+      "name": "Tema en una frase"
+    }
+  }
+}

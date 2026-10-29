@@ -1,0 +1,124 @@
+{
+  "name": "Financial analysis",
+  "field": "Finance and investments",
+  "description": "Analyse a company's fundamentals, recalculate key figures and review the results critically.",
+  "start": "Task",
+  "output": "Result",
+  "file_name": "Financial analysis",
+  "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nAnalyse the profitability and financial stability of Example Industries plc (a fictional company).\n\n| Figure (EUR m) | 2024 | 2025 |\n|---|---|---|\n| Revenue | 980 | 1,250 |\n| Operating profit (EBIT) | 140 | 210 |\n| Net profit | 95 | 150 |\n| Operating cash flow | 160 | 190 |\n| Capital expenditure | 70 | 130 |\n| Equity | 610 | 700 |\n| Total assets | 1,450 | 1,700 |\n| Net financial debt | 220 | 260 |\n\nNote from the annual report: about a third of the growth in 2025 comes from the acquisition of a competitor.",
+  "guide": {
+    "problem": "Figures from annual reports are quickly quoted but rarely recalculated and put into context. The workflow extracts the figures, calculates margins and growth exactly and has the result reviewed critically.",
+    "flow": "A sequential chain of three agents: the research agent organises the figures with period and unit, the analysis agent calculates key figures with the calculator tool, and the review agent checks the calculations and logic and summarises the result in a structured way.",
+    "input": "A company's financial figures for at least two years, for example from an annual report or quarterly statement, plus known one-off effects. You can paste the figures or attach them as an Excel, CSV or PDF file; the sample file contains the figures of the test task.",
+    "result": "A structured review with summary, key figures, errors or risks found, limits of the analysis and whether the analysis is considered correct, also as a PDF and Excel file. The research agent proposes the extracted figures for knowledge; only what you confirm is adopted. The result is not investment advice.",
+    "adapt": "Attach the annual report or your table of figures directly. Add further figures, such as gearing or free cash flow, in the system prompt of the analysis agent. For many companies one after another, use batch processing with one row per company."
+  },
+  "agents": {
+    "research": {
+      "name": "Research Agent",
+      "description": "Collects figures and context for the financial data.",
+      "system": "You are a financial research analyst. Extract every figure from the task, state its period and unit and arrange them in a table. Briefly add what the figures mean and record special effects such as acquisitions or one-off items. Do not invent figures that are not given.",
+      "task": "{{input}}"
+    },
+    "analysis": {
+      "name": "Analysis Agent",
+      "description": "Calculates margins, growth and stability ratios with the calculator tool.",
+      "system": "You are a senior financial analyst. Use the calculator tool to calculate all key figures: revenue growth, EBIT margin, net margin, equity ratio, free cash flow (operating cash flow minus capital expenditure) and the ratio of net financial debt to EBIT. Explain each result in one sentence and take special effects into account, for example organic growth without the acquisition.",
+      "task": "Calculate the key figures from these research results:\n\n{{node:research}}"
+    },
+    "review": {
+      "name": "Review Agent",
+      "description": "Reviews the analysis and summarises it in a structured way.",
+      "system": "You are a meticulous reviewer. Check the analysis for calculation and logic errors, check that special effects are handled correctly and summarise the result for management. Name the limits of the analysis. Do not give a buy or sell recommendation.",
+      "task": "Review this analysis and summarise it:\n\n{{input}}",
+      "fields": {
+        "summary": "Summary in 2-3 sentences",
+        "key_figures": "Key figures",
+        "issues": "Errors or risks found",
+        "limitations": "Limits of the analysis",
+        "approved": "Is the analysis correct?"
+      }
+    }
+  },
+  "form": {
+    "figures": {
+      "label": "Financial figures as a file",
+      "description": "Optional: figures as Excel or CSV or an annual report as PDF, up to 3 files. Without a file, the figures in the text apply."
+    }
+  },
+  "samples": {
+    "figures": {
+      "name": "Figures_Example_Industries_plc",
+      "description": "The fictional figures of the test task as an Excel file with a sheet for notes.",
+      "content": {
+        "Figures": [
+          [
+            "Figure (EUR m)",
+            "2024",
+            "2025"
+          ],
+          [
+            "Revenue",
+            980,
+            1250
+          ],
+          [
+            "Operating profit (EBIT)",
+            140,
+            210
+          ],
+          [
+            "Net profit",
+            95,
+            150
+          ],
+          [
+            "Operating cash flow",
+            160,
+            190
+          ],
+          [
+            "Capital expenditure",
+            70,
+            130
+          ],
+          [
+            "Equity",
+            610,
+            700
+          ],
+          [
+            "Total assets",
+            1450,
+            1700
+          ],
+          [
+            "Net financial debt",
+            220,
+            260
+          ]
+        ],
+        "Notes": [
+          [
+            "Note"
+          ],
+          [
+            "Fictional company Example Industries plc."
+          ],
+          [
+            "About a third of the growth in 2025 comes from the acquisition of a competitor."
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "figures_text": {
+      "name": "Figures in the text"
+    },
+    "figures_file": {
+      "name": "Figures as an Excel file",
+      "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nAnalyse the profitability and financial stability of Example Industries plc (a fictional company). The figures and notes are in the attached Excel file."
+    }
+  }
+}

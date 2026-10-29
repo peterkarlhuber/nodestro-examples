@@ -1,0 +1,52 @@
+{
+  "name": "Planejar a festa de uma associação",
+  "field": "Associações e clubes",
+  "description": "Planejar cronograma, tarefas e orçamento da festa de uma associação, preparar a comunicação e criar um documento para a diretoria.",
+  "start": "Informações-chave",
+  "output": "Documento para a diretoria",
+  "file_name": "Documento para a diretoria",
+  "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nAssociação: SC Vila Exemplo, 420 sócios, dos quais 130 crianças e jovens\nOcasião: festa de verão pelos 75 anos no sábado, 2026-07-11, das 14h às 22h, campo esportivo\nData do planejamento: 2026-05-04\nConvidados esperados: cerca de 300\nDesejos de programação: olimpíadas infantis, homenagem a sócios antigos, banda ao vivo à noite\nVoluntários: 25 voluntários aceitaram ajudar, cada um em turnos de 3 horas\nOrçamento: recursos da associação 3.000 EUR, patrocínio confirmado 1.500 EUR (Bebidas Amostra), receitas esperadas\ncom vendas: bebidas 2.400 EUR, comida 1.800 EUR, rifa 600 EUR\nCustos conhecidos: banda 1.200 EUR, aluguel de tenda 900 EUR, castelo inflável 250 EUR, compra de comida e bebidas\ncerca de 1.900 EUR, troféus e homenagens 300 EUR",
+  "guide": {
+    "problem": "Festas de associações são organizadas por voluntários no tempo livre. O workflow cria cronograma, tarefas, orçamento e comunicação e resume tudo em um documento para a reunião da diretoria.",
+    "flow": "O planejador de cronograma e o planejador de orçamento trabalham em paralelo; um conta regressivamente a partir da festa com a ferramenta de datas, o outro calcula o orçamento com a calculadora. O planejador de comunicação prepara convites e posts alinhados ao cronograma. O documento para a diretoria reúne tudo; uma verificação de qualidade confere completude e responsabilidades.",
+    "input": "Ocasião, data, local, número de convidados, desejos de programação, voluntários, orçamento e custos conhecidos.",
+    "result": "Um documento para a diretoria com cronograma até a festa, tarefas e responsáveis, escala de turnos, orçamento com superávit ou déficit, plano de comunicação e propostas de deliberação, também como arquivo Word para enviar à diretoria.",
+    "adapt": "Insira as informações-chave da sua festa. Licenças e exigências variam conforme o município; acrescente as exigências conhecidas na entrada. Logotipos e modelos de cartaz podem ser guardados como conhecimento."
+  },
+  "agents": {
+    "schedule": {
+      "name": "Planejador de cronograma",
+      "description": "Planeja de trás para frente, a partir do dia da festa, cronograma, tarefas e turnos.",
+      "system": "Você organiza eventos de associações. Calcule o tempo que falta até a festa com a ferramenta days_between e planeje de trás para frente: marcos com datas, tarefas com responsabilidade como função, programação do dia da festa e escala de turnos dos voluntários. Pense em licenças, seguro, higiene, primeiros socorros e desmontagem, e marque pontos a esclarecer com o município.",
+      "task": "Planeje o cronograma e as tarefas desta festa:\n\n{{input}}"
+    },
+    "budget": {
+      "name": "Planejador de orçamento",
+      "description": "Calcula receitas, despesas e reserva com a calculadora.",
+      "system": "Você é o tesoureiro da associação. Use a calculadora para criar um orçamento: receitas, despesas, uma reserva de 10 % para imprevistos e o resultado esperado. Calcule um cenário cauteloso com 30 % menos receita de vendas, por exemplo com mau tempo. Proponha como um déficit poderia ser coberto.",
+      "task": "Crie o orçamento desta festa:\n\n{{input}}"
+    },
+    "communication": {
+      "name": "Planejador de comunicação",
+      "description": "Prepara convites, posts e um comunicado à imprensa.",
+      "system": "Você faz relações públicas para associações. Alinhado ao cronograma, crie um plano de comunicação com datas e canais (carta aos sócios, mural, redes sociais, jornal local) e redija textos: um convite aos sócios, um post para redes sociais e um breve comunicado à imprensa. Escreva de forma calorosa e convidativa.",
+      "task": "Planeje a comunicação para este cronograma:\n\n{{node:schedule}}"
+    },
+    "board_paper": {
+      "name": "Documento para a diretoria",
+      "description": "Resume planejamento, orçamento e comunicação para a diretoria.",
+      "system": "Você prepara documentos de decisão para diretorias de associações. Resuma com clareza cronograma, tarefas, orçamento e comunicação, em no máximo duas páginas. Termine com propostas de deliberação concretas, pontos em aberto e as três próximas datas. Use números apenas do orçamento.",
+      "task": "Crie o documento para a diretoria.\n\nCronograma e tarefas:\n{{node:schedule}}\n\nOrçamento:\n{{node:budget}}\n\nComunicação:\n{{node:communication}}",
+      "criteria": {
+        "complete": "O documento contém cronograma, tarefas, orçamento, comunicação e propostas de deliberação.",
+        "responsibilities": "Cada tarefa tem uma função responsável e uma data.",
+        "budget_consistent": "Todos os números correspondem ao orçamento."
+      }
+    }
+  },
+  "tests": {
+    "summer_party": {
+      "name": "Festa de verão pelo aniversário da associação"
+    }
+  }
+}

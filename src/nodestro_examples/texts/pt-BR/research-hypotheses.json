@@ -1,0 +1,177 @@
+{
+  "name": "Transformar uma pergunta de pesquisa em hipóteses",
+  "field": "Pesquisa e desenvolvimento",
+  "description": "Analisar uma pergunta de pesquisa, desenvolver hipóteses testáveis, revisá-las criticamente e derivar um plano de experimentos.",
+  "start": "Pergunta de pesquisa",
+  "output": "Plano de experimentos",
+  "file_name": "Plano de experimentos",
+  "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nPergunta de pesquisa: é possível reduzir a temperatura de cura da nossa tinta em pó PL-7 de 180 °C para 165 °C\nsem prejudicar a aderência em aço galvanizado? O objetivo é economizar cerca de 10 % de energia no forno.\n\nEnsaio preliminar (5 chapas cada, teste de corte em grade conforme ISO 2409, 0 = melhor aderência, 5 = pior):\n- 180 °C, 15 min: 0, 0, 1, 0, 1\n- 165 °C, 15 min: 1, 0, 2, 1, 1\n- 165 °C, 20 min: 0, 1, 0, 1, 0\n\nRestrições: 40 chapas de teste disponíveis por semana, forno livre para ensaios dois dias por semana,\no pré-tratamento das chapas até agora foi feito em dois dias diferentes.",
+  "guide": {
+    "problem": "Uma boa pesquisa começa com uma pergunta precisa e testável. O workflow decompõe uma pergunta de pesquisa, formula hipóteses, submete-as a uma crítica metodológica e deriva um plano de experimentos realista.",
+    "flow": "Uma cadeia sequencial com retorno: o analista esclarece variáveis e premissas, o agente de hipóteses formula hipóteses testáveis com hipóteses nulas, o crítico metodológico as confronta com os dados preliminares usando a calculadora e aponta fatores de confusão. O planejador de experimentos usa hipóteses e crítica em conjunto.",
+    "input": "Uma pergunta de pesquisa com objetivo, dados de ensaios preliminares e restrições como material, tempo e equipamentos. Você pode anexar dados de medição e documentos como arquivos; o arquivo de exemplo contém os valores do ensaio preliminar por chapa.",
+    "result": "Um plano de experimentos com hipóteses, fatores e níveis, tamanho da amostra, método de medição, análise e critérios de interrupção, além dos riscos em aberto, também como arquivo Word. O planejador de experimentos propõe o plano para o conhecimento; você decide se ele é salvo.",
+    "adapt": "Substitua a pergunta e o ensaio preliminar pelos seus e anexe os dados de medição diretamente. A literatura de que você precisa com frequência pode ser carregada como conhecimento no modo \"Pesquisa\" e atribuída ao analista da pergunta, para que ele trabalhe com citações. Acrescente as suas diretrizes estatísticas no crítico metodológico."
+  },
+  "agents": {
+    "framing": {
+      "name": "Analista da pergunta",
+      "description": "Esclarece objetivo, variáveis, restrições e lacunas de conhecimento.",
+      "system": "Você é pesquisador e estrutura perguntas de pesquisa. Decomponha a pergunta em objetivo, variáveis independentes e dependentes, possíveis fatores de confusão e restrições. Resuma o que os dados existentes mostram e o que não mostram, e separe o conhecimento estabelecido de suposições.",
+      "task": "Analise esta pergunta de pesquisa:\n\n{{input}}"
+    },
+    "hypotheses": {
+      "name": "Desenvolvedor de hipóteses",
+      "description": "Formula hipóteses testáveis com previsões e hipóteses nulas.",
+      "system": "Você formula hipóteses científicas. Derive da análise três a cinco hipóteses testáveis. Para cada uma, indique a hipótese nula, uma previsão mensurável, o método de medição e o que conta como confirmação ou refutação. Ordene-as pela relevância para o objetivo.",
+      "task": "Desenvolva hipóteses com base nesta análise:\n\n{{node:framing}}"
+    },
+    "critic": {
+      "name": "Crítico metodológico",
+      "description": "Verifica testabilidade das hipóteses, fatores de confusão e dados disponíveis.",
+      "system": "Você é um metodólogo e revisor rigoroso. Verifique em cada hipótese a falseabilidade, a mensurabilidade, os fatores de confusão e os vieses. Avalie os dados preliminares disponíveis com a calculadora (por exemplo médias e amplitudes) e julgue se os dados permitem uma conclusão. Indique quais hipóteses devem ser rejeitadas, refinadas ou mantidas.",
+      "task": "Revise estas hipóteses criticamente.\n\nPergunta de pesquisa e dados:\n{{run.input}}\n\nHipóteses:\n{{node:hypotheses}}"
+    },
+    "design": {
+      "name": "Planejador de experimentos",
+      "description": "Deriva um plano de experimentos das hipóteses e da crítica.",
+      "system": "Você planeja experimentos segundo os princípios do planejamento de experimentos. Para as hipóteses mantidas, elabore um plano: fatores e níveis, repetições, aleatorização e blocagem contra fatores de confusão, método de medição, método de análise, critérios de parada e de sucesso e um cronograma compatível com as restrições. Termine com os riscos em aberto.",
+      "task": "Elabore o plano de experimentos.\n\nHipóteses:\n{{node:hypotheses}}\n\nCrítica metodológica:\n{{node:critic}}"
+    }
+  },
+  "form": {
+    "research_files": {
+      "label": "Documentos de pesquisa",
+      "description": "Opcional: dados de medição (CSV, Excel, JSON) e documentos como relatórios de ensaio ou artigos (PDF, Word, Markdown), até 6 arquivos. Sem arquivos valem as informações do texto."
+    }
+  },
+  "samples": {
+    "pretest": {
+      "name": "Ensaio_preliminar_PL-7",
+      "description": "Os valores fictícios de corte em grade do ensaio preliminar por chapa, com dia de pré-tratamento, em CSV.",
+      "content": [
+        [
+          "Temperatura_C",
+          "Tempo_min",
+          "Chapa",
+          "Dia_pre_tratamento",
+          "Corte_em_grade_ISO2409"
+        ],
+        [
+          180,
+          15,
+          1,
+          "Dia 1",
+          0
+        ],
+        [
+          180,
+          15,
+          2,
+          "Dia 1",
+          0
+        ],
+        [
+          180,
+          15,
+          3,
+          "Dia 2",
+          1
+        ],
+        [
+          180,
+          15,
+          4,
+          "Dia 2",
+          0
+        ],
+        [
+          180,
+          15,
+          5,
+          "Dia 2",
+          1
+        ],
+        [
+          165,
+          15,
+          6,
+          "Dia 1",
+          1
+        ],
+        [
+          165,
+          15,
+          7,
+          "Dia 1",
+          0
+        ],
+        [
+          165,
+          15,
+          8,
+          "Dia 2",
+          2
+        ],
+        [
+          165,
+          15,
+          9,
+          "Dia 2",
+          1
+        ],
+        [
+          165,
+          15,
+          10,
+          "Dia 2",
+          1
+        ],
+        [
+          165,
+          20,
+          11,
+          "Dia 1",
+          0
+        ],
+        [
+          165,
+          20,
+          12,
+          "Dia 1",
+          1
+        ],
+        [
+          165,
+          20,
+          13,
+          "Dia 1",
+          0
+        ],
+        [
+          165,
+          20,
+          14,
+          "Dia 2",
+          1
+        ],
+        [
+          165,
+          20,
+          15,
+          "Dia 2",
+          0
+        ]
+      ]
+    }
+  },
+  "tests": {
+    "question_text": {
+      "name": "Pergunta e ensaio preliminar no texto"
+    },
+    "pretest_file": {
+      "name": "Dados do ensaio preliminar em CSV",
+      "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nPergunta de pesquisa: é possível reduzir a temperatura de cura da nossa tinta em pó PL-7 de 180 °C para 165 °C sem prejudicar a aderência em aço galvanizado? O objetivo é economizar cerca de 10 % de energia no forno.\n\nOs valores do ensaio preliminar (corte em grade conforme ISO 2409, 0 = melhor aderência) estão anexados como arquivo CSV.\n\nRestrições: 40 chapas de teste disponíveis por semana, forno livre para ensaios dois dias por semana."
+    }
+  }
+}

@@ -1,0 +1,68 @@
+{
+  "name": "Create a personal learning plan",
+  "field": "Education and training",
+  "description": "Assess the current level, develop a learning plan, explain the content and create a knowledge check.",
+  "start": "Learning goal",
+  "output": "Learning package",
+  "file_name": "Learning plan",
+  "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nLearner: Sam Example, purchasing clerk, uses Excel daily for simple lists and totals.\nGoal: use pivot tables confidently within four weeks to analyse orders by supplier and month.\nTime: about 3 hours a week, preferably in sessions of 30 to 45 minutes.\nPrior knowledge: has used VLOOKUP before, confident with filtering and sorting; hardly any charts.\nLearning style: learns best with examples from their own work, likes short exercises.",
+  "guide": {
+    "problem": "Learning works better with a plan that starts where you are. The workflow creates a personal learning plan, explains the first topics and checks understanding with a quiz.",
+    "flow": "The learning assessment determines the starting point and gaps, and the learning planner turns this into a weekly plan. On this basis, the tutor (learning content for the chosen week, based on your course materials if you like) and the quiz author (knowledge check with answers) work in parallel. The result contains all three parts.",
+    "input": "Who is learning, the learning goal, available time, prior knowledge and preferred learning style. In the form you choose the week to work out and can attach your own course materials; the sample file is a short guide to pivot tables.",
+    "result": "A four-week learning plan with goals for each week, clear explanations with exercises for the chosen week and a quiz with answers and explanations, also as a PDF to print.",
+    "adapt": "Describe your own learning goal; it works for almost any topic. For the following weeks, start the workflow again and change the week in the form. Course materials you use permanently can be uploaded as knowledge and assigned to the tutor."
+  },
+  "agents": {
+    "assessment": {
+      "name": "Learning assessment",
+      "description": "Determines the starting point, the learning goal and the gaps.",
+      "system": "You are a learning adviser. From the description, determine the starting level, the concrete learning goal in a verifiable form, the gaps in between and possible stumbling blocks. Take the time budget and the learning style into account. Be brief and structured.",
+      "task": "Assess the learning level:\n\n{{input}}"
+    },
+    "plan": {
+      "name": "Learning planner",
+      "description": "Creates a weekly plan with learning goals and exercises.",
+      "system": "You are an instructional designer who plans training. Create a learning plan in weeks: for each week the learning goals, topics, sessions with duration, a practical exercise from everyday work and a criterion by which the learner can recognise their progress. Keep to the time budget and build in repetition.",
+      "task": "Create the learning plan based on this assessment:\n\n{{node:assessment}}"
+    },
+    "tutor": {
+      "name": "Tutor",
+      "description": "Explains the content of the first week with examples and exercises.",
+      "system": "You are a patient tutor. Explain the topics of the week of the learning plan named in the task step by step, with one running example from the learner's working life, short exercises and typical mistakes. If course materials are attached, stick to their terms and approach and refer to the relevant sections. Write clearly and encouragingly, without jargon you do not explain.",
+      "task": "Explain the content of week {{form.week}} of this learning plan.\n\nLearner and goal:\n{{run.input}}\n\nLearning plan:\n{{node:plan}}"
+    },
+    "quiz": {
+      "name": "Quiz author",
+      "description": "Creates a knowledge check with answers for the first week.",
+      "system": "You create knowledge checks. Write eight tasks for the week of the learning plan named in the task: multiple-choice questions with one correct answer, short application tasks and one transfer task. Then give the answer key with a short explanation for each task. Test understanding, not memorisation.",
+      "task": "Create the knowledge check for week {{form.week}} of this learning plan:\n\n{{node:plan}}"
+    }
+  },
+  "form": {
+    "week": {
+      "label": "Week for explanation and quiz",
+      "description": "The week of the plan for which the tutor and the quiz author work out the content.",
+      "default": "1"
+    },
+    "materials": {
+      "label": "Course materials",
+      "description": "Optional: your own materials as PDF, Word, Markdown or text, up to 5 files. The tutor relies on them when they are available."
+    }
+  },
+  "samples": {
+    "guide": {
+      "name": "Quick_guide_pivot_tables",
+      "description": "A fictional course handout on pivot tables as a Word document.",
+      "content": "# Quick guide: pivot tables in Excel\n\nSYNTHETIC SAMPLE DATA – a fictional course handout, for trying things out only.\n\n## 1. Prepare the data\n\n- One header row, no empty rows or columns.\n- Only one kind of value per column (for example only dates).\n- Format the data as a table (Ctrl+T); the pivot table then grows with it.\n\n## 2. Create a pivot table\n\n1. Click into the table.\n2. Insert > PivotTable.\n3. Choose “New worksheet”.\n\n## 3. Arrange the fields\n\n| Area | Purpose | Example |\n|---|---|---|\n| Rows | Groups below each other | Supplier |\n| Columns | Groups next to each other | Month |\n| Values | What is calculated | Sum of order value |\n| Filters | Selection for the whole table | Site |\n\n## 4. Typical mistakes\n\n- Values are counted instead of summed: Value field settings > Sum.\n- New data is missing: refresh the pivot table (Alt+F5).\n- Dates not grouped: right-click > Group > Months."
+    }
+  },
+  "tests": {
+    "week_one": {
+      "name": "Week 1 without materials"
+    },
+    "week_two_material": {
+      "name": "Week 2 with course handout"
+    }
+  }
+}

@@ -1,0 +1,160 @@
+{
+  "name": "Preparare un'offerta su misura",
+  "field": "Vendite",
+  "description": "Analizzare la richiesta di un cliente, calcolare una soluzione adatta e redigere un'offerta.",
+  "start": "Richiesta del cliente",
+  "output": "Bozza di offerta",
+  "file_name": "Offerta",
+  "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nE-mail della sig.ra Lena Esempio, office manager dello Studio Commercialisti Campione (35 postazioni, trasloco a giugno):\n\"Buongiorno, il 15 giugno ci trasferiamo in nuovi uffici e abbiamo bisogno di arredi nuovi per 35 postazioni.\nPer noi sono importanti scrivanie regolabili in altezza, perché diversi colleghi hanno problemi alla schiena, e ci\nserve un'acustica migliore nell'open space (12 scrivanie). Ci servono inoltre due sale riunioni da 8 persone\nciascuna. Il nostro budget è di circa 60.000 EUR netti. Potreste inviarci un'offerta entro fine mese?\nIl montaggio dovrebbe avvenire nel fine settimana, così il lavoro può continuare.\"\n\nIl nostro listino (netto):\n- Scrivania regolabile elettricamente in altezza, 160 x 80 cm: 690 EUR\n- Scrivania ad altezza fissa, 160 x 80 cm: 320 EUR\n- Sedia ergonomica premium: 540 EUR; standard: 290 EUR\n- Pannello divisorio acustico da scrivania: 210 EUR; pannello acustico a parete 120 x 60 cm: 140 EUR\n- Tavolo riunioni per 8 persone: 1.450 EUR; sedia per riunioni: 180 EUR\n- Consegna e montaggio: 45 EUR a postazione, supplemento fine settimana 20 % sul montaggio\n- Sconto quantità: 5 % da 25.000 EUR di merce, 8 % da 50.000 EUR",
+  "guide": {
+    "problem": "Una buona offerta risponde al bisogno reale del cliente, non solo alle sue parole chiave. Il workflow chiarisce il bisogno, calcola una soluzione adatta e redige un'offerta completa.",
+    "flow": "L'analista dei bisogni distingue requisiti espliciti e impliciti e raccoglie le domande aperte. Il consulente di soluzioni compone articoli dal listino e calcola con la calcolatrice, inclusa una variante entro il budget. Il redattore dell'offerta redige l'offerta; un controllo qualità integrato verifica completezza e prezzi. Un modulo di input raccoglie i dati chiave (cliente, scadenza, budget, montaggio nel fine settimana); prima dell'invio una persona approva l'offerta.",
+    "input": "La richiesta del cliente e il vostro listino con sconti e condizioni. Il modulo raccoglie i dati principali; il listino puoi scriverlo nel testo o allegarlo come file Excel, CSV o PDF, come mostra il file di esempio.",
+    "result": "Una bozza di offerta con lettera di accompagnamento, tabella delle voci, totali, varianti, ipotesi e domande aperte. Solo dopo la tua approvazione l'esecuzione salva l'offerta in PDF e come file Word modificabile.",
+    "adapt": "Allega il tuo listino attuale come file; così basta la richiesta del cliente come testo. Condizioni di pagamento e testi standard si aggiungono nel prompt di sistema del redattore dell'offerta."
+  },
+  "agents": {
+    "needs": {
+      "name": "Analista dei bisogni",
+      "description": "Individua requisiti espliciti e impliciti.",
+      "system": "Sei un consulente commerciale esperto. Analizza la richiesta del cliente: requisiti espliciti, bisogni impliciti, vincoli come budget, scadenza e montaggio, e criteri di decisione. Elenca le domande aperte da chiarire prima di un'offerta vincolante e le ipotesi utilizzabili fino ad allora.",
+      "task": "Analizza i bisogni in questa richiesta:\n\n{{input}}"
+    },
+    "solution": {
+      "name": "Consulente di soluzioni",
+      "description": "Compone articoli adatti e calcola con la calcolatrice.",
+      "system": "Sei un consulente di soluzioni. Componi dal listino una soluzione che soddisfi il bisogno e calcola quantità, subtotali, supplementi e sconti con la calcolatrice. Se il budget non basta, prepara una seconda variante che rientri nel budget e spiega le differenze. Usa solo articoli e prezzi del listino.",
+      "task": "Componi una soluzione con calcolo.\n\nRichiesta e listino:\n{{run.input}}\n\nAnalisi dei bisogni:\n{{node:needs}}"
+    },
+    "offer": {
+      "name": "Redattore dell'offerta",
+      "description": "Redige la bozza di offerta per il cliente.",
+      "system": "Scrivi offerte nelle vendite B2B. Scrivi un'offerta cordiale e precisa: una breve lettera di accompagnamento che riprende le esigenze del cliente, una tabella delle voci con quantità e prezzi, totali, varianti, servizi come consegna e montaggio, validità e le domande aperte. Contrassegna il documento come bozza per l'approvazione interna. Prendi i prezzi solo dal calcolo.",
+      "task": "Redigi la bozza di offerta.\n\nAnalisi dei bisogni:\n{{node:needs}}\n\nSoluzione e calcolo:\n{{node:solution}}",
+      "criteria": {
+        "all_requirements": "L'offerta tratta tutti i requisiti dell'analisi dei bisogni.",
+        "prices_consistent": "Tutti i prezzi e i totali corrispondono al calcolo.",
+        "open_points": "Domande aperte e ipotesi sono indicate chiaramente."
+      }
+    }
+  },
+  "steps": {
+    "approve": {
+      "name": "Approvare l'offerta",
+      "instructions": "Controlla prezzi, sconti, tempi di consegna e le domande aperte prima di inviare l'offerta. Un rifiuto termina l'esecuzione; modifica l'input e riparti."
+    }
+  },
+  "form": {
+    "customer": {
+      "label": "Cliente",
+      "description": "Azienda e persona di riferimento",
+      "default": "Studio Commercialisti Campione, Lena Esempio"
+    },
+    "deadline": {
+      "label": "Offerta entro",
+      "description": "Entro quando il cliente ha bisogno dell'offerta",
+      "default": "2026-05-29"
+    },
+    "budget": {
+      "label": "Budget (EUR netti)",
+      "description": "Il quadro indicato dal cliente",
+      "default": "60000"
+    },
+    "weekend": {
+      "label": "Montaggio nel fine settimana",
+      "description": "L'attività del cliente non deve essere interrotta",
+      "default": "true"
+    },
+    "price_list": {
+      "label": "Listino come file",
+      "description": "Facoltativo: il vostro listino in Excel, CSV o PDF. Senza file vale il listino nel testo."
+    }
+  },
+  "samples": {
+    "price_list": {
+      "name": "Listino_arredo_ufficio",
+      "description": "Il listino fittizio dell'attività di prova come file Excel con articoli e condizioni.",
+      "content": {
+        "Listino": [
+          [
+            "Articolo",
+            "Unità",
+            "Prezzo netto (EUR)"
+          ],
+          [
+            "Scrivania regolabile elettricamente in altezza, 160 x 80 cm",
+            "pezzo",
+            690
+          ],
+          [
+            "Scrivania ad altezza fissa, 160 x 80 cm",
+            "pezzo",
+            320
+          ],
+          [
+            "Sedia ergonomica premium",
+            "pezzo",
+            540
+          ],
+          [
+            "Sedia da ufficio standard",
+            "pezzo",
+            290
+          ],
+          [
+            "Pannello divisorio acustico da scrivania",
+            "pezzo",
+            210
+          ],
+          [
+            "Pannello acustico a parete 120 x 60 cm",
+            "pezzo",
+            140
+          ],
+          [
+            "Tavolo riunioni per 8 persone",
+            "pezzo",
+            1450
+          ],
+          [
+            "Sedia per riunioni",
+            "pezzo",
+            180
+          ],
+          [
+            "Consegna e montaggio",
+            "postazione",
+            45
+          ]
+        ],
+        "Condizioni": [
+          [
+            "Condizione",
+            "Regola"
+          ],
+          [
+            "Supplemento fine settimana",
+            "20 % sul montaggio"
+          ],
+          [
+            "Sconto quantità",
+            "5 % da 25.000 EUR di merce, 8 % da 50.000 EUR"
+          ],
+          [
+            "Validità delle offerte",
+            "30 giorni"
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "request_text": {
+      "name": "Richiesta e listino nel testo"
+    },
+    "price_list_file": {
+      "name": "Listino come file Excel",
+      "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nE-mail della sig.ra Lena Esempio, office manager dello Studio Commercialisti Campione (35 postazioni, trasloco a giugno):\n\"Buongiorno, il 15 giugno ci trasferiamo in nuovi uffici e abbiamo bisogno di arredi nuovi per 35 postazioni.\nPer noi sono importanti scrivanie regolabili in altezza, perché diversi colleghi hanno problemi alla schiena, e ci\nserve un'acustica migliore nell'open space (12 scrivanie). Ci servono inoltre due sale riunioni da 8 persone\nciascuna. Il nostro budget è di circa 60.000 EUR netti. Potreste inviarci un'offerta entro fine mese?\nIl montaggio dovrebbe avvenire nel fine settimana, così il lavoro può continuare.\"\n\nIl nostro listino è allegato come file Excel."
+    }
+  }
+}

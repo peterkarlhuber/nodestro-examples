@@ -1,0 +1,144 @@
+{
+  "name": "Desenvolver e precificar um cardápio",
+  "field": "Gastronomia",
+  "description": "Desenvolver pratos para um público, calcular o custo de insumos e os preços e escrever os textos do cardápio.",
+  "start": "Conceito",
+  "output": "Cardápio",
+  "file_name": "Cardápio de almoço",
+  "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nEstabelecimento: bistrô \"O Moinho Exemplo\", 40 lugares, parque empresarial com muitos escritórios\nPúblico: funcionários de escritório no horário de almoço (45 minutos), querem comida rápida e fresca, muitas vezes vegetariana\nTarefa: cardápio de almoço com 6 pratos, pelo menos 2 vegetarianos e 1 vegano; muda a cada duas semanas\nCusto de insumos alvo: no máximo 30 % do preço de venda líquido; faixa de preço 9,50 a 14,50 EUR com impostos (IVA 7 %)\n\nPreços de compra (líquidos):\n- Peito de frango 9,80 EUR/kg, carne moída 8,90 EUR/kg, filé de salmão 21,00 EUR/kg\n- Massa 1,60 EUR/kg, arroz 1,90 EUR/kg, batatas 0,90 EUR/kg, lentilhas 2,40 EUR/kg\n- Legumes da estação em média 2,80 EUR/kg, folhas 4,50 EUR/kg, grão-de-bico 2,20 EUR/kg\n- Queijo feta 8,50 EUR/kg, creme de leite 3,20 EUR/l, leite de coco 3,90 EUR/l, azeite 7,50 EUR/l\n- Temperos, ervas e pequenos itens valor fixo de 0,35 EUR por porção",
+  "guide": {
+    "problem": "Um cardápio precisa agradar aos clientes e dar lucro. O workflow desenvolve pratos para um público, calcula o custo de insumos e os preços e escreve textos de cardápio apetitosos.",
+    "flow": "Uma cadeia de três agentes: o desenvolvedor de conceito monta pratos com receitas, a precificação calcula o custo de insumos e os preços de venda com a calculadora, e o redator do cardápio escreve o cardápio. Um controle de qualidade verifica público, preços e o aviso sobre alergênicos. O resultado contém a precificação e o cardápio.",
+    "input": "Tipo de estabelecimento, público, número e tipo de pratos, custo de insumos alvo, faixa de preço e preços de compra. Os preços de compra você pode colar ou anexar como arquivo CSV ou Excel, como mostra o arquivo de exemplo.",
+    "result": "Uma tabela de precificação com custo de insumos e preço por prato e um cardápio de almoço pronto com descrições curtas, também como arquivo Word para diagramar e como arquivo Excel com as tabelas de precificação. Alergênicos e aditivos precisam ser verificados e sinalizados com base nas receitas reais.",
+    "adapt": "Anexe a sua lista atual de preços de compra e descreva o seu público. As suas fichas técnicas podem ser carregadas como conhecimento e atribuídas à precificação; regras da casa, como tamanho das porções, vão no desenvolvedor de conceito. Para a troca a cada duas semanas, você pode agendar a cópia."
+  },
+  "agents": {
+    "concept": {
+      "name": "Desenvolvedor de conceito",
+      "description": "Monta pratos adequados com receitas e quantidades.",
+      "system": "Você é chef de cozinha com experiência em almoço executivo. Desenvolva pratos que combinem com o público e possam ser preparados e servidos no tempo disponível. Para cada prato, indique um nome, uma descrição curta e uma receita por porção com quantidades em gramas ou mililitros. Use principalmente ingredientes da lista de compras e marque os ingredientes que não estão na lista.",
+      "task": "Desenvolva os pratos para este conceito:\n\n{{input}}"
+    },
+    "costing": {
+      "name": "Precificação",
+      "description": "Calcula custo de insumos e preços de venda com a calculadora.",
+      "system": "Você é especialista em precificação na gastronomia. Para cada prato, use a calculadora para calcular o custo de insumos por porção a partir da receita e dos preços de compra, o preço líquido com custo de insumos de no máximo 30 % e o preço com 7 % de IVA, arredondado para preços de cardápio sensatos. Verifique a faixa de preço e proponha ajustes se um prato não se encaixar. Mostre tudo em uma tabela.",
+      "task": "Precifique estes pratos.\n\nConceito e preços de compra:\n{{run.input}}\n\nPratos:\n{{node:concept}}"
+    },
+    "menu": {
+      "name": "Redator do cardápio",
+      "description": "Escreve o cardápio de almoço com descrições apetitosas.",
+      "system": "Você escreve cardápios. Para cada prato, escreva um nome apetitoso e uma descrição de no máximo 20 palavras que combine com o público. Acrescente o preço, uma indicação vegetariano ou vegano e um aviso de que os alérgenos precisam ser verificados e informados com base nas receitas. Use preços apenas da precificação. Por fim, repita a tabela de precificação sem alterações.",
+      "task": "Escreva o cardápio de almoço a partir desta precificação:\n\n{{node:costing}}",
+      "criteria": {
+        "target_group": "Pratos e textos combinam claramente com o público descrito.",
+        "prices_match": "Todos os preços correspondem à precificação e estão dentro da faixa de preço.",
+        "allergen_note": "O cardápio contém um aviso sobre a verificação e a indicação de alérgenos."
+      }
+    }
+  },
+  "form": {
+    "purchase_prices": {
+      "label": "Preços de compra como arquivo",
+      "description": "Opcional: a sua lista de preços de compra em CSV ou Excel, no máximo 5 MB. Sem arquivo valem os preços do texto."
+    }
+  },
+  "samples": {
+    "prices": {
+      "name": "Precos_compra_Moinho_Exemplo",
+      "description": "Os preços de compra fictícios da tarefa de teste em CSV.",
+      "content": [
+        [
+          "Ingrediente",
+          "Unidade",
+          "Preço líquido (EUR)"
+        ],
+        [
+          "Peito de frango",
+          "kg",
+          9.8
+        ],
+        [
+          "Carne moída",
+          "kg",
+          8.9
+        ],
+        [
+          "Filé de salmão",
+          "kg",
+          21.0
+        ],
+        [
+          "Massa",
+          "kg",
+          1.6
+        ],
+        [
+          "Arroz",
+          "kg",
+          1.9
+        ],
+        [
+          "Batatas",
+          "kg",
+          0.9
+        ],
+        [
+          "Lentilhas",
+          "kg",
+          2.4
+        ],
+        [
+          "Legumes da estação (média)",
+          "kg",
+          2.8
+        ],
+        [
+          "Folhas",
+          "kg",
+          4.5
+        ],
+        [
+          "Grão-de-bico",
+          "kg",
+          2.2
+        ],
+        [
+          "Queijo feta",
+          "kg",
+          8.5
+        ],
+        [
+          "Creme de leite",
+          "l",
+          3.2
+        ],
+        [
+          "Leite de coco",
+          "l",
+          3.9
+        ],
+        [
+          "Azeite",
+          "l",
+          7.5
+        ],
+        [
+          "Temperos, ervas, pequenos itens (valor fixo)",
+          "porção",
+          0.35
+        ]
+      ]
+    }
+  },
+  "tests": {
+    "lunch_menu": {
+      "name": "Cardápio de almoço com preços no texto"
+    },
+    "price_file": {
+      "name": "Preços de compra em CSV",
+      "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nEstabelecimento: bistrô \"O Moinho Exemplo\", 40 lugares, parque empresarial com muitos escritórios\nPúblico: funcionários de escritório no horário de almoço (45 minutos), querem comida rápida e fresca, muitas vezes vegetariana\nTarefa: cardápio de almoço com 6 pratos, pelo menos 2 vegetarianos e 1 vegano; muda a cada duas semanas\nCusto de insumos alvo: no máximo 30 % do preço de venda líquido; faixa de preço 9,50 a 14,50 EUR com impostos (IVA 7 %)\n\nOs preços de compra estão anexados como arquivo CSV."
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "name": "Revisione del codice con test",
+  "field": "Sviluppo software",
+  "description": "Controllare il codice sorgente per bug e problemi di sicurezza e proporre una versione migliorata con test.",
+  "start": "Codice sorgente",
+  "output": "Revisione e test",
+  "file_name": "Revisione del codice",
+  "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nContesto: funzioni di uno strumento interno che calcola sconti sugli ordini e cerca ordini.\nPython 3.12, database SQLite.\n\n```python\nimport sqlite3\n\ndef apply_discount(total, customer_type, coupon=None):\n    \"\"\"Return the price after discounts. Regular customers get 5 %, premium 10 %.\n    A coupon like \"SAVE20\" takes a further 20 % off, but the price must never drop below 0.\"\"\"\n    if customer_type == \"premium\":\n        total = total * 0.9\n    elif customer_type == \"regular\":\n        total = total * 0.95\n    if coupon:\n        percent = int(coupon[4:])\n        total = total - total * percent / 100\n    return round(total, 1)\n\ndef average_order_value(orders):\n    return sum(o[\"total\"] for o in orders) / len(orders)\n\ndef find_orders(db_path, customer_name):\n    conn = sqlite3.connect(db_path)\n    query = f\"SELECT id, total FROM orders WHERE customer = '{customer_name}'\"\n    rows = conn.execute(query).fetchall()\n    return rows\n```",
+  "guide": {
+    "problem": "Un secondo sguardo trova i bug prima che arrivino in produzione. Il workflow controlla contemporaneamente il codice per errori logici e problemi di sicurezza e fornisce una versione migliorata con test.",
+    "flow": "L'analista dei bug e il revisore della sicurezza lavorano in parallelo sullo stesso codice. L'agente di miglioramento unisce i rilievi e scrive codice corretto e test pytest; un controllo qualità integrato verifica che ogni rilievo sia trattato e coperto da test.",
+    "input": "Un estratto di codice con un breve contesto: linguaggio, scopo e ambiente, oppure un intero progetto come archivio ZIP o singoli file nel campo file. Gli archivi vengono solo letti, mai eseguiti. Il codice resta invariato nel suo linguaggio; le spiegazioni compaiono nella lingua dell'interfaccia. Il file di esempio è un piccolo progetto Python con errori inseriti.",
+    "result": "Un elenco dei rilievi ordinato per gravità, il codice corretto e test pytest che coprono ogni rilievo, anche come file Markdown. I test non vengono eseguiti automaticamente; eseguili in locale.",
+    "adapt": "Allega il tuo progetto come ZIP o incolla il codice indicando linguaggio e framework. Per altri linguaggi adatta il framework di test nell'agente di correzione, per esempio Jest o JUnit. Le vostre linee guida di codifica puoi salvarle come conoscenza. Tramite l'API del workflow la revisione può essere avviata anche da una pipeline CI."
+  },
+  "agents": {
+    "bugs": {
+      "name": "Analista dei bug",
+      "description": "Cerca errori logici, casi limite e scostamenti dalla descrizione.",
+      "system": "Sei uno sviluppatore senior che fa revisioni del codice. Cerca errori logici, casi limite non gestiti, scostamenti tra documentazione e comportamento, gestione degli errori e perdite di risorse. Per ogni rilievo indica la riga o la funzione, un input concreto che mostra il bug, la gravità (critica, alta, media, bassa) e una correzione proposta.",
+      "task": "Controlla questo codice alla ricerca di bug:\n\n{{input}}"
+    },
+    "security": {
+      "name": "Revisore della sicurezza",
+      "description": "Controlla il codice per vulnerabilità e schemi non sicuri.",
+      "system": "Sei uno specialista di sicurezza delle applicazioni. Controlla il codice per problemi di sicurezza, per esempio injection, gestione non sicura degli input, validazione mancante, segreti nel codice o uso non sicuro delle risorse. Ordina i rilievi per gravità, descrivi in una frase un possibile scenario di attacco e indica l'alternativa sicura. Non segnalare nulla che non riguardi il codice mostrato.",
+      "task": "Controlla questo codice alla ricerca di problemi di sicurezza:\n\n{{input}}"
+    },
+    "fix": {
+      "name": "Correzione e test",
+      "description": "Scrive codice corretto e test pytest per tutti i rilievi.",
+      "system": "Sei uno sviluppatore attento alla qualità dei test. Unisci i rilievi ed elimina i duplicati. Output: prima una tabella dei rilievi per gravità, poi il codice corretto completo, infine test pytest che coprono ogni rilievo, casi limite compresi. Codice, identificatori e commenti nel codice restano in inglese. Fai presente che i test vanno eseguiti in locale. Se si tratta di un progetto con più file, indica per ogni file modificato il percorso e la nuova versione completa e tralascia i file invariati.",
+      "task": "Crea la versione migliorata con test.\n\nCodice originale:\n{{run.input}}\n\nAnalisi dei bug:\n{{node:bugs}}\n\nRevisione della sicurezza:\n{{node:security}}",
+      "criteria": {
+        "every_finding_addressed": "Ogni rilievo dell'analisi dei bug e della revisione della sicurezza è corretto nel codice o rinviato con motivazione.",
+        "tests_cover_findings": "Esiste almeno un test per ogni rilievo corretto.",
+        "runnable": "Codice e test sono completi ed eseguibili, senza segnaposto."
+      }
+    }
+  },
+  "form": {
+    "code_files": {
+      "label": "Codice come file",
+      "description": "Facoltativo: un progetto come archivio ZIP o singoli file sorgente, fino a 20 file. Gli archivi vengono solo letti, mai eseguiti; gli agenti vedono prima la struttura e poi leggono i file necessari."
+    }
+  },
+  "samples": {
+    "project": {
+      "name": "calcolatore-sconti",
+      "description": "Un piccolo progetto Python innocuo in ZIP con errori inseriti: calcolo degli sconti, query SQL e un test.",
+      "content": {
+        "calcolatore-sconti/README.md": "# Calcolatore di sconti (progetto di esempio)\n\nDATI DI ESEMPIO SINTETICI – progetto completamente fittizio, solo per provare.\n\nUn piccolo strumento interno: calcola sconti sugli ordini e cerca ordini in un database SQLite.\n\n- Python 3.12, nessun'altra dipendenza\n- Test con pytest: `pytest`\n",
+        "calcolatore-sconti/shop/__init__.py": "",
+        "calcolatore-sconti/shop/discounts.py": "def apply_discount(total, customer_type, coupon=None):\n    \"\"\"Return the price after discounts. Regular customers get 5 %, premium 10 %.\n    A coupon like \"SAVE20\" takes a further 20 % off, but the price must never drop below 0.\"\"\"\n    if customer_type == \"premium\":\n        total = total * 0.9\n    elif customer_type == \"regular\":\n        total = total * 0.95\n    if coupon:\n        percent = int(coupon[4:])\n        total = total - total * percent / 100\n    return round(total, 1)\n\n\ndef average_order_value(orders):\n    return sum(o[\"total\"] for o in orders) / len(orders)\n",
+        "calcolatore-sconti/shop/orders.py": "import sqlite3\n\nADMIN_PASSWORD = \"admin123\"\n\n\ndef find_orders(db_path, customer_name):\n    conn = sqlite3.connect(db_path)\n    query = f\"SELECT id, total FROM orders WHERE customer = '{customer_name}'\"\n    rows = conn.execute(query).fetchall()\n    return rows\n",
+        "calcolatore-sconti/tests/test_discounts.py": "from shop.discounts import apply_discount\n\n\ndef test_premium():\n    assert apply_discount(100, \"premium\") == 90\n",
+        "calcolatore-sconti/requirements.txt": "pytest>=8\n"
+      }
+    }
+  },
+  "tests": {
+    "snippet": {
+      "name": "Estratto di codice nel testo"
+    },
+    "project_zip": {
+      "name": "Progetto come archivio ZIP",
+      "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nVerifica il progetto nell'archivio ZIP: uno strumento interno che calcola sconti e cerca ordini. Python 3.12, database SQLite."
+    }
+  }
+}

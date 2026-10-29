@@ -1,0 +1,194 @@
+{
+  "name": "Tratar uma reclamação com 8D",
+  "field": "Gestão da qualidade",
+  "description": "Tratar passo a passo uma reclamação de cliente com o método 8D e documentá-la em um relatório.",
+  "start": "Reclamação",
+  "output": "Relatório 8D",
+  "file_name": "Relatório 8D",
+  "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nCliente: Exemplo Automotiva S.A., fábrica Sul\nPeça: carcaça plástica G-220 (PA6-GF30, injetada), lote 24-117, entregue em 12/03, 4.000 peças\nReclamação de 18/03: os ganchos de encaixe quebram na montagem. O cliente inspecionou 2.000 peças, 46 estão\ndefeituosas (2,3 %). Ele exige ações de contenção em 24 horas e um relatório 8D em 10 dias.\n\nInformações internas:\n- O lote 24-117 foi produzido na máquina SG-4 com um molde recém-retrabalhado (manutenção em 05/03).\n- O material veio de uma nova entrega; o tempo de secagem foi reduzido de 4 para 2,5 horas por pressão de prazo.\n- A inspeção final verifica dimensões e aparência por plano de amostragem, mas nenhuma carga mecânica nos ganchos.\n- Estoque: 1.200 peças do lote 24-117 e 3.000 peças do lote 24-121 (mesmo molde, secagem normal).\n- Não houve reclamações comparáveis nos últimos 12 meses.",
+  "guide": {
+    "problem": "Reclamações exigem contenção rápida e uma análise de causa sólida. O método 8D define os passos; o workflow os percorre de forma estruturada e os documenta de maneira consistente.",
+    "flow": "Uma cadeia sequencial: o primeiro agente descreve o problema e as ações de contenção (D1 a D3), o segundo busca as causas de ocorrência e de não detecção (D4), o terceiro planeja ações corretivas e preventivas (D5 a D7). O agente de relatório reúne tudo em um relatório 8D estruturado. Um nó de decisão verifica a gravidade: em casos críticos, um agente adicional planeja a contenção de emergência das próximas 24 horas. Antes de o relatório ir para o cliente, uma pessoa o libera.",
+    "input": "A reclamação do cliente com peça, lote, defeito e taxa de defeitos, além das informações internas conhecidas sobre produção, material e inspeção. Você também pode anexar a carta de reclamação, dados de medição e fotos do defeito como arquivos; os arquivos de exemplo contêm uma carta de reclamação fictícia (PDF) e medições (Excel).",
+    "result": "Um relatório 8D estruturado com um campo para cada disciplina D1 a D8 e uma lista de pontos em aberto que a equipe ainda precisa esclarecer. Após a liberação, a execução salva o relatório em PDF e como arquivo Word editável. O agente de relatório também propõe aprendizados para o conhecimento; só é salvo o que você adotar explicitamente.",
+    "adapt": "Substitua os dados de teste pela sua reclamação e anexe diretamente registros de inspeção, desenhos ou fotos. Se você usa um formulário próprio, ajuste os campos do agente de relatório em \"Formato de saída\". Aprendizados adotados de reclamações anteriores podem ser atribuídos como conhecimento à análise de causas."
+  },
+  "agents": {
+    "problem": {
+      "name": "Descrição do problema D1–D3",
+      "description": "Descreve a equipe, o problema (é/não é) e as ações de contenção.",
+      "system": "Você é engenheiro de qualidade e conduz equipes 8D. Trabalhe nas etapas D1 a D3: proponha uma equipe multifuncional com funções, descreva o problema com precisão usando 5W2H e uma análise é/não é, e defina ações de contenção (bloqueio, seleção, entrega de reposição, informação ao cliente). Para cada ação de contenção, indique como sua eficácia é verificada.",
+      "task": "Trabalhe em D1 a D3 para esta reclamação:\n\n{{input}}",
+      "fields": {
+        "analysis": "D1 a D3 em texto: equipe, descrição do problema (5W2H, é/não é) e ações de contenção com verificação de eficácia",
+        "critical": "true se o caso for crítico: relevância de segurança ou legal, linha do cliente parada ou estoque afetado que ainda está sendo expedido"
+      }
+    },
+    "root_cause": {
+      "name": "Análise de causas D4",
+      "description": "Busca as causas de ocorrência e de não detecção com os 5 porquês.",
+      "system": "Você é especialista em análise de causa raiz na manufatura. Trabalhe em D4: analise separadamente por que o defeito ocorreu e por que não foi detectado. Use uma cadeia de 5 porquês para cada caso e baseie-se nos fatos da reclamação. Avalie quão bem cada causa está sustentada e indique ensaios ou verificações que a comprovem.",
+      "task": "Analise as causas (D4).\n\nReclamação:\n{{run.input}}\n\nResultado D1–D3:\n{{node:problem}}"
+    },
+    "actions": {
+      "name": "Planejamento de ações D5–D7",
+      "description": "Planeja ações corretivas, sua verificação e a prevenção.",
+      "system": "Você é gerente da qualidade. Trabalhe em D5 a D7: defina ações corretivas permanentes para cada causa comprovada ou provável, descreva como a eficácia será comprovada e derive ações preventivas que evitem defeitos semelhantes em outros produtos, por exemplo atualizações do FMEA, do plano de controle ou das instruções de trabalho. Indique responsáveis como funções e prazos realistas.",
+      "task": "Planeje D5 a D7 com base nesta análise de causas:\n\n{{node:root_cause}}"
+    },
+    "report": {
+      "name": "Relatório 8D",
+      "description": "Reúne todas as etapas em um relatório 8D estruturado.",
+      "system": "Você redige relatórios 8D para clientes. Resuma os resultados das etapas anteriores de forma completa e objetiva, sem acrescentar fatos novos. Verifique se as etapas se encaixam e liste contradições ou causas ainda não comprovadas como pontos em aberto. D8 contém uma nota de encerramento que reconhece a equipe e indica o que ainda falta antes do fechamento.",
+      "task": "Redija o relatório 8D.\n\nD1–D3:\n{{node:problem}}\n\nD4:\n{{node:root_cause}}\n\nD5–D7:\n{{node:actions}}\n\nContenção de emergência (somente em casos críticos):\n{{node:containment}}",
+      "fields": {
+        "d1_team": "D1 equipe com funções",
+        "d2_problem": "D2 descrição do problema",
+        "d3_containment": "D3 ações de contenção com verificação de eficácia",
+        "d4_root_causes": "D4 causas de ocorrência e de não detecção",
+        "d5_corrective_actions": "D5 ações corretivas",
+        "d6_verification": "D6 comprovação da eficácia",
+        "d7_prevention": "D7 ações preventivas",
+        "d8_closure": "D8 encerramento e reconhecimento",
+        "open_points": "Pontos em aberto e suposições ainda não comprovadas"
+      }
+    },
+    "containment": {
+      "name": "Contenção de emergência",
+      "description": "Planeja a contenção das próximas 24 horas em casos críticos.",
+      "system": "Você é o gerente de qualidade de plantão. Para uma reclamação crítica, planeje a contenção das próximas 24 horas: bloquear e separar todo o estoque e os lotes suspeitos, garantir as entregas em trânsito, organizar uma inspeção 100 % ou uma entrega de reposição e informar o cliente com uma situação clara. Indique para cada ação um papel responsável, um prazo e como a eficácia será verificada, e liste o que fica em aberto.",
+      "task": "Planeje a contenção de emergência para esta reclamação crítica.\n\nReclamação:\n{{run.input}}\n\nD1–D3:\n{{node:problem}}"
+    }
+  },
+  "steps": {
+    "severity": {
+      "name": "Gravidade",
+      "branches": {
+        "critical": "Crítico"
+      },
+      "default": "Padrão"
+    },
+    "release": {
+      "name": "Liberar relatório",
+      "instructions": "Verifique se o relatório 8D contém apenas fatos comprovados, se as causas não esclarecidas estão marcadas como em aberto e se as ações de contenção são realistas. Só então libere-o para envio ao cliente."
+    }
+  },
+  "form": {
+    "documents": {
+      "label": "Documentos da reclamação",
+      "description": "Opcional: carta de reclamação (PDF, Word), dados de medição (Excel, CSV) ou fotos do defeito (PNG, JPEG, WebP), até 8 arquivos. Sem arquivos, vale o texto."
+    }
+  },
+  "samples": {
+    "complaint": {
+      "name": "Reclamacao_G-220_lote_24-117",
+      "description": "Carta de reclamação fictícia do cliente em PDF.",
+      "content": "# Reclamação nº R-2026-031\n\n**De:** Exemplo Automotiva S.A., fábrica Sul, inspeção de recebimento\n\n**Para:** Gestão da qualidade, fornecedor de carcaças plásticas\n\n**Data:** 18/03/2026\n\n## Peça afetada\n\n| Dado | Valor |\n|---|---|\n| Peça | Carcaça plástica G-220 (PA6-GF30) |\n| Lote | 24-117 |\n| Data de entrega | 12/03/2026 |\n| Quantidade entregue | 4.000 peças |\n\n## Descrição do defeito\n\nNa montagem, os ganchos de encaixe das carcaças quebram assim que a tampa é encaixada. Inspecionamos 2.000 peças; 46 estão defeituosas (2,3 %). As superfícies de fratura parecem frágeis.\n\n## Nossas exigências\n\n1. Ações de contenção em até 24 horas, incluindo a seleção do estoque em nossa fábrica.\n2. Um relatório 8D em até 10 dias.\n3. Uma indicação de quais outros lotes podem estar afetados.\n\nContato: Sra. Érica Amostra, qualidade de fornecedores (fictício)"
+    },
+    "measurements": {
+      "name": "Medicoes_ganchos",
+      "description": "Forças de arrancamento fictícias dos ganchos por lote, com tempo de secagem, em um arquivo Excel.",
+      "content": {
+        "Força de arrancamento": [
+          [
+            "Amostra",
+            "Lote",
+            "Tempo de secagem (h)",
+            "Força de arrancamento (N)",
+            "Mínimo (N)"
+          ],
+          [
+            1,
+            "24-117",
+            2.5,
+            38,
+            45
+          ],
+          [
+            2,
+            "24-117",
+            2.5,
+            41,
+            45
+          ],
+          [
+            3,
+            "24-117",
+            2.5,
+            47,
+            45
+          ],
+          [
+            4,
+            "24-117",
+            2.5,
+            36,
+            45
+          ],
+          [
+            5,
+            "24-117",
+            2.5,
+            44,
+            45
+          ],
+          [
+            6,
+            "24-121",
+            4,
+            58,
+            45
+          ],
+          [
+            7,
+            "24-121",
+            4,
+            61,
+            45
+          ],
+          [
+            8,
+            "24-121",
+            4,
+            57,
+            45
+          ],
+          [
+            9,
+            "24-121",
+            4,
+            60,
+            45
+          ],
+          [
+            10,
+            "24-121",
+            4,
+            59,
+            45
+          ]
+        ],
+        "Observações": [
+          [
+            "Observação"
+          ],
+          [
+            "Medição em laboratório em 19/03/2026, cinco peças do estoque por lote."
+          ],
+          [
+            "A umidade residual do granulado não foi documentada para o lote 24-117."
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "complaint_text": {
+      "name": "Reclamação no texto"
+    },
+    "complaint_files": {
+      "name": "Carta de reclamação e medições como arquivos",
+      "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nReclamação da Exemplo Automotiva S.A. sobre a carcaça G-220; a carta de reclamação e as medições estão anexadas como arquivos.\n\nInformações internas:\n- O lote 24-117 foi produzido na máquina SG-4 com um molde recém-retrabalhado (manutenção em 05/03).\n- O material veio de uma nova entrega; o tempo de secagem foi reduzido de 4 para 2,5 horas por pressão de prazo.\n- A inspeção final verifica dimensões e aparência por plano de amostragem, mas nenhuma carga mecânica nos ganchos.\n- Estoque: 1.200 peças do lote 24-117 e 3.000 peças do lote 24-121 (mesmo molde, secagem normal)."
+    }
+  }
+}

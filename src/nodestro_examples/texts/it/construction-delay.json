@@ -1,0 +1,127 @@
+{
+  "name": "Analizzare i ritardi di cantiere",
+  "field": "Edilizia",
+  "description": "Calcolare gli scostamenti dal cronoprogramma, classificare le cause, sviluppare contromisure e riferire al committente.",
+  "start": "Stato del progetto",
+  "output": "Rapporto sullo stato",
+  "file_name": "Rapporto di avanzamento",
+  "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nProgetto: nuovo asilo nido \"Raggio di Sole\", Città Esempio; committente: Comune di Città Esempio\nData di ultimazione contrattuale: 2026-09-30; data del rapporto: 2026-05-15\n\n| Traguardo | Previsto | Effettivo / previsione | Nota |\n|---|---|---|---|\n| Struttura completata | 2026-02-27 | 2026-03-20 | 9 giorni di gelo a gennaio, getti sospesi |\n| Copertura impermeabile | 2026-03-27 | 2026-04-24 | Consegna in ritardo degli elementi di copertura (il fornitore segnala carenza di materiale) |\n| Serramenti montati | 2026-04-17 | 2026-05-29 (previsione) | Modifica progettuale delle finestre di emergenza su richiesta della verifica antincendio |\n| Impianti, prima fase | 2026-05-22 | 2026-06-19 (previsione) | Dipende dai serramenti; elettricista in cantiere con solo 2 persone invece di 4 |\n| Finiture interne completate | 2026-08-28 | aperto | — |\n| Collaudo | 2026-09-30 | aperto | Penale contrattuale dello 0,2 % dell'importo contrattuale per giorno lavorativo, max. 5 % |\n\nImporto contrattuale dell'impresa generale: 3,2 mln EUR. Il committente si aspetta un rapporto per la riunione del 2026-05-20.",
+  "guide": {
+    "problem": "I ritardi in cantiere si sommano e i committenti hanno bisogno in fretta di un quadro chiaro. Il workflow calcola gli scostamenti, classifica le cause, sviluppa contromisure e scrive un rapporto sullo stato.",
+    "flow": "L'analista del cronoprogramma e l'analista delle cause lavorano in parallelo. Il primo calcola ritardi e margini con gli strumenti per date e calcoli, il secondo ordina le cause per ambito di responsabilità e necessità di documentazione; entrambi analizzano anche cronoprogrammi, giornali dei lavori e foto allegati. Il pianificatore delle contromisure sviluppa opzioni di accelerazione e l'agente del rapporto riassume tutto per il committente. Prima che il rapporto lasci il team di progetto, una persona lo approva.",
+    "input": "Un cronoprogramma con traguardi previsti ed effettivi, note sulle cause, data del rapporto e condizioni contrattuali, come testo o come file: cronoprogramma in Excel, giornale dei lavori in PDF, foto come immagine. I file di esempio contengono un cronoprogramma e un estratto del giornale dei lavori.",
+    "result": "Un rapporto di avanzamento oggettivo con situazione dei tempi, cause, contromisure, decisioni necessarie e rischi. Dopo l'approvazione l'esecuzione lo salva in PDF e come file Word modificabile. Le questioni su penali e proroga dei termini restano soggette a verifica tecnica e legale.",
+    "adapt": "Esporta il tuo cronoprogramma dal software di progetto in Excel e allega giornale dei lavori e foto. Per un rapporto periodico puoi pianificare la copia; l'approvazione ti aspetterà."
+  },
+  "agents": {
+    "schedule": {
+      "name": "Analista del cronoprogramma",
+      "description": "Calcola ritardi, margini e conseguenze con lo strumento delle date e la calcolatrice.",
+      "system": "Sei un pianificatore di cantiere. Calcola il ritardo di ogni traguardo in giorni di calendario con lo strumento days_between e ricava l'effetto sulla data di ultimazione se il ritardo continua. Mostra le dipendenze tra i traguardi e usa la calcolatrice per determinare quale penale contrattuale potrebbe derivare da un ritardo ipotizzato, esplicitamente come scenario.",
+      "task": "Analizza la situazione del cronoprogramma:\n\n{{input}}"
+    },
+    "causes": {
+      "name": "Analista delle cause",
+      "description": "Classifica le cause per ambito di responsabilità ed esigenze di documentazione.",
+      "system": "Sei un direttore di cantiere esperto nella gestione delle riserve. Assegna ogni ritardo a una categoria di causa: meteo, catena di fornitura, modifica progettuale, personale o altro. Indica in quale ambito di responsabilità rientra probabilmente secondo le informazioni disponibili, quali prove andrebbero documentate e quali comunicazioni di impedimento potrebbero servire. Non dare valutazioni giuridiche.",
+      "task": "Classifica le cause dei ritardi:\n\n{{input}}"
+    },
+    "countermeasures": {
+      "name": "Pianificatore delle contromisure",
+      "description": "Sviluppa misure di accelerazione con costi ed effetti.",
+      "system": "Sei un project controller. Sviluppa contromisure per mantenere la data di ultimazione o limitare il ritardo, per esempio riorganizzare la sequenza delle lavorazioni, capacità aggiuntive o lavori in parallelo. Valuta ogni misura per tempo guadagnato, costo, rischio e decisioni necessarie del committente. Raccomanda un pacchetto di misure.",
+      "task": "Sviluppa contromisure.\n\nAnalisi del cronoprogramma:\n{{node:schedule}}\n\nCause:\n{{node:causes}}"
+    },
+    "report": {
+      "name": "Rapporto al committente",
+      "description": "Riassume in modo oggettivo situazione del cronoprogramma, cause e misure.",
+      "system": "Scrivi rapporti sullo stato per committenti pubblici: oggettivi, chiari e senza attribuire colpe. Strutturalo in situazione del cronoprogramma, cause, contromisure, decisioni necessarie e rischi, in al massimo una pagina. Fai presente che le questioni su penali e proroghe dei termini devono essere verificate a livello tecnico e legale.",
+      "task": "Scrivi il rapporto sullo stato.\n\nAnalisi del cronoprogramma:\n{{node:schedule}}\n\nContromisure:\n{{node:countermeasures}}"
+    }
+  },
+  "steps": {
+    "release": {
+      "name": "Approvare il rapporto",
+      "instructions": "Verifica il rapporto di avanzamento prima che vada al committente: date e ritardi sono corretti, le cause sono descritte in modo oggettivo e senza attribuire colpe, ed è chiaro quali decisioni deve prendere il committente? Le affermazioni su penali e proroga dei termini devono essere state verificate da un esperto. Se lo respingi, scrivi cosa manca; l'esecuzione termina allora senza file del rapporto."
+    }
+  },
+  "form": {
+    "project_files": {
+      "label": "Documenti del progetto",
+      "description": "Facoltativo: cronoprogramma (Excel, CSV), giornale dei lavori o verbali (PDF, Word) e foto del cantiere (PNG, JPEG, WebP), fino a 10 file."
+    }
+  },
+  "samples": {
+    "schedule": {
+      "name": "Cronoprogramma_asilo_Raggio_di_Sole",
+      "description": "Il cronoprogramma fittizio dell'attività di prova come file Excel.",
+      "content": {
+        "Cronoprogramma": [
+          [
+            "Traguardo",
+            "Previsto",
+            "Effettivo o previsione",
+            "Stato",
+            "Nota"
+          ],
+          [
+            "Struttura completata",
+            "2026-02-27",
+            "2026-03-20",
+            "completato",
+            "9 giorni di gelo a gennaio, getti sospesi"
+          ],
+          [
+            "Copertura impermeabile",
+            "2026-03-27",
+            "2026-04-24",
+            "completato",
+            "Consegna in ritardo degli elementi di copertura (carenza di materiale presso il fornitore)"
+          ],
+          [
+            "Serramenti montati",
+            "2026-04-17",
+            "2026-05-29",
+            "previsione",
+            "Modifica progettuale delle finestre di emergenza su richiesta della verifica antincendio"
+          ],
+          [
+            "Impianti, prima fase",
+            "2026-05-22",
+            "2026-06-19",
+            "previsione",
+            "Dipende dai serramenti; elettricista con 2 persone invece di 4"
+          ],
+          [
+            "Finiture interne completate",
+            "2026-08-28",
+            "",
+            "aperto",
+            ""
+          ],
+          [
+            "Collaudo",
+            "2026-09-30",
+            "",
+            "aperto",
+            "Penale contrattuale dello 0,2 % dell'importo contrattuale per giorno lavorativo, max. 5 %"
+          ]
+        ]
+      }
+    },
+    "site_diary": {
+      "name": "Giornale_lavori_estratto_aprile_maggio",
+      "description": "Un estratto fittizio del giornale dei lavori in PDF.",
+      "content": "# Giornale dei lavori asilo nido \"Raggio di Sole\" – estratto\n\nDATI DI ESEMPIO SINTETICI – completamente fittizi.\n\n| Data | Annotazione |\n|---|---|\n| 2026-04-08 | Il fornitore degli elementi di copertura conferma la consegna per il 2026-04-20 invece del 2026-03-20. |\n| 2026-04-24 | Copertura impermeabile. Accettata dalla direzione lavori senza difetti. |\n| 2026-04-29 | Il tecnico antincendio richiede finestre di emergenza modificate nelle aule 2 e 3; variante commissionata. |\n| 2026-05-06 | Il serramentista comunica un nuovo tempo di consegna di 3 settimane per gli elementi modificati. |\n| 2026-05-11 | Impianto elettrico: solo 2 installatori in cantiere, l'impresa adduce assenze per malattia. |\n| 2026-05-13 | Il committente chiede l'impatto sulla data di apertura del 2026-10-01. |"
+    }
+  },
+  "tests": {
+    "schedule_text": {
+      "name": "Cronoprogramma nel testo"
+    },
+    "project_files": {
+      "name": "Cronoprogramma e giornale dei lavori come file",
+      "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nProgetto: nuovo asilo nido \"Raggio di Sole\", Città Esempio; committente: Comune di Città Esempio\nData di ultimazione contrattuale: 2026-09-30; data del rapporto: 2026-05-15\nImporto contrattuale dell'impresa generale: 3,2 mln EUR. Il committente si aspetta un rapporto per la riunione del 2026-05-20.\n\nIl cronoprogramma e il giornale dei lavori sono allegati come file."
+    }
+  }
+}

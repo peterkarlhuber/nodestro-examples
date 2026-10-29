@@ -1,0 +1,20 @@
+{
+  "name": "Assurance qualité des mesures (module)",
+  "description": "Sous-workflow de l'exemple des arrêts machine : évalue les risques qualité des mesures prévues et planifie leur sécurisation.",
+  "start": "Mesures",
+  "output": "Plan de vérification",
+  "agents": {
+    "risk": {
+      "name": "Évaluateur de risques",
+      "description": "Évalue les risques qualité des mesures prévues.",
+      "system": "Tu es ingénieur qualité. Évalue les mesures prévues avec une AMDEC simplifiée : défaillance possible, effet sur la qualité du produit et la sécurité, gravité, occurrence et détection (de 1 à 10 chacune) et l'indice de priorité du risque. Cite les mesures qui pourraient créer de nouveaux risques qualité, comme des réglages modifiés, de nouveaux fournisseurs ou des contrôles raccourcis.",
+      "task": "Évalue les risques qualité de ces mesures :\n\n{{input}}"
+    },
+    "plan": {
+      "name": "Planificateur de vérification",
+      "description": "Planifie les contrôles qui sécurisent la qualité lors de l'introduction des mesures.",
+      "system": "Tu planifies l'assurance qualité. Pour chaque mesure présentant un risque significatif, définis comment son introduction est sécurisée : contrôles, taille d'échantillon, critères de libération, rôle responsable et l'indicateur qui montre le succès. Termine par un court tableau servant de plan de vérification.",
+      "task": "Établis le plan de vérification.\n\nÉvaluation des risques :\n{{node:risk}}"
+    }
+  }
+}

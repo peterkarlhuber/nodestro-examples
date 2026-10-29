@@ -1,0 +1,144 @@
+{
+  "name": "Développer et calculer une carte",
+  "field": "Restauration",
+  "description": "Développer des plats pour une clientèle, calculer le coût matière et les prix et rédiger les textes de la carte.",
+  "start": "Concept",
+  "output": "Carte",
+  "file_name": "Carte du midi",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nÉtablissement : bistrot « Le Moulin Exemple », 40 couverts, zone d'activités avec beaucoup de bureaux\nClientèle : employés de bureau en pause déjeuner (45 minutes), veulent manger vite et frais, souvent végétarien\nMission : carte du midi avec 6 plats, dont au moins 2 végétariens et 1 végane ; change toutes les deux semaines\nCoût matière cible : au maximum 30 % du prix de vente HT ; fourchette de prix 9,50 à 14,50 EUR TTC (TVA 7 %)\n\nPrix d'achat (HT) :\n- Blanc de poulet 9,80 EUR/kg, bœuf haché 8,90 EUR/kg, filet de saumon 21,00 EUR/kg\n- Pâtes 1,60 EUR/kg, riz 1,90 EUR/kg, pommes de terre 0,90 EUR/kg, lentilles 2,40 EUR/kg\n- Légumes de saison en moyenne 2,80 EUR/kg, salade 4,50 EUR/kg, pois chiches 2,20 EUR/kg\n- Feta 8,50 EUR/kg, crème 3,20 EUR/l, lait de coco 3,90 EUR/l, huile d'olive 7,50 EUR/l\n- Épices, herbes et petits ingrédients forfait 0,35 EUR par portion",
+  "guide": {
+    "problem": "Une carte doit plaire aux clients et être rentable. Le workflow développe des plats pour une clientèle, calcule le coût matière et les prix et rédige des textes de carte appétissants.",
+    "flow": "Une chaîne de trois agents : le concepteur de plats compose des plats avec leurs recettes, le calcul des coûts détermine le coût matière et les prix de vente avec l'outil de calcul, le rédacteur de la carte écrit la carte. Un contrôle qualité vérifie la clientèle, les prix et la mention des allergènes. Le résultat contient le calcul et la carte.",
+    "input": "Type d'établissement, clientèle, nombre et type de plats, coût matière cible, fourchette de prix et prix d'achat. Vous pouvez coller les prix d'achat ou les joindre en fichier CSV ou Excel, comme le montre le fichier d'exemple.",
+    "result": "Un tableau de calcul avec coût matière et prix par plat et une carte du midi finalisée avec de courtes descriptions, aussi en fichier Word pour la mise en page et en fichier Excel avec les tableaux de calcul. Les allergènes et additifs doivent être vérifiés et signalés d'après les recettes réelles.",
+    "adapt": "Joignez votre liste de prix d'achat actuelle et décrivez votre clientèle. Vos fiches techniques peuvent être chargées comme connaissance et attribuées au calcul des coûts ; les règles maison comme les tailles de portions s'ajoutent dans le concepteur de plats. Pour le changement toutes les deux semaines, vous pouvez planifier la copie."
+  },
+  "agents": {
+    "concept": {
+      "name": "Concepteur de plats",
+      "description": "Assemble des plats adaptés avec recettes et quantités.",
+      "system": "Tu es chef de cuisine expérimenté dans la restauration du midi. Développe des plats adaptés à la clientèle, réalisables et servis dans le temps disponible. Pour chaque plat, indique un nom, une courte description et une recette par portion avec les quantités en grammes ou millilitres. Utilise principalement des ingrédients de la liste d'achat et signale ceux qui n'y figurent pas.",
+      "task": "Développe les plats pour ce concept :\n\n{{input}}"
+    },
+    "costing": {
+      "name": "Calcul des coûts",
+      "description": "Calcule coût matière et prix de vente avec la calculatrice.",
+      "system": "Tu es spécialiste du calcul des coûts en restauration. Pour chaque plat, utilise la calculatrice pour calculer le coût matière par portion à partir de la recette et des prix d'achat, le prix HT pour un coût matière de 30 % au maximum et le prix TTC avec 7 % de TVA, arrondi à des prix de carte cohérents. Vérifie la fourchette de prix et propose des ajustements si un plat ne convient pas. Présente tout dans un tableau.",
+      "task": "Calcule le coût de ces plats.\n\nConcept et prix d'achat :\n{{run.input}}\n\nPlats :\n{{node:concept}}"
+    },
+    "menu": {
+      "name": "Rédacteur de la carte",
+      "description": "Rédige la carte du midi avec des descriptions appétissantes.",
+      "system": "Tu rédiges des cartes de restaurant. Pour chaque plat, écris un nom appétissant et une description de 20 mots au maximum adaptée à la clientèle. Ajoute le prix, une mention végétarien ou végane et une remarque indiquant que les allergènes doivent être vérifiés et indiqués à partir des recettes. Prends les prix uniquement dans le calcul des coûts. Pour finir, reprends le tableau de calcul sans le modifier.",
+      "task": "Rédige la carte du midi à partir de ce calcul :\n\n{{node:costing}}",
+      "criteria": {
+        "target_group": "Les plats et les textes correspondent clairement à la clientèle décrite.",
+        "prices_match": "Tous les prix correspondent au calcul et se situent dans la fourchette de prix.",
+        "allergen_note": "La carte contient une remarque sur la vérification et l'indication des allergènes."
+      }
+    }
+  },
+  "form": {
+    "purchase_prices": {
+      "label": "Prix d'achat en fichier",
+      "description": "Facultatif : votre liste de prix d'achat en CSV ou Excel, 5 Mo au maximum. Sans fichier, les prix du texte font foi."
+    }
+  },
+  "samples": {
+    "prices": {
+      "name": "Prix_achat_Moulin_Exemple",
+      "description": "Les prix d'achat fictifs de la tâche de test en CSV.",
+      "content": [
+        [
+          "Ingrédient",
+          "Unité",
+          "Prix HT (EUR)"
+        ],
+        [
+          "Blanc de poulet",
+          "kg",
+          9.8
+        ],
+        [
+          "Bœuf haché",
+          "kg",
+          8.9
+        ],
+        [
+          "Filet de saumon",
+          "kg",
+          21.0
+        ],
+        [
+          "Pâtes",
+          "kg",
+          1.6
+        ],
+        [
+          "Riz",
+          "kg",
+          1.9
+        ],
+        [
+          "Pommes de terre",
+          "kg",
+          0.9
+        ],
+        [
+          "Lentilles",
+          "kg",
+          2.4
+        ],
+        [
+          "Légumes de saison (moyenne)",
+          "kg",
+          2.8
+        ],
+        [
+          "Salade",
+          "kg",
+          4.5
+        ],
+        [
+          "Pois chiches",
+          "kg",
+          2.2
+        ],
+        [
+          "Feta",
+          "kg",
+          8.5
+        ],
+        [
+          "Crème",
+          "l",
+          3.2
+        ],
+        [
+          "Lait de coco",
+          "l",
+          3.9
+        ],
+        [
+          "Huile d'olive",
+          "l",
+          7.5
+        ],
+        [
+          "Épices, herbes, petits ingrédients (forfait)",
+          "portion",
+          0.35
+        ]
+      ]
+    }
+  },
+  "tests": {
+    "lunch_menu": {
+      "name": "Carte du midi avec prix dans le texte"
+    },
+    "price_file": {
+      "name": "Prix d'achat en CSV",
+      "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nÉtablissement : bistrot « Le Moulin Exemple », 40 couverts, zone d'activités avec beaucoup de bureaux\nClientèle : employés de bureau en pause déjeuner (45 minutes), veulent manger vite et frais, souvent végétarien\nMission : carte du midi avec 6 plats, dont au moins 2 végétariens et 1 végane ; change toutes les deux semaines\nCoût matière cible : au maximum 30 % du prix de vente HT ; fourchette de prix 9,50 à 14,50 EUR TTC (TVA 7 %)\n\nLes prix d'achat sont joints en fichier CSV."
+    }
+  }
+}

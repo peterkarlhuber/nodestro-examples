@@ -1,0 +1,141 @@
+{
+  "name": "Planifier l'assolement d'une exploitation",
+  "field": "Agriculture",
+  "description": "Planifier la rotation des cultures sur les parcelles d'une exploitation, calculer les marges brutes et vérifier le plan.",
+  "start": "Données de l'exploitation",
+  "output": "Plan d'assolement",
+  "file_name": "Plan d'assolement",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer. Les prix et coûts sont des hypothèses.\n\nExploitation : ferme de grandes cultures Ferme Exemple, 60 ha en cinq parcelles, conventionnelle, sans élevage\n| Parcelle | Surface | Sol | Précédent 2026 |\n|---|---|---|---|\n| F1 | 15 ha | limon, bon | blé d'hiver |\n| F2 | 12 ha | limon, bon | colza d'hiver |\n| F3 | 10 ha | limon sableux | orge d'hiver |\n| F4 | 13 ha | limon, bon | betterave sucrière |\n| F5 | 10 ha | sableux, sec | seigle d'hiver |\n\nRègles de planification : pas de blé sur blé ; colza au maximum tous les 4 ans sur la même parcelle (F2 avait du\ncolza en 2026) ; betterave sucrière uniquement sur bon limon, contrat de livraison pour 13 ha ; part de céréales au\nmaximum 66 %.\n\nHypothèses par ha (produit / charges variables) :\n- Blé d'hiver 1 900 EUR / 1 050 EUR ; orge d'hiver 1 550 EUR / 950 EUR ; seigle d'hiver 1 250 EUR / 780 EUR\n- Colza d'hiver 1 800 EUR / 1 100 EUR ; betterave sucrière 3 300 EUR / 1 900 EUR ; féverole 1 150 EUR / 650 EUR",
+  "guide": {
+    "problem": "L'assolement doit tenir compte à la fois de la rotation, des sols, des contrats et de la rentabilité. Le workflow propose une rotation, calcule les marges brutes et vérifie le plan au regard de vos propres règles.",
+    "flow": "Une chaîne de trois agents : le planificateur de rotation attribuez une culture à chaque parcelle, le calcul des marges brutes chiffre chaque parcelle et le total avec la calculatrice, et le contrôle de plausibilité vérifie règles et risques et livre un résultat structuré.",
+    "input": "Les parcelles avec surface, sol et précédent, vos règles de planification et vos hypothèses de produits et de charges par hectare. Vous pouvez joindre parcelles et hypothèses en fichier Excel ou CSV ; le fichier d'exemple contient les deux tableaux de la tâche de test.",
+    "result": "Un plan d'assolement par parcelle avec marge brute, un contrôle des règles, des risques et des questions ouvertes, aussi en fichier Excel. Les exigences réglementaires, par exemple sur la fertilisation ou les conditions d'aides, doivent être vérifiées selon les règles locales en vigueur.",
+    "adapt": "Joignez votre parcellaire et vos données de calcul en Excel et saisissez vos règles de planification. Les analyses de sol dont vous avez besoin chaque année peuvent être chargées comme connaissance et attribuées au planificateur de rotation."
+  },
+  "agents": {
+    "rotation": {
+      "name": "Planificateur de rotation",
+      "description": "Attribue une culture à chaque parcelle selon les règles et le sol.",
+      "system": "Tu es conseiller en production végétale. Attribue une culture à chaque parcelle pour l'année de planification, en tenant compte du précédent, du sol, des contrats, des règles de planification et d'une rotation saine. Justifie chaque attribution en une phrase et nomme des alternatives là où une règle est tout juste respectée. Respecte les règles indiquées même si elles ont des inconvénients économiques.",
+      "task": "Planifie la rotation des cultures pour cette exploitation :\n\n{{input}}"
+    },
+    "margins": {
+      "name": "Calcul des marges brutes",
+      "description": "Calcule les marges brutes par parcelle et au total avec la calculatrice.",
+      "system": "Tu es économiste agricole. Utilise la calculatrice pour calculer la marge brute de chaque parcelle (produit moins charges variables, multiplié par la surface) et le total de l'exploitation. N'utilise que les hypothèses indiquées. Montre aussi comment la marge brute totale évolue avec un produit inférieur de 15 %.",
+      "task": "Calcule les marges brutes.\n\nDonnées de l'exploitation et hypothèses :\n{{run.input}}\n\nRotation des cultures :\n{{node:rotation}}"
+    },
+    "review": {
+      "name": "Contrôle de plausibilité",
+      "description": "Vérifie le plan au regard des règles et des risques et le résume.",
+      "system": "Tu vérifies des plans d'assolement. Vérifie chaque règle de planification séparément et indique si elle est respectée, contrôle la plausibilité du calcul et nomme les risques comme la météo, les prix et les pointes de travail. Signale que les exigences légales et les conditions d'aides doivent être vérifiées selon les règles en vigueur.",
+      "task": "Vérifie ce plan d'assolement.\n\nRotation des cultures :\n{{node:rotation}}\n\nMarges brutes :\n{{node:margins}}",
+      "fields": {
+        "plan_summary": "Plan d'assolement par parcelle en bref",
+        "total_margin_eur": "Marge brute totale en euros",
+        "rule_checks": "Contrôle de chaque règle de planification",
+        "risks": "Risques du plan",
+        "open_questions": "Questions ouvertes avant la mise en œuvre"
+      }
+    }
+  },
+  "form": {
+    "field_data": {
+      "label": "Parcellaire et données de calcul",
+      "description": "Facultatif : parcelles et hypothèses en Excel ou CSV, jusqu'à 3 fichiers de 10 Mo chacun. Sans fichier, les tableaux du texte font foi."
+    }
+  },
+  "samples": {
+    "fields": {
+      "name": "Parcellaire_Ferme_Exemple",
+      "description": "Les parcelles et hypothèses de calcul fictives de la tâche de test en fichier Excel à deux feuilles.",
+      "content": {
+        "Parcelles": [
+          [
+            "Parcelle",
+            "Surface (ha)",
+            "Sol",
+            "Précédent 2026"
+          ],
+          [
+            "F1",
+            15,
+            "limon, bon",
+            "blé d'hiver"
+          ],
+          [
+            "F2",
+            12,
+            "limon, bon",
+            "colza d'hiver"
+          ],
+          [
+            "F3",
+            10,
+            "limon sableux",
+            "orge d'hiver"
+          ],
+          [
+            "F4",
+            13,
+            "limon, bon",
+            "betterave sucrière"
+          ],
+          [
+            "F5",
+            10,
+            "sableux, sec",
+            "seigle d'hiver"
+          ]
+        ],
+        "Hypothèses": [
+          [
+            "Culture",
+            "Produit (EUR/ha)",
+            "Charges variables (EUR/ha)"
+          ],
+          [
+            "Blé d'hiver",
+            1900,
+            1050
+          ],
+          [
+            "Orge d'hiver",
+            1550,
+            950
+          ],
+          [
+            "Seigle d'hiver",
+            1250,
+            780
+          ],
+          [
+            "Colza d'hiver",
+            1800,
+            1100
+          ],
+          [
+            "Betterave sucrière",
+            3300,
+            1900
+          ],
+          [
+            "Féverole",
+            1150,
+            650
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "farm_text": {
+      "name": "Exploitation dans le texte"
+    },
+    "field_file": {
+      "name": "Parcellaire en fichier Excel",
+      "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer. Les prix et coûts sont des hypothèses.\n\nExploitation : ferme de grandes cultures Ferme Exemple, 60 ha en cinq parcelles, conventionnelle, sans élevage. Les parcelles et les hypothèses de calcul figurent dans le fichier Excel joint.\n\nRègles de planification : pas de blé sur blé ; colza au maximum tous les 4 ans sur la même parcelle (F2 avait du colza en 2026) ;\nbetterave sucrière uniquement sur bon limon, contrat de livraison pour 13 ha ; part de céréales au maximum 66 %."
+    }
+  }
+}

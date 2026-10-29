@@ -1,0 +1,123 @@
+{
+  "id": "code-review",
+  "number": 11,
+  "category": "knowledge",
+  "level": "advanced",
+  "featured": true,
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 180,
+      "form": [
+        {
+          "name": "code_files",
+          "type": "file",
+          "accept": [
+            "zip",
+            "code",
+            "md",
+            "txt",
+            "json"
+          ],
+          "multiple": true,
+          "max_files": 20
+        }
+      ]
+    },
+    {
+      "id": "bugs",
+      "type": "agent",
+      "x": 360,
+      "y": 40,
+      "role": "analysis",
+      "icon": "code"
+    },
+    {
+      "id": "security",
+      "type": "agent",
+      "x": 360,
+      "y": 320,
+      "role": "review",
+      "icon": "shield"
+    },
+    {
+      "id": "fix",
+      "type": "agent",
+      "x": 720,
+      "y": 180,
+      "role": "writing",
+      "icon": "code",
+      "criteria": [
+        "every_finding_addressed",
+        "tests_cover_findings",
+        "runnable"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1080,
+      "y": 180,
+      "files": [
+        "md"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "bugs"
+    ],
+    [
+      "start",
+      "security"
+    ],
+    [
+      "bugs",
+      "fix"
+    ],
+    [
+      "security",
+      "fix"
+    ],
+    [
+      "fix",
+      "output"
+    ],
+    [
+      "start",
+      "fix"
+    ]
+  ],
+  "samples": [
+    {
+      "id": "project",
+      "format": "zip",
+      "field": "code_files"
+    }
+  ],
+  "tests": [
+    {
+      "id": "snippet",
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "project_zip",
+      "input": "own",
+      "samples": [
+        "project"
+      ],
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

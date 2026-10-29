@@ -1,0 +1,203 @@
+{
+  "name": "Analizzare i fermi macchina",
+  "field": "Produzione e industria",
+  "description": "Analizzare un registro dei fermi, sviluppare ipotesi sulle cause e dare priorità alle misure di miglioramento.",
+  "start": "Registro dei fermi",
+  "output": "Piano d'azione",
+  "file_name": "Analisi dei fermi",
+  "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nStabilimento: Stabilimento Esempio Nord, linea di riempimento L2 (bevande, 3 turni)\nPeriodo: settimane 14–15, tempo di produzione pianificato totale 14.400 minuti\nObiettivo: fermi inferiori al 3 % del tempo di produzione pianificato\n\n| N. | Data | Turno | Macchina | Durata (min) | Codice guasto | Nota dell'operatore |\n|---|---|---|---|---|---|---|\n| 1 | 01/04 | Mattina | Etichettatrice | 45 | E-17 strappo etichetta | Nuova bobina di etichette dal fornitore B |\n| 2 | 01/04 | Pomeriggio | Riempitrice | 120 | F-03 valvola che perde | Guarnizione sostituita, ricambio da prendere al magazzino centrale |\n| 3 | 02/04 | Notte | Etichettatrice | 30 | E-17 strappo etichetta | Di nuovo bobina del fornitore B |\n| 4 | 03/04 | Mattina | Incartonatrice | 25 | P-08 inceppamento cartoni | I cartoni sembrano umidi |\n| 5 | 03/04 | Pomeriggio | Etichettatrice | 50 | E-17 strappo etichetta | Tensione del nastro regolata |\n| 6 | 04/04 | Mattina | Riempitrice | 90 | F-11 cambio formato | Passaggio da 0,5 l a 1 l, tempo standard 45 min |\n| 7 | 07/04 | Notte | Etichettatrice | 40 | E-17 strappo etichetta | Nuovo operatore in formazione |\n| 8 | 08/04 | Mattina | Incartonatrice | 35 | P-08 inceppamento cartoni | Tetto del deposito cartoni nel capannone 3 che perde? |\n| 9 | 09/04 | Pomeriggio | Riempitrice | 60 | F-03 valvola che perde | Stesso gruppo valvole del 01/04 |\n| 10 | 10/04 | Mattina | Etichettatrice | 55 | E-17 strappo etichetta | Bobina del fornitore B, la colla sembra debole |\n| 11 | 11/04 | Pomeriggio | Riempitrice | 95 | F-11 cambio formato | Il pezzo di formato andava cercato |\n| 12 | 14/04 | Notte | Incartonatrice | 20 | P-02 guasto sensore | Fotocellula pulita |",
+  "guide": {
+    "problem": "I fermi costano tempo di produzione, ma nei registri lunghi gli schemi si perdono facilmente. Il workflow trasforma un registro dei fermi in un elenco di misure motivato e ordinato per priorità.",
+    "flow": "Due agenti lavorano in parallelo: l'analista dei fermi calcola totali, quote e una classifica di Pareto con la calcolatrice, l'analista delle cause sviluppa ipotesi secondo le 6M. Il pianificatore delle azioni unisce i due risultati, e un controllo qualità integrato verifica che ogni misura sia motivata. Se la quota dei fermi supera l'obiettivo del 3 %, un nodo decisionale avvia un sotto-workflow di qualità che valuta i rischi delle misure e pianifica come metterle in sicurezza.",
+    "input": "Un registro dei fermi (data, turno, macchina, durata, codice guasto, nota) e il tempo di produzione pianificato. Puoi incollare il registro nel testo come tabella o inserirlo nel campo file facoltativo come CSV o Excel; il file di esempio \"Registro_fermi_L2_settimane14-15.xlsx\" contiene le stesse dodici voci fittizie dell'attività di prova.",
+    "result": "Una tabella con priorità di azioni immediate, verifiche e azioni durature, ciascuna con effetto atteso, impegno, ruolo responsabile e indicatore, più l'analisi dei dati con la quota di fermi e i tre prossimi passi più importanti. L'esecuzione salva inoltre tutto in Markdown e in un file Excel con le tabelle.",
+    "adapt": "Inserisci nel campo file un'esportazione dal tuo MES o dal tuo foglio di calcolo; funzionano anche registri lunghi, perché gli agenti leggono i file grandi in modo mirato. Per un'analisi settimanale puoi pianificare la copia. Nel prompt di sistema del pianificatore delle azioni puoi aggiungere il vostro metodo, per esempio i pilastri TPM o uno schema di valutazione fisso."
+  },
+  "agents": {
+    "downtime": {
+      "name": "Analista dei fermi",
+      "description": "Analizza il registro in modo quantitativo e calcola con la calcolatrice.",
+      "system": "Sei un analista di dati nella manutenzione. Analizza i registri dei fermi in modo quantitativo: totali e quote per macchina, codice guasto e turno, frequenza e durata media, una classifica di Pareto e la quota del tempo di produzione pianificato rispetto all'obiettivo. Verifica ogni numero con la calcolatrice invece di stimarlo. Presenta i risultati in tabelle compatte e segnala anomalie come ripetizioni o concentrazioni in determinati turni.",
+      "task": "Analizza in modo quantitativo questo registro dei fermi:\n\n{{input}}",
+      "fields": {
+        "analysis": "L'analisi quantitativa come testo con tabelle",
+        "downtime_share_percent": "Quota dei fermi sul tempo di produzione pianificato, in percentuale"
+      }
+    },
+    "causes": {
+      "name": "Analista delle cause",
+      "description": "Sviluppa ipotesi sulle cause secondo le 6M e propone verifiche.",
+      "system": "Sei un ingegnere di produzione esperto che conduce analisi delle cause. Ricava dalle voci e dalle note ipotesi sulle cause e raggruppale secondo le 6M: manodopera, macchina, materiale, metodo, misura, ambiente. Per ogni ipotesi indica le voci che la sostengono, la sua plausibilità (alta, media, bassa) e una verifica che la confermi o la escluda. Formula ipotesi, non cause accertate.",
+      "task": "Sviluppa ipotesi sulle cause di questi fermi:\n\n{{input}}"
+    },
+    "measures": {
+      "name": "Pianificatore delle azioni",
+      "description": "Unisce analisi e ipotesi in misure ordinate per priorità.",
+      "system": "Sei un esperto di lean production e TPM. Sviluppa misure di miglioramento concrete a partire dall'analisi dei dati e dalle ipotesi sulle cause. Distingui azioni immediate, verifiche che confermano ipotesi e misure correttive permanenti. Valuta ogni misura per effetto atteso (minuti risparmiati, se ricavabili), impegno e tempi di attuazione, e ordinale per priorità in una tabella. Indica per ogni misura un ruolo responsabile e un indicatore per verificarne l'efficacia. Concludi con i tre prossimi passi più importanti.",
+      "task": "Ricava misure di miglioramento ordinate per priorità.\n\nAnalisi dei dati:\n{{node:downtime}}\n\nIpotesi sulle cause:\n{{node:causes}}",
+      "criteria": {
+        "linked_to_findings": "Ogni misura si riferisce in modo tracciabile a un risultato dell'analisi dei dati o a un'ipotesi sulle cause.",
+        "prioritised": "Le misure sono ordinate per priorità in modo motivato secondo effetto e impegno.",
+        "owners_and_metrics": "Ogni misura indica un ruolo responsabile e un indicatore per verificarne l'efficacia."
+      }
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "Obiettivo mancato?",
+      "branches": {
+        "above_target": "Oltre il 3 %"
+      },
+      "default": "Nell'obiettivo"
+    },
+    "quality": {
+      "name": "Assicurazione qualità"
+    }
+  },
+  "form": {
+    "log_file": {
+      "label": "Registro dei fermi come file",
+      "description": "Facoltativo: un'esportazione dal MES o da un foglio di calcolo in CSV o Excel (XLSX), al massimo 10 MB. Senza file, gli agenti analizzano la tabella nel testo."
+    }
+  },
+  "samples": {
+    "log": {
+      "name": "Registro_fermi_L2_settimane14-15",
+      "description": "Esportazione Excel con i dodici fermi fittizi della linea di riempimento L2 dell'attività di prova.",
+      "content": {
+        "Fermi": [
+          [
+            "N.",
+            "Data",
+            "Turno",
+            "Macchina",
+            "Durata (min)",
+            "Codice guasto",
+            "Nota dell'operatore"
+          ],
+          [
+            1,
+            "2026-04-01",
+            "Mattina",
+            "Etichettatrice",
+            45,
+            "E-17 strappo etichetta",
+            "Nuova bobina di etichette dal fornitore B"
+          ],
+          [
+            2,
+            "2026-04-01",
+            "Pomeriggio",
+            "Riempitrice",
+            120,
+            "F-03 valvola che perde",
+            "Guarnizione sostituita, ricambio da prendere al magazzino centrale"
+          ],
+          [
+            3,
+            "2026-04-02",
+            "Notte",
+            "Etichettatrice",
+            30,
+            "E-17 strappo etichetta",
+            "Di nuovo bobina del fornitore B"
+          ],
+          [
+            4,
+            "2026-04-03",
+            "Mattina",
+            "Incartonatrice",
+            25,
+            "P-08 inceppamento cartoni",
+            "I cartoni sembrano umidi"
+          ],
+          [
+            5,
+            "2026-04-03",
+            "Pomeriggio",
+            "Etichettatrice",
+            50,
+            "E-17 strappo etichetta",
+            "Tensione del nastro regolata"
+          ],
+          [
+            6,
+            "2026-04-04",
+            "Mattina",
+            "Riempitrice",
+            90,
+            "F-11 cambio formato",
+            "Passaggio da 0,5 l a 1 l, tempo standard 45 min"
+          ],
+          [
+            7,
+            "2026-04-07",
+            "Notte",
+            "Etichettatrice",
+            40,
+            "E-17 strappo etichetta",
+            "Nuovo operatore in formazione"
+          ],
+          [
+            8,
+            "2026-04-08",
+            "Mattina",
+            "Incartonatrice",
+            35,
+            "P-08 inceppamento cartoni",
+            "Tetto del deposito cartoni nel capannone 3 che perde?"
+          ],
+          [
+            9,
+            "2026-04-09",
+            "Pomeriggio",
+            "Riempitrice",
+            60,
+            "F-03 valvola che perde",
+            "Stesso gruppo valvole del 01/04"
+          ],
+          [
+            10,
+            "2026-04-10",
+            "Mattina",
+            "Etichettatrice",
+            55,
+            "E-17 strappo etichetta",
+            "Bobina del fornitore B, la colla sembra debole"
+          ],
+          [
+            11,
+            "2026-04-11",
+            "Pomeriggio",
+            "Riempitrice",
+            95,
+            "F-11 cambio formato",
+            "Il pezzo di formato andava cercato"
+          ],
+          [
+            12,
+            "2026-04-14",
+            "Notte",
+            "Incartonatrice",
+            20,
+            "P-02 guasto sensore",
+            "Fotocellula pulita"
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "above_target": {
+      "name": "Registro nel testo, obiettivo mancato (4,6 %)"
+    },
+    "within_target": {
+      "name": "Quindicina tranquilla, obiettivo rispettato",
+      "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nStabilimento: Stabilimento Esempio Nord, linea di riempimento L2 (bevande, 3 turni)\nPeriodo: settimane 16–17, tempo di produzione pianificato totale 14.400 minuti\nObiettivo: fermi inferiori al 3 % del tempo di produzione pianificato\n\n| N. | Data | Turno | Macchina | Durata (min) | Codice guasto | Nota dell'operatore |\n|---|---|---|---|---|---|---|\n| 1 | 15/04 | Mattina | Riempitrice | 70 | F-11 cambio formato | Passaggio da 0,5 l a 1 l con la nuova checklist |\n| 2 | 17/04 | Pomeriggio | Etichettatrice | 25 | E-17 strappo etichetta | Bobina del fornitore A |\n| 3 | 21/04 | Notte | Incartonatrice | 20 | P-02 guasto sensore | Fotocellula pulita |\n| 4 | 23/04 | Mattina | Riempitrice | 60 | F-11 cambio formato | Passaggio da 1 l a 0,5 l |\n| 5 | 24/04 | Pomeriggio | Etichettatrice | 30 | E-04 applicazione colla | Ugello della colla pulito |"
+    },
+    "log_file": {
+      "name": "Registro come file Excel",
+      "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nStabilimento: Stabilimento Esempio Nord, linea di riempimento L2 (bevande, 3 turni)\nPeriodo: settimane 14–15, tempo di produzione pianificato totale 14.400 minuti\nObiettivo: fermi inferiori al 3 % del tempo di produzione pianificato\n\nIl registro dei fermi è allegato come file Excel."
+    }
+  }
+}

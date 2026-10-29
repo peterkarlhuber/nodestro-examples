@@ -1,0 +1,68 @@
+{
+  "name": "Divulgar uma vaga e preparar entrevistas",
+  "field": "Recursos humanos",
+  "description": "Elaborar um perfil de vaga, redigir um anúncio, preparar perguntas de entrevista estruturadas e verificar sua imparcialidade.",
+  "start": "Necessidade de contratação",
+  "output": "Documentos da vaga",
+  "file_name": "Anúncio da vaga",
+  "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nEmpresa: Exemplo Logística Ltda., 220 funcionários, sediada em Cidade Exemplo, trabalho híbrido possível (2 dias/semana)\nVaga: Analista de dados júnior (todos os gêneros), tempo integral, efetivo, equipe de controladoria (5 pessoas)\nAnotações do líder da equipe:\n- Deve criar e manter relatórios sobre prazos e custos de entrega (Excel, Power BI), preparar dados do ERP\n- Importante: cuidadoso, sabe explicar números com clareza, gosta de trabalhar com o armazém e as vendas\n- Formação em administração, estatística ou área similar, ou formação técnica comparável com experiência\n- Noções de SQL seriam bem-vindas, Python é um diferencial\n- \"De preferência alguém jovem que se encaixe na equipe, com português como língua materna\"\n- Faixa salarial 48.000–54.000 EUR, 30 dias de férias, verba de treinamento de 1.500 EUR por ano",
+  "guide": {
+    "problem": "Uma boa contratação começa com um perfil claro e entrevistas justas e comparáveis. O workflow transforma anotações soltas em perfil da vaga, anúncio e roteiro de entrevista e verifica a imparcialidade de tudo.",
+    "flow": "O agente de perfil organiza atividades e requisitos. A partir disso, o anúncio da vaga e o roteiro de entrevista são criados em paralelo. O revisor de imparcialidade verifica os dois em busca de formulações discriminatórias ou não permitidas, por exemplo sobre idade ou língua materna, e indica o que uma pessoa precisa verificar. Se ele tiver objeções, um nó de decisão encaminha os documentos para uma revisão que aplica as sugestões; caso contrário, ficam as primeiras versões.",
+    "input": "Anotações sobre a vaga: atividades, qualificações desejadas, equipe, condições e remuneração.",
+    "result": "Perfil da vaga, anúncio da vaga e roteiro de entrevista com âncoras de avaliação, uma revisão de imparcialidade estruturada e, se houver objeções, uma versão revisada com a lista de alterações, também como arquivo Word. Os documentos precisam ser aprovados pelo RH ou por uma pessoa qualificada antes da publicação.",
+    "adapt": "Substitua as anotações pela sua necessidade de contratação. Você pode guardar seu perfil de empregador e seus benefícios como conhecimento e atribuí-los ao agente do anúncio. Acrescente as exigências legais do seu país ao prompt de sistema do revisor de imparcialidade."
+  },
+  "agents": {
+    "profile": {
+      "name": "Perfil da vaga",
+      "description": "Organiza atividades, requisitos obrigatórios e desejáveis e competências.",
+      "system": "Você é HR business partner. Elabore um perfil da vaga a partir das anotações: propósito da função, principais atividades, requisitos obrigatórios e desejáveis, competências técnicas e pessoais e condições. Formule os requisitos de modo que se refiram ao trabalho e sejam verificáveis. Não adote desejos que se refiram a características protegidas como idade, origem, gênero ou língua materna; registre-os como ponto a esclarecer.",
+      "task": "Elabore o perfil da vaga a partir destas anotações:\n\n{{input}}"
+    },
+    "job_ad": {
+      "name": "Anúncio da vaga",
+      "description": "Redige um anúncio de vaga atraente e inclusivo.",
+      "system": "Você redige anúncios de vagas que atraem pessoas e não excluem ninguém. Escreva um anúncio com apresentação da empresa, atividades, perfil (obrigatório e desejável claramente separados), o que é oferecido e como se candidatar. Use linguagem clara e inclusiva e evite barreiras desnecessárias. Use apenas informações do perfil da vaga.",
+      "task": "Redija o anúncio para este perfil:\n\n{{node:profile}}"
+    },
+    "interview": {
+      "name": "Roteiro de entrevista",
+      "description": "Prepara perguntas de entrevista estruturadas com critérios de avaliação.",
+      "system": "Você é especialista em seleção estruturada. Crie um roteiro de entrevista de 60 minutos: agenda, oito a dez perguntas sobre os requisitos mais importantes (perguntas comportamentais e situacionais) e, para cada pergunta, o critério avaliado e referências de avaliação para fraco, médio e forte. Todos os candidatos recebem as mesmas perguntas. Não pergunte nada sobre vida privada, planejamento familiar, saúde, origem ou religião.",
+      "task": "Crie o roteiro de entrevista para este perfil:\n\n{{node:profile}}"
+    },
+    "fairness": {
+      "name": "Revisor de imparcialidade",
+      "description": "Verifica anúncio e roteiro quanto a discriminação e perguntas inadmissíveis.",
+      "system": "Você verifica documentos de RH quanto a imparcialidade e igualdade de tratamento. Procure no anúncio e no roteiro formulações que prejudiquem direta ou indiretamente pessoas por idade, gênero, origem, idioma, religião, deficiência ou outras características protegidas, perguntas de entrevista inadmissíveis e requisitos sem relação com o trabalho. Proponha alterações concretas. Diga explicitamente que os documentos precisam ser aprovados por uma pessoa qualificada antes do uso.",
+      "task": "Verifique a imparcialidade destes documentos.\n\nAnúncio da vaga:\n{{node:job_ad}}\n\nRoteiro de entrevista:\n{{node:interview}}",
+      "fields": {
+        "approved": "Pode ser usado sem alterações?",
+        "issues": "Problemas encontrados, com localização",
+        "suggested_changes": "Sugestões de alteração concretas",
+        "human_checks": "Pontos que o RH ou uma pessoa qualificada precisa verificar"
+      }
+    },
+    "revise": {
+      "name": "Revisão",
+      "description": "Aplica ao anúncio e ao roteiro as alterações sugeridas pela revisão de imparcialidade.",
+      "system": "Você revisa documentos de RH após uma revisão de imparcialidade. Aplique cada sugestão de alteração, remova as formulações apontadas e as perguntas não permitidas e deixe todo o resto inalterado. Apresente o anúncio da vaga revisado completo e o roteiro de entrevista revisado completo e, no final, liste cada alteração com uma breve justificativa. Marque os pontos que você não conseguiu resolver para que o RH os verifique.",
+      "task": "Revise os documentos.\n\nAnúncio da vaga:\n{{node:job_ad}}\n\nRoteiro de entrevista:\n{{node:interview}}\n\nRevisão de imparcialidade:\n{{node:fairness}}"
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "Precisa de revisão?",
+      "branches": {
+        "revise": "Revisar"
+      },
+      "default": "Sem problemas"
+    }
+  },
+  "tests": {
+    "notes": {
+      "name": "Anotações com desejos problemáticos"
+    }
+  }
+}

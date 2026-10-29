@@ -1,0 +1,68 @@
+{
+  "name": "Advertise a job and prepare interviews",
+  "field": "Human resources",
+  "description": "Develop a job profile, write a job advert, prepare structured interview questions and check them for fairness.",
+  "start": "Hiring need",
+  "output": "Job documents",
+  "file_name": "Job advert",
+  "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nCompany: Example Logistics Ltd., 220 employees, located in Sampletown, hybrid working possible (2 days/week)\nPosition: Junior Data Analyst (all genders), full-time, permanent, controlling team (5 people)\nNotes from the team lead:\n- Should build and maintain reports on delivery times and costs (Excel, Power BI), prepare data from the ERP\n- Important: careful, can explain figures clearly, likes working with the warehouse and sales\n- Degree in business, statistics or similar, or comparable vocational training with experience\n- Basic SQL would be nice, Python a plus\n- \"Ideally someone young who fits into the team, with German as their mother tongue\"\n- Salary band EUR 48,000–54,000, 30 days of holiday, training budget EUR 1,500 per year",
+  "guide": {
+    "problem": "Good hiring starts with a clear profile and fair, comparable interviews. The workflow turns loose notes into a job profile, an advert and an interview guide and checks everything for fairness.",
+    "flow": "The profile agent organises tasks and requirements. From this, the job advert and the interview guide are created in parallel. The fairness reviewer checks both for discriminatory or inadmissible wording, for example about age or mother tongue, and names what a person must check. If it raises objections, a decision node routes the documents to a revision that applies its suggestions; otherwise the first versions stand.",
+    "input": "Notes on the position: tasks, desired qualifications, team, conditions and pay.",
+    "result": "Job profile, job advert and interview guide with rating anchors, a structured fairness review and, if there were objections, a revised version with a list of changes, also as a Word file. The documents must be approved by HR or a qualified person before publication.",
+    "adapt": "Replace the notes with your hiring need. You can store your employer profile and benefits as knowledge and assign them to the advert agent. Add the legal requirements of your country to the system prompt of the fairness reviewer."
+  },
+  "agents": {
+    "profile": {
+      "name": "Job profile",
+      "description": "Organises tasks, essential and desirable requirements and competencies.",
+      "system": "You are an HR business partner. Develop a job profile from the notes: purpose of the role, main tasks, essential and desirable requirements, professional and personal competencies and conditions. Formulate requirements so they relate to the job and can be verified. Do not adopt wishes that refer to protected characteristics such as age, origin, gender or mother tongue; record them as a point to clarify instead.",
+      "task": "Develop the job profile from these notes:\n\n{{input}}"
+    },
+    "job_ad": {
+      "name": "Job advert",
+      "description": "Writes an appealing, inclusive job advert.",
+      "system": "You write job adverts that appeal to people and exclude no one. Write an advert with an introduction to the company, tasks, profile (essential and desirable clearly separated), what is offered and how to apply. Use gender-neutral, clear language and avoid unnecessary hurdles. Use only details from the job profile.",
+      "task": "Write the job advert for this profile:\n\n{{node:profile}}"
+    },
+    "interview": {
+      "name": "Interview guide",
+      "description": "Prepares structured interview questions with rating anchors.",
+      "system": "You are an expert in structured selection. Create an interview guide for 60 minutes: agenda, eight to ten questions on the most important requirements (behavioural and situational questions), and for each question the criterion it tests and rating anchors for weak, average and strong. All candidates get the same questions. Ask nothing about private life, family planning, health, origin or religion.",
+      "task": "Create the interview guide for this profile:\n\n{{node:profile}}"
+    },
+    "fairness": {
+      "name": "Fairness reviewer",
+      "description": "Checks the advert and the guide for discrimination and inadmissible questions.",
+      "system": "You check HR documents for fairness and equal treatment. Look in the advert and the guide for wording that directly or indirectly disadvantages people because of age, gender, origin, language, religion, disability or other protected characteristics, for inadmissible interview questions and for requirements unrelated to the job. Propose concrete changes. State explicitly that the documents must be approved by a qualified person before use.",
+      "task": "Check these documents for fairness.\n\nJob advert:\n{{node:job_ad}}\n\nInterview guide:\n{{node:interview}}",
+      "fields": {
+        "approved": "Usable without changes?",
+        "issues": "Problems found, with location",
+        "suggested_changes": "Concrete suggested changes",
+        "human_checks": "Points HR or a qualified person must check"
+      }
+    },
+    "revise": {
+      "name": "Revision",
+      "description": "Applies the changes suggested by the fairness review to the advert and the guide.",
+      "system": "You revise HR documents after a fairness review. Apply every suggested change, remove flagged wording and inadmissible questions and leave everything else unchanged. Output the complete revised job advert and the complete revised interview guide, and at the end list every change with a short reason. Mark points you could not resolve for review by HR.",
+      "task": "Revise the documents.\n\nJob advert:\n{{node:job_ad}}\n\nInterview guide:\n{{node:interview}}\n\nFairness review:\n{{node:fairness}}"
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "Revision needed?",
+      "branches": {
+        "revise": "Revise"
+      },
+      "default": "No issues"
+    }
+  },
+  "tests": {
+    "notes": {
+      "name": "Notes with problematic wishes"
+    }
+  }
+}

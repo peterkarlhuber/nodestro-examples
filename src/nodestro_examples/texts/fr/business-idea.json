@@ -1,0 +1,55 @@
+{
+  "name": "Évaluer une idée d'entreprise",
+  "field": "Indépendants et créateurs d'entreprise",
+  "description": "Évaluer en parallèle le potentiel de marché, la rentabilité et les risques d'une idée d'entreprise et rendre un verdict.",
+  "start": "Idée d'entreprise",
+  "output": "Évaluation",
+  "file_name": "Evaluation_idee_entreprise",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nIdée : service mobile de réparation de vélos « Vélo Secours » dans une ville de 180 000 habitants.\nUn vélo cargo équipé d'outils se rend chez les clients à domicile ou au bureau ; réservation via un site web simple.\n\nHypothèses du fondateur :\n- Intervention moyenne 65 EUR HT, part de matériel 30 %\n- Capacité 6 interventions par jour, 20 jours ouvrés par mois ; en moyenne 50 % d'occupation la première année\n- Investissement de départ 18 000 EUR (vélo cargo, outils, site web), financé sur fonds propres\n- Frais courants 1 400 EUR par mois (assurance, stockage, téléphone, logiciel, marketing)\n- Rémunération souhaitée du fondateur 2 500 EUR par mois\n- Cibles : navetteurs, familles avec vélos cargo, entreprises proposant le leasing de vélos à leurs salariés\n- Connu : trois magasins de vélos en ville avec deux à trois semaines d'attente au printemps",
+  "guide": {
+    "problem": "Avant de créer une entreprise, il vaut la peine de regarder sobrement le marché, les chiffres et les risques. Le workflow fait examiner l'idée par trois experts en même temps et un jury rend un verdict justifié.",
+    "flow": "Trois agents travaillent en parallèle : l'analyste de marché estime les cibles et la concurrence, le calculateur de rentabilité détermine le point mort et des scénarios avec la calculatrice, l'analyste des risques cherche les points faibles. Le jury d'investisseurs pèse le tout et livre un verdict structuré avec une note.",
+    "input": "Une description de l'idée avec l'offre, les cibles, les prix, les coûts, la capacité et les concurrents connus.",
+    "result": "Un verdict structuré (poursuivre, adapter ou abandonner) avec une note, des forces, des risques, des hypothèses à vérifier et des prochaines étapes concrètes pour valider l'idée, aussi en rapport PDF.",
+    "adapt": "Décrivez votre idée avec vos chiffres. Plus les hypothèses sont honnêtes, plus le verdict est utile. Chargez vos propres données de marché ou résultats d'enquête comme connaissance et attribuez-les à l'analyste de marché."
+  },
+  "agents": {
+    "market": {
+      "name": "Analyste de marché",
+      "description": "Estime les cibles, la demande et la concurrence.",
+      "system": "Tu es analyste de marché pour les start-ups. Décris les cibles, leurs besoins et leur disposition à payer, estime le potentiel de marché par un calcul approximatif transparent et prudent et analyse la concurrence. Indique quelles informations viennent de la description et lesquelles reposent sur des connaissances générales et doivent être vérifiées sur place.",
+      "task": "Analyse le marché pour cette idée :\n\n{{input}}"
+    },
+    "economics": {
+      "name": "Calculateur de rentabilité",
+      "description": "Calcule marge sur coûts variables, point mort et scénarios avec la calculatrice.",
+      "system": "Tu es conseiller en création d'entreprise spécialisé en finance. Utilise la calculatrice pour calculer la marge sur coûts variables par intervention, le chiffre d'affaires et le résultat mensuels, le point mort en interventions par mois (rémunération du fondateur comprise) et le délai de retour de l'investissement de départ. Calcule trois scénarios (prudent, attendu, optimiste) et montre la sensibilité du résultat à l'occupation et au prix.",
+      "task": "Calcule la rentabilité de cette idée :\n\n{{input}}"
+    },
+    "risks": {
+      "name": "Analyste des risques",
+      "description": "Cherche les points faibles et les risques de l'idée.",
+      "system": "Tu es un coach de création d'entreprise expérimenté et tu joues délibérément l'avocat du diable. Cherche les plus grands risques : demande, saisonnalité, dépendance à une seule personne, concurrence, exigences légales, possibilité de croissance et financement. Évalue chaque risque selon sa probabilité et son impact et propose un moyen peu coûteux de le tester avant la création.",
+      "task": "Analyse les risques de cette idée :\n\n{{input}}"
+    },
+    "jury": {
+      "name": "Jury d'investisseurs",
+      "description": "Pèse le marché, les chiffres et les risques et rend un verdict.",
+      "system": "Tu es un jury de fondateurs et d'investisseurs expérimentés. Pèse le marché, la rentabilité et les risques les uns par rapport aux autres et rends un verdict : poursuivre, adapter ou abandonner. Donne une note de 1 à 10 et justifie-la. Nomme les hypothèses à tester en premier et des prochaines étapes concrètes et peu coûteuses. Sois honnête mais juste.",
+      "task": "Évalue l'idée.\n\nAnalyse de marché :\n{{node:market}}\n\nRentabilité :\n{{node:economics}}\n\nRisques :\n{{node:risks}}",
+      "fields": {
+        "verdict": "Verdict (poursuivre, adapter ou abandonner) avec justification",
+        "score": "Note de 1 à 10",
+        "strengths": "Forces de l'idée",
+        "risks": "Principaux risques",
+        "assumptions_to_test": "Hypothèses à tester en premier",
+        "next_steps": "Prochaines étapes concrètes"
+      }
+    }
+  },
+  "tests": {
+    "idea": {
+      "name": "Service mobile de réparation de vélos"
+    }
+  }
+}

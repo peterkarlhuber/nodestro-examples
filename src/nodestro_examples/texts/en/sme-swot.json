@@ -1,0 +1,54 @@
+{
+  "name": "SWOT strategy for a small business",
+  "field": "Companies and SMEs",
+  "description": "Analyse a company's internal and external situation, develop a SWOT-based strategy and review it critically.",
+  "start": "Company profile",
+  "output": "Strategy",
+  "file_name": "SWOT strategy",
+  "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nCompany: Example Woodworks Joinery Ltd., small town in southern Germany, founded in 1987\nStaff: 14 (including 2 apprentices), owner aged 61, succession not settled\nRevenue: 2023 EUR 1.9 m, 2024 EUR 1.8 m; return on sales most recently 4 %\nRevenue split: interior fittings for private customers 55 %, commercial projects (practices, offices) 30 %, repairs 15 %\nStrengths according to the owner: high quality, loyal regular customers, own CNC machine since 2022\nProblems: long delivery times (currently 14 weeks), two journeyman positions vacant for a year,\nhardly any online presence (website from 2015, no social media), quotes are calculated by hand\nEnvironment: rising timber prices, regional funding programmes for energy-efficient renovation,\nnew residential areas within 20 km, a furniture store with a kitchen studio has opened nearby\nOwner's goal: a stable company ready for handover in three years with a return on sales of at least 7 %",
+  "guide": {
+    "problem": "Many small businesses know their problems, but not the best order in which to tackle them. The workflow creates a SWOT analysis, derives strategies from it and has them challenged by a critical reviewer.",
+    "flow": "The internal analysis (strengths, weaknesses) and the environment analysis (opportunities, threats) run in parallel. The strategy developer combines both into strategies following the TOWS matrix and a 90-day plan. The critical reviewer looks for weak points and missing information; the result contains strategy and review. At the end the result is saved with the run as a Markdown and a PDF file.",
+    "input": "A short company profile with key figures, offering, strengths, problems, market environment and goals.",
+    "result": "A SWOT matrix with derived strategies and a 90-day plan, plus a structured critical review with verdict, weak points, missing information and next steps.",
+    "adapt": "Describe your company in the same style. The more precise the figures and goals, the more concrete the strategy. You can upload industry studies or customer surveys as knowledge and assign them to the environment analysis."
+  },
+  "agents": {
+    "internal": {
+      "name": "Internal analysis",
+      "description": "Works out strengths and weaknesses from the company data.",
+      "system": "You are a management consultant for small and medium-sized businesses. Analyse the internal factors: offering, customers, staff, processes, finances, equipment and organisation. Derive concrete strengths and weaknesses and support each with details from the profile. Rate the importance of each point for the company's goal (high, medium, low).",
+      "task": "Analyse the strengths and weaknesses of this company:\n\n{{input}}"
+    },
+    "external": {
+      "name": "Environment analysis",
+      "description": "Derives opportunities and threats from the market and environment.",
+      "system": "You are a market analyst. Analyse a company's external factors: demand, competition, cost trends, labour market, funding, technology and regulation. Derive opportunities and threats. Rely on the details in the profile and on generally known industry knowledge; mark what is general knowledge and should be checked locally.",
+      "task": "Analyse the opportunities and threats in this company's environment:\n\n{{input}}"
+    },
+    "strategy": {
+      "name": "Strategy developer",
+      "description": "Develops strategies following the TOWS matrix and a 90-day plan.",
+      "system": "You are a strategy consultant. Summarise strengths, weaknesses, opportunities and threats in a SWOT matrix and develop strategies with the TOWS logic: SO (use strengths to seize opportunities), WO, ST and WT. Choose the two or three most effective strategies for the goal and justify the choice. Draw up a 90-day plan with concrete steps, owners and measurable milestones.",
+      "task": "Develop the strategy.\n\nInternal analysis:\n{{node:internal}}\n\nEnvironment analysis:\n{{node:external}}"
+    },
+    "critic": {
+      "name": "Critical reviewer",
+      "description": "Challenges the strategy and uncovers weak points.",
+      "system": "You are a critical advisory board member who reviews strategies before a company invests money. Check whether the strategy can reach the goal, whether it matches the resources and which assumptions are untested. Name contradictions, implementation risks and information missing before a decision. Be constructive: every weak point comes with a suggestion.",
+      "task": "Review this strategy critically:\n\n{{input}}",
+      "fields": {
+        "verdict": "Overall verdict in two to three sentences",
+        "robust_points": "Sound parts of the strategy",
+        "weak_points": "Weak points with suggestions for improvement",
+        "missing_information": "Information missing before a decision",
+        "next_steps": "Recommended next steps"
+      }
+    }
+  },
+  "tests": {
+    "profile": {
+      "name": "Joinery with succession not settled"
+    }
+  }
+}

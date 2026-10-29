@@ -1,0 +1,133 @@
+{
+  "id": "restaurant-menu",
+  "number": 20,
+  "category": "business",
+  "level": "beginner",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160,
+      "form": [
+        {
+          "name": "purchase_prices",
+          "type": "file",
+          "accept": [
+            "csv",
+            "xlsx"
+          ],
+          "multiple": false,
+          "max_size_mb": 5
+        }
+      ]
+    },
+    {
+      "id": "concept",
+      "type": "agent",
+      "x": 340,
+      "y": 160,
+      "role": "planning",
+      "icon": "idea"
+    },
+    {
+      "id": "costing",
+      "type": "agent",
+      "x": 680,
+      "y": 160,
+      "role": "analysis",
+      "icon": "calculator",
+      "tools": [
+        "calculator"
+      ]
+    },
+    {
+      "id": "menu",
+      "type": "agent",
+      "x": 1020,
+      "y": 160,
+      "role": "writing",
+      "icon": "pen",
+      "criteria": [
+        "target_group",
+        "prices_match",
+        "allergen_note"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1360,
+      "y": 160,
+      "files": [
+        "docx",
+        "xlsx"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "concept"
+    ],
+    [
+      "concept",
+      "costing"
+    ],
+    [
+      "costing",
+      "menu"
+    ],
+    [
+      "menu",
+      "output"
+    ],
+    [
+      "start",
+      "costing"
+    ],
+    [
+      "costing",
+      "output"
+    ]
+  ],
+  "samples": [
+    {
+      "id": "prices",
+      "format": "csv",
+      "field": "purchase_prices"
+    }
+  ],
+  "tests": [
+    {
+      "id": "lunch_menu",
+      "checks": [
+        {
+          "node": "costing",
+          "operator": "is_not_empty"
+        },
+        {
+          "node": "menu",
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "price_file",
+      "input": "own",
+      "samples": [
+        "prices"
+      ],
+      "checks": [
+        {
+          "node": "costing",
+          "operator": "is_not_empty"
+        },
+        {
+          "node": "menu",
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

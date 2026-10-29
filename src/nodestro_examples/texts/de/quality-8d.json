@@ -1,0 +1,194 @@
+{
+  "name": "Reklamation mit 8D untersuchen",
+  "field": "Qualitätsmanagement",
+  "description": "Eine Kundenreklamation Schritt für Schritt nach der 8D-Methode bearbeiten und als Bericht dokumentieren.",
+  "start": "Reklamation",
+  "output": "8D-Bericht",
+  "file_name": "8D-Bericht",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nKunde: Beispiel Automotive AG, Werk Süd\nTeil: Kunststoffgehäuse G-220 (PA6-GF30, Spritzguss), Charge 24-117, geliefert am 12.03., 4.000 Stück\nReklamation vom 18.03.: Bei der Montage brechen Rastnasen ab. Der Kunde hat 2.000 Teile geprüft, 46 sind\nfehlerhaft (2,3 %). Er fordert innerhalb von 24 Stunden Sofortmaßnahmen und innerhalb von 10 Tagen einen 8D-Bericht.\n\nInterne Informationen:\n- Charge 24-117 wurde auf Maschine SG-4 mit einem neu überarbeiteten Werkzeug gefertigt (Wartung am 05.03.).\n- Das Material kam aus einer neuen Lieferung; die Trocknungszeit wurde wegen Termindruck von 4 auf 2,5 Stunden verkürzt.\n- Die Ausgangsprüfung prüft Maße und Optik nach Stichprobenplan, aber keine mechanische Belastung der Rastnasen.\n- Lagerbestand: 1.200 Teile aus Charge 24-117 und 3.000 Teile aus Charge 24-121 (gleiches Werkzeug, normale Trocknung).\n- Vergleichbare Reklamationen gab es in den letzten 12 Monaten nicht.",
+  "guide": {
+    "problem": "Reklamationen verlangen schnelle Sofortmaßnahmen und eine saubere Ursachenklärung. Die 8D-Methode gibt die Schritte vor; der Workflow arbeitet sie strukturiert ab und dokumentiert sie einheitlich.",
+    "flow": "Eine sequenzielle Kette: Der erste Agent beschreibt das Problem und die Sofortmaßnahmen (D1 bis D3), der zweite sucht die Ursachen für Entstehung und Nichtentdeckung (D4), der dritte plant Abstell- und Vorbeugemaßnahmen (D5 bis D7). Der Berichtsagent fasst alles in einem strukturierten 8D-Bericht zusammen. Ein Entscheidungsknoten prüft den Schweregrad: In kritischen Fällen plant ein zusätzlicher Agent die Notfall-Eindämmung für die nächsten 24 Stunden. Bevor der Bericht an den Kunden geht, gibt ihn ein Mensch frei.",
+    "input": "Die Reklamation des Kunden mit Teil, Charge, Fehlerbild und Fehlerquote sowie bekannte interne Informationen zu Fertigung, Material und Prüfung. Reklamationsschreiben, Messdaten und Fotos des Fehlerbilds kannst du zusätzlich als Dateien anhängen; die Beispieldateien enthalten ein erfundenes Reklamationsschreiben (PDF) und Messwerte (Excel).",
+    "result": "Ein strukturierter 8D-Bericht mit je einem Feld für D1 bis D8 und einer Liste offener Punkte, die das Team noch klären muss. Nach der Freigabe speichert der Lauf den Bericht als PDF und als bearbeitbare Word-Datei. Der Berichtsagent schlägt außerdem Erkenntnisse für das Wissen vor; gespeichert wird nur, was du ausdrücklich übernimmst.",
+    "adapt": "Ersetze die Testdaten durch eure Reklamation und hänge Prüfprotokolle, Zeichnungen oder Fotos direkt an. Wenn ihr ein eigenes Formular nutzt, passe die Felder des Berichtsagenten unter „Ausgabeformat“ an. Übernommene Erkenntnisse aus früheren Reklamationen kannst du dem Ursachenanalysten als Wissen zuweisen."
+  },
+  "agents": {
+    "problem": {
+      "name": "Problembeschreibung D1–D3",
+      "description": "Beschreibt Team, Problem (Ist/Ist-nicht) und Sofortmaßnahmen.",
+      "system": "Du bist Qualitätsingenieur und leitest 8D-Teams. Bearbeite die Schritte D1 bis D3: Schlage ein interdisziplinäres Team mit Rollen vor, beschreibe das Problem präzise nach 5W2H und einer Ist/Ist-nicht- Analyse und lege Sofortmaßnahmen zur Eindämmung fest (Sperrung, Sortierung, Ersatzlieferung, Information des Kunden). Nenne für jede Sofortmaßnahme, wie ihre Wirksamkeit geprüft wird.",
+      "task": "Bearbeite D1 bis D3 für diese Reklamation:\n\n{{input}}",
+      "fields": {
+        "analysis": "D1 bis D3 als Text: Team, Problembeschreibung (5W2H, Ist/Ist-nicht) und Sofortmaßnahmen mit Wirksamkeitsprüfung",
+        "critical": "true, wenn der Fall kritisch ist: Sicherheits- oder Rechtsrelevanz, stehende Kundenlinie oder betroffener Bestand, der noch ausgeliefert wird"
+      }
+    },
+    "root_cause": {
+      "name": "Ursachenanalyse D4",
+      "description": "Sucht Ursachen für Entstehung und Nichtentdeckung mit 5-Why.",
+      "system": "Du bist Experte für Ursachenanalyse in der Fertigung. Bearbeite D4: Analysiere getrennt die Ursache für das Entstehen des Fehlers und die Ursache dafür, dass er nicht entdeckt wurde. Nutze jeweils eine 5-Why-Kette und ziehe die Fakten aus der Reklamation heran. Bewerte, wie gut jede Ursache belegt ist, und nenne Versuche oder Prüfungen, die sie verifizieren.",
+      "task": "Analysiere die Ursachen (D4).\n\nReklamation:\n{{run.input}}\n\nErgebnis D1–D3:\n{{node:problem}}"
+    },
+    "actions": {
+      "name": "Maßnahmenplanung D5–D7",
+      "description": "Plant Abstellmaßnahmen, ihre Verifizierung und die Vorbeugung.",
+      "system": "Du bist Qualitätsmanager. Bearbeite D5 bis D7: Lege für jede verifizierte oder wahrscheinliche Ursache dauerhafte Abstellmaßnahmen fest, beschreibe, wie ihre Wirksamkeit nachgewiesen wird, und leite Vorbeugemaßnahmen ab, die ähnliche Fehler bei anderen Produkten verhindern, zum Beispiel Anpassungen von FMEA, Prüfplan oder Arbeitsanweisungen. Nenne Verantwortliche als Rollen und realistische Termine.",
+      "task": "Plane D5 bis D7 auf Grundlage dieser Ursachenanalyse:\n\n{{node:root_cause}}"
+    },
+    "report": {
+      "name": "8D-Bericht",
+      "description": "Fasst alle Schritte in einem strukturierten 8D-Bericht zusammen.",
+      "system": "Du erstellst 8D-Berichte für Kunden. Fasse die Ergebnisse der vorherigen Schritte vollständig und sachlich zusammen, ohne neue Fakten hinzuzufügen. Prüfe dabei, ob die Schritte zueinander passen, und nimm Widersprüche oder noch nicht verifizierte Ursachen in die offenen Punkte auf. D8 enthält eine Abschlussnotiz zur Würdigung des Teams und dazu, was bis zum Abschluss noch fehlt.",
+      "task": "Erstelle den 8D-Bericht.\n\nD1–D3:\n{{node:problem}}\n\nD4:\n{{node:root_cause}}\n\nD5–D7:\n{{node:actions}}\n\nNotfall-Eindämmung (nur bei kritischen Fällen):\n{{node:containment}}",
+      "fields": {
+        "d1_team": "D1 Team mit Rollen",
+        "d2_problem": "D2 Problembeschreibung",
+        "d3_containment": "D3 Sofortmaßnahmen mit Wirksamkeitsprüfung",
+        "d4_root_causes": "D4 Ursachen für Entstehung und Nichtentdeckung",
+        "d5_corrective_actions": "D5 Abstellmaßnahmen",
+        "d6_verification": "D6 Nachweis der Wirksamkeit",
+        "d7_prevention": "D7 Vorbeugemaßnahmen",
+        "d8_closure": "D8 Abschluss und Würdigung",
+        "open_points": "Offene Punkte und noch nicht verifizierte Annahmen"
+      }
+    },
+    "containment": {
+      "name": "Notfall-Eindämmung",
+      "description": "Plant bei kritischen Fällen die Eindämmung für die nächsten 24 Stunden.",
+      "system": "Du bist Qualitätsmanager in Rufbereitschaft. Plane für eine kritische Reklamation die Eindämmung der nächsten 24 Stunden: alle verdächtigen Bestände und Chargen sperren und sortieren, Lieferungen unterwegs absichern, eine 100-%-Prüfung oder Ersatzlieferung organisieren und den Kunden mit einem klaren Stand informieren. Nenne für jede Maßnahme eine verantwortliche Rolle, einen Termin und wie ihre Wirksamkeit geprüft wird, und liste, was offen bleibt.",
+      "task": "Plane die Notfall-Eindämmung für diese kritische Reklamation.\n\nReklamation:\n{{run.input}}\n\nD1–D3:\n{{node:problem}}"
+    }
+  },
+  "steps": {
+    "severity": {
+      "name": "Schweregrad",
+      "branches": {
+        "critical": "Kritisch"
+      },
+      "default": "Standard"
+    },
+    "release": {
+      "name": "Bericht freigeben",
+      "instructions": "Prüfe, ob der 8D-Bericht nur belegte Fakten enthält, ungeklärte Ursachen als offen markiert sind und die Sofortmaßnahmen realistisch sind. Erst dann für den Versand an den Kunden freigeben."
+    }
+  },
+  "form": {
+    "documents": {
+      "label": "Reklamationsunterlagen",
+      "description": "Optional: Reklamationsschreiben (PDF, Word), Messdaten (Excel, CSV) oder Fotos des Fehlerbilds (PNG, JPEG, WebP), bis zu 8 Dateien. Ohne Dateien gilt der Text."
+    }
+  },
+  "samples": {
+    "complaint": {
+      "name": "Reklamation_G-220_Charge_24-117",
+      "description": "Erfundenes Reklamationsschreiben des Kunden als PDF.",
+      "content": "# Reklamation Nr. R-2026-031\n\n**Von:** Beispiel Automotive AG, Werk Süd, Wareneingangsprüfung\n\n**An:** Qualitätsmanagement, Lieferant von Kunststoffgehäusen\n\n**Datum:** 18.03.2026\n\n## Betroffenes Teil\n\n| Angabe | Wert |\n|---|---|\n| Teil | Kunststoffgehäuse G-220 (PA6-GF30) |\n| Charge | 24-117 |\n| Liefertermin | 12.03.2026 |\n| Liefermenge | 4.000 Stück |\n\n## Fehlerbeschreibung\n\nBei der Montage brechen an den Gehäusen die Rastnasen ab, sobald der Deckel aufgeclipst wird. Wir haben 2.000 Teile geprüft; 46 Teile sind fehlerhaft (2,3 %). Die Bruchflächen wirken spröde.\n\n## Unsere Forderungen\n\n1. Sofortmaßnahmen innerhalb von 24 Stunden, einschließlich Sortierung der Bestände bei uns.\n2. Einen 8D-Bericht innerhalb von 10 Tagen.\n3. Eine Aussage, welche weiteren Chargen betroffen sein können.\n\nAnsprechperson: Frau Erika Muster, Lieferantenqualität (fiktiv)"
+    },
+    "measurements": {
+      "name": "Messwerte_Rastnasen",
+      "description": "Erfundene Auszugskräfte der Rastnasen je Charge mit Trocknungszeit, als Excel-Datei.",
+      "content": {
+        "Auszugskraft": [
+          [
+            "Probe",
+            "Charge",
+            "Trocknungszeit (h)",
+            "Auszugskraft (N)",
+            "Mindestwert (N)"
+          ],
+          [
+            1,
+            "24-117",
+            2.5,
+            38,
+            45
+          ],
+          [
+            2,
+            "24-117",
+            2.5,
+            41,
+            45
+          ],
+          [
+            3,
+            "24-117",
+            2.5,
+            47,
+            45
+          ],
+          [
+            4,
+            "24-117",
+            2.5,
+            36,
+            45
+          ],
+          [
+            5,
+            "24-117",
+            2.5,
+            44,
+            45
+          ],
+          [
+            6,
+            "24-121",
+            4,
+            58,
+            45
+          ],
+          [
+            7,
+            "24-121",
+            4,
+            61,
+            45
+          ],
+          [
+            8,
+            "24-121",
+            4,
+            57,
+            45
+          ],
+          [
+            9,
+            "24-121",
+            4,
+            60,
+            45
+          ],
+          [
+            10,
+            "24-121",
+            4,
+            59,
+            45
+          ]
+        ],
+        "Hinweise": [
+          [
+            "Hinweis"
+          ],
+          [
+            "Messung im Labor am 19.03.2026, je Charge fünf Teile aus dem Lager."
+          ],
+          [
+            "Restfeuchte des Granulats wurde für Charge 24-117 nicht dokumentiert."
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "complaint_text": {
+      "name": "Reklamation im Text"
+    },
+    "complaint_files": {
+      "name": "Reklamationsschreiben und Messwerte als Dateien",
+      "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nReklamation der Beispiel Automotive AG zum Gehäuse G-220; Reklamationsschreiben und Messwerte liegen als Dateien bei.\n\nInterne Informationen:\n- Charge 24-117 wurde auf Maschine SG-4 mit einem neu überarbeiteten Werkzeug gefertigt (Wartung am 05.03.).\n- Das Material kam aus einer neuen Lieferung; die Trocknungszeit wurde wegen Termindruck von 4 auf 2,5 Stunden verkürzt.\n- Die Ausgangsprüfung prüft Maße und Optik nach Stichprobenplan, aber keine mechanische Belastung der Rastnasen.\n- Lagerbestand: 1.200 Teile aus Charge 24-117 und 3.000 Teile aus Charge 24-121 (gleiches Werkzeug, normale Trocknung)."
+    }
+  }
+}

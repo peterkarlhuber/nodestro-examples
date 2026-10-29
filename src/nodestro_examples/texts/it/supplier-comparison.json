@@ -1,0 +1,129 @@
+{
+  "name": "Confrontare offerte di fornitori",
+  "field": "Logistica e acquisti",
+  "description": "Confrontare offerte per costo totale e rischio di fornitura e ricavarne una raccomandazione motivata.",
+  "start": "Offerte",
+  "output": "Raccomandazione",
+  "file_name": "Confronto fornitori",
+  "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nFabbisogno: pezzo tornito in acciaio inox DT-40, 24.000 pezzi all'anno, richiamo di 2.000 pezzi al mese\nPrezzo obiettivo: 2,10 EUR al pezzo franco stabilimento\n\nOfferta A – Esempio Precisione GmbH (Germania, a 80 km)\n- Prezzo 2,35 EUR/pezzo, franco stabilimento, tempo di consegna 2 settimane\n- Ordine minimo 1.000 pezzi, termini di pagamento 30 giorni\n- Tasso di reclami lo scorso anno 0,4 %, certificazione IATF 16949\n\nOfferta B – Esempio Componenti Ltd. (Estremo Oriente, trasporto via mare)\n- Prezzo 1,62 EUR/pezzo franco fabbrica, trasporto e dazi stimati 0,28 EUR/pezzo, tempo di consegna 10 settimane\n- Ordine minimo 12.000 pezzi, pagamento 30 % anticipato, saldo alla spedizione\n- Nessuno storico di forniture, ISO 9001, campioni approvati\n\nOfferta C – Campione Parti Metalliche s.r.o. (Repubblica Ceca, a 450 km)\n- Prezzo 1,98 EUR/pezzo, trasporto 0,07 EUR/pezzo, tempo di consegna 4 settimane\n- Ordine minimo 4.000 pezzi, termini di pagamento 45 giorni\n- Tasso di reclami lo scorso anno 1,1 %, ISO 9001, capacità utilizzata al 90 % secondo il fornitore\n\nIpotesi interne: costo del capitale 8 % annuo, costo di magazzino 0,03 EUR per pezzo al mese,\ncosto per reclamo (controllo, selezione) 0,90 EUR per pezzo difettoso.",
+  "guide": {
+    "problem": "Il prezzo unitario più basso raramente è l'offerta più conveniente. Il workflow confronta le offerte per costo totale e rischio di fornitura e motiva una raccomandazione per gli acquisti.",
+    "flow": "L'analista dei costi e l'analista dei rischi lavorano in parallelo. Uno calcola il costo totale di possesso per offerta con la calcolatrice, l'altro valuta tempi di consegna, dipendenze e qualità. La raccomandazione di acquisto mette a confronto i due risultati e fornisce un esito strutturato.",
+    "input": "Più offerte con prezzo, trasporto, tempo di consegna, quantità minima, condizioni di pagamento e dati di qualità, più i vostri costi interni. Puoi scrivere le offerte nel testo o allegarle come file, anche miste in PDF, Word ed Excel; i tre file di esempio mostrano proprio questo.",
+    "result": "Una raccomandazione strutturata con classifica, motivazioni, rischi, punti di negoziazione e ipotesi adottate. L'esecuzione la salva inoltre come rapporto PDF e come file Excel con un foglio per elenco.",
+    "adapt": "Allega le vostre offerte come file e indica fabbisogno e costi nel testo. Se avete pesi fissi (per esempio 50 % costo, 30 % rischio, 20 % qualità), aggiungili nel prompt di sistema della raccomandazione di acquisto. Contratti quadro o valutazioni dei fornitori puoi salvarli come conoscenza e assegnarli all'analista dei rischi."
+  },
+  "agents": {
+    "cost": {
+      "name": "Analista dei costi",
+      "description": "Calcola il costo totale per offerta con la calcolatrice.",
+      "system": "Sei un analista dei costi negli acquisti. Calcola per ogni offerta il costo totale per pezzo e per anno: prezzo, trasporto e dazi, capitale immobilizzato da ordini minimi e pagamenti anticipati, costo di magazzino e costo atteso dei reclami. Usa la calcolatrice per ogni calcolo e mostra il procedimento. Confronta il risultato con il prezzo obiettivo e mostra quali ipotesi influenzano di più il risultato.",
+      "task": "Calcola il costo totale di queste offerte:\n\n{{input}}"
+    },
+    "risk": {
+      "name": "Analista dei rischi",
+      "description": "Valuta i rischi di tempi di consegna, dipendenza, capacità e qualità.",
+      "system": "Sei un risk manager della supply chain. Valuta i rischi di fornitura di ogni offerta: tempi di consegna e flessibilità, via di trasporto, utilizzo della capacità, storico della qualità e certificazione, impegno finanziario e dipendenza. Valuta ogni rischio per probabilità e impatto (alto, medio, basso) e proponi misure di protezione, per esempio scorte di sicurezza o una seconda fonte.",
+      "task": "Valuta i rischi di fornitura di queste offerte:\n\n{{input}}"
+    },
+    "recommendation": {
+      "name": "Raccomandazione di acquisto",
+      "description": "Mette a confronto costi e rischi e raccomanda un fornitore.",
+      "system": "Sei il responsabile acquisti e prepari una decisione di approvvigionamento. Metti a confronto costo totale e rischio e raccomanda un fornitore o una combinazione, per esempio una fonte principale con una seconda fonte. Motiva chiaramente la classifica, indica i rischi residui e punti concreti per la trattativa. Elenca ogni ipotesi da cui dipende la raccomandazione.",
+      "task": "Ricava una raccomandazione.\n\nAnalisi dei costi:\n{{node:cost}}\n\nAnalisi dei rischi:\n{{node:risk}}",
+      "fields": {
+        "recommended_supplier": "Fornitore o combinazione raccomandata",
+        "ranking": "Classifica delle offerte con breve motivazione",
+        "reasons": "Motivi principali della raccomandazione",
+        "risks": "Rischi residui e misure di protezione",
+        "negotiation_points": "Punti per la trattativa",
+        "assumptions": "Ipotesi da cui dipende la raccomandazione"
+      }
+    }
+  },
+  "form": {
+    "offers": {
+      "label": "File delle offerte",
+      "description": "Facoltativo: le offerte in PDF, Word, Excel o CSV, fino a 10 file. Senza file valgono le offerte nel testo; con i file, nel testo bastano fabbisogno, prezzo obiettivo e ipotesi interne."
+    }
+  },
+  "samples": {
+    "offer_a": {
+      "name": "Offerta_A_Esempio_Precisione",
+      "description": "Offerta A come lettera PDF (fittizia).",
+      "content": "# Offerta n. 2026-0412\n\n**Esempio Precisione GmbH**, Germania (a 80 km dal vostro stabilimento)\n\nGentili Signori, grazie per la vostra richiesta relativa al pezzo tornito in acciaio inox DT-40. Vi offriamo:\n\n| Voce | Dettaglio |\n|---|---|\n| Prezzo | 2,35 EUR al pezzo, franco stabilimento |\n| Tempo di consegna | 2 settimane |\n| Ordine minimo | 1.000 pezzi |\n| Termini di pagamento | 30 giorni netti |\n| Certificazione | IATF 16949 |\n| Tasso di reclami lo scorso anno | 0,4 % |\n\nL'offerta è valida 60 giorni. Cordiali saluti, Ufficio vendite (fittizio)"
+    },
+    "offer_b": {
+      "name": "Offerta_B_Esempio_Componenti",
+      "description": "Offerta B come documento Word (fittizia).",
+      "content": "# Quotation Q-77-DT40\n\n**Esempio Componenti Ltd.** (Estremo Oriente, trasporto via mare)\n\n## Condizioni\n\n- Prezzo: 1,62 EUR al pezzo franco fabbrica\n- Trasporto e dazi: secondo la nostra stima 0,28 EUR al pezzo\n- Tempo di consegna: 10 settimane incluso il trasporto via mare\n- Ordine minimo: 12.000 pezzi\n- Pagamento: 30 % anticipato all'ordine, saldo alla spedizione\n\n## Qualità\n\nCertificazione ISO 9001. I primi campioni sono stati approvati. Non esiste ancora uno storico di forniture con voi."
+    },
+    "offer_c": {
+      "name": "Offerta_C_Campione_Parti_Metalliche",
+      "description": "Offerta C come tabella Excel (fittizia).",
+      "content": {
+        "Offerta": [
+          [
+            "Voce",
+            "Valore",
+            "Unità"
+          ],
+          [
+            "Fornitore",
+            "Campione Parti Metalliche s.r.o. (Repubblica Ceca, 450 km)",
+            ""
+          ],
+          [
+            "Prezzo",
+            1.98,
+            "EUR/pezzo"
+          ],
+          [
+            "Trasporto",
+            0.07,
+            "EUR/pezzo"
+          ],
+          [
+            "Tempo di consegna",
+            4,
+            "settimane"
+          ],
+          [
+            "Ordine minimo",
+            4000,
+            "pezzi"
+          ],
+          [
+            "Termini di pagamento",
+            45,
+            "giorni"
+          ],
+          [
+            "Tasso di reclami lo scorso anno",
+            1.1,
+            "%"
+          ],
+          [
+            "Certificazione",
+            "ISO 9001",
+            ""
+          ],
+          [
+            "Capacità utilizzata secondo il fornitore",
+            90,
+            "%"
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "offers_text": {
+      "name": "Tre offerte nel testo"
+    },
+    "offers_files": {
+      "name": "Tre offerte in PDF, Word ed Excel",
+      "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nFabbisogno: pezzo tornito in acciaio inox DT-40, 24.000 pezzi all'anno, richiamo di 2.000 pezzi al mese\nPrezzo obiettivo: 2,10 EUR al pezzo franco stabilimento\n\nLe tre offerte sono allegate come file.\n\nIpotesi interne: costo del capitale 8 % annuo, costo di magazzino 0,03 EUR per pezzo al mese,\ncosto per reclamo (controllo, selezione) 0,90 EUR per pezzo difettoso."
+    }
+  }
+}

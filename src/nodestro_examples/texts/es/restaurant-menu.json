@@ -1,0 +1,144 @@
+{
+  "name": "Desarrollar y calcular una carta",
+  "field": "Hostelería",
+  "description": "Desarrollar platos para un público, calcular coste de materia prima y precios y redactar los textos de la carta.",
+  "start": "Concepto",
+  "output": "Carta",
+  "file_name": "Carta de mediodía",
+  "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nLocal: bistró «El Molino de Ejemplo», 40 plazas, polígono con muchas oficinas\nPúblico: personas que trabajan en oficinas en su pausa para comer (45 minutos); quieren algo rápido, fresco y a menudo vegetariano\nEncargo: carta de mediodía con 6 platos, al menos 2 vegetarianos y 1 vegano; cambia cada dos semanas\nCoste objetivo de materia prima: como máximo el 30 % del precio de venta neto; rango de precios 9,50 a 14,50 EUR con IVA (7 %)\n\nPrecios de compra (netos):\n- Pechuga de pollo 9,80 EUR/kg, carne picada de ternera 8,90 EUR/kg, filete de salmón 21,00 EUR/kg\n- Pasta 1,60 EUR/kg, arroz 1,90 EUR/kg, patatas 0,90 EUR/kg, lentejas 2,40 EUR/kg\n- Verdura de temporada de media 2,80 EUR/kg, lechuga 4,50 EUR/kg, garbanzos 2,20 EUR/kg\n- Feta 8,50 EUR/kg, nata 3,20 EUR/l, leche de coco 3,90 EUR/l, aceite de oliva 7,50 EUR/l\n- Especias, hierbas y pequeños ingredientes, a tanto alzado 0,35 EUR por ración",
+  "guide": {
+    "problem": "Una carta tiene que gustar a los clientes y ser rentable. El flujo desarrolla platos para un público, calcula el coste de materia prima y los precios y redacta textos apetecibles para la carta.",
+    "flow": "Una cadena de tres agentes: el creador del concepto compone platos con recetas, el escandallo calcula el coste de materia prima y los precios de venta con la calculadora y el redactor de la carta escribe la carta. Un control de calidad comprueba público, precios y la nota sobre alérgenos. El resultado contiene el escandallo y la carta.",
+    "input": "Tipo de local, público, número y tipo de platos, coste objetivo de materia prima, rango de precios y precios de compra. Los precios de compra puedes pegarlos o adjuntarlos como archivo CSV o Excel, como muestra el archivo de ejemplo.",
+    "result": "Una tabla de escandallo con coste de materia prima y precio por plato y una carta de mediodía terminada con descripciones breves, además como archivo de Word para maquetar y como archivo de Excel con las tablas del escandallo. Los alérgenos y aditivos deben comprobarse y señalarse según las recetas reales.",
+    "adapt": "Adjunta tu lista actual de precios de compra y describe tu público. Vuestras recetas estándar puedes subirlas como conocimiento y asignarlas al escandallo; las normas de la casa, como el tamaño de las raciones, se añaden en el creador del concepto. Para el cambio cada dos semanas puedes programar la copia."
+  },
+  "agents": {
+    "concept": {
+      "name": "Creador del concepto",
+      "description": "Compone platos adecuados con recetas y cantidades.",
+      "system": "Eres jefe de cocina con experiencia en servicio de mediodía. Desarrolla platos que encajen con el público y que puedan prepararse y servirse en el tiempo disponible. Indica para cada plato el nombre, una breve descripción y una receta por ración con cantidades en gramos o mililitros. Usa sobre todo ingredientes de la lista de compras y marca los que no figuren en ella.",
+      "task": "Desarrolla los platos para este concepto:\n\n{{input}}"
+    },
+    "costing": {
+      "name": "Escandallo",
+      "description": "Calcula coste de materia prima y precios de venta con la calculadora.",
+      "system": "Eres responsable de escandallos en hostelería. Calcula con la calculadora para cada plato el coste de materia prima por ración a partir de la receta y los precios de compra, el precio neto con un coste máximo del 30 % y el precio con un 7 % de IVA, redondeado a precios de carta razonables. Comprueba el rango de precios y propone ajustes si un plato no encaja. Muéstralo todo en una tabla.",
+      "task": "Calcula el escandallo de estos platos.\n\nConcepto y precios de compra:\n{{run.input}}\n\nPlatos:\n{{node:concept}}"
+    },
+    "menu": {
+      "name": "Redactor de la carta",
+      "description": "Escribe la carta de mediodía con descripciones apetecibles.",
+      "system": "Redactas cartas. Escribe para cada plato un nombre apetecible y una descripción de 20 palabras como máximo, adecuada al público. Añade el precio, la indicación vegetariano o vegano y una nota de que los alérgenos deben comprobarse y declararse según las recetas. Toma los precios solo del escandallo. Al final, reproduce sin cambios la tabla de escandallo.",
+      "task": "Redacta la carta de mediodía a partir de este escandallo:\n\n{{node:costing}}",
+      "criteria": {
+        "target_group": "Platos y textos encajan claramente con el público descrito.",
+        "prices_match": "Todos los precios coinciden con el escandallo y están dentro del rango.",
+        "allergen_note": "La carta contiene una nota sobre la comprobación y declaración de alérgenos."
+      }
+    }
+  },
+  "form": {
+    "purchase_prices": {
+      "label": "Precios de compra como archivo",
+      "description": "Opcional: vuestra lista de precios de compra en CSV o Excel, como máximo 5 MB. Sin archivo valen los precios del texto."
+    }
+  },
+  "samples": {
+    "prices": {
+      "name": "Precios_compra_Molino_de_Ejemplo",
+      "description": "Los precios de compra inventados de la tarea de prueba en CSV.",
+      "content": [
+        [
+          "Ingrediente",
+          "Unidad",
+          "Precio neto (EUR)"
+        ],
+        [
+          "Pechuga de pollo",
+          "kg",
+          9.8
+        ],
+        [
+          "Carne picada de ternera",
+          "kg",
+          8.9
+        ],
+        [
+          "Filete de salmón",
+          "kg",
+          21.0
+        ],
+        [
+          "Pasta",
+          "kg",
+          1.6
+        ],
+        [
+          "Arroz",
+          "kg",
+          1.9
+        ],
+        [
+          "Patatas",
+          "kg",
+          0.9
+        ],
+        [
+          "Lentejas",
+          "kg",
+          2.4
+        ],
+        [
+          "Verdura de temporada (media)",
+          "kg",
+          2.8
+        ],
+        [
+          "Lechuga",
+          "kg",
+          4.5
+        ],
+        [
+          "Garbanzos",
+          "kg",
+          2.2
+        ],
+        [
+          "Feta",
+          "kg",
+          8.5
+        ],
+        [
+          "Nata",
+          "l",
+          3.2
+        ],
+        [
+          "Leche de coco",
+          "l",
+          3.9
+        ],
+        [
+          "Aceite de oliva",
+          "l",
+          7.5
+        ],
+        [
+          "Especias, hierbas, pequeños ingredientes (a tanto alzado)",
+          "ración",
+          0.35
+        ]
+      ]
+    }
+  },
+  "tests": {
+    "lunch_menu": {
+      "name": "Carta de mediodía con precios en el texto"
+    },
+    "price_file": {
+      "name": "Precios de compra en CSV",
+      "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nLocal: bistró «El Molino de Ejemplo», 40 plazas, polígono con muchas oficinas\nPúblico: personas que trabajan en oficinas en su pausa para comer (45 minutos); quieren algo rápido, fresco y a menudo vegetariano\nEncargo: carta de mediodía con 6 platos, al menos 2 vegetarianos y 1 vegano; cambia cada dos semanas\nCoste objetivo de materia prima: como máximo el 30 % del precio de venta neto; rango de precios 9,50 a 14,50 EUR con IVA (7 %)\n\nLos precios de compra se adjuntan como archivo CSV."
+    }
+  }
+}

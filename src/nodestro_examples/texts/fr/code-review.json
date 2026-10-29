@@ -1,0 +1,70 @@
+{
+  "name": "Revue de code avec tests",
+  "field": "Développement logiciel",
+  "description": "Vérifier le code source à la recherche de bugs et de failles de sécurité et proposer une version améliorée avec tests.",
+  "start": "Code source",
+  "output": "Revue et tests",
+  "file_name": "Revue de code",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nContexte : fonctions d'un outil interne qui calcule les remises sur commandes et recherche des commandes.\nPython 3.12, base de données SQLite.\n\n```python\nimport sqlite3\n\ndef apply_discount(total, customer_type, coupon=None):\n    \"\"\"Return the price after discounts. Regular customers get 5 %, premium 10 %.\n    A coupon like \"SAVE20\" takes a further 20 % off, but the price must never drop below 0.\"\"\"\n    if customer_type == \"premium\":\n        total = total * 0.9\n    elif customer_type == \"regular\":\n        total = total * 0.95\n    if coupon:\n        percent = int(coupon[4:])\n        total = total - total * percent / 100\n    return round(total, 1)\n\ndef average_order_value(orders):\n    return sum(o[\"total\"] for o in orders) / len(orders)\n\ndef find_orders(db_path, customer_name):\n    conn = sqlite3.connect(db_path)\n    query = f\"SELECT id, total FROM orders WHERE customer = '{customer_name}'\"\n    rows = conn.execute(query).fetchall()\n    return rows\n```",
+  "guide": {
+    "problem": "Un second regard trouve les bugs avant qu'ils n'arrivent en production. Le workflow vérifie en même temps le code à la recherche d'erreurs de logique et de problèmes de sécurité, et livre une version améliorée avec tests.",
+    "flow": "L'analyste de bugs et le contrôleur de sécurité travaillent en parallèle sur le même code. L'agent d'amélioration réunit les constats et écrit du code corrigé et des tests pytest ; une vérification qualité intégrée s'assure que chaque constat est traité et couvert par des tests.",
+    "input": "Un extrait de code avec un court contexte : langage, finalité et environnement, ou un projet entier en archive ZIP ou en fichiers isolés dans le champ de fichier. Les archives sont seulement lues, jamais exécutées. Le code reste inchangé dans son langage ; les explications apparaissent dans la langue de l'interface. Le fichier d'exemple est un petit projet Python avec des erreurs intégrées.",
+    "result": "Une liste de constats triée par gravité, le code corrigé et des tests pytest couvrant chaque constat, aussi en fichier Markdown. Les tests ne sont pas exécutés automatiquement ; lancez-les en local.",
+    "adapt": "Joignez votre projet en ZIP ou collez du code en précisant le langage et le framework. Pour d'autres langages, adaptez le framework de test dans l'agent de correction, par exemple Jest ou JUnit. Vos règles de codage peuvent être enregistrées comme connaissance. Via l'API du workflow, la revue peut aussi être déclenchée depuis un pipeline CI."
+  },
+  "agents": {
+    "bugs": {
+      "name": "Analyste de bugs",
+      "description": "Cherche les erreurs de logique, les cas limites et les écarts par rapport à la description.",
+      "system": "Tu es développeur senior et tu fais des revues de code. Cherche les erreurs de logique, les cas limites non traités, les écarts entre documentation et comportement, la gestion des erreurs et les fuites de ressources. Pour chaque constat, indique la ligne ou la fonction, une entrée concrète qui montre le bug, la gravité (critique, élevée, moyenne, faible) et une correction proposée.",
+      "task": "Vérifie ce code à la recherche de bugs :\n\n{{input}}"
+    },
+    "security": {
+      "name": "Contrôleur de sécurité",
+      "description": "Vérifie le code à la recherche de vulnérabilités et de pratiques dangereuses.",
+      "system": "Tu es spécialiste de la sécurité applicative. Vérifie le code à la recherche de problèmes de sécurité, par exemple injections, traitement non sûr des entrées, validation manquante, secrets dans le code ou gestion non sûre des ressources. Classe les constats par gravité, décris en une phrase un scénario d'attaque possible et nomme l'alternative sûre. Ne signale rien qui soit sans rapport avec le code montré.",
+      "task": "Vérifie ce code à la recherche de problèmes de sécurité :\n\n{{input}}"
+    },
+    "fix": {
+      "name": "Correction et tests",
+      "description": "Écrit du code corrigé et des tests pytest pour tous les constats.",
+      "system": "Tu es développeur attaché à la qualité des tests. Réunis les constats et supprime les doublons. Sortie : d'abord un tableau des constats par gravité, ensuite le code corrigé complet, enfin des tests pytest qui couvrent chaque constat, cas limites compris. Le code, les identifiants et les commentaires dans le code restent en anglais. Signale que les tests doivent être exécutés en local. S'il s'agit d'un projet de plusieurs fichiers, indique pour chaque fichier modifié le chemin et la nouvelle version complète et omets les fichiers inchangés.",
+      "task": "Crée la version améliorée avec tests.\n\nCode d'origine :\n{{run.input}}\n\nAnalyse des bugs :\n{{node:bugs}}\n\nRevue de sécurité :\n{{node:security}}",
+      "criteria": {
+        "every_finding_addressed": "Chaque constat de l'analyse des bugs et de la revue de sécurité est corrigé dans le code ou reporté avec une justification.",
+        "tests_cover_findings": "Il existe au moins un test pour chaque constat corrigé.",
+        "runnable": "Le code et les tests sont complets et exécutables, sans espaces réservés."
+      }
+    }
+  },
+  "form": {
+    "code_files": {
+      "label": "Code en fichiers",
+      "description": "Facultatif : un projet en archive ZIP ou des fichiers source isolés, jusqu'à 20 fichiers. Les archives sont seulement lues, jamais exécutées ; les agents voient d'abord la structure puis lisent les fichiers nécessaires."
+    }
+  },
+  "samples": {
+    "project": {
+      "name": "calculateur-remises",
+      "description": "Un petit projet Python inoffensif en ZIP avec des erreurs intégrées : calcul de remise, requête SQL et un test.",
+      "content": {
+        "calculateur-remises/README.md": "# Calculateur de remises (projet d'exemple)\n\nDONNÉES D'EXEMPLE SYNTHÉTIQUES – projet entièrement fictif, uniquement pour essayer.\n\nUn petit outil interne : il calcule les remises sur les commandes et recherche des commandes dans une base SQLite.\n\n- Python 3.12, aucune autre dépendance\n- Tests avec pytest : `pytest`\n",
+        "calculateur-remises/shop/__init__.py": "",
+        "calculateur-remises/shop/discounts.py": "def apply_discount(total, customer_type, coupon=None):\n    \"\"\"Return the price after discounts. Regular customers get 5 %, premium 10 %.\n    A coupon like \"SAVE20\" takes a further 20 % off, but the price must never drop below 0.\"\"\"\n    if customer_type == \"premium\":\n        total = total * 0.9\n    elif customer_type == \"regular\":\n        total = total * 0.95\n    if coupon:\n        percent = int(coupon[4:])\n        total = total - total * percent / 100\n    return round(total, 1)\n\n\ndef average_order_value(orders):\n    return sum(o[\"total\"] for o in orders) / len(orders)\n",
+        "calculateur-remises/shop/orders.py": "import sqlite3\n\nADMIN_PASSWORD = \"admin123\"\n\n\ndef find_orders(db_path, customer_name):\n    conn = sqlite3.connect(db_path)\n    query = f\"SELECT id, total FROM orders WHERE customer = '{customer_name}'\"\n    rows = conn.execute(query).fetchall()\n    return rows\n",
+        "calculateur-remises/tests/test_discounts.py": "from shop.discounts import apply_discount\n\n\ndef test_premium():\n    assert apply_discount(100, \"premium\") == 90\n",
+        "calculateur-remises/requirements.txt": "pytest>=8\n"
+      }
+    }
+  },
+  "tests": {
+    "snippet": {
+      "name": "Extrait de code dans le texte"
+    },
+    "project_zip": {
+      "name": "Projet en archive ZIP",
+      "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nVérifie le projet de l'archive ZIP : un outil interne qui calcule des remises et recherche des commandes. Python 3.12, base de données SQLite."
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "name": "Artigo de blog",
+  "field": "Marketing e conteúdo",
+  "description": "Pesquisar o público, criar uma estrutura, escrever o artigo e revisá-lo.",
+  "start": "Tema",
+  "output": "Artigo",
+  "file_name": "Artigo de blog",
+  "input": "Por que editores visuais de workflows tornam os agentes de IA mais acessíveis",
+  "guide": {
+    "problem": "Bons artigos nascem de um público claro e de uma estrutura bem pensada. O workflow divide o trabalho como uma redação e verifica o resultado antes da publicação.",
+    "flow": "Público e estrutura são criados em paralelo com um modelo rápido. O redator transforma os dois no artigo; uma verificação de qualidade integrada garante que ele siga a estrutura e responda às perguntas dos leitores. A revisão verifica extensão e legibilidade com a ferramenta de estatísticas de texto e marca afirmações não verificadas.",
+    "input": "Um tema em uma frase. Opcionalmente, acrescente o público, o tom ou a extensão desejada diretamente na entrada.",
+    "result": "Um artigo pronto em Markdown com títulos, uma meta descrição e breves notas de revisão com a contagem de palavras e indicações de afirmações que devem ser comprovadas antes da publicação. A execução também salva o resultado como arquivo Markdown e HTML, que você pode levar para o seu CMS.",
+    "adapt": "Mude o tema na entrada. Você pode carregar seu guia de estilo como conhecimento e atribuí-lo ao redator e à revisão. Defina a extensão desejada no prompt de sistema do redator."
+  },
+  "agents": {
+    "audience": {
+      "name": "Público",
+      "description": "Descreve os leitores, suas perguntas e o que já sabem.",
+      "system": "Você descreve os leitores-alvo de um artigo: quem são, o que já sabem e quais três perguntas trazem. Seja conciso.",
+      "task": "{{input}}"
+    },
+    "outline": {
+      "name": "Estrutura",
+      "description": "Cria o título e a estrutura.",
+      "system": "Você cria um título atraente e uma estrutura em cinco partes para um artigo. Indique em uma frase o que cada seção deve alcançar.",
+      "task": "{{input}}"
+    },
+    "writer": {
+      "name": "Redator",
+      "description": "Escreve o artigo a partir da estrutura e do público.",
+      "system": "Você é um jornalista de tecnologia experiente. Escreva um artigo claro e vivo com cerca de 700 palavras e títulos em Markdown. Explique termos técnicos na primeira vez que aparecem e use exemplos concretos. Não invente estudos, números ou citações.",
+      "task": "Escreva o artigo sobre “{{run.input}}”.\n\nPúblico:\n{{node:audience}}\n\nEstrutura:\n{{node:outline}}",
+      "criteria": {
+        "follows_outline": "O artigo segue a estrutura.",
+        "audience": "O artigo responde às perguntas do público."
+      }
+    },
+    "editor": {
+      "name": "Revisão",
+      "description": "Verifica extensão e legibilidade e entrega a versão final.",
+      "system": "Você é revisor de textos. Determine a contagem de palavras e frases do artigo com a ferramenta de estatísticas de texto. Melhore clareza, ortografia e fluidez sem mudar o conteúdo ou a estrutura. Entregue primeiro a versão final revisada em Markdown, depois uma meta description de no máximo 155 caracteres e por fim as notas de revisão: contagem de palavras, principais mudanças e afirmações que devem ser comprovadas antes da publicação.",
+      "task": "Revise este artigo:\n\n{{input}}"
+    }
+  },
+  "tests": {
+    "topic": {
+      "name": "Tema em uma frase"
+    }
+  }
+}

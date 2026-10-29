@@ -1,0 +1,95 @@
+{
+  "name": "Rispondere alle richieste dei clienti",
+  "field": "Servizio clienti",
+  "description": "Classificare le richieste, verificare regole e scadenze e redigere risposte.",
+  "start": "Richieste",
+  "output": "Bozze di risposta",
+  "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nData di oggi: 2026-03-20\n\nEstratto dalla nostra policy di servizio (negozio online di esempio \"Cucina Campione\"):\n- Resi: 30 giorni dalla consegna, merce non usata nella confezione originale; il reso è gratuito.\n- Garanzia: 2 anni; in caso di difetti riparazione o sostituzione dopo verifica, una foto del difetto aiuta.\n- Tempi di consegna: 2–4 giorni lavorativi; in caso di ritardo superiore a 7 giorni lavorativi offriamo l'annullamento gratuito.\n- Buoni e gesti di cortesia oltre 20 EUR solo dopo approvazione del responsabile del team.\n\nRichiesta 1 – Jonas Esempio, ordine 10442, consegnato il 2026-02-27:\n\"La padella non funziona sul mio piano a induzione. Posso restituirla? È ancora nella confezione originale.\"\n\nRichiesta 2 – Maria Campione, ordine 10518, consegnato il 2026-01-15:\n\"Il manico della mia pentola si è staccato, dopo due mesi! È davvero fastidioso. Rivoglio i miei soldi.\"\n\nRichiesta 3 – Ali Istanza, ordine 10603, effettuato il 2026-03-09, non ancora consegnato:\n\"Dov'è il mio ordine? Mi serve il set di coltelli come regalo per il fine settimana.\"\n\nRichiesta 4 – Sofia Prova:\n\"Avete anche stampi in silicone per dolci senza plastificanti?\"",
+  "guide": {
+    "problem": "Nel servizio clienti arrivano molte richieste insieme, e ognuna richiede la regola giusta e il tono giusto. Il workflow ordina le richieste, verifica regole e scadenze e prepara risposte da approvare.",
+    "flow": "Un classificatore veloce ordina ogni richiesta per argomento, urgenza e stato d'animo. Il verificatore delle regole applica la policy di servizio e ricalcola le scadenze con lo strumento delle date. Il redattore delle risposte scrive le risposte; un controllo qualità verifica che non si prometta nulla oltre la policy. Un nodo decisionale invia prima le escalation a un agente di de-escalation. Ogni bozza attende un'approvazione; un rifiuto con riscontro porta a una versione rivista.",
+    "input": "Più richieste di clienti con dati di ordine e consegna, la data di oggi e la vostra policy di servizio, come estratto nel testo o come file (PDF, Word, Markdown); il file di esempio contiene una policy più dettagliata.",
+    "result": "Per ogni richiesta una classificazione, la regola applicabile con verifica delle scadenze e una bozza di risposta che una persona approva prima dell'invio.",
+    "adapt": "Allega la vostra policy completa e le FAQ come file, oppure caricale come conoscenza e assegnale al verificatore delle regole se valgono in modo permanente. Il tono del tuo marchio (tu o Lei, formula di saluto) si definisce nel prompt di sistema del redattore delle risposte. Per molte richieste insieme usa l'elaborazione in batch."
+  },
+  "agents": {
+    "triage": {
+      "name": "Classificatore",
+      "description": "Ordina ogni richiesta per argomento, urgenza e stato d'animo.",
+      "system": "Ordini le richieste dei clienti. Classifica ogni richiesta: argomento (reso, reclamo, consegna, domanda sul prodotto, altro), urgenza (alta, media, bassa), stato d'animo (positivo, neutro, irritato), dati rilevanti come numero d'ordine e data, e informazioni mancanti. Rispondi con una tabella compatta con una riga per richiesta.",
+      "task": "{{input}}",
+      "fields": {
+        "overview": "Tabella con una riga per richiesta: tema, urgenza, stato d'animo, dati rilevanti e informazioni mancanti",
+        "escalation": "true se almeno un cliente è contrariato o chiede più di quanto consentono le linee guida"
+      }
+    },
+    "policy": {
+      "name": "Verificatore delle regole",
+      "description": "Applica la policy di servizio e verifica le scadenze con lo strumento delle date.",
+      "system": "Sei responsabile di un team del servizio clienti. Determina per ogni richiesta quale regola della policy di servizio si applica. Calcola le scadenze con lo strumento days_between invece di stimarle. Decidi cosa si può promettere, cosa richiede approvazione e quali informazioni mancano dal cliente. Se la policy non copre una risposta, dillo chiaramente.",
+      "task": "Verifica le regole per queste richieste.\n\nRichieste e policy:\n{{run.input}}\n\nClassificazione:\n{{node:triage}}"
+    },
+    "reply": {
+      "name": "Redattore delle risposte",
+      "description": "Scrive bozze di risposta cordiali da approvare.",
+      "system": "Scrivi risposte del servizio clienti: cordiali, chiare, orientate alla soluzione e cortesi. Rispondi alla richiesta e allo stato d'animo, indica il passo successivo e chiedi in modo mirato le informazioni mancanti. Prometti solo ciò che la verifica delle regole consente. Contrassegna ogni risposta come bozza e annota quando serve l'approvazione del responsabile del team.",
+      "task": "Scrivi una bozza di risposta per ogni richiesta.\n\nClassificazione:\n{{node:triage}}\n\nVerifica delle regole:\n{{node:policy}}\n\nDe-escalation (solo per le escalation):\n{{node:deescalation}}",
+      "criteria": {
+        "policy_compliant": "Ogni risposta rispetta la policy di servizio e i risultati della verifica delle scadenze.",
+        "tone": "Le risposte sono cordiali, chiare e tengono conto dello stato d'animo del cliente.",
+        "no_promises": "Non viene promesso nulla che richieda approvazione o non sia coperto dalla policy."
+      }
+    },
+    "deescalation": {
+      "name": "De-escalation",
+      "description": "Prepara come gestire i clienti contrariati e cosa richiede un'approvazione.",
+      "system": "Sei una responsabile reclami esperta. Per ogni cliente contrariato e ogni richiesta che va oltre le linee guida, proponi come stemperare la situazione: riconoscere il problema, la soluzione nell'ambito delle linee guida, possibili gesti di cortesia e quali richiedono l'approvazione del responsabile del team. Non promettere nulla tu stessa.",
+      "task": "Prepara la de-escalation.\n\nRichieste e linee guida:\n{{run.input}}\n\nClassificazione:\n{{node:triage}}"
+    },
+    "revise": {
+      "name": "Revisione",
+      "description": "Rivede le bozze secondo il riscontro dell'approvazione.",
+      "system": "Rivedi risposte del servizio clienti. Applica esattamente il riscontro della persona che approva, lascia invariato tutto il resto e rispetta le linee guida del servizio. Contrassegna ogni risposta come bozza rivista.",
+      "task": "Rivedi le bozze di risposta.\n\nBozze:\n{{node:reply}}\n\nRiscontro:\n{{node:approve}}"
+    }
+  },
+  "steps": {
+    "route": {
+      "name": "Escalation?",
+      "branches": {
+        "escalate": "Escalare"
+      },
+      "default": "Standard"
+    },
+    "approve": {
+      "name": "Approvare le risposte",
+      "instructions": "Leggi ogni bozza prima dell'invio: tono, fatti e impegni. Se rifiuti, scrivi cosa deve cambiare; le bozze vengono quindi riviste."
+    }
+  },
+  "form": {
+    "policies": {
+      "label": "Policy di servizio come file",
+      "description": "Facoltativo: le vostre regole o FAQ in PDF, Word, Markdown o testo, fino a 5 file. Senza file vale l'estratto nel testo."
+    }
+  },
+  "samples": {
+    "policies": {
+      "name": "Policy_servizio_Cucina_Campione",
+      "description": "Una policy di servizio fittizia più completa, in PDF.",
+      "content": "# Policy di servizio del negozio online \"Cucina Campione\" (fittizia)\n\nVersione: 01/01/2026\n\n## 1. Resi\n\n- 30 giorni dalla consegna, merce non usata nella confezione originale.\n- Il reso è gratuito; inviamo l'etichetta di reso via e-mail.\n- Rimborso entro 5 giorni lavorativi dal ricevimento della merce.\n\n## 2. Garanzia\n\n- 2 anni dalla consegna.\n- In caso di difetti prima riparazione o sostituzione dopo verifica; una foto del difetto accelera la verifica.\n- Il rimborso del prezzo è possibile solo se riparazione o sostituzione falliscono.\n\n## 3. Consegna\n\n- Tempi di consegna 2–4 giorni lavorativi.\n- In caso di ritardo superiore a 7 giorni lavorativi offriamo l'annullamento gratuito.\n- Spedizione espressa possibile per ordini entro le 14 a 9,90 EUR.\n\n## 4. Gesti di cortesia\n\n- Il team di assistenza può concedere autonomamente buoni e gesti di cortesia fino a 20 EUR.\n- Oltre 20 EUR solo dopo approvazione del responsabile del team.\n\n## 5. Domande sui prodotti\n\n- Informazioni sui materiali solo dalle schede tecniche; nel dubbio chiedere invece di indovinare."
+    }
+  },
+  "tests": {
+    "four_requests": {
+      "name": "Quattro richieste, una arrabbiata"
+    },
+    "calm_request": {
+      "name": "Una domanda gentile su un prodotto",
+      "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nData di oggi: 2026-03-20\n\nEstratto dalla nostra policy di servizio (negozio online di esempio \"Cucina Campione\"):\n- Resi: 30 giorni dalla consegna, merce non usata nella confezione originale; il reso è gratuito.\n- Domande sui prodotti: informazioni sui materiali solo dalle schede tecniche.\n\nRichiesta 1 – Lea Esempio:\n\"Ciao, la padella in ghisa del vostro negozio va bene per l'induzione? Grazie e un saluto!\""
+    },
+    "policies_file": {
+      "name": "Policy come file PDF",
+      "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nData di oggi: 2026-03-20\nLa nostra policy di servizio è allegata come file.\n\nRichiesta 1 – Jonas Esempio, ordine 10442, consegnato il 2026-02-27:\n\"La padella non funziona sul mio piano a induzione. Posso restituirla? È ancora nella confezione originale.\"\n\nRichiesta 2 – Maria Campione, ordine 10518, consegnato il 2026-01-15:\n\"Il manico della mia pentola si è staccato, dopo due mesi! È davvero fastidioso. Rivoglio i miei soldi.\""
+    }
+  }
+}

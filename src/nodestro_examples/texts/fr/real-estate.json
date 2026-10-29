@@ -1,0 +1,68 @@
+{
+  "name": "Comparer des offres immobilières",
+  "field": "Immobilier",
+  "description": "Comparer deux offres d'achat selon le rendement, l'emplacement et l'état et évaluer opportunités et risques.",
+  "start": "Offres",
+  "output": "Évaluation",
+  "file_name": "Comparaison immobilière",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nObjectif : acheter un appartement pour le louer. Apport 80 000 EUR, le reste par un crédit\nà 3,8 % d'intérêt et 2 % d'amortissement par an. Frais d'acquisition environ 10 % du prix d'achat.\n\nOffre 1 – périphérie, construit en 1994\n- 3 pièces, 74 m², prix d'achat 245 000 EUR, place de parking comprise\n- Loyer hors charges atteignable selon l'agent 11,50 EUR/m² ; actuellement loué 9,20 EUR/m²\n- Charges 310 EUR/mois, dont 95 EUR non récupérables sur le locataire\n- Fonds de travaux de la copropriété 38 000 EUR pour 24 appartements ; rénovation de la toiture prévue dans 3 ans\n- RER à 8 minutes à pied, nouvelle zone d'activités annoncée à proximité\n\nOffre 2 – centre-ville, immeuble ancien de 1910, rénové en 2015\n- 2 pièces, 58 m², prix d'achat 289 000 EUR, sans place de parking\n- Vacant ; les appartements comparables se louent 15,00 EUR/m²\n- Charges 280 EUR/mois, dont 80 EUR non récupérables sur le locataire\n- Fonds de travaux 112 000 EUR pour 10 appartements ; aucun gros travaux connu\n- Emplacement recherché, un encadrement des loyers s'applique dans la ville",
+  "guide": {
+    "problem": "Dans l'immobilier, les chiffres et l'emplacement décident ensemble. Le workflow recalcule rendement et cash-flow, analyse le bien et son emplacement et met en regard opportunités et risques.",
+    "flow": "Le calculateur de rendement détermine le rendement locatif brut et net et le cash-flow mensuel avec la calculatrice, pendant que l'analyste du bien et de l'emplacement évalue en parallèle l'état, les réserves et l'environnement. L'évaluation réunit les deux dans une comparaison structurée.",
+    "input": "Au moins deux offres avec prix d'achat, surface, loyer, charges, fonds de travaux et emplacement, ainsi que vos hypothèses de financement. Joignez annonces, procès-verbaux et plans en PDF, Word ou image ; les fichiers d'exemple contiennent une annonce avec extrait de procès-verbal et un plan pour l'offre 2.",
+    "result": "Une comparaison structurée avec indicateurs, offre préférée, opportunités, risques et points à vérifier avant une décision, aussi en PDF. Elle ne remplace ni un conseil financier, fiscal ou juridique, ni une visite.",
+    "adapt": "Saisissez vos offres et vos données de financement et joignez directement annonces, procès-verbaux d'assemblée générale ou plans. Un observatoire des loyers dont vous avez souvent besoin peut être enregistré comme connaissance et attribué à l'analyste du bien et de l'emplacement."
+  },
+  "agents": {
+    "returns": {
+      "name": "Calculateur de rendement",
+      "description": "Calcule rendement, financement et cash-flow avec la calculatrice.",
+      "system": "Tu es analyste immobilier. Pour chaque offre, utilise la calculatrice pour calculer : investissement total frais d'acquisition compris, montant du crédit, loyer annuel hors charges (actuel et atteignable), rendement locatif brut, rendement locatif net après charges non récupérables, mensualité et cash-flow mensuel avant impôts. Montre tes calculs et l'effet d'un loyer inférieur de 10 % sur le résultat.",
+      "task": "Fais les calculs pour ces offres :\n\n{{input}}"
+    },
+    "property": {
+      "name": "Analyste du bien et de l'emplacement",
+      "description": "Évalue l'état, les réserves, la facilité de location et l'emplacement.",
+      "system": "Tu es expert en immobilier résidentiel. Pour chaque offre, évalue l'état et l'année de construction, le fonds de travaux par appartement, les travaux à venir, la situation locative et les conditions juridiques comme l'encadrement des loyers, ainsi que l'emplacement et l'évolution du quartier. Nomme les documents à consulter avant l'achat.",
+      "task": "Évalue le bien et l'emplacement de ces offres :\n\n{{input}}"
+    },
+    "assessment": {
+      "name": "Évaluation opportunités et risques",
+      "description": "Met en regard les chiffres et l'évaluation du bien et compare de façon structurée.",
+      "system": "Tu conseilles des investisseurs particuliers. Mets en regard le rendement et l'évaluation du bien, nomme opportunités et risques pour chaque offre et explique quelle offre convient le mieux selon les hypothèses indiquées. Formule la préférence avec prudence et liste ce qui doit être vérifié avant une décision, comme une visite, les procès-verbaux, le financement et la fiscalité.",
+      "task": "Compare les offres.\n\nCalcul de rendement :\n{{node:returns}}\n\nÉvaluation du bien et de l'emplacement :\n{{node:property}}",
+      "fields": {
+        "comparison": "Comparaison des indicateurs des deux offres",
+        "preferred_offer": "Offre qui convient le mieux selon les hypothèses, avec justification",
+        "opportunities": "Opportunités",
+        "risks": "Risques",
+        "checks_before_decision": "Vérifications avant une décision"
+      }
+    }
+  },
+  "form": {
+    "documents": {
+      "label": "Documents du bien",
+      "description": "Facultatif : annonces, procès-verbaux d'assemblée générale de copropriété, diagnostics énergétiques (PDF, Word) ou plans et photos (PNG, JPEG, WebP), jusqu'à 8 fichiers."
+    }
+  },
+  "samples": {
+    "expose": {
+      "name": "Annonce_offre_2_immeuble_ancien",
+      "description": "Une annonce fictive pour l'offre 2 avec un extrait du procès-verbal d'assemblée générale, en PDF.",
+      "content": "# Annonce : 2 pièces dans un immeuble ancien du centre-ville\n\nDONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives.\n\n| Information | Valeur |\n|---|---|\n| Construction | 1910, rénovation complète en 2015 |\n| Surface habitable | 58 m² (voir plan) |\n| Prix d'achat | 289 000 EUR |\n| Charges | 280 EUR/mois, dont 80 EUR non récupérables |\n| Diagnostic énergétique | sur consommation, 128 kWh/(m²·an), chauffage central au gaz de 2015 |\n| État | vacant, libre immédiatement |\n\n## Emplacement\n\nRue latérale calme, à 5 minutes du métro, commerces et médecins à pied. Un encadrement des loyers s'applique dans la ville.\n\n## Extrait du procès-verbal de l'assemblée générale du 12/11/2025\n\n- Point 4 : la copropriété fera réaliser d'ici mi-2026 une expertise de la façade. Une rénovation est attendue en 2027–2028 ; la nécessité d'un appel de fonds exceptionnel reste ouverte.\n- Point 5 : le fonds de travaux s'élève à 112 000 EUR pour 10 appartements.\n- Point 6 : le contrat du syndic arrive à échéance fin 2026."
+    },
+    "floor_plan": {
+      "name": "Plan_offre_2",
+      "description": "Un plan simplifié et fictif de l'appartement de 58 m² de l'offre 2 en image (PNG)."
+    }
+  },
+  "tests": {
+    "two_offers": {
+      "name": "Deux offres dans le texte"
+    },
+    "with_documents": {
+      "name": "Avec annonce et plan"
+    }
+  }
+}

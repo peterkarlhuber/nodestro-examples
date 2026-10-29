@@ -1,0 +1,68 @@
+{
+  "name": "Creare un piano di studio personale",
+  "field": "Istruzione e formazione",
+  "description": "Valutare il livello attuale, elaborare un piano di studio, spiegare i contenuti e creare una verifica delle conoscenze.",
+  "start": "Obiettivo di apprendimento",
+  "output": "Pacchetto di studio",
+  "file_name": "Piano di studio",
+  "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nChi impara: Sam Esempio, addetto agli acquisti, usa Excel ogni giorno per elenchi e somme semplici.\nObiettivo: usare con sicurezza le tabelle pivot entro quattro settimane per analizzare gli ordini per fornitore e mese.\nTempo: circa 3 ore a settimana, preferibilmente in sessioni da 30 a 45 minuti.\nConoscenze pregresse: ha già usato CERCA.VERT, sicuro con filtri e ordinamento; quasi mai grafici.\nStile di apprendimento: impara meglio con esempi dal proprio lavoro, ama gli esercizi brevi.",
+  "guide": {
+    "problem": "Si impara meglio con un piano che parte da dove sei. Il workflow crea un piano di studio personale, spiega i primi argomenti e verifica la comprensione con un quiz.",
+    "flow": "La valutazione iniziale determina punto di partenza e lacune, il pianificatore dello studio ne ricava un piano settimanale. Su questa base lavorano in parallelo il tutor (contenuti della settimana scelta, basati se vuoi sul tuo materiale del corso) e l'autore del quiz (verifica delle conoscenze con soluzioni). Il risultato contiene tutte e tre le parti.",
+    "input": "Chi impara, l'obiettivo, il tempo disponibile, le conoscenze pregresse e lo stile di apprendimento preferito. Nel modulo scegli la settimana da elaborare e puoi allegare materiale tuo; il file di esempio è una breve guida alle tabelle pivot.",
+    "result": "Un piano di studio di quattro settimane con obiettivi per settimana, spiegazioni chiare con esercizi per la settimana scelta e un quiz con soluzioni e spiegazioni, anche in PDF da stampare.",
+    "adapt": "Descrivi il tuo obiettivo; funziona per quasi ogni argomento. Per le settimane successive avvia di nuovo il workflow e cambia la settimana nel modulo. Il materiale che usi sempre puoi caricarlo come conoscenza e assegnarlo al tutor."
+  },
+  "agents": {
+    "assessment": {
+      "name": "Valutazione iniziale",
+      "description": "Determina il punto di partenza, l'obiettivo di apprendimento e le lacune.",
+      "system": "Sei un consulente per l'apprendimento. Dalla descrizione determina il livello di partenza, l'obiettivo di apprendimento concreto in forma verificabile, le lacune tra i due e i possibili ostacoli. Tieni conto del tempo disponibile e dello stile di apprendimento. Sii breve e strutturato.",
+      "task": "Valuta il livello di apprendimento:\n\n{{input}}"
+    },
+    "plan": {
+      "name": "Pianificatore dello studio",
+      "description": "Crea un piano settimanale con obiettivi ed esercizi.",
+      "system": "Sei un instructional designer che pianifica percorsi formativi. Crea un piano di studio per settimane: per ogni settimana gli obiettivi, gli argomenti, le sessioni con durata, un esercizio pratico dal lavoro quotidiano e un criterio con cui chi impara riconosce i propri progressi. Rispetta il tempo disponibile e prevedi ripassi.",
+      "task": "Crea il piano di studio sulla base di questa valutazione:\n\n{{node:assessment}}"
+    },
+    "tutor": {
+      "name": "Tutor",
+      "description": "Spiega i contenuti della prima settimana con esempi ed esercizi.",
+      "system": "Sei un tutor paziente. Spiega passo dopo passo gli argomenti della settimana del piano di studio indicata nell'incarico, con un esempio continuo tratto dalla vita lavorativa di chi impara, esercizi brevi ed errori tipici. Se è allegato materiale del corso, attieniti ai suoi termini e al suo approccio e rimanda alle sezioni pertinenti. Scrivi in modo chiaro e incoraggiante, senza termini tecnici che non spieghi.",
+      "task": "Spiega i contenuti della settimana {{form.week}} di questo piano di studio.\n\nChi impara e obiettivo:\n{{run.input}}\n\nPiano di studio:\n{{node:plan}}"
+    },
+    "quiz": {
+      "name": "Autore del quiz",
+      "description": "Crea una verifica delle conoscenze con soluzioni per la prima settimana.",
+      "system": "Crei verifiche delle conoscenze. Scrivi otto esercizi per la settimana del piano di studio indicata nell'incarico: domande a scelta multipla con una risposta corretta, brevi esercizi di applicazione e un esercizio di transfer. Fornisci poi le soluzioni con una breve spiegazione per ogni esercizio. Verifica la comprensione, non la memorizzazione.",
+      "task": "Crea la verifica delle conoscenze per la settimana {{form.week}} di questo piano di studio:\n\n{{node:plan}}"
+    }
+  },
+  "form": {
+    "week": {
+      "label": "Settimana per spiegazione e quiz",
+      "description": "La settimana del piano per cui il tutor e l'autore del quiz elaborano i contenuti.",
+      "default": "1"
+    },
+    "materials": {
+      "label": "Materiale del corso",
+      "description": "Facoltativo: materiale proprio in PDF, Word, Markdown o testo, fino a 5 file. Il tutor si basa su di esso quando è presente."
+    }
+  },
+  "samples": {
+    "guide": {
+      "name": "Guida_rapida_tabelle_pivot",
+      "description": "Un materiale didattico fittizio sulle tabelle pivot come documento Word.",
+      "content": "# Guida rapida: tabelle pivot in Excel\n\nDATI DI ESEMPIO SINTETICI – materiale didattico fittizio, solo per provare.\n\n## 1. Preparare i dati\n\n- Una riga di intestazione, nessuna riga o colonna vuota.\n- Un solo tipo di valore per colonna (per esempio solo date).\n- Formattare i dati come tabella (Ctrl+T); così la tabella pivot cresce insieme.\n\n## 2. Creare la tabella pivot\n\n1. Fare clic nella tabella.\n2. Inserisci > Tabella pivot.\n3. Scegliere \"Nuovo foglio di lavoro\".\n\n## 3. Disporre i campi\n\n| Area | A cosa serve | Esempio |\n|---|---|---|\n| Righe | Gruppi uno sotto l'altro | Fornitore |\n| Colonne | Gruppi uno accanto all'altro | Mese |\n| Valori | Cosa viene calcolato | Somma del valore d'ordine |\n| Filtri | Selezione per tutta la tabella | Sede |\n\n## 4. Errori tipici\n\n- I valori vengono contati invece che sommati: Impostazioni campo valore > Somma.\n- Mancano dati nuovi: aggiornare la tabella pivot (Alt+F5).\n- Date non raggruppate: clic destro > Raggruppa > Mesi."
+    }
+  },
+  "tests": {
+    "week_one": {
+      "name": "Settimana 1 senza materiale"
+    },
+    "week_two_material": {
+      "name": "Settimana 2 con materiale del corso"
+    }
+  }
+}

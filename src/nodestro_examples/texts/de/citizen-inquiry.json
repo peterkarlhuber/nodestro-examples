@@ -1,0 +1,63 @@
+{
+  "name": "Bürgeranfrage beantworten",
+  "field": "Öffentliche Einrichtungen",
+  "description": "Eine Bürgeranfrage analysieren, die einschlägigen Regeln heraussuchen und einen sachlichen Antwortentwurf vorbereiten.",
+  "start": "Bürgeranfrage",
+  "output": "Antwortentwurf",
+  "file_name": "Antwortentwurf",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfundene Gemeinde und Regeln, nur zum Ausprobieren.\n\nE-Mail an die Gemeinde Musterstadt vom 2026-04-14, Absender: Herr Paul Beispiel, Lindenweg 12:\n„Sehr geehrte Damen und Herren, ich möchte im Garten ein Gartenhaus mit etwa 4 x 3 Metern aufstellen, Höhe\n2,60 Meter, ungefähr 1 Meter vom Zaun zum Nachbarn entfernt. Brauche ich dafür eine Genehmigung? Außerdem ist\nseit Wochen die Straßenlaterne vor Hausnummer 14 kaputt, abends ist es dort stockdunkel. Wann wird das repariert?\nIch habe das schon einmal im März telefonisch gemeldet.“\n\nAuszug aus den internen Informationen der Gemeinde (fiktiv):\n- Bauordnung (Auszug): Gebäude ohne Aufenthaltsräume bis 30 m³ Brutto-Rauminhalt sind verfahrensfrei.\n  Verfahrensfreie Vorhaben müssen trotzdem die Abstandsflächen einhalten; an der Grundstücksgrenze sind\n  Nebengebäude bis 3 m Wandhöhe und 9 m Gesamtlänge zulässig. Bebauungspläne können Abweichendes regeln.\n- Für den Lindenweg gilt der Bebauungsplan Nr. 17 „Am Lindenhain“; eine Prüfung durch das Bauamt ist nötig.\n- Straßenbeleuchtung: zuständig ist der Bauhof; Meldungen über das Online-Formular oder Telefon 0000-123,\n  Bearbeitung in der Regel innerhalb von 10 Arbeitstagen. Für März ist im System keine Meldung zum Lindenweg erfasst.",
+  "guide": {
+    "problem": "Bürgeranfragen enthalten oft mehrere Anliegen und müssen korrekt, verständlich und ohne vorschnelle Zusagen beantwortet werden. Der Workflow zerlegt die Anfrage, sucht die passenden Regeln aus den bereitgestellten Informationen und bereitet eine Antwort vor.",
+    "flow": "Eine Kette aus drei Agenten: Die Anliegenanalyse trennt die Anliegen und ordnet Zuständigkeiten zu, die Informationsaufbereitung sucht die einschlägigen Regeln ausschließlich aus dem bereitgestellten Auszug, und der Antwortentwurf formuliert eine bürgernahe Antwort. Eine Qualitätsprüfung kontrolliert, dass nur belegte Regeln genannt und keine verbindlichen Zusagen gemacht werden.",
+    "input": "Die Anfrage der Bürgerin oder des Bürgers und die relevanten internen Informationen, Regeln und Zuständigkeiten, als Auszug im Text oder als Dateien. Auch Fotos aus der Anfrage kannst du anhängen. Die Beispieldatei ist ein erfundenes Merkblatt der Gemeinde.",
+    "result": "Ein Antwortentwurf in einfacher Sprache mit Zuständigkeiten, nächsten Schritten und Hinweisen für die Sachbearbeitung, zusätzlich als Word-Datei für euren Briefkopf. Die Informationsaufbereitung schlägt die gefundenen Regeln mit Fundstelle für das Wissen vor, damit spätere Anfragen darauf zugreifen können; gespeichert wird nur, was du bestätigst. Der Entwurf muss vor dem Versand fachlich geprüft und freigegeben werden.",
+    "adapt": "Hänge eure Satzungen und Merkblätter an oder lade sie dauerhaft als Wissen hoch (Modus „Volltextsuche“ mit Zitaten) und weise sie der Informationsaufbereitung zu. Briefkopf und Grußformel ergänzt du im System-Prompt des Antwortentwurfs. Viele Anfragen auf einmal bearbeitest du mit der Stapelverarbeitung."
+  },
+  "agents": {
+    "triage": {
+      "name": "Anliegenanalyse",
+      "description": "Trennt die Anliegen und ordnet Zuständigkeiten und Dringlichkeit zu.",
+      "system": "Du arbeitest in der Bürgerkommunikation einer Verwaltung. Zerlege die Anfrage in einzelne Anliegen und gib für jedes an: Art (Auskunft, Beschwerde, Meldung, Antrag), vermutlich zuständige Stelle, Dringlichkeit und die Fragen, die beantwortet werden müssen. Fasse dich kurz und schreibe als Liste.",
+      "task": "{{input}}"
+    },
+    "rules": {
+      "name": "Informationsaufbereitung",
+      "description": "Sucht die einschlägigen Regeln nur aus den bereitgestellten Informationen.",
+      "system": "Du bist Sachbearbeiterin in der Verwaltung. Ordne jedem Anliegen die einschlägigen Regeln und Zuständigkeiten zu und gib die Fundstelle aus dem bereitgestellten Auszug wieder. Verwende ausschließlich die bereitgestellten Informationen und erfinde keine Vorschriften, Fristen oder Telefonnummern. Benenne, was ohne weitere Prüfung nicht beantwortet werden kann und welche Angaben von der Bürgerin oder dem Bürger fehlen.",
+      "task": "Bereite die Informationen auf.\n\nAnfrage und interne Informationen:\n{{run.input}}\n\nAnliegen:\n{{node:triage}}"
+    },
+    "reply": {
+      "name": "Antwortentwurf",
+      "description": "Formuliert eine sachliche, bürgernahe Antwort zur Freigabe.",
+      "system": "Du schreibst Antworten einer Verwaltung an Bürgerinnen und Bürger: höflich, sachlich, in einfacher Sprache und ohne Behördenjargon. Beantworte jedes Anliegen, nenne die zuständige Stelle und den nächsten Schritt und erkläre, was noch geprüft wird. Mache keine verbindlichen Zusagen oder Genehmigungen. Beginne mit dem Vermerk „ENTWURF – vor Versand fachlich prüfen“ und schließe mit Hinweisen für die Sachbearbeitung.",
+      "task": "Schreibe den Antwortentwurf.\n\nAnliegen:\n{{node:triage}}\n\nAufbereitete Informationen:\n{{node:rules}}",
+      "criteria": {
+        "only_given_rules": "Die Antwort nennt nur Regeln, Fristen und Kontakte aus den bereitgestellten Informationen.",
+        "plain_language": "Die Antwort ist höflich und in einfacher, verständlicher Sprache geschrieben.",
+        "no_binding_commitment": "Die Antwort enthält keine verbindlichen Zusagen oder Genehmigungen und ist als Entwurf gekennzeichnet."
+      }
+    }
+  },
+  "form": {
+    "documents": {
+      "label": "Unterlagen",
+      "description": "Optional: Satzungen, Merkblätter oder Zuständigkeitslisten (PDF, Word, Markdown, Text) und Fotos aus der Anfrage (PNG, JPEG, WebP), bis zu 5 Dateien. Ohne Dateien gilt der Auszug im Text."
+    }
+  },
+  "samples": {
+    "guidance": {
+      "name": "Merkblatt_Nebengebaeude_und_Beleuchtung",
+      "description": "Ein erfundenes Merkblatt der Gemeinde mit Regeln zu Gartenhäusern und Zuständigkeit für Straßenlaternen, als PDF.",
+      "content": "# Merkblatt der Gemeinde Musterstadt (fiktiv)\n\nSYNTHETISCHE BEISPIELDATEN – frei erfundene Regeln, nur zum Ausprobieren.\n\n## Gartenhäuser und andere Nebengebäude\n\n1. Gebäude ohne Aufenthaltsräume bis 30 m³ Brutto-Rauminhalt sind verfahrensfrei (§ 12 Abs. 1 der Musterbauordnung, fiktiv).\n2. Auch verfahrensfreie Vorhaben müssen die Abstandsflächen einhalten. An der Grundstücksgrenze sind Nebengebäude bis 3 m Wandhöhe und 9 m Gesamtlänge zulässig (§ 6 Abs. 7).\n3. Bebauungspläne können Abweichendes regeln. Für den Lindenweg gilt der Bebauungsplan Nr. 17 „Am Lindenhain“; dort ist eine Prüfung durch das Bauamt nötig.\n4. Auskunft: Bauamt, Zimmer 2.14, Sprechzeiten Di und Do 9–12 Uhr.\n\n## Straßenbeleuchtung\n\n- Zuständig ist der Bauhof.\n- Meldungen über das Online-Formular „Mängelmelder“ oder Telefon 0000-123.\n- Bearbeitung in der Regel innerhalb von 10 Arbeitstagen nach Eingang der Meldung.\n- Telefonische Meldungen werden im System erfasst; fehlt ein Eintrag, bitte erneut melden."
+    }
+  },
+  "tests": {
+    "two_concerns": {
+      "name": "Gartenhaus und Straßenlaterne"
+    },
+    "guidance_file": {
+      "name": "Regeln als Merkblatt-Datei",
+      "input": "SYNTHETISCHE BEISPIELDATEN – frei erfundene Gemeinde und Regeln, nur zum Ausprobieren.\n\nE-Mail an die Gemeinde Musterstadt vom 2026-04-14, Absender: Herr Paul Beispiel, Lindenweg 12:\n„Sehr geehrte Damen und Herren, ich möchte im Garten ein Gartenhaus mit etwa 4 x 3 Metern aufstellen, Höhe\n2,60 Meter, ungefähr 1 Meter vom Zaun zum Nachbarn entfernt. Brauche ich dafür eine Genehmigung? Außerdem ist\nseit Wochen die Straßenlaterne vor Hausnummer 14 kaputt, abends ist es dort stockdunkel. Wann wird das repariert?\nIch habe das schon einmal im März telefonisch gemeldet.“\n\nDie einschlägigen Regeln stehen im angehängten Merkblatt."
+    }
+  }
+}

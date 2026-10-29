@@ -1,0 +1,68 @@
+{
+  "name": "Pubblicare un annuncio e preparare i colloqui",
+  "field": "Risorse umane",
+  "description": "Elaborare un profilo della posizione, scrivere un annuncio di lavoro, preparare domande di colloquio strutturate e verificarne l'equità.",
+  "start": "Fabbisogno di personale",
+  "output": "Documenti di selezione",
+  "file_name": "Annuncio di lavoro",
+  "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nAzienda: Esempio Logistica S.r.l., 220 dipendenti, sede a Città Esempio, lavoro ibrido possibile (2 giorni/settimana)\nPosizione: Junior Data Analyst (tutti i generi), tempo pieno, indeterminato, team controllo di gestione (5 persone)\nNote del responsabile del team:\n- Deve creare e mantenere report su tempi e costi di consegna (Excel, Power BI), preparare i dati dall'ERP\n- Importante: accurato, sa spiegare i numeri in modo chiaro, lavora volentieri con magazzino e vendite\n- Laurea in economia, statistica o simili, o formazione professionale comparabile con esperienza\n- Basi di SQL gradite, Python un plus\n- \"Idealmente una persona giovane che si integri nel team, di madrelingua italiana\"\n- Fascia retributiva 48.000–54.000 EUR, 30 giorni di ferie, budget formazione 1.500 EUR all'anno",
+  "guide": {
+    "problem": "Una buona selezione inizia con un profilo chiaro e colloqui equi e confrontabili. Il workflow trasforma note sparse in profilo della posizione, annuncio e traccia di colloquio e ne verifica l'equità.",
+    "flow": "L'agente del profilo ordina compiti e requisiti. Da qui nascono in parallelo l'annuncio di lavoro e la traccia di colloquio. Il revisore dell'equità controlla entrambi alla ricerca di formulazioni discriminatorie o non ammesse, per esempio su età o madrelingua, e indica cosa deve verificare una persona. Se ha dei rilievi, un nodo decisionale passa i documenti a una revisione che applica le sue proposte; altrimenti restano le prime versioni.",
+    "input": "Note sulla posizione: mansioni, qualifiche desiderate, team, condizioni e retribuzione.",
+    "result": "Profilo della posizione, annuncio di lavoro e traccia di colloquio con ancoraggi di valutazione, una verifica dell'equità strutturata e, in caso di rilievi, una versione rivista con l'elenco delle modifiche, anche come file Word. I documenti devono essere approvati dall'HR o da una persona competente prima della pubblicazione.",
+    "adapt": "Sostituisci le note con il tuo fabbisogno di personale. Puoi salvare il tuo profilo di datore di lavoro e i benefit come conoscenza e assegnarli all'agente dell'annuncio. Aggiungi i requisiti di legge del tuo paese al prompt di sistema del revisore dell'equità."
+  },
+  "agents": {
+    "profile": {
+      "name": "Profilo della posizione",
+      "description": "Ordina mansioni, requisiti indispensabili e desiderabili e competenze.",
+      "system": "Sei un HR business partner. Elabora dalle note un profilo della posizione: scopo del ruolo, mansioni principali, requisiti indispensabili e desiderabili, competenze tecniche e personali e condizioni. Formula i requisiti in modo che riguardino il lavoro e siano verificabili. Non adottare desideri che si riferiscono a caratteristiche protette come età, origine, genere o madrelingua; annotali invece come punto da chiarire.",
+      "task": "Elabora il profilo della posizione da queste note:\n\n{{input}}"
+    },
+    "job_ad": {
+      "name": "Annuncio di lavoro",
+      "description": "Scrive un annuncio di lavoro attraente e inclusivo.",
+      "system": "Scrivi annunci di lavoro che attirano le persone e non escludono nessuno. Scrivi un annuncio con presentazione dell'azienda, mansioni, profilo (indispensabile e desiderabile chiaramente separati), cosa si offre e come candidarsi. Usa un linguaggio chiaro e inclusivo ed evita ostacoli inutili. Usa solo informazioni del profilo della posizione.",
+      "task": "Scrivi l'annuncio di lavoro per questo profilo:\n\n{{node:profile}}"
+    },
+    "interview": {
+      "name": "Traccia di colloquio",
+      "description": "Prepara domande di colloquio strutturate con criteri di valutazione.",
+      "system": "Sei un esperto di selezione strutturata. Crea una traccia di colloquio di 60 minuti: scaletta, da otto a dieci domande sui requisiti più importanti (domande comportamentali e situazionali) e, per ogni domanda, il criterio valutato e riferimenti di valutazione per debole, medio e forte. Tutti i candidati ricevono le stesse domande. Non chiedere nulla su vita privata, progetti familiari, salute, origine o religione.",
+      "task": "Crea la traccia di colloquio per questo profilo:\n\n{{node:profile}}"
+    },
+    "fairness": {
+      "name": "Revisore dell'equità",
+      "description": "Controlla annuncio e traccia per discriminazioni e domande non ammesse.",
+      "system": "Verifichi l'equità e la parità di trattamento dei documenti HR. Cerca nell'annuncio e nella traccia formulazioni che svantaggiano direttamente o indirettamente persone per età, genere, origine, lingua, religione, disabilità o altre caratteristiche protette, domande di colloquio non ammesse e requisiti non legati al lavoro. Proponi modifiche concrete. Indica esplicitamente che i documenti devono essere approvati da una persona qualificata prima dell'uso.",
+      "task": "Verifica l'equità di questi documenti.\n\nAnnuncio di lavoro:\n{{node:job_ad}}\n\nTraccia di colloquio:\n{{node:interview}}",
+      "fields": {
+        "approved": "Utilizzabile senza modifiche?",
+        "issues": "Problemi individuati, con la loro posizione",
+        "suggested_changes": "Proposte di modifica concrete",
+        "human_checks": "Punti che le risorse umane o una persona qualificata devono verificare"
+      }
+    },
+    "revise": {
+      "name": "Revisione",
+      "description": "Applica all'annuncio e alla traccia le modifiche proposte dalla verifica dell'equità.",
+      "system": "Rivedi documenti HR dopo una verifica dell'equità. Applica ogni proposta di modifica, elimina le formulazioni segnalate e le domande non ammesse e lascia invariato tutto il resto. Fornisci l'annuncio di lavoro rivisto completo e la traccia di colloquio rivista completa e alla fine elenca ogni modifica con una breve motivazione. Segnala i punti che non sei riuscito a risolvere perché li verifichi l'ufficio HR.",
+      "task": "Rivedi i documenti.\n\nAnnuncio di lavoro:\n{{node:job_ad}}\n\nTraccia di colloquio:\n{{node:interview}}\n\nVerifica dell'equità:\n{{node:fairness}}"
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "Serve una revisione?",
+      "branches": {
+        "revise": "Rivedere"
+      },
+      "default": "Nessun rilievo"
+    }
+  },
+  "tests": {
+    "notes": {
+      "name": "Note con richieste problematiche"
+    }
+  }
+}

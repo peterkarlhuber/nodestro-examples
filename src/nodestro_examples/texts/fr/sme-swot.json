@@ -1,0 +1,54 @@
+{
+  "name": "Stratégie SWOT pour une PME",
+  "field": "Entreprises et PME",
+  "description": "Analyser la situation interne et externe d'une entreprise, développer une stratégie fondée sur le SWOT et la vérifier de façon critique.",
+  "start": "Profil de l'entreprise",
+  "output": "Stratégie",
+  "file_name": "Stratégie SWOT",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nEntreprise : Menuiserie Bois Exemple SARL, petite ville du sud de l'Allemagne, fondée en 1987\nEffectif : 14 personnes (dont 2 apprentis), dirigeant de 61 ans, succession non réglée\nChiffre d'affaires : 2023 1,9 M EUR, 2024 1,8 M EUR ; rentabilité des ventes récemment de 4 %\nRépartition du CA : aménagement intérieur pour particuliers 55 %, projets professionnels (cabinets, bureaux) 30 %, réparations 15 %\nForces selon le dirigeant : qualité élevée, clients fidèles, machine CNC propre depuis 2022\nProblèmes : délais de livraison longs (actuellement 14 semaines), deux postes de compagnon vacants depuis un an,\npresque pas de présence en ligne (site de 2015, pas de réseaux sociaux), devis calculés à la main\nEnvironnement : hausse des prix du bois, programmes régionaux d'aide à la rénovation énergétique,\nnouveaux lotissements dans un rayon de 20 km, un magasin de meubles avec studio cuisine a ouvert à proximité\nObjectif du dirigeant : dans trois ans, une entreprise stable et transmissible avec au moins 7 % de rentabilité",
+  "guide": {
+    "problem": "Beaucoup de petites entreprises connaissent leurs problèmes, mais pas le meilleur ordre pour les traiter. Le workflow établit une analyse SWOT, en déduit des stratégies et les soumet à un relecteur critique.",
+    "flow": "L'analyse interne (forces, faiblesses) et l'analyse de l'environnement (opportunités, menaces) tournent en parallèle. Le développeur de stratégie combine les deux en stratégies selon la matrice TOWS et un plan à 90 jours. Le relecteur critique cherche les points faibles et les informations manquantes ; le résultat contient la stratégie et la revue. À la fin, le résultat est enregistré avec l'exécution sous forme de fichiers Markdown et PDF.",
+    "input": "Un court profil d'entreprise avec chiffres clés, offre, forces, problèmes, environnement de marché et objectifs.",
+    "result": "Une matrice SWOT avec des stratégies déduites et un plan à 90 jours, ainsi qu'une revue critique structurée avec avis, points faibles, informations manquantes et prochaines étapes.",
+    "adapt": "Décrivez votre entreprise dans le même style. Plus les chiffres et les objectifs sont précis, plus la stratégie est concrète. Vous pouvez charger des études sectorielles ou des enquêtes clients comme connaissance et les attribuer à l'analyse de l'environnement."
+  },
+  "agents": {
+    "internal": {
+      "name": "Analyse interne",
+      "description": "Dégage les forces et faiblesses à partir des données de l'entreprise.",
+      "system": "Tu es consultant pour les petites et moyennes entreprises. Analyse les facteurs internes : offre, clients, personnel, processus, finances, équipements et organisation. Déduis-en des forces et faiblesses concrètes et étaye chacune par des éléments du profil. Évalue l'importance de chaque point pour l'objectif de l'entreprise (élevée, moyenne, faible).",
+      "task": "Analyse les forces et faiblesses de cette entreprise :\n\n{{input}}"
+    },
+    "external": {
+      "name": "Analyse de l'environnement",
+      "description": "Déduit opportunités et menaces du marché et de l'environnement.",
+      "system": "Tu es analyste de marché. Analyse les facteurs externes d'une entreprise : demande, concurrence, évolution des coûts, marché du travail, aides, technologie et réglementation. Déduis-en opportunités et menaces. Appuie-toi sur les éléments du profil et sur des connaissances sectorielles généralement admises ; signale ce qui relève de connaissances générales et doit être vérifié localement.",
+      "task": "Analyse les opportunités et menaces dans l'environnement de cette entreprise :\n\n{{input}}"
+    },
+    "strategy": {
+      "name": "Développeur de stratégie",
+      "description": "Développe des stratégies selon la matrice TOWS et un plan à 90 jours.",
+      "system": "Tu es consultant en stratégie. Résume forces, faiblesses, opportunités et menaces dans une matrice SWOT et développe des stratégies selon la logique TOWS : SO (utiliser les forces pour saisir les opportunités), WO, ST et WT. Choisis les deux ou trois stratégies les plus efficaces pour l'objectif et justifie ce choix. Établis un plan à 90 jours avec des étapes concrètes, des responsables et des jalons mesurables.",
+      "task": "Développe la stratégie.\n\nAnalyse interne :\n{{node:internal}}\n\nAnalyse de l'environnement :\n{{node:external}}"
+    },
+    "critic": {
+      "name": "Relecteur critique",
+      "description": "Remet en question la stratégie et met au jour les points faibles.",
+      "system": "Tu es un membre critique d'un comité consultatif et tu examines les stratégies avant qu'une entreprise investisse. Vérifie si la stratégie peut atteindre l'objectif, si elle correspond aux ressources et quelles hypothèses ne sont pas vérifiées. Signale les contradictions, les risques de mise en œuvre et les informations qui manquent avant une décision. Sois constructif : chaque point faible s'accompagne d'une proposition.",
+      "task": "Examine cette stratégie de façon critique :\n\n{{input}}",
+      "fields": {
+        "verdict": "Avis global en deux ou trois phrases",
+        "robust_points": "Éléments solides de la stratégie",
+        "weak_points": "Points faibles avec proposition d'amélioration",
+        "missing_information": "Informations manquantes avant une décision",
+        "next_steps": "Prochaines étapes recommandées"
+      }
+    }
+  },
+  "tests": {
+    "profile": {
+      "name": "Menuiserie à la succession non réglée"
+    }
+  }
+}

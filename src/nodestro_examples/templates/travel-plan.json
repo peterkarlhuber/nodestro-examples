@@ -1,0 +1,170 @@
+{
+  "id": "travel-plan",
+  "number": 15,
+  "category": "private",
+  "level": "beginner",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160,
+      "form": [
+        {
+          "name": "destination",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "arrival",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "departure",
+          "type": "date",
+          "required": true
+        },
+        {
+          "name": "travellers",
+          "type": "number"
+        },
+        {
+          "name": "budget",
+          "type": "number"
+        },
+        {
+          "name": "abroad",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "id": "itinerary",
+      "type": "agent",
+      "x": 340,
+      "y": 160,
+      "role": "planning",
+      "icon": "globe"
+    },
+    {
+      "id": "budget",
+      "type": "agent",
+      "x": 680,
+      "y": 160,
+      "role": "analysis",
+      "icon": "calculator",
+      "tools": [
+        "calculator",
+        "days_between"
+      ]
+    },
+    {
+      "id": "organizer",
+      "type": "agent",
+      "x": 1020,
+      "y": 160,
+      "role": "writing",
+      "icon": "list",
+      "criteria": [
+        "within_budget",
+        "constraints",
+        "verify_notes"
+      ]
+    },
+    {
+      "id": "gate",
+      "type": "condition",
+      "x": 340,
+      "y": 380,
+      "condition": {
+        "source": "start",
+        "rules": [
+          {
+            "id": "abroad",
+            "field": "abroad",
+            "operator": "is_true"
+          }
+        ]
+      }
+    },
+    {
+      "id": "documents",
+      "type": "agent",
+      "x": 680,
+      "y": 380,
+      "role": "research",
+      "icon": "file"
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1360,
+      "y": 160,
+      "files": [
+        "pdf"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "itinerary"
+    ],
+    [
+      "start",
+      "gate"
+    ],
+    [
+      "gate",
+      "documents",
+      "abroad"
+    ],
+    [
+      "itinerary",
+      "budget"
+    ],
+    [
+      "itinerary",
+      "organizer"
+    ],
+    [
+      "budget",
+      "organizer"
+    ],
+    [
+      "documents",
+      "organizer"
+    ],
+    [
+      "organizer",
+      "output"
+    ]
+  ],
+  "tests": [
+    {
+      "id": "abroad",
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "domestic",
+      "input": "own",
+      "values": {
+        "arrival": "2026-08-14",
+        "departure": "2026-08-16",
+        "travellers": 2,
+        "budget": 600,
+        "abroad": false
+      },
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

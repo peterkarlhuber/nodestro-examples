@@ -1,0 +1,158 @@
+{
+  "id": "sales-offer",
+  "number": 7,
+  "category": "customers",
+  "level": "advanced",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160,
+      "form": [
+        {
+          "name": "customer",
+          "type": "text",
+          "required": true
+        },
+        {
+          "name": "deadline",
+          "type": "date"
+        },
+        {
+          "name": "budget",
+          "type": "number"
+        },
+        {
+          "name": "weekend",
+          "type": "boolean"
+        },
+        {
+          "name": "price_list",
+          "type": "file",
+          "accept": [
+            "xlsx",
+            "csv",
+            "pdf"
+          ],
+          "multiple": false,
+          "max_size_mb": 10
+        }
+      ]
+    },
+    {
+      "id": "needs",
+      "type": "agent",
+      "x": 340,
+      "y": 160,
+      "role": "analysis",
+      "icon": "search"
+    },
+    {
+      "id": "solution",
+      "type": "agent",
+      "x": 680,
+      "y": 160,
+      "role": "planning",
+      "icon": "idea",
+      "tools": [
+        "calculator"
+      ]
+    },
+    {
+      "id": "offer",
+      "type": "agent",
+      "x": 1020,
+      "y": 160,
+      "role": "writing",
+      "icon": "mail",
+      "criteria": [
+        "all_requirements",
+        "prices_consistent",
+        "open_points"
+      ]
+    },
+    {
+      "id": "approve",
+      "type": "approval",
+      "x": 1360,
+      "y": 160,
+      "approval": {
+        "on_reject": "stop",
+        "show": [
+          "offer"
+        ]
+      }
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1700,
+      "y": 160,
+      "files": [
+        "pdf",
+        "docx"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "needs"
+    ],
+    [
+      "needs",
+      "solution"
+    ],
+    [
+      "needs",
+      "offer"
+    ],
+    [
+      "solution",
+      "offer"
+    ],
+    [
+      "offer",
+      "approve"
+    ],
+    [
+      "approve",
+      "output",
+      "approved"
+    ],
+    [
+      "start",
+      "solution"
+    ]
+  ],
+  "samples": [
+    {
+      "id": "price_list",
+      "format": "xlsx",
+      "field": "price_list"
+    }
+  ],
+  "tests": [
+    {
+      "id": "request_text",
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "price_list_file",
+      "input": "own",
+      "samples": [
+        "price_list"
+      ],
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

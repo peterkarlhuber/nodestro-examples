@@ -1,0 +1,70 @@
+{
+  "name": "Revisión de código con pruebas",
+  "field": "Desarrollo de software",
+  "description": "Revisar código fuente en busca de errores y problemas de seguridad y proponer una versión mejorada con pruebas.",
+  "start": "Código fuente",
+  "output": "Revisión y pruebas",
+  "file_name": "Revisión de código",
+  "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nContexto: funciones de una herramienta interna que calcula descuentos para pedidos y busca pedidos.\nPython 3.12, base de datos SQLite.\n\n```python\nimport sqlite3\n\ndef apply_discount(total, customer_type, coupon=None):\n    \"\"\"Return the price after discounts. Regular customers get 5 %, premium 10 %.\n    A coupon like \"SAVE20\" takes a further 20 % off, but the price must never drop below 0.\"\"\"\n    if customer_type == \"premium\":\n        total = total * 0.9\n    elif customer_type == \"regular\":\n        total = total * 0.95\n    if coupon:\n        percent = int(coupon[4:])\n        total = total - total * percent / 100\n    return round(total, 1)\n\ndef average_order_value(orders):\n    return sum(o[\"total\"] for o in orders) / len(orders)\n\ndef find_orders(db_path, customer_name):\n    conn = sqlite3.connect(db_path)\n    query = f\"SELECT id, total FROM orders WHERE customer = '{customer_name}'\"\n    rows = conn.execute(query).fetchall()\n    return rows\n```",
+  "guide": {
+    "problem": "Una segunda mirada encuentra errores antes de que lleguen a producción. El flujo revisa el código a la vez en busca de errores lógicos y problemas de seguridad y entrega una versión mejorada con pruebas.",
+    "flow": "El analista de errores y el revisor de seguridad trabajan en paralelo sobre el mismo código. El agente de mejora reúne los hallazgos y escribe código corregido y pruebas pytest; una revisión de calidad integrada comprueba que cada hallazgo se trate y quede cubierto por pruebas.",
+    "input": "Un fragmento de código con un breve contexto: lenguaje, finalidad y entorno, o un proyecto entero como archivo ZIP o archivos sueltos en el campo de archivo. Los archivos comprimidos solo se leen, nunca se ejecutan. El código se mantiene sin cambios en su lenguaje; las explicaciones aparecen en el idioma de la interfaz. El archivo de ejemplo es un pequeño proyecto Python con errores incorporados.",
+    "result": "Una lista de hallazgos ordenada por gravedad, el código corregido y pruebas de pytest que cubren cada hallazgo, además como archivo Markdown. Las pruebas no se ejecutan automáticamente; ejecútalas en local.",
+    "adapt": "Adjunta tu proyecto como ZIP o pega el código e indica el lenguaje y el framework. Para otros lenguajes, ajusta el framework de pruebas en el agente de mejora, por ejemplo Jest o JUnit. Vuestras guías de estilo de código puedes guardarlas como conocimiento. A través de la API del flujo de trabajo, la revisión también puede lanzarse desde una pipeline de CI."
+  },
+  "agents": {
+    "bugs": {
+      "name": "Analista de errores",
+      "description": "Busca errores lógicos, casos límite y desviaciones respecto a la descripción.",
+      "system": "Eres desarrollador de software sénior y haces revisiones de código. Busca errores lógicos, casos límite no tratados, desviaciones entre documentación y comportamiento, gestión de errores y fugas de recursos. Indica para cada hallazgo la línea o función, una entrada concreta que muestre el error, la gravedad (crítica, alta, media, baja) y una propuesta de solución.",
+      "task": "Revisa este código en busca de errores:\n\n{{input}}"
+    },
+    "security": {
+      "name": "Revisor de seguridad",
+      "description": "Revisa el código en busca de vulnerabilidades y patrones inseguros.",
+      "system": "Eres especialista en seguridad de aplicaciones. Revisa el código en busca de problemas de seguridad, por ejemplo inyección, tratamiento inseguro de entradas, falta de validación, secretos en el código o manejo inseguro de recursos. Ordena los hallazgos por gravedad, describe en una frase un posible escenario de ataque e indica la alternativa segura. No informes de nada que no tenga relación con el código mostrado.",
+      "task": "Revisa este código en busca de problemas de seguridad:\n\n{{input}}"
+    },
+    "fix": {
+      "name": "Mejora y pruebas",
+      "description": "Escribe código corregido y pruebas pytest para todos los hallazgos.",
+      "system": "Eres desarrollador centrado en la calidad de las pruebas. Reúne los hallazgos y elimina duplicados. Entrega: primero una tabla de hallazgos por gravedad, segundo el código corregido completo y tercero pruebas pytest que cubran cada hallazgo, incluidos los casos límite. El código, los identificadores y los comentarios del código se mantienen en inglés. Indica que las pruebas deben ejecutarse en local. Si se trata de un proyecto con varios archivos, indica para cada archivo modificado la ruta y la nueva versión completa y omite los archivos sin cambios.",
+      "task": "Crea la versión mejorada con pruebas.\n\nCódigo original:\n{{run.input}}\n\nAnálisis de errores:\n{{node:bugs}}\n\nRevisión de seguridad:\n{{node:security}}",
+      "criteria": {
+        "every_finding_addressed": "Cada hallazgo del análisis de errores y de la revisión de seguridad está corregido en el código o aplazado de forma justificada.",
+        "tests_cover_findings": "Hay al menos una prueba para cada hallazgo corregido.",
+        "runnable": "El código y las pruebas están completos y se pueden ejecutar sin marcadores de posición."
+      }
+    }
+  },
+  "form": {
+    "code_files": {
+      "label": "Código como archivos",
+      "description": "Opcional: un proyecto como archivo ZIP o archivos de código sueltos, hasta 20 archivos. Los archivos comprimidos solo se leen, nunca se ejecutan; los agentes ven primero la estructura y leen de forma selectiva lo que necesitan."
+    }
+  },
+  "samples": {
+    "project": {
+      "name": "calculadora-descuentos",
+      "description": "Un proyecto Python pequeño e inofensivo en ZIP con errores incorporados: cálculo de descuentos, consulta SQL y una prueba.",
+      "content": {
+        "calculadora-descuentos/README.md": "# Calculadora de descuentos (proyecto de ejemplo)\n\nDATOS DE EJEMPLO SINTÉTICOS – proyecto totalmente inventado, solo para probar.\n\nUna pequeña herramienta interna: calcula descuentos para pedidos y busca pedidos en una base de datos SQLite.\n\n- Python 3.12, sin otras dependencias\n- Pruebas con pytest: `pytest`\n",
+        "calculadora-descuentos/shop/__init__.py": "",
+        "calculadora-descuentos/shop/discounts.py": "def apply_discount(total, customer_type, coupon=None):\n    \"\"\"Return the price after discounts. Regular customers get 5 %, premium 10 %.\n    A coupon like \"SAVE20\" takes a further 20 % off, but the price must never drop below 0.\"\"\"\n    if customer_type == \"premium\":\n        total = total * 0.9\n    elif customer_type == \"regular\":\n        total = total * 0.95\n    if coupon:\n        percent = int(coupon[4:])\n        total = total - total * percent / 100\n    return round(total, 1)\n\n\ndef average_order_value(orders):\n    return sum(o[\"total\"] for o in orders) / len(orders)\n",
+        "calculadora-descuentos/shop/orders.py": "import sqlite3\n\nADMIN_PASSWORD = \"admin123\"\n\n\ndef find_orders(db_path, customer_name):\n    conn = sqlite3.connect(db_path)\n    query = f\"SELECT id, total FROM orders WHERE customer = '{customer_name}'\"\n    rows = conn.execute(query).fetchall()\n    return rows\n",
+        "calculadora-descuentos/tests/test_discounts.py": "from shop.discounts import apply_discount\n\n\ndef test_premium():\n    assert apply_discount(100, \"premium\") == 90\n",
+        "calculadora-descuentos/requirements.txt": "pytest>=8\n"
+      }
+    }
+  },
+  "tests": {
+    "snippet": {
+      "name": "Fragmento de código en el texto"
+    },
+    "project_zip": {
+      "name": "Proyecto como archivo ZIP",
+      "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nRevisa el proyecto del archivo ZIP: una herramienta interna que calcula descuentos y busca pedidos. Python 3.12, base de datos SQLite."
+    }
+  }
+}

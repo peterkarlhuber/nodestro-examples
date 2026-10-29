@@ -1,0 +1,127 @@
+{
+  "name": "Analizar retrasos de obra",
+  "field": "Construcción",
+  "description": "Calcular desviaciones de plazos, clasificar causas, desarrollar contramedidas e informar al promotor.",
+  "start": "Estado del proyecto",
+  "output": "Informe de situación",
+  "file_name": "Informe de estado",
+  "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nProyecto: nueva guardería «Mirasol», Villaejemplo; promotor: Ayuntamiento de Villaejemplo\nFecha contractual de finalización: 2026-09-30; fecha del informe: 2026-05-15\n\n| Hito | Previsto | Real / previsión | Observación |\n|---|---|---|---|\n| Estructura terminada | 2026-02-27 | 2026-03-20 | 9 días de helada en enero, hormigonado suspendido |\n| Cubierta estanca | 2026-03-27 | 2026-04-24 | Retraso en la entrega de elementos de cubierta (el proveedor alega falta de material) |\n| Ventanas instaladas | 2026-04-17 | 2026-05-29 (previsión) | Cambio de proyecto en ventanas de evacuación a petición de la revisión de incendios |\n| Instalaciones, primera fase | 2026-05-22 | 2026-06-19 (previsión) | Depende de las ventanas; el electricista solo tiene 2 personas en obra en lugar de 4 |\n| Acabados interiores terminados | 2026-08-28 | abierto | — |\n| Recepción | 2026-09-30 | abierto | Penalización contractual del 0,2 % del importe por día laborable, máx. 5 % |\n\nImporte del contrato del contratista general: 3,2 M EUR. El promotor espera un informe para la reunión del 2026-05-20.",
+  "guide": {
+    "problem": "Los retrasos en obra se acumulan y los promotores necesitan rápido una imagen clara. El flujo calcula las desviaciones, clasifica las causas, desarrolla contramedidas y redacta un informe de situación.",
+    "flow": "El analista de plazos y el analista de causas trabajan en paralelo. Uno calcula retrasos y holguras con las herramientas de fechas y calculadora; el otro ordena las causas por ámbito de responsabilidad y necesidad de documentación; ambos analizan también las planificaciones, libros de obra y fotos adjuntos. El planificador de contramedidas desarrolla opciones de aceleración y el agente del informe lo resume todo para el promotor. Antes de que el informe salga del equipo del proyecto, una persona lo aprueba.",
+    "input": "Un resumen de plazos con hitos previstos y reales, observaciones sobre las causas, fecha del informe y condiciones contractuales, como texto o como archivos: planificación en Excel, libro de obra en PDF, fotos como imagen. Los archivos de ejemplo contienen una planificación y un extracto del libro de obra.",
+    "result": "Un informe de estado objetivo con situación de plazos, causas, contramedidas, decisiones necesarias y riesgos. Tras la aprobación, la ejecución lo guarda en PDF y como archivo de Word editable. Las cuestiones sobre penalizaciones y ampliación de plazo quedan sujetas a revisión técnica y jurídica.",
+    "adapt": "Exporta tu planificación desde el software de proyectos en Excel y adjunta el libro de obra y las fotos. Para un informe periódico puedes programar la copia; la aprobación te esperará entonces."
+  },
+  "agents": {
+    "schedule": {
+      "name": "Analista de plazos",
+      "description": "Calcula retrasos, holguras y consecuencias con la herramienta de fechas y la calculadora.",
+      "system": "Eres planificador de obras. Calcula el retraso de cada hito en días naturales con la herramienta days_between y deduce el efecto sobre la fecha de finalización si el retraso continúa. Muestra las dependencias entre hitos y calcula con la calculadora qué penalización podría derivarse de un retraso supuesto, expresamente como escenario.",
+      "task": "Analiza la situación de plazos:\n\n{{input}}"
+    },
+    "causes": {
+      "name": "Analista de causas",
+      "description": "Clasifica las causas por ámbito de responsabilidad y necesidad de documentación.",
+      "system": "Eres jefe de obra con experiencia en gestión de reclamaciones. Asigna cada retraso a una categoría de causa: clima, cadena de suministro, cambio de proyecto, personal u otros. Indica en qué ámbito de responsabilidad recae probablemente según la información disponible, qué pruebas deberían documentarse y qué comunicaciones de impedimento podrían ser necesarias. No hagas valoraciones jurídicas.",
+      "task": "Clasifica las causas de los retrasos:\n\n{{input}}"
+    },
+    "countermeasures": {
+      "name": "Planificador de contramedidas",
+      "description": "Desarrolla medidas de aceleración con coste y efecto.",
+      "system": "Eres project manager de obra. Desarrolla contramedidas para mantener la fecha de finalización o limitar el retraso, por ejemplo reorganizar secuencias, más capacidad o trabajos en paralelo. Valora cada medida por tiempo ganado, coste, riesgo y decisiones necesarias del promotor. Recomienda un paquete de medidas.",
+      "task": "Desarrolla contramedidas.\n\nAnálisis de plazos:\n{{node:schedule}}\n\nCausas:\n{{node:causes}}"
+    },
+    "report": {
+      "name": "Informe al promotor",
+      "description": "Resume de forma objetiva plazos, causas y medidas.",
+      "system": "Redactas informes de situación para promotores públicos: objetivos, claros y sin buscar culpables. Estructura el informe en situación de plazos, causas, contramedidas, decisiones necesarias y riesgos, como máximo una página. Indica que las cuestiones sobre penalizaciones y ampliación de plazo deben revisarse técnica y jurídicamente.",
+      "task": "Redacta el informe de situación.\n\nAnálisis de plazos:\n{{node:schedule}}\n\nContramedidas:\n{{node:countermeasures}}"
+    }
+  },
+  "steps": {
+    "release": {
+      "name": "Aprobar informe",
+      "instructions": "Revisa el informe de estado antes de que llegue al promotor: ¿son correctos las fechas y los retrasos, se describen las causas de forma objetiva y sin buscar culpables, y queda claro qué decisiones debe tomar el promotor? Las afirmaciones sobre penalizaciones y ampliación de plazo deben estar revisadas por una persona experta. Si lo rechazas, escribe qué falta; la ejecución termina entonces sin archivos del informe."
+    }
+  },
+  "form": {
+    "project_files": {
+      "label": "Documentación del proyecto",
+      "description": "Opcional: planificación (Excel, CSV), libro de obra o actas (PDF, Word) y fotos de la obra (PNG, JPEG, WebP), hasta 10 archivos."
+    }
+  },
+  "samples": {
+    "schedule": {
+      "name": "Planificacion_guarderia_Mirasol",
+      "description": "La planificación inventada de la tarea de prueba como archivo de Excel.",
+      "content": {
+        "Planificación": [
+          [
+            "Hito",
+            "Previsto",
+            "Real o previsión",
+            "Estado",
+            "Observación"
+          ],
+          [
+            "Estructura terminada",
+            "2026-02-27",
+            "2026-03-20",
+            "hecho",
+            "9 días de helada en enero, hormigonado suspendido"
+          ],
+          [
+            "Cubierta estanca",
+            "2026-03-27",
+            "2026-04-24",
+            "hecho",
+            "Retraso en la entrega de elementos de cubierta (falta de material del proveedor)"
+          ],
+          [
+            "Ventanas instaladas",
+            "2026-04-17",
+            "2026-05-29",
+            "previsión",
+            "Cambio de proyecto en ventanas de evacuación a petición de la revisión de incendios"
+          ],
+          [
+            "Instalaciones, primera fase",
+            "2026-05-22",
+            "2026-06-19",
+            "previsión",
+            "Depende de las ventanas; electricista con 2 personas en lugar de 4"
+          ],
+          [
+            "Acabados interiores terminados",
+            "2026-08-28",
+            "",
+            "abierto",
+            ""
+          ],
+          [
+            "Recepción",
+            "2026-09-30",
+            "",
+            "abierto",
+            "Penalización contractual del 0,2 % del importe por día laborable, máx. 5 %"
+          ]
+        ]
+      }
+    },
+    "site_diary": {
+      "name": "Libro_de_obra_extracto_abril_mayo",
+      "description": "Un extracto inventado del libro de obra en PDF.",
+      "content": "# Libro de obra guardería «Mirasol» – extracto\n\nDATOS DE EJEMPLO SINTÉTICOS – totalmente inventados.\n\n| Fecha | Anotación |\n|---|---|\n| 2026-04-08 | El proveedor de los elementos de cubierta confirma la entrega para el 2026-04-20 en lugar del 2026-03-20. |\n| 2026-04-24 | Cubierta estanca. Recepción por la dirección de obra sin defectos. |\n| 2026-04-29 | El inspector de incendios exige ventanas de evacuación modificadas en las aulas 2 y 3; cambio de proyecto encargado. |\n| 2026-05-06 | El fabricante de ventanas comunica un nuevo plazo de 3 semanas para los elementos modificados. |\n| 2026-05-11 | Electricidad: solo 2 instaladores en obra, la empresa alega bajas por enfermedad. |\n| 2026-05-13 | El promotor pregunta por el efecto sobre la fecha de apertura del 2026-10-01. |"
+    }
+  },
+  "tests": {
+    "schedule_text": {
+      "name": "Resumen de plazos en el texto"
+    },
+    "project_files": {
+      "name": "Planificación y libro de obra como archivos",
+      "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nProyecto: nueva guardería «Mirasol», Villaejemplo; promotor: Ayuntamiento de Villaejemplo\nFecha contractual de finalización: 2026-09-30; fecha del informe: 2026-05-15\nImporte del contrato del contratista general: 3,2 M EUR. El promotor espera un informe para la reunión del 2026-05-20.\n\nLa planificación y el libro de obra se adjuntan como archivos."
+    }
+  }
+}

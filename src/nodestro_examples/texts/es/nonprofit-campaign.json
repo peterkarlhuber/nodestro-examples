@@ -1,0 +1,48 @@
+{
+  "name": "Desarrollar una campaña de donaciones",
+  "field": "Organizaciones sin ánimo de lucro",
+  "description": "Diseñar una campaña de donaciones, valorar el posible impacto del proyecto y comprobar su credibilidad.",
+  "start": "Descripción del proyecto",
+  "output": "Concepto de campaña",
+  "file_name": "Campaña de donaciones",
+  "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nOrganización: Amigos de la Lectura de Villaejemplo (asociación ficticia), 60 voluntarios, una persona a media jornada\nProyecto: «Padrinos de lectura en primaria»: voluntarios leen cada semana durante un curso escolar con niños que\nnecesitan apoyo en la lectura.\nHasta ahora: curso 2025/26 en 4 colegios con 48 niños. Valoración del profesorado: 31 de 48 niños leen con más\nfluidez (una estimación, no una medición estandarizada).\nObjetivo: ampliar a 8 colegios y 100 niños en el curso 2026/27\nNecesidad de financiación: 25.000 EUR (coordinación 15.000 EUR, libros y material 6.000 EUR, formación 4.000 EUR)\nPeriodo de la campaña: 2026-09-01 a 2026-11-30\nCanales disponibles: boletín (1.200 destinatarios), Instagram (900 seguidores), buenos contactos con el periódico local",
+  "guide": {
+    "problem": "Las campañas de donaciones necesitan una historia que conmueva, pero también afirmaciones honestas sobre el impacto. El flujo desarrolla una campaña, valora el posible impacto y comprueba si las promesas son creíbles y éticamente defendibles.",
+    "flow": "El desarrollador de la campaña y el analista de impacto trabajan en paralelo: uno diseña mensaje, públicos y acciones, y el otro elabora un modelo de impacto con indicadores y calcula el coste por niño con la calculadora. El revisor de credibilidad comprueba ambos; el resultado incluye las tres partes.",
+    "input": "Organización, proyecto, resultados hasta ahora, objetivo, necesidad de financiación, periodo de la campaña y canales disponibles.",
+    "result": "Un concepto de campaña con calendario y borradores de textos, un modelo de impacto con indicadores y una revisión estructurada de afirmaciones exageradas, avisos éticos y un plan para medir el impacto, además como archivo de Word. El analista de impacto propone su modelo de impacto para el conocimiento, por ejemplo para futuras solicitudes de financiación; solo se guarda lo que confirmes.",
+    "adapt": "Describe tu proyecto y tus resultados con la mayor honestidad posible. Sube memorias anuales o evaluaciones como conocimiento y asígnalas al analista de impacto."
+  },
+  "agents": {
+    "campaign": {
+      "name": "Desarrollador de la campaña",
+      "description": "Diseña mensaje, públicos, canales y calendario de la campaña.",
+      "system": "Eres experta en captación de fondos para organizaciones sin ánimo de lucro. Desarrolla una campaña de donaciones: mensaje central, públicos, incentivos como «Con 50 euros…», canales, calendario a lo largo del periodo de la campaña y tres borradores (boletín, redes sociales, nota de prensa). Cuenta la historia con respeto y sin imágenes que busquen lástima, y usa solo resultados que figuren en la descripción.",
+      "task": "Desarrolla la campaña para este proyecto:\n\n{{input}}"
+    },
+    "impact": {
+      "name": "Analista de impacto",
+      "description": "Elabora un modelo de impacto con indicadores y el coste por niño.",
+      "system": "Eres analista de impacto de proyectos sociales. Elabora un modelo de impacto (recursos, actividades, productos, resultados, impacto), propone indicadores medibles con su método de recogida y calcula con la calculadora el coste por niño y por partida. Valora con honestidad qué demuestran los resultados hasta ahora y qué no.",
+      "task": "Elabora el modelo de impacto de este proyecto:\n\n{{input}}"
+    },
+    "integrity": {
+      "name": "Revisor de credibilidad",
+      "description": "Revisa las afirmaciones en cuanto a exageración, ética y respaldo.",
+      "system": "Revisas material de captación de fondos en cuanto a credibilidad y ética. Compara las afirmaciones de la campaña con el modelo de impacto: ¿qué está demostrado, qué es exagerado, qué debería formularse con más prudencia? Cuida la dignidad de las personas representadas, la protección de datos en las fotos de niños y la transparencia sobre el uso de los fondos. Propone un plan sencillo para medir el impacto.",
+      "task": "Revisa la campaña y el modelo de impacto.\n\nCampaña:\n{{node:campaign}}\n\nModelo de impacto:\n{{node:impact}}",
+      "fields": {
+        "credible": "¿Es creíble la campaña en su forma actual?",
+        "overstated_claims": "Afirmaciones exageradas o sin respaldo con una formulación mejor",
+        "ethical_notes": "Observaciones éticas y protección de datos",
+        "suggested_changes": "Otras propuestas de mejora",
+        "measurement_plan": "Plan sencillo para medir el impacto"
+      }
+    }
+  },
+  "tests": {
+    "reading_mentors": {
+      "name": "Padrinos de lectura en primaria"
+    }
+  }
+}

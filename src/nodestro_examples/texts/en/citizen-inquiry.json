@@ -1,0 +1,63 @@
+{
+  "name": "Answer a citizen enquiry",
+  "field": "Public institutions",
+  "description": "Analyse a citizen enquiry, look up the applicable rules and prepare a factual draft reply.",
+  "start": "Citizen enquiry",
+  "output": "Draft reply",
+  "file_name": "Draft reply",
+  "input": "SYNTHETIC SAMPLE DATA – an entirely fictional municipality and rules, for trying things out only.\n\nEmail to the municipality of Sampletown on 2026-04-14, sender: Mr Paul Example, 12 Linden Way:\n\"Dear Sir or Madam, I would like to put up a garden shed of about 4 x 3 metres in my garden, height\n2.60 metres, about 1 metre from the fence to my neighbour. Do I need a permit for this? Also, the street lamp\nin front of number 14 has been broken for weeks and it is pitch dark there in the evening. When will it be\nrepaired? I already reported it by phone in March.\"\n\nExtract from the municipality's internal information (fictional):\n- Building regulations (extract): buildings without rooms for habitation up to 30 m³ gross volume do not need a\n  permit. Projects without a permit must still respect the clearance areas; at the plot boundary, outbuildings up\n  to 3 m wall height and 9 m total length are allowed. Development plans may provide otherwise.\n- Development plan no. 17 \"Am Lindenhain\" applies to Linden Way; a review by the building authority is needed.\n- Street lighting: the municipal works depot is responsible; reports via the online form or phone 0000-123,\n  usually processed within 10 working days. No report on Linden Way is recorded in the system for March.",
+  "guide": {
+    "problem": "Citizen enquiries often contain several concerns and must be answered correctly, clearly and without hasty commitments. The workflow breaks the enquiry down, finds the relevant rules in the information provided and prepares a reply.",
+    "flow": "A chain of three agents: the concern analysis separates the concerns and assigns responsibilities, the information preparation looks up the relevant rules only in the extract provided, and the draft reply writes a citizen-friendly answer. A quality check makes sure only documented rules are cited and no binding commitments are made.",
+    "input": "The citizen's enquiry and the relevant internal information, rules and responsibilities, as an extract in the text or as files. You can also attach photos from the enquiry. The sample file is a fictional guidance note of the municipality.",
+    "result": "A draft reply in plain language with responsibilities, next steps and notes for the case worker, also as a Word file for your letterhead. The information preparation proposes the rules it found, with references, for knowledge so that later enquiries can use them; only what you confirm is stored. The draft must be checked and approved by an expert before it is sent.",
+    "adapt": "Attach your by-laws and guidance notes or upload them permanently as knowledge (“Search” mode with quotations) and assign them to the information preparation. Add letterhead and sign-off in the system prompt of the draft reply. Use batch processing to handle many enquiries at once."
+  },
+  "agents": {
+    "triage": {
+      "name": "Concern analysis",
+      "description": "Separates the concerns and assigns responsibilities and urgency.",
+      "system": "You work in citizen communication for a public administration. Break the enquiry down into individual concerns and give for each: type (information, complaint, report, application), the probable responsible office, urgency and the questions that must be answered. Be brief and write a list.",
+      "task": "{{input}}"
+    },
+    "rules": {
+      "name": "Information preparation",
+      "description": "Looks up the relevant rules only in the information provided.",
+      "system": "You are a case worker in a public administration. Assign the relevant rules and responsibilities to each concern and quote the passage from the extract provided. Use only the information provided and do not invent regulations, deadlines or phone numbers. State what cannot be answered without further review and which details are missing from the citizen.",
+      "task": "Prepare the information.\n\nEnquiry and internal information:\n{{run.input}}\n\nConcerns:\n{{node:triage}}"
+    },
+    "reply": {
+      "name": "Draft reply",
+      "description": "Writes a factual, citizen-friendly reply for approval.",
+      "system": "You write replies from a public administration to citizens: polite, factual, in plain language and without bureaucratic jargon. Answer every concern, name the responsible office and the next step, and explain what is still being checked. Make no binding commitments or approvals. Start with the note \"DRAFT – check before sending\" and finish with notes for the case worker.",
+      "task": "Write the draft reply.\n\nConcerns:\n{{node:triage}}\n\nPrepared information:\n{{node:rules}}",
+      "criteria": {
+        "only_given_rules": "The reply cites only rules, deadlines and contacts from the information provided.",
+        "plain_language": "The reply is polite and written in plain, understandable language.",
+        "no_binding_commitment": "The reply contains no binding commitments or approvals and is marked as a draft."
+      }
+    }
+  },
+  "form": {
+    "documents": {
+      "label": "Documents",
+      "description": "Optional: by-laws, guidance notes or lists of responsibilities (PDF, Word, Markdown, text) and photos from the enquiry (PNG, JPEG, WebP), up to 5 files. Without files, the extract in the text applies."
+    }
+  },
+  "samples": {
+    "guidance": {
+      "name": "Guidance_outbuildings_and_lighting",
+      "description": "A fictional guidance note of the municipality with rules on garden sheds and responsibility for street lamps, as a PDF.",
+      "content": "# Guidance note of the municipality of Sampletown (fictional)\n\nSYNTHETIC SAMPLE DATA – entirely fictional rules, for trying things out only.\n\n## Garden sheds and other outbuildings\n\n1. Buildings without rooms for habitation up to 30 m³ gross volume do not need a permit (section 12 (1) of the model building regulations, fictional).\n2. Projects without a permit must still respect the clearance areas. At the plot boundary, outbuildings up to 3 m wall height and 9 m total length are allowed (section 6 (7)).\n3. Development plans may provide otherwise. Development plan no. 17 “Am Lindenhain” applies to Linden Way; a review by the building authority is needed there.\n4. Information: building authority, room 2.14, office hours Tue and Thu 9 am–12 noon.\n\n## Street lighting\n\n- The municipal works depot is responsible.\n- Reports via the online form “Report a problem” or phone 0000-123.\n- Usually processed within 10 working days after the report is received.\n- Reports by phone are recorded in the system; if there is no entry, please report again."
+    }
+  },
+  "tests": {
+    "two_concerns": {
+      "name": "Garden shed and street lamp"
+    },
+    "guidance_file": {
+      "name": "Rules as a guidance note file",
+      "input": "SYNTHETIC SAMPLE DATA – an entirely fictional municipality and rules, for trying things out only.\n\nEmail to the municipality of Sampletown on 2026-04-14, sender: Mr Paul Example, 12 Linden Way:\n\"Dear Sir or Madam, I would like to put up a garden shed of about 4 x 3 metres in my garden, height\n2.60 metres, about 1 metre from the fence to my neighbour. Do I need a permit for this? Also, the street lamp\nin front of number 14 has been broken for weeks and it is pitch dark there in the evening. When will it be\nrepaired? I already reported it by phone in March.\"\n\nThe relevant rules are in the attached guidance note."
+    }
+  }
+}

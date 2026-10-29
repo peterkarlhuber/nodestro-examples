@@ -1,0 +1,203 @@
+{
+  "name": "Maschinenstillstände analysieren",
+  "field": "Produktion und Industrie",
+  "description": "Stillstandsprotokoll auswerten, Ursachenhypothesen entwickeln und Verbesserungsmaßnahmen priorisieren.",
+  "start": "Stillstandsprotokoll",
+  "output": "Maßnahmenplan",
+  "file_name": "Stillstandsanalyse",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nWerk: Beispielwerk Nord, Abfülllinie L2 (Getränke, 3 Schichten)\nZeitraum: KW 14–15, geplante Produktionszeit gesamt 14.400 Minuten\nZiel: Stillstandsanteil unter 3 % der geplanten Produktionszeit\n\n| Nr. | Datum | Schicht | Anlage | Dauer (min) | Störcode | Notiz des Bedieners |\n|---|---|---|---|---|---|---|\n| 1 | 01.04. | Früh | Etikettierer | 45 | E-17 Etikettenabriss | Neue Etikettenrolle von Lieferant B |\n| 2 | 01.04. | Spät | Füller | 120 | F-03 Ventil undicht | Dichtung getauscht, Ersatzteil musste aus dem Zentrallager geholt werden |\n| 3 | 02.04. | Nacht | Etikettierer | 30 | E-17 Etikettenabriss | Wieder Rolle von Lieferant B |\n| 4 | 03.04. | Früh | Packer | 25 | P-08 Kartonstau | Kartons wirken feucht |\n| 5 | 03.04. | Spät | Etikettierer | 50 | E-17 Etikettenabriss | Bahnspannung nachgestellt |\n| 6 | 04.04. | Früh | Füller | 90 | F-11 Formatwechsel | Wechsel 0,5 l auf 1 l, Standardzeit 45 min |\n| 7 | 07.04. | Nacht | Etikettierer | 40 | E-17 Etikettenabriss | Neuer Bediener in Einarbeitung |\n| 8 | 08.04. | Früh | Packer | 35 | P-08 Kartonstau | Dach im Kartonlager Halle 3 undicht? |\n| 9 | 09.04. | Spät | Füller | 60 | F-03 Ventil undicht | Gleiche Ventilgruppe wie am 01.04. |\n| 10 | 10.04. | Früh | Etikettierer | 55 | E-17 Etikettenabriss | Rolle von Lieferant B, Leim wirkt schwach |\n| 11 | 11.04. | Spät | Füller | 95 | F-11 Formatwechsel | Formatteil musste gesucht werden |\n| 12 | 14.04. | Nacht | Packer | 20 | P-02 Sensorfehler | Lichtschranke gereinigt |",
+  "guide": {
+    "problem": "Stillstände kosten Produktionszeit, doch in langen Protokollen gehen Muster leicht unter. Der Workflow macht aus einem Stillstandsprotokoll eine begründete, priorisierte Maßnahmenliste.",
+    "flow": "Zwei Agenten arbeiten parallel: Der Stillstandsanalyst rechnet Summen, Anteile und eine Pareto-Rangfolge mit dem Rechner-Tool, der Ursachenanalyst entwickelt Hypothesen nach den 6M. Der Maßnahmenplaner führt beides zusammen, und eine eingebaute Qualitätsprüfung kontrolliert, dass jede Maßnahme begründet ist. Liegt der Stillstandsanteil über dem Ziel von 3 %, startet ein Entscheidungsknoten einen Qualitäts-Sub-Workflow, der die Risiken der Maßnahmen bewertet und ihre Absicherung plant.",
+    "input": "Ein Stillstandsprotokoll (Datum, Schicht, Anlage, Dauer, Störcode, Notiz) und die geplante Produktionszeit. Das Protokoll kannst du als Tabelle in den Text einfügen oder als CSV- bzw. Excel-Datei in das optionale Dateifeld legen; die Beispieldatei „Stillstandsprotokoll_L2_KW14-15.xlsx“ enthält dieselben zwölf erfundenen Einträge wie die Testaufgabe.",
+    "result": "Eine priorisierte Tabelle mit Sofortmaßnahmen, Prüfaufträgen und dauerhaften Maßnahmen, jeweils mit erwarteter Wirkung, Aufwand, verantwortlicher Rolle und Kennzahl, dazu die Datenanalyse mit Stillstandsanteil und die drei wichtigsten nächsten Schritte. Der Lauf speichert alles zusätzlich als Markdown und als Excel-Datei mit den Tabellen.",
+    "adapt": "Lege einen Export aus deinem MES oder deiner Tabellenkalkulation in das Dateifeld; auch lange Protokolle funktionieren, weil die Agenten große Dateien gezielt lesen. Für eine wöchentliche Auswertung kannst du die Kopie zeitgesteuert starten. Im System-Prompt des Maßnahmenplaners kannst du eure Methodik ergänzen, zum Beispiel TPM-Säulen oder ein festes Bewertungsschema."
+  },
+  "agents": {
+    "downtime": {
+      "name": "Stillstandsanalyst",
+      "description": "Wertet das Protokoll quantitativ aus und rechnet mit dem Rechner-Tool.",
+      "system": "Du bist Datenanalyst in der Instandhaltung. Werte Stillstandsprotokolle quantitativ aus: Summen und Anteile je Anlage, Störcode und Schicht, Häufigkeit und mittlere Dauer, eine Pareto-Rangfolge sowie den Anteil an der geplanten Produktionszeit im Vergleich zum Ziel. Rechne jede Zahl mit dem Rechner-Tool nach, statt sie zu schätzen. Gib die Ergebnisse als kompakte Tabellen aus und nenne Auffälligkeiten wie Wiederholungen oder Häufungen in bestimmten Schichten.",
+      "task": "Werte dieses Stillstandsprotokoll quantitativ aus:\n\n{{input}}",
+      "fields": {
+        "analysis": "Die quantitative Auswertung als Text mit Tabellen",
+        "downtime_share_percent": "Anteil der Stillstände an der geplanten Produktionszeit in Prozent"
+      }
+    },
+    "causes": {
+      "name": "Ursachenanalyst",
+      "description": "Entwickelt Ursachenhypothesen nach den 6M und schlägt Prüfungen vor.",
+      "system": "Du bist erfahrener Produktionsingenieur und moderierst Ursachenanalysen. Leite aus den Einträgen und Notizen Ursachenhypothesen ab und ordne sie nach den 6M: Mensch, Maschine, Material, Methode, Messung, Mitwelt. Nenne für jede Hypothese die stützenden Einträge, ihre Plausibilität (hoch, mittel, gering) und eine Prüfung, mit der man sie bestätigen oder verwerfen kann. Formuliere Hypothesen, keine feststehenden Ursachen.",
+      "task": "Entwickle Ursachenhypothesen zu diesen Stillständen:\n\n{{input}}"
+    },
+    "measures": {
+      "name": "Maßnahmenplaner",
+      "description": "Führt Analyse und Hypothesen zu priorisierten Maßnahmen zusammen.",
+      "system": "Du bist Experte für Lean Production und TPM. Entwickle aus der Datenanalyse und den Ursachenhypothesen konkrete Verbesserungsmaßnahmen. Unterscheide Sofortmaßnahmen, Prüfaufträge zur Bestätigung von Hypothesen und dauerhafte Abstellmaßnahmen. Bewerte jede Maßnahme nach erwarteter Wirkung (eingesparte Minuten, soweit ableitbar), Aufwand und Umsetzungsdauer und priorisiere sie in einer Tabelle. Nenne je Maßnahme eine verantwortliche Rolle und eine Kennzahl zur Wirksamkeitskontrolle. Schließe mit den drei wichtigsten nächsten Schritten.",
+      "task": "Leite priorisierte Verbesserungsmaßnahmen ab.\n\nDatenanalyse:\n{{node:downtime}}\n\nUrsachenhypothesen:\n{{node:causes}}",
+      "criteria": {
+        "linked_to_findings": "Jede Maßnahme bezieht sich nachvollziehbar auf einen Befund der Datenanalyse oder eine Ursachenhypothese.",
+        "prioritised": "Die Maßnahmen sind nach Wirkung und Aufwand begründet priorisiert.",
+        "owners_and_metrics": "Jede Maßnahme nennt eine verantwortliche Rolle und eine Kennzahl zur Wirksamkeitskontrolle."
+      }
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "Ziel verfehlt?",
+      "branches": {
+        "above_target": "Über 3 %"
+      },
+      "default": "Im Ziel"
+    },
+    "quality": {
+      "name": "Qualitätsabsicherung"
+    }
+  },
+  "form": {
+    "log_file": {
+      "label": "Stillstandsprotokoll als Datei",
+      "description": "Optional: ein Export aus MES oder Tabellenkalkulation als CSV oder Excel (XLSX), höchstens 10 MB. Ohne Datei werten die Agenten die Tabelle im Text aus."
+    }
+  },
+  "samples": {
+    "log": {
+      "name": "Stillstandsprotokoll_L2_KW14-15",
+      "description": "Excel-Export mit den zwölf erfundenen Stillständen der Abfülllinie L2 aus der Testaufgabe.",
+      "content": {
+        "Stillstände": [
+          [
+            "Nr.",
+            "Datum",
+            "Schicht",
+            "Anlage",
+            "Dauer (min)",
+            "Störcode",
+            "Notiz des Bedieners"
+          ],
+          [
+            1,
+            "2026-04-01",
+            "Früh",
+            "Etikettierer",
+            45,
+            "E-17 Etikettenabriss",
+            "Neue Etikettenrolle von Lieferant B"
+          ],
+          [
+            2,
+            "2026-04-01",
+            "Spät",
+            "Füller",
+            120,
+            "F-03 Ventil undicht",
+            "Dichtung getauscht, Ersatzteil musste aus dem Zentrallager geholt werden"
+          ],
+          [
+            3,
+            "2026-04-02",
+            "Nacht",
+            "Etikettierer",
+            30,
+            "E-17 Etikettenabriss",
+            "Wieder Rolle von Lieferant B"
+          ],
+          [
+            4,
+            "2026-04-03",
+            "Früh",
+            "Packer",
+            25,
+            "P-08 Kartonstau",
+            "Kartons wirken feucht"
+          ],
+          [
+            5,
+            "2026-04-03",
+            "Spät",
+            "Etikettierer",
+            50,
+            "E-17 Etikettenabriss",
+            "Bahnspannung nachgestellt"
+          ],
+          [
+            6,
+            "2026-04-04",
+            "Früh",
+            "Füller",
+            90,
+            "F-11 Formatwechsel",
+            "Wechsel 0,5 l auf 1 l, Standardzeit 45 min"
+          ],
+          [
+            7,
+            "2026-04-07",
+            "Nacht",
+            "Etikettierer",
+            40,
+            "E-17 Etikettenabriss",
+            "Neuer Bediener in Einarbeitung"
+          ],
+          [
+            8,
+            "2026-04-08",
+            "Früh",
+            "Packer",
+            35,
+            "P-08 Kartonstau",
+            "Dach im Kartonlager Halle 3 undicht?"
+          ],
+          [
+            9,
+            "2026-04-09",
+            "Spät",
+            "Füller",
+            60,
+            "F-03 Ventil undicht",
+            "Gleiche Ventilgruppe wie am 01.04."
+          ],
+          [
+            10,
+            "2026-04-10",
+            "Früh",
+            "Etikettierer",
+            55,
+            "E-17 Etikettenabriss",
+            "Rolle von Lieferant B, Leim wirkt schwach"
+          ],
+          [
+            11,
+            "2026-04-11",
+            "Spät",
+            "Füller",
+            95,
+            "F-11 Formatwechsel",
+            "Formatteil musste gesucht werden"
+          ],
+          [
+            12,
+            "2026-04-14",
+            "Nacht",
+            "Packer",
+            20,
+            "P-02 Sensorfehler",
+            "Lichtschranke gereinigt"
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "above_target": {
+      "name": "Protokoll im Text, Ziel verfehlt (4,6 %)"
+    },
+    "within_target": {
+      "name": "Ruhige Woche, Ziel eingehalten",
+      "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nWerk: Beispielwerk Nord, Abfülllinie L2 (Getränke, 3 Schichten)\nZeitraum: KW 16–17, geplante Produktionszeit gesamt 14.400 Minuten\nZiel: Stillstandsanteil unter 3 % der geplanten Produktionszeit\n\n| Nr. | Datum | Schicht | Anlage | Dauer (min) | Störcode | Notiz des Bedieners |\n|---|---|---|---|---|---|---|\n| 1 | 15.04. | Früh | Füller | 70 | F-11 Formatwechsel | Wechsel 0,5 l auf 1 l nach neuer Checkliste |\n| 2 | 17.04. | Spät | Etikettierer | 25 | E-17 Etikettenabriss | Rolle von Lieferant A |\n| 3 | 21.04. | Nacht | Packer | 20 | P-02 Sensorfehler | Lichtschranke gereinigt |\n| 4 | 23.04. | Früh | Füller | 60 | F-11 Formatwechsel | Wechsel 1 l auf 0,5 l |\n| 5 | 24.04. | Spät | Etikettierer | 30 | E-04 Leimauftrag | Leimdüse gereinigt |"
+    },
+    "log_file": {
+      "name": "Protokoll als Excel-Datei",
+      "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nWerk: Beispielwerk Nord, Abfülllinie L2 (Getränke, 3 Schichten)\nZeitraum: KW 14–15, geplante Produktionszeit gesamt 14.400 Minuten\nZiel: Stillstandsanteil unter 3 % der geplanten Produktionszeit\n\nDas Stillstandsprotokoll liegt als Excel-Datei bei."
+    }
+  }
+}

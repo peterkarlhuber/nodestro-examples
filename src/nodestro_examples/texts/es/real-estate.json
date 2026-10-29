@@ -1,0 +1,68 @@
+{
+  "name": "Comparar ofertas inmobiliarias",
+  "field": "Sector inmobiliario",
+  "description": "Comparar dos ofertas de compra por rentabilidad, ubicación y estado y valorar oportunidades y riesgos.",
+  "start": "Ofertas",
+  "output": "Valoración",
+  "file_name": "Comparación inmobiliaria",
+  "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nObjetivo: comprar un piso para alquilar. Capital propio 80.000 EUR, el resto mediante préstamo\nal 3,8 % de interés y 2 % de amortización anual. Gastos de compra de alrededor del 10 % del precio.\n\nOferta 1 – periferia, construido en 1994\n- 3 habitaciones, 74 m², precio 245.000 EUR, plaza de aparcamiento incluida\n- Alquiler neto alcanzable según la agencia 11,50 EUR/m²; actualmente alquilado a 9,20 EUR/m²\n- Cuota de comunidad 310 EUR/mes, de los que 95 EUR no son repercutibles al inquilino\n- Fondo de reserva de la comunidad 38.000 EUR para 24 viviendas; rehabilitación del tejado prevista en 3 años\n- Tren de cercanías a 8 minutos a pie, anunciado un nuevo polígono empresarial cerca\n\nOferta 2 – centro, edificio antiguo de 1910, rehabilitado en 2015\n- 2 habitaciones, 58 m², precio 289.000 EUR, sin aparcamiento\n- Vacío; pisos comparables se alquilan a 15,00 EUR/m²\n- Cuota de comunidad 280 EUR/mes, de los que 80 EUR no son repercutibles\n- Fondo de reserva 112.000 EUR para 10 viviendas; no se conocen obras importantes\n- Ubicación muy demandada; en la ciudad rige un límite a la subida de alquileres",
+  "guide": {
+    "problem": "En inmuebles deciden a la vez las cifras y la ubicación. El flujo recalcula rentabilidad y flujo de caja, analiza el inmueble y su entorno y contrapone oportunidades y riesgos.",
+    "flow": "El calculador de rentabilidad obtiene la rentabilidad bruta y neta y el flujo de caja mensual con la calculadora, mientras el analista del inmueble y la ubicación valora en paralelo estado, reservas y entorno. La valoración reúne ambos en una comparación estructurada.",
+    "input": "Al menos dos ofertas con precio, superficie, alquiler, cuota de comunidad, fondo de reserva y ubicación, además de tus supuestos de financiación. Las fichas, actas y planos se adjuntan en PDF, Word o imagen; los archivos de ejemplo contienen una ficha con extracto del acta y un plano de la oferta 2.",
+    "result": "Una comparación estructurada con indicadores, oferta preferida, oportunidades, riesgos y puntos que comprobar antes de decidir, además en PDF. No sustituye el asesoramiento financiero, fiscal o jurídico ni una visita.",
+    "adapt": "Introduce tus ofertas y datos de financiación y adjunta directamente fichas, actas de la junta de propietarios o planos. Un índice de alquileres que necesites a menudo puedes guardarlo como conocimiento y asignarlo al analista del inmueble y la ubicación."
+  },
+  "agents": {
+    "returns": {
+      "name": "Calculador de rentabilidad",
+      "description": "Calcula rentabilidad, financiación y flujo de caja con la calculadora.",
+      "system": "Eres analista inmobiliario. Calcula para cada oferta con la calculadora: inversión total con gastos de compra, importe del préstamo, alquiler anual (actual y alcanzable), rentabilidad bruta, rentabilidad neta tras los costes no repercutibles, cuota mensual y flujo de caja mensual antes de impuestos. Muestra los cálculos y cuánto cambia el resultado con un alquiler un 10 % más bajo.",
+      "task": "Calcula estas ofertas:\n\n{{input}}"
+    },
+    "property": {
+      "name": "Analista del inmueble y la ubicación",
+      "description": "Valora estado, reservas, facilidad de alquiler y ubicación.",
+      "system": "Eres tasador de viviendas. Valora para cada oferta el estado y el año de construcción, el fondo de reserva por vivienda, las obras previstas, la situación de alquiler y el marco legal, como un límite a los alquileres, así como la ubicación y la evolución del entorno. Indica los documentos que deben revisarse antes de comprar.",
+      "task": "Valora el inmueble y la ubicación de estas ofertas:\n\n{{input}}"
+    },
+    "assessment": {
+      "name": "Valoración de oportunidades y riesgos",
+      "description": "Contrapone cifras y valoración del inmueble y compara de forma estructurada.",
+      "system": "Asesoras a pequeños inversores privados. Contrapón la rentabilidad y la valoración del inmueble, indica oportunidades y riesgos de cada oferta y explica qué oferta encaja mejor con los supuestos indicados. Formula la preferencia con prudencia y enumera lo que debe comprobarse antes de decidir, como una visita, las actas, la financiación y los impuestos.",
+      "task": "Compara las ofertas.\n\nCálculo de rentabilidad:\n{{node:returns}}\n\nValoración del inmueble y la ubicación:\n{{node:property}}",
+      "fields": {
+        "comparison": "Indicadores principales de ambas ofertas comparados",
+        "preferred_offer": "Oferta que encaja mejor con los supuestos, con justificación",
+        "opportunities": "Oportunidades",
+        "risks": "Riesgos",
+        "checks_before_decision": "Comprobaciones antes de decidir"
+      }
+    }
+  },
+  "form": {
+    "documents": {
+      "label": "Documentación del inmueble",
+      "description": "Opcional: fichas del inmueble, actas de la junta de propietarios, certificados energéticos (PDF, Word) o planos y fotos (PNG, JPEG, WebP), hasta 8 archivos."
+    }
+  },
+  "samples": {
+    "expose": {
+      "name": "Ficha_oferta_2_edificio_antiguo",
+      "description": "Una ficha inventada de la oferta 2 con un extracto del acta de la junta de propietarios, en PDF.",
+      "content": "# Ficha: piso de 2 habitaciones en edificio antiguo del centro\n\nDATOS DE EJEMPLO SINTÉTICOS – totalmente inventados.\n\n| Dato | Valor |\n|---|---|\n| Año de construcción | 1910, rehabilitación integral en 2015 |\n| Superficie | 58 m² (ver plano) |\n| Precio | 289.000 EUR |\n| Cuota de comunidad | 280 EUR/mes, de los que 80 EUR no son repercutibles |\n| Certificado energético | por consumo, 128 kWh/(m²·a), calefacción central de gas de 2015 |\n| Estado | vacío, disponible de inmediato |\n\n## Ubicación\n\nCalle lateral tranquila, a 5 minutos del metro, tiendas y médicos a pie. En la ciudad rige un límite a la subida de alquileres.\n\n## Extracto del acta de la junta de propietarios del 12/11/2025\n\n- Punto 4: La comunidad encargará hasta mediados de 2026 un informe sobre la fachada. Se espera una rehabilitación en 2027–2028; está por ver si hará falta una derrama.\n- Punto 5: El fondo de reserva asciende a 112.000 EUR para 10 viviendas.\n- Punto 6: El contrato con la administración de fincas vence a finales de 2026."
+    },
+    "floor_plan": {
+      "name": "Plano_oferta_2",
+      "description": "Un plano simplificado e inventado del piso de 58 m² de la oferta 2 como imagen (PNG)."
+    }
+  },
+  "tests": {
+    "two_offers": {
+      "name": "Dos ofertas en el texto"
+    },
+    "with_documents": {
+      "name": "Con ficha y plano"
+    }
+  }
+}

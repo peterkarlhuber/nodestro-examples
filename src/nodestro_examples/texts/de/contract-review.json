@@ -1,0 +1,93 @@
+{
+  "name": "Vertrag strukturieren und Prüfpunkte finden",
+  "field": "Recht und Verwaltung",
+  "description": "Einen Vertrag gliedern, Klauseln verständlich erklären und Punkte für die fachliche Prüfung sammeln.",
+  "start": "Vertragstext",
+  "output": "Vertragsübersicht",
+  "file_name": "Vertragsübersicht",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfundener Vertrag, nur zum Ausprobieren.\n\nSoftware-Dienstleistungsvertrag zwischen der Beispiel Cloud GmbH (Anbieter) und der Muster Handels KG (Kunde)\n\n§ 1 Gegenstand: Der Anbieter stellt dem Kunden die Software „ShopPilot“ als Cloud-Dienst bereit und betreibt sie.\n§ 2 Laufzeit: Der Vertrag beginnt am 01.04.2026 und läuft 24 Monate. Er verlängert sich automatisch um jeweils\n12 Monate, wenn er nicht 6 Monate vor Ablauf schriftlich gekündigt wird.\n§ 3 Vergütung: 1.200 EUR netto pro Monat, zahlbar jährlich im Voraus. Der Anbieter darf die Preise einmal\njährlich nach billigem Ermessen anpassen.\n§ 4 Verfügbarkeit: Der Anbieter strebt eine Verfügbarkeit von 99 % im Monatsmittel an. Wartungsfenster zählen nicht.\n§ 5 Haftung: Die Haftung des Anbieters ist auf die Vergütung von drei Monaten begrenzt, außer bei Vorsatz.\n§ 6 Daten: Der Anbieter verarbeitet Kundendaten im Auftrag. Unterauftragnehmer können ohne vorherige\nInformation eingesetzt werden. Nach Vertragsende werden Daten nach 30 Tagen gelöscht.\n§ 7 Kündigung aus wichtigem Grund: Bei Zahlungsverzug von mehr als 14 Tagen kann der Anbieter den Zugang sperren.\n§ 8 Gerichtsstand: Sitz des Anbieters.",
+  "guide": {
+    "problem": "Verträge sind lang, und wichtige Klauseln verstecken sich in Details. Der Workflow gliedert einen Vertrag, erklärt ihn in einfacher Sprache und sammelt Punkte, die eine fachkundige Person prüfen sollte. Er ersetzt keine Rechtsberatung.",
+    "flow": "Der Strukturierer erfasst Parteien, Laufzeit, Leistungen und Fristen. Darauf arbeiten parallel der Klausel-Erklärer (einfache Sprache) und der Prüfpunkte-Analyst (ungewöhnliche oder einseitige Regelungen); beide lesen den Vertrag selbst, als Text oder als hochgeladene Datei. Findet der Prüfpunkte-Analyst kritische Klauseln, ergänzt ein Entscheidungsknoten eine vertiefte Prüfung dieser Klauseln. Der Berichts-Agent führt alles zu einer strukturierten Übersicht mit Fragen für die Rechtsberatung zusammen.",
+    "input": "Der Vertrag als Datei (PDF, Word, Markdown oder Text) im Feld „Vertrag als Datei“ oder als Text, möglichst mit Paragrafennummern. Die Datei lädst du direkt beim Start hoch; eine Wissenssammlung brauchst du dafür nicht. Die Beispieldatei enthält den erfundenen Vertrag der Testaufgabe.",
+    "result": "Eine strukturierte Übersicht mit Zusammenfassung, Eckdaten, erklärten Klauseln, Prüfpunkten und Fragen an eine Rechtsanwältin oder einen Rechtsanwalt, zusätzlich als PDF und als bearbeitbare Word-Datei. Der Strukturierer schlägt die Eckdaten des Vertrags für das Wissen vor, etwa für ein Vertragsverzeichnis; gespeichert wird nur, was du bestätigst.",
+    "adapt": "Lade deinen Vertrag beim Start als Datei hoch oder füge ihn ein. Eigene Prüfkriterien, etwa eure Mindestanforderungen an Haftung oder Datenschutz, ergänzt du im System-Prompt des Prüfpunkte-Analysten. Musterverträge, mit denen verglichen werden soll, kannst du als Wissen hinterlegen und dem Prüfpunkte-Analysten zuweisen."
+  },
+  "agents": {
+    "structure": {
+      "name": "Vertragsstrukturierer",
+      "description": "Erfasst Parteien, Gegenstand, Laufzeit, Vergütung und Fristen.",
+      "system": "Du strukturierst Verträge. Erfasse Parteien, Vertragsgegenstand, Laufzeit und Verlängerung, Kündigungsfristen, Vergütung und Zahlungsbedingungen, Leistungszusagen, Haftung, Datenschutz und Gerichtsstand. Gib jede Angabe mit Fundstelle wieder und notiere, was der Vertrag nicht regelt.",
+      "task": "Strukturiere diesen Vertrag:\n\n{{input}}"
+    },
+    "explain": {
+      "name": "Klausel-Erklärer",
+      "description": "Erklärt jede Klausel in einfacher Sprache.",
+      "system": "Du erklärst Verträge für Menschen ohne juristische Ausbildung. Erkläre jede Klausel in ein bis drei Sätzen in einfacher Sprache: was sie regelt und was sie praktisch für den Kunden bedeutet, mit einem kurzen Beispiel, wo es hilft. Bewerte nicht, ob eine Klausel wirksam ist.",
+      "task": "Erkläre die Klauseln dieses Vertrags.\n\nVertrag:\n{{run.input}}\n\nStruktur:\n{{node:structure}}"
+    },
+    "checkpoints": {
+      "name": "Prüfpunkte-Analyst",
+      "description": "Findet ungewöhnliche, einseitige oder fehlende Regelungen.",
+      "system": "Du bereitest Verträge für die rechtliche Prüfung vor. Markiere Regelungen, die ungewöhnlich, einseitig oder unklar sind oder fehlen, zum Beispiel automatische Verlängerung, einseitige Preisänderungen, schwache Leistungszusagen, Haftungsgrenzen, Unterauftragnehmer oder Datenrückgabe. Erkläre je Punkt, warum er geprüft werden sollte, und formuliere eine Frage dazu. Triff keine abschließende rechtliche Bewertung. Gib bei jedem Prüfpunkt den Wortlaut der betroffenen Klausel mit Fundstelle wieder, damit spätere Schritte ohne das Originaldokument damit arbeiten können.",
+      "task": "Sammle Prüfpunkte zu diesem Vertrag.\n\nVertrag:\n{{run.input}}\n\nStruktur:\n{{node:structure}}",
+      "fields": {
+        "points": "Prüfpunkte mit Begründung und Frage",
+        "critical_count": "Anzahl kritischer Klauseln (z. B. unbegrenzte oder sehr niedrige Haftung, automatische Verlängerung, einseitige Preisänderungen, Datenverarbeitung ohne Vereinbarung)"
+      }
+    },
+    "report": {
+      "name": "Vertragsübersicht",
+      "description": "Führt Erklärungen und Prüfpunkte zu einer strukturierten Übersicht zusammen.",
+      "system": "Du fasst Vertragsanalysen für Entscheider zusammen. Erstelle eine strukturierte Übersicht aus den Erklärungen und Prüfpunkten, ohne neue rechtliche Bewertungen hinzuzufügen. Formuliere die Fragen so, dass eine Rechtsanwältin oder ein Rechtsanwalt sie direkt beantworten kann.",
+      "task": "Erstelle die Vertragsübersicht.\n\nKlauseln erklärt:\n{{node:explain}}\n\nPrüfpunkte:\n{{node:checkpoints}}\n\nKritische Klauseln vertieft:\n{{node:critical}}",
+      "fields": {
+        "overview": "Zusammenfassung des Vertrags in drei bis fünf Sätzen",
+        "key_terms": "Eckdaten mit Fundstelle (Laufzeit, Fristen, Vergütung)",
+        "clauses_explained": "Klauseln in einfacher Sprache",
+        "check_points": "Prüfpunkte mit Begründung",
+        "questions_for_expert": "Fragen für die Rechtsberatung"
+      }
+    },
+    "critical": {
+      "name": "Kritische Klauseln",
+      "description": "Prüft kritische Klauseln vertieft und bereitet Verhandlungsfragen vor.",
+      "system": "Du bereitest Vertragsverhandlungen vor. Untersuche jede kritische Klausel vertieft: was sie praktisch bedeutet, der schlimmste realistische Fall, wie solche Klauseln in vergleichbaren Verträgen üblicherweise formuliert sind und welche andere Formulierung vorgeschlagen werden könnte. Formuliere Fragen für die Rechtsberatung. Triff keine abschließende rechtliche Bewertung.",
+      "task": "Prüfe die kritischen Klauseln vertieft.\n\nVertrag:\n{{run.input}}\n\nPrüfpunkte:\n{{node:checkpoints}}"
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "Kritische Klauseln?",
+      "branches": {
+        "critical": "Kritische Klauseln"
+      },
+      "default": "Keine"
+    }
+  },
+  "form": {
+    "contract_file": {
+      "label": "Vertrag als Datei",
+      "description": "Optional: der Vertrag als PDF, Word (DOCX), Markdown oder Text, höchstens 20 MB. Lade die Datei einfach hier hoch, eine Wissenssammlung ist nicht nötig. Ohne Datei gilt der Vertragstext unten."
+    }
+  },
+  "samples": {
+    "contract": {
+      "name": "Software-Dienstleistungsvertrag_Beispiel",
+      "description": "Der erfundene Vertrag der Testaufgabe als Word-Dokument.",
+      "content": "# Software-Dienstleistungsvertrag\n\nSYNTHETISCHE BEISPIELDATEN – frei erfundener Vertrag, nur zum Ausprobieren.\n\nzwischen der **Beispiel Cloud GmbH** (Anbieter) und der **Muster Handels KG** (Kunde)\n\n## § 1 Gegenstand\n\nDer Anbieter stellt dem Kunden die Software „ShopPilot“ als Cloud-Dienst bereit und betreibt sie.\n\n## § 2 Laufzeit\n\nDer Vertrag beginnt am 01.04.2026 und läuft 24 Monate. Er verlängert sich automatisch um jeweils 12 Monate, wenn er nicht 6 Monate vor Ablauf schriftlich gekündigt wird.\n\n## § 3 Vergütung\n\n1.200 EUR netto pro Monat, zahlbar jährlich im Voraus. Der Anbieter darf die Preise einmal jährlich nach billigem Ermessen anpassen.\n\n## § 4 Verfügbarkeit\n\nDer Anbieter strebt eine Verfügbarkeit von 99 % im Monatsmittel an. Wartungsfenster zählen nicht.\n\n## § 5 Haftung\n\nDie Haftung des Anbieters ist auf die Vergütung von drei Monaten begrenzt, außer bei Vorsatz.\n\n## § 6 Daten\n\nDer Anbieter verarbeitet Kundendaten im Auftrag. Unterauftragnehmer können ohne vorherige Information eingesetzt werden. Nach Vertragsende werden Daten nach 30 Tagen gelöscht.\n\n## § 7 Kündigung aus wichtigem Grund\n\nBei Zahlungsverzug von mehr als 14 Tagen kann der Anbieter den Zugang sperren.\n\n## § 8 Gerichtsstand\n\nSitz des Anbieters."
+    }
+  },
+  "tests": {
+    "contract_text": {
+      "name": "Vertrag im Text, mit kritischen Klauseln"
+    },
+    "contract_file": {
+      "name": "Vertrag als Word-Datei, ohne Text"
+    },
+    "balanced_contract": {
+      "name": "Ausgewogener Wartungsvertrag",
+      "input": "SYNTHETISCHE BEISPIELDATEN – frei erfundener Vertrag, nur zum Ausprobieren.\n\nWartungsvertrag zwischen der Beispiel Technik GmbH (Auftragnehmer) und der Muster Praxis GbR (Auftraggeber)\n\n§ 1 Gegenstand: Halbjährliche Wartung von zwei Klimageräten im Praxisgebäude.\n§ 2 Laufzeit: 12 Monate ab 01.05.2026; danach jederzeit mit einem Monat Frist zum Monatsende kündbar.\n§ 3 Vergütung: 380 EUR netto je Wartung, fällig 14 Tage nach Rechnung. Preisänderungen nur mit Zustimmung beider Seiten.\n§ 4 Störungen: Reaktion innerhalb von 2 Werktagen; Ersatzteile nach vorheriger Freigabe des Auftraggebers.\n§ 5 Haftung: nach den gesetzlichen Vorschriften.\n§ 6 Datenschutz: Es werden keine personenbezogenen Daten verarbeitet."
+    }
+  }
+}
