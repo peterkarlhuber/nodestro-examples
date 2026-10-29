@@ -1,5 +1,10 @@
 # Changelog
 
+## Unveröffentlicht
+
+- Pin von `nodestro-runtime` auf den aktuellen Stand (unverändertes Verhalten der Beispiele).
+- CI: aktuelle Actions (Node 24), Checkout ohne gespeicherte Zugangsdaten.
+
 ## 0.2.0 (2026-10-29)
 
 - Erste Version als eigenes Repository: aus `nodestro` 0.1.0 (Commit 15e2076, heute `nodestro-legacy`)
