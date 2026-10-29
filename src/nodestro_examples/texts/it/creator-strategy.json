@@ -1,0 +1,151 @@
+{
+  "name": "Sviluppare una strategia per i social media",
+  "field": "Influencer e creator di contenuti",
+  "description": "Definire posizionamento e pilastri di contenuto, sviluppare idee e creare un piano editoriale.",
+  "start": "Profilo del creator",
+  "output": "Piano dei contenuti",
+  "file_name": "Piano editoriale",
+  "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nCreator: \"Cucinare con Kim\" (fittizio), Instagram 8.400 follower, TikTok 3.100 follower, nessun canale YouTube\nContenuti finora: ricette veloci dopo il lavoro, irregolarmente 1–2 post a settimana\nPost migliori: pasta in 15 minuti (reel, 92.000 visualizzazioni), meal prep per la settimana (carosello, 1.400 salvataggi)\nPubblico secondo le statistiche: 25–40 anni, per lo più lavoratori, 70 % donne\nObiettivo in tre mesi: 15.000 follower su Instagram e una prima collaborazione con un marchio regionale\nTempo: circa 6 ore a settimana per pianificare, girare e montare\nData di inizio del piano: lunedì 2026-05-04",
+  "guide": {
+    "problem": "Pubblicare con regolarità richiede una direzione chiara e un piano adatto al proprio tempo disponibile. Il workflow ricava una strategia dalle statistiche, raccoglie idee adatte e pianifica la pubblicazione.",
+    "flow": "Una catena di tre agenti: l'agente della strategia definisce posizionamento, pilastri dei contenuti e obiettivi e analizza a questo scopo le statistiche allegate, lo sviluppatore di idee formula idee concrete di post con un gancio e il pianificatore dei contenuti le distribuisce su quattro settimane. Lo sviluppatore di idee ricorda le sue proposte in una memoria, così le esecuzioni successive non ripetono le idee. Un controllo qualità verifica che frequenza e mix siano realistici.",
+    "input": "Profilo con piattaforme, numeri, post di successo, pubblico, obiettivi, tempo disponibile e data di inizio. Puoi allegare anche le statistiche come screenshot o come esportazione CSV/Excel; il file di esempio è un'esportazione di questo tipo.",
+    "result": "Un piano editoriale di quattro settimane con data, piattaforma, formato, idea, gancio e call to action, introdotto da un breve riepilogo della strategia, anche come file Excel per continuare a pianificare.",
+    "adapt": "Inserisci il tuo profilo e i tuoi numeri o allega screenshot delle tue statistiche. Lo stile del tuo marchio e i temi tabù si aggiungono nel prompt di sistema dello sviluppatore di idee. La memoria \"creator-ideas\" si trova in Memoria; svuotala se vuoi ricominciare. Per un piano mensile puoi pianificare la copia."
+  },
+  "agents": {
+    "strategy": {
+      "name": "Agente della strategia",
+      "description": "Definisce posizionamento, pilastri di contenuto e obiettivi misurabili.",
+      "system": "Sei uno stratega di social media per creator. Dalle statistiche e dagli obiettivi ricava un posizionamento in una frase, da tre a quattro pilastri di contenuto con la loro quota, formati adatti per piattaforma e obiettivi misurabili per tre mesi. Motiva ogni decisione con i dati disponibili e tieni conto del tempo disponibile.",
+      "task": "Sviluppa la strategia per questo profilo:\n\n{{input}}"
+    },
+    "ideas": {
+      "name": "Sviluppatore di idee",
+      "description": "Sviluppa idee concrete di post con gancio e formato.",
+      "system": "Sei uno sviluppatore di contenuti creativo. Per ogni pilastro di contenuto sviluppa quattro idee concrete di post con titolo provvisorio, formato, un gancio per i primi tre secondi e un invito all'azione. Punta sulla varietà e su idee realizzabili con poco sforzo. Segnala le idee adatte a una collaborazione con un marchio. Usa la tua memoria: prima di sviluppare idee, leggi quali idee sono già state proposte nelle esecuzioni precedenti ed evita ripetizioni. Alla fine salva i titoli provvisori delle nuove idee con la data. Se la memoria è vuota, comincia semplicemente da zero.",
+      "task": "Sviluppa idee di post per questa strategia:\n\n{{node:strategy}}"
+    },
+    "calendar": {
+      "name": "Pianificatore dei contenuti",
+      "description": "Distribuisce le idee in un piano realistico di quattro settimane.",
+      "system": "Pianifichi calendari editoriali. Inizia con una sintesi della strategia in tre frasi. Crea poi un piano di quattro settimane a partire dalla data di inizio in forma di tabella con data, giorno della settimana, piattaforma, formato, idea, gancio e invito all'azione. Pianifica la produzione in modo che rientri nel tempo disponibile, per esempio con giornate di riprese per più post.",
+      "task": "Crea il calendario editoriale.\n\nStrategia:\n{{node:strategy}}\n\nIdee:\n{{node:ideas}}",
+      "criteria": {
+        "realistic_frequency": "La frequenza di pubblicazione è compatibile con il tempo disponibile indicato.",
+        "pillars_balanced": "I pilastri di contenuto sono distribuiti secondo la strategia.",
+        "matches_goals": "Il piano sostiene in modo visibile gli obiettivi indicati."
+      }
+    }
+  },
+  "form": {
+    "insights": {
+      "label": "Statistiche",
+      "description": "Facoltativo: screenshot delle tue statistiche (PNG, JPEG, WebP) o un'esportazione in CSV o Excel, fino a 6 file. Senza file valgono i numeri nel testo."
+    }
+  },
+  "samples": {
+    "insights": {
+      "name": "Statistiche_post_marzo",
+      "description": "Un'esportazione di statistiche fittizia con sette post in CSV.",
+      "content": [
+        [
+          "Data",
+          "Piattaforma",
+          "Formato",
+          "Tema",
+          "Visualizzazioni",
+          "Mi piace",
+          "Salvataggi",
+          "Commenti",
+          "Nuovi follower"
+        ],
+        [
+          "2026-03-02",
+          "Instagram",
+          "Reel",
+          "Pasta in 15 minuti",
+          92000,
+          4100,
+          2300,
+          160,
+          610
+        ],
+        [
+          "2026-03-05",
+          "Instagram",
+          "Carosello",
+          "Meal prep per la settimana",
+          18500,
+          1200,
+          1400,
+          75,
+          140
+        ],
+        [
+          "2026-03-09",
+          "TikTok",
+          "Video",
+          "Verdure al forno senza tagliare",
+          7400,
+          380,
+          90,
+          22,
+          35
+        ],
+        [
+          "2026-03-14",
+          "Instagram",
+          "Reel",
+          "Colazione da portare via",
+          6100,
+          290,
+          160,
+          18,
+          20
+        ],
+        [
+          "2026-03-19",
+          "Instagram",
+          "Storia",
+          "Spesa al mercato",
+          2100,
+          0,
+          0,
+          12,
+          4
+        ],
+        [
+          "2026-03-23",
+          "TikTok",
+          "Video",
+          "Tre salse veloci",
+          11800,
+          640,
+          210,
+          41,
+          66
+        ],
+        [
+          "2026-03-28",
+          "Instagram",
+          "Carosello",
+          "Idee con gli avanzi",
+          9900,
+          720,
+          980,
+          54,
+          85
+        ]
+      ]
+    }
+  },
+  "tests": {
+    "profile": {
+      "name": "Profilo nel testo"
+    },
+    "insights_export": {
+      "name": "Profilo con esportazione delle statistiche"
+    }
+  }
+}

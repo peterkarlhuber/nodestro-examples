@@ -1,0 +1,160 @@
+{
+  "name": "Individuelles Angebot vorbereiten",
+  "field": "Vertrieb",
+  "description": "Kundenanfrage analysieren, passende Lösung kalkulieren und ein Angebot entwerfen.",
+  "start": "Kundenanfrage",
+  "output": "Angebotsentwurf",
+  "file_name": "Angebot",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nE-Mail von Frau Lena Beispiel, Office-Managerin der Muster Steuerberatung (35 Arbeitsplätze, zieht im Juni um):\n„Guten Tag, wir ziehen am 15. Juni in neue Räume und brauchen für 35 Arbeitsplätze neue Ausstattung.\nWichtig sind uns höhenverstellbare Tische, weil mehrere Kollegen Rückenprobleme haben, und eine bessere\nAkustik im Großraum (12 Plätze). Außerdem brauchen wir zwei Besprechungsräume für je 8 Personen.\nUnser Budget liegt bei etwa 60.000 Euro netto. Können Sie uns bis Ende des Monats ein Angebot schicken?\nMontage sollte am Wochenende stattfinden, damit der Betrieb weiterläuft.“\n\nUnsere Preisliste (netto):\n- Schreibtisch höhenverstellbar elektrisch, 160 x 80 cm: 690 EUR\n- Schreibtisch fest, 160 x 80 cm: 320 EUR\n- Bürostuhl ergonomisch Premium: 540 EUR; Standard: 290 EUR\n- Akustik-Trennwand für Tische: 210 EUR; Akustik-Wandpaneel 120 x 60 cm: 140 EUR\n- Konferenztisch für 8 Personen: 1.450 EUR; Konferenzstuhl: 180 EUR\n- Lieferung und Montage: 45 EUR pro Arbeitsplatz, Wochenendzuschlag 20 % auf die Montage\n- Mengenrabatt: ab 25.000 EUR Warenwert 5 %, ab 50.000 EUR 8 %",
+  "guide": {
+    "problem": "Ein gutes Angebot beantwortet den tatsächlichen Bedarf des Kunden, nicht nur seine Stichworte. Der Workflow klärt den Bedarf, kalkuliert eine passende Lösung und entwirft ein vollständiges Angebot.",
+    "flow": "Der Bedarfsanalyst trennt ausdrückliche und unausgesprochene Anforderungen und sammelt offene Fragen. Der Lösungsberater stellt Positionen aus der Preisliste zusammen und rechnet mit dem Rechner-Tool, auch eine Variante innerhalb des Budgets. Der Angebotsautor schreibt das Angebot; eine eingebaute Qualitätsprüfung kontrolliert Vollständigkeit und Preise. Ein Eingabeformular nimmt die Eckdaten auf (Kunde, Termin, Budget, Montage am Wochenende); vor dem Versand gibt ein Mensch das Angebot frei.",
+    "input": "Die Anfrage des Kunden und eure Preisliste mit Rabatten und Konditionen. Das Formular nimmt die Eckdaten auf; die Preisliste kannst du in den Text schreiben oder als Excel-, CSV- oder PDF-Datei anhängen, wie die Beispieldatei zeigt.",
+    "result": "Ein Angebotsentwurf mit Anschreiben, Positionstabelle, Summen, Varianten, Annahmen und offenen Fragen. Erst nach deiner Freigabe speichert der Lauf das Angebot als PDF und als bearbeitbare Word-Datei.",
+    "adapt": "Hänge deine aktuelle Preisliste als Datei an, dann genügt als Text die Kundenanfrage. Zahlungsbedingungen und Textbausteine ergänzt du im System-Prompt des Angebotsautors."
+  },
+  "agents": {
+    "needs": {
+      "name": "Bedarfsanalyst",
+      "description": "Arbeitet ausdrückliche und unausgesprochene Anforderungen heraus.",
+      "system": "Du bist erfahrener Vertriebsberater. Analysiere die Kundenanfrage: ausdrückliche Anforderungen, unausgesprochene Bedürfnisse, Rahmenbedingungen wie Budget, Termin und Montage sowie Entscheidungskriterien. Liste offene Fragen auf, die vor einem verbindlichen Angebot geklärt werden sollten, und nenne die Annahmen, mit denen bis dahin gearbeitet werden kann.",
+      "task": "Analysiere den Bedarf in dieser Anfrage:\n\n{{input}}"
+    },
+    "solution": {
+      "name": "Lösungsberater",
+      "description": "Stellt passende Positionen zusammen und kalkuliert mit dem Rechner-Tool.",
+      "system": "Du bist Lösungsberater. Stelle aus der Preisliste eine Lösung zusammen, die den Bedarf erfüllt, und rechne Mengen, Zwischensummen, Zuschläge und Rabatte mit dem Rechner-Tool. Wenn das Budget nicht reicht, entwirf eine zweite Variante, die im Budget bleibt, und erkläre die Unterschiede. Verwende nur Artikel und Preise aus der Preisliste.",
+      "task": "Stelle eine Lösung mit Kalkulation zusammen.\n\nAnfrage und Preisliste:\n{{run.input}}\n\nBedarfsanalyse:\n{{node:needs}}"
+    },
+    "offer": {
+      "name": "Angebotsautor",
+      "description": "Schreibt den Angebotsentwurf für den Kunden.",
+      "system": "Du schreibst Angebote im B2B-Vertrieb. Verfasse ein freundliches, präzises Angebot: kurzes Anschreiben mit Bezug auf die Anliegen des Kunden, Positionstabelle mit Mengen und Preisen, Summen, Varianten, Leistungen wie Lieferung und Montage, Gültigkeit und die offenen Fragen. Kennzeichne das Dokument als Entwurf zur internen Freigabe. Übernimm Preise nur aus der Kalkulation.",
+      "task": "Schreibe den Angebotsentwurf.\n\nBedarfsanalyse:\n{{node:needs}}\n\nLösung und Kalkulation:\n{{node:solution}}",
+      "criteria": {
+        "all_requirements": "Das Angebot geht auf jede Anforderung aus der Bedarfsanalyse ein.",
+        "prices_consistent": "Alle Preise und Summen stimmen mit der Kalkulation überein.",
+        "open_points": "Offene Fragen und Annahmen sind klar benannt."
+      }
+    }
+  },
+  "steps": {
+    "approve": {
+      "name": "Angebot freigeben",
+      "instructions": "Prüfe Preise, Rabatte, Liefertermine und die offenen Fragen, bevor das Angebot verschickt wird. Eine Ablehnung beendet den Lauf; passe die Eingabe an und starte neu."
+    }
+  },
+  "form": {
+    "customer": {
+      "label": "Kunde",
+      "description": "Firma und Ansprechperson",
+      "default": "Muster Steuerberatung, Lena Beispiel"
+    },
+    "deadline": {
+      "label": "Angebot bis",
+      "description": "Bis wann der Kunde das Angebot braucht",
+      "default": "2026-05-29"
+    },
+    "budget": {
+      "label": "Budget (EUR netto)",
+      "description": "Der Rahmen, den der Kunde genannt hat",
+      "default": "60000"
+    },
+    "weekend": {
+      "label": "Montage am Wochenende",
+      "description": "Der Betrieb des Kunden darf nicht unterbrochen werden",
+      "default": "true"
+    },
+    "price_list": {
+      "label": "Preisliste als Datei",
+      "description": "Optional: eure Preisliste als Excel, CSV oder PDF. Ohne Datei gilt die Preisliste im Text."
+    }
+  },
+  "samples": {
+    "price_list": {
+      "name": "Preisliste_Bueroausstattung",
+      "description": "Die erfundene Preisliste der Testaufgabe als Excel-Datei mit Artikeln und Konditionen.",
+      "content": {
+        "Preisliste": [
+          [
+            "Artikel",
+            "Einheit",
+            "Preis netto (EUR)"
+          ],
+          [
+            "Schreibtisch höhenverstellbar elektrisch, 160 x 80 cm",
+            "Stück",
+            690
+          ],
+          [
+            "Schreibtisch fest, 160 x 80 cm",
+            "Stück",
+            320
+          ],
+          [
+            "Bürostuhl ergonomisch Premium",
+            "Stück",
+            540
+          ],
+          [
+            "Bürostuhl Standard",
+            "Stück",
+            290
+          ],
+          [
+            "Akustik-Trennwand für Tische",
+            "Stück",
+            210
+          ],
+          [
+            "Akustik-Wandpaneel 120 x 60 cm",
+            "Stück",
+            140
+          ],
+          [
+            "Konferenztisch für 8 Personen",
+            "Stück",
+            1450
+          ],
+          [
+            "Konferenzstuhl",
+            "Stück",
+            180
+          ],
+          [
+            "Lieferung und Montage",
+            "Arbeitsplatz",
+            45
+          ]
+        ],
+        "Konditionen": [
+          [
+            "Kondition",
+            "Regel"
+          ],
+          [
+            "Wochenendzuschlag",
+            "20 % auf die Montage"
+          ],
+          [
+            "Mengenrabatt",
+            "ab 25.000 EUR Warenwert 5 %, ab 50.000 EUR 8 %"
+          ],
+          [
+            "Gültigkeit von Angeboten",
+            "30 Tage"
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "request_text": {
+      "name": "Anfrage und Preisliste im Text"
+    },
+    "price_list_file": {
+      "name": "Preisliste als Excel-Datei",
+      "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nE-Mail von Frau Lena Beispiel, Office-Managerin der Muster Steuerberatung (35 Arbeitsplätze, zieht im Juni um):\n„Guten Tag, wir ziehen am 15. Juni in neue Räume und brauchen für 35 Arbeitsplätze neue Ausstattung.\nWichtig sind uns höhenverstellbare Tische, weil mehrere Kollegen Rückenprobleme haben, und eine bessere\nAkustik im Großraum (12 Plätze). Außerdem brauchen wir zwei Besprechungsräume für je 8 Personen.\nUnser Budget liegt bei etwa 60.000 Euro netto. Können Sie uns bis Ende des Monats ein Angebot schicken?\nMontage sollte am Wochenende stattfinden, damit der Betrieb weiterläuft.“\n\nUnsere Preisliste liegt als Excel-Datei bei."
+    }
+  }
+}

@@ -1,0 +1,203 @@
+{
+  "name": "Analizar paradas de máquina",
+  "field": "Producción e industria",
+  "description": "Evaluar un registro de paradas, desarrollar hipótesis de causa y priorizar medidas de mejora.",
+  "start": "Registro de paradas",
+  "output": "Plan de medidas",
+  "file_name": "Análisis de paradas",
+  "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nPlanta: Planta Ejemplo Norte, línea de llenado L2 (bebidas, 3 turnos)\nPeriodo: semanas 14–15, tiempo de producción planificado total 14.400 minutos\nObjetivo: tiempo de parada inferior al 3 % del tiempo de producción planificado\n\n| N.º | Fecha | Turno | Máquina | Duración (min) | Código de fallo | Nota del operario |\n|---|---|---|---|---|---|---|\n| 1 | 01/04 | Mañana | Etiquetadora | 45 | E-17 rotura de etiqueta | Bobina de etiquetas nueva del proveedor B |\n| 2 | 01/04 | Tarde | Llenadora | 120 | F-03 válvula con fuga | Junta cambiada, hubo que traer el repuesto del almacén central |\n| 3 | 02/04 | Noche | Etiquetadora | 30 | E-17 rotura de etiqueta | Otra vez bobina del proveedor B |\n| 4 | 03/04 | Mañana | Encajadora | 25 | P-08 atasco de cajas | Las cajas parecen húmedas |\n| 5 | 03/04 | Tarde | Etiquetadora | 50 | E-17 rotura de etiqueta | Tensión de banda reajustada |\n| 6 | 04/04 | Mañana | Llenadora | 90 | F-11 cambio de formato | Cambio de 0,5 l a 1 l, tiempo estándar 45 min |\n| 7 | 07/04 | Noche | Etiquetadora | 40 | E-17 rotura de etiqueta | Operario nuevo en formación |\n| 8 | 08/04 | Mañana | Encajadora | 35 | P-08 atasco de cajas | ¿Gotea el techo del almacén de cajas en la nave 3? |\n| 9 | 09/04 | Tarde | Llenadora | 60 | F-03 válvula con fuga | Mismo grupo de válvulas que el 01/04 |\n| 10 | 10/04 | Mañana | Etiquetadora | 55 | E-17 rotura de etiqueta | Bobina del proveedor B, el adhesivo parece débil |\n| 11 | 11/04 | Tarde | Llenadora | 95 | F-11 cambio de formato | Hubo que buscar una pieza de formato |\n| 12 | 14/04 | Noche | Encajadora | 20 | P-02 fallo de sensor | Fotocélula limpiada |",
+  "guide": {
+    "problem": "Las paradas cuestan tiempo de producción, pero en los registros largos los patrones pasan desapercibidos. El flujo convierte un registro de paradas en una lista de medidas justificada y priorizada.",
+    "flow": "Dos agentes trabajan en paralelo: el analista de paradas calcula totales, porcentajes y una clasificación de Pareto con la calculadora, y el analista de causas desarrolla hipótesis según las 6M. El planificador de medidas reúne ambos resultados, y una revisión de calidad integrada comprueba que cada medida esté justificada. Si el porcentaje de paradas supera el objetivo del 3 %, un nodo de decisión inicia un subflujo de calidad que evalúa los riesgos de las medidas y planifica cómo asegurarlas.",
+    "input": "Un registro de paradas (fecha, turno, máquina, duración, código de fallo, nota) y el tiempo de producción planificado. Puedes pegar el registro en el texto como tabla o ponerlo en el campo de archivo opcional como CSV o Excel; el archivo de ejemplo «Registro_paradas_L2_semanas14-15.xlsx» contiene las mismas doce entradas inventadas que la tarea de prueba.",
+    "result": "Una tabla priorizada con medidas inmediatas, comprobaciones y medidas permanentes, cada una con efecto esperado, esfuerzo, rol responsable e indicador, además del análisis de datos con el porcentaje de paradas y los tres próximos pasos más importantes. La ejecución guarda además todo como Markdown y como archivo de Excel con las tablas.",
+    "adapt": "Pon una exportación de tu MES o de tu hoja de cálculo en el campo de archivo; también funcionan registros largos, porque los agentes leen los archivos grandes de forma selectiva. Para una evaluación semanal puedes programar la copia. En el prompt de sistema del planificador de medidas puedes añadir vuestra metodología, por ejemplo los pilares TPM o un esquema de valoración fijo."
+  },
+  "agents": {
+    "downtime": {
+      "name": "Analista de paradas",
+      "description": "Evalúa el registro de forma cuantitativa y calcula con la calculadora.",
+      "system": "Eres analista de datos en mantenimiento. Evalúa los registros de paradas de forma cuantitativa: totales y porcentajes por máquina, código de fallo y turno, frecuencia y duración media, una clasificación de Pareto y el porcentaje del tiempo de producción planificado frente al objetivo. Comprueba cada cifra con la calculadora en lugar de estimarla. Presenta los resultados en tablas compactas y señala anomalías como repeticiones o acumulaciones en determinados turnos.",
+      "task": "Evalúa cuantitativamente este registro de paradas:\n\n{{input}}",
+      "fields": {
+        "analysis": "La evaluación cuantitativa como texto con tablas",
+        "downtime_share_percent": "Porcentaje de paradas sobre el tiempo de producción planificado"
+      }
+    },
+    "causes": {
+      "name": "Analista de causas",
+      "description": "Desarrolla hipótesis de causa según las 6M y propone comprobaciones.",
+      "system": "Eres ingeniero de producción con experiencia y moderas análisis de causa raíz. Deriva hipótesis de causa a partir de las entradas y notas y agrúpalas según las 6M: mano de obra, máquina, material, método, medición y medio ambiente. Indica para cada hipótesis las entradas que la apoyan, su plausibilidad (alta, media, baja) y una comprobación que la confirme o la descarte. Formula hipótesis, no causas establecidas.",
+      "task": "Desarrolla hipótesis de causa para estas paradas:\n\n{{input}}"
+    },
+    "measures": {
+      "name": "Planificador de medidas",
+      "description": "Combina análisis e hipótesis en medidas priorizadas.",
+      "system": "Eres experto en lean manufacturing y TPM. Desarrolla medidas de mejora concretas a partir del análisis de datos y de las hipótesis de causa. Distingue acciones inmediatas, tareas de verificación que confirmen hipótesis y medidas correctivas permanentes. Valora cada medida según el efecto esperado (minutos ahorrados, cuando se pueda deducir), el esfuerzo y el plazo de implantación, y priorízalas en una tabla. Indica para cada medida un rol responsable y un indicador para comprobar su eficacia. Termina con los tres próximos pasos más importantes.",
+      "task": "Deriva medidas de mejora priorizadas.\n\nAnálisis de datos:\n{{node:downtime}}\n\nHipótesis de causa:\n{{node:causes}}",
+      "criteria": {
+        "linked_to_findings": "Cada medida se refiere de forma comprensible a un hallazgo del análisis de datos o a una hipótesis de causa.",
+        "prioritised": "Las medidas están priorizadas de forma justificada según efecto y esfuerzo.",
+        "owners_and_metrics": "Cada medida indica un rol responsable y un indicador para comprobar su eficacia."
+      }
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "¿Objetivo incumplido?",
+      "branches": {
+        "above_target": "Más del 3 %"
+      },
+      "default": "Dentro del objetivo"
+    },
+    "quality": {
+      "name": "Aseguramiento de calidad"
+    }
+  },
+  "form": {
+    "log_file": {
+      "label": "Registro de paradas como archivo",
+      "description": "Opcional: una exportación del MES o de una hoja de cálculo en CSV o Excel (XLSX), como máximo 10 MB. Sin archivo, los agentes analizan la tabla del texto."
+    }
+  },
+  "samples": {
+    "log": {
+      "name": "Registro_paradas_L2_semanas14-15",
+      "description": "Exportación de Excel con las doce paradas inventadas de la línea de llenado L2 de la tarea de prueba.",
+      "content": {
+        "Paradas": [
+          [
+            "N.º",
+            "Fecha",
+            "Turno",
+            "Máquina",
+            "Duración (min)",
+            "Código de fallo",
+            "Nota del operario"
+          ],
+          [
+            1,
+            "2026-04-01",
+            "Mañana",
+            "Etiquetadora",
+            45,
+            "E-17 rotura de etiqueta",
+            "Bobina de etiquetas nueva del proveedor B"
+          ],
+          [
+            2,
+            "2026-04-01",
+            "Tarde",
+            "Llenadora",
+            120,
+            "F-03 válvula con fuga",
+            "Junta cambiada, hubo que traer el repuesto del almacén central"
+          ],
+          [
+            3,
+            "2026-04-02",
+            "Noche",
+            "Etiquetadora",
+            30,
+            "E-17 rotura de etiqueta",
+            "Otra vez bobina del proveedor B"
+          ],
+          [
+            4,
+            "2026-04-03",
+            "Mañana",
+            "Encajadora",
+            25,
+            "P-08 atasco de cajas",
+            "Las cajas parecen húmedas"
+          ],
+          [
+            5,
+            "2026-04-03",
+            "Tarde",
+            "Etiquetadora",
+            50,
+            "E-17 rotura de etiqueta",
+            "Tensión de banda reajustada"
+          ],
+          [
+            6,
+            "2026-04-04",
+            "Mañana",
+            "Llenadora",
+            90,
+            "F-11 cambio de formato",
+            "Cambio de 0,5 l a 1 l, tiempo estándar 45 min"
+          ],
+          [
+            7,
+            "2026-04-07",
+            "Noche",
+            "Etiquetadora",
+            40,
+            "E-17 rotura de etiqueta",
+            "Operario nuevo en formación"
+          ],
+          [
+            8,
+            "2026-04-08",
+            "Mañana",
+            "Encajadora",
+            35,
+            "P-08 atasco de cajas",
+            "¿Gotea el techo del almacén de cajas en la nave 3?"
+          ],
+          [
+            9,
+            "2026-04-09",
+            "Tarde",
+            "Llenadora",
+            60,
+            "F-03 válvula con fuga",
+            "Mismo grupo de válvulas que el 01/04"
+          ],
+          [
+            10,
+            "2026-04-10",
+            "Mañana",
+            "Etiquetadora",
+            55,
+            "E-17 rotura de etiqueta",
+            "Bobina del proveedor B, el adhesivo parece débil"
+          ],
+          [
+            11,
+            "2026-04-11",
+            "Tarde",
+            "Llenadora",
+            95,
+            "F-11 cambio de formato",
+            "Hubo que buscar una pieza de formato"
+          ],
+          [
+            12,
+            "2026-04-14",
+            "Noche",
+            "Encajadora",
+            20,
+            "P-02 fallo de sensor",
+            "Fotocélula limpiada"
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "above_target": {
+      "name": "Registro en el texto, objetivo incumplido (4,6 %)"
+    },
+    "within_target": {
+      "name": "Quincena tranquila, objetivo cumplido",
+      "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nPlanta: Planta Ejemplo Norte, línea de llenado L2 (bebidas, 3 turnos)\nPeriodo: semanas 16–17, tiempo de producción planificado total 14.400 minutos\nObjetivo: tiempo de parada inferior al 3 % del tiempo de producción planificado\n\n| N.º | Fecha | Turno | Máquina | Duración (min) | Código de fallo | Nota del operario |\n|---|---|---|---|---|---|---|\n| 1 | 15/04 | Mañana | Llenadora | 70 | F-11 cambio de formato | Cambio de 0,5 l a 1 l con la nueva lista de verificación |\n| 2 | 17/04 | Tarde | Etiquetadora | 25 | E-17 rotura de etiqueta | Bobina del proveedor A |\n| 3 | 21/04 | Noche | Encajadora | 20 | P-02 fallo de sensor | Fotocélula limpiada |\n| 4 | 23/04 | Mañana | Llenadora | 60 | F-11 cambio de formato | Cambio de 1 l a 0,5 l |\n| 5 | 24/04 | Tarde | Etiquetadora | 30 | E-04 aplicación de cola | Boquilla de cola limpiada |"
+    },
+    "log_file": {
+      "name": "Registro como archivo de Excel",
+      "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nPlanta: Planta Ejemplo Norte, línea de llenado L2 (bebidas, 3 turnos)\nPeriodo: semanas 14–15, tiempo de producción planificado total 14.400 minutos\nObjetivo: tiempo de parada inferior al 3 % del tiempo de producción planificado\n\nEl registro de paradas se adjunta como archivo de Excel."
+    }
+  }
+}

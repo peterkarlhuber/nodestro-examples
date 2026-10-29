@@ -1,0 +1,160 @@
+{
+  "name": "Preparar una oferta a medida",
+  "field": "Ventas",
+  "description": "Analizar la solicitud de un cliente, calcular una solución adecuada y redactar una oferta.",
+  "start": "Solicitud del cliente",
+  "output": "Borrador de oferta",
+  "file_name": "Oferta",
+  "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nCorreo de Lena Ejemplo, office manager de Asesoría Fiscal Muestra (35 puestos de trabajo, se muda en junio):\n«Buenos días: el 15 de junio nos mudamos a unas oficinas nuevas y necesitamos mobiliario para 35 puestos.\nPara nosotros son importantes las mesas regulables en altura, porque varios compañeros tienen problemas de\nespalda, y una mejor acústica en la zona abierta (12 puestos). Además necesitamos dos salas de reuniones para\n8 personas cada una. Nuestro presupuesto es de unos 60.000 euros netos. ¿Podrían enviarnos una oferta antes de\nfin de mes? El montaje debería hacerse el fin de semana para no interrumpir la actividad.»\n\nNuestra lista de precios (netos):\n- Mesa regulable en altura eléctrica, 160 x 80 cm: 690 EUR\n- Mesa fija, 160 x 80 cm: 320 EUR\n- Silla de oficina ergonómica premium: 540 EUR; estándar: 290 EUR\n- Panel acústico separador de mesa: 210 EUR; panel acústico de pared 120 x 60 cm: 140 EUR\n- Mesa de reuniones para 8 personas: 1.450 EUR; silla de reuniones: 180 EUR\n- Entrega y montaje: 45 EUR por puesto, recargo de fin de semana del 20 % sobre el montaje\n- Descuento por volumen: 5 % a partir de 25.000 EUR de mercancía, 8 % a partir de 50.000 EUR",
+  "guide": {
+    "problem": "Una buena oferta responde a la necesidad real del cliente, no solo a sus palabras clave. El flujo aclara la necesidad, calcula una solución adecuada y redacta una oferta completa.",
+    "flow": "El analista de necesidades separa los requisitos explícitos de los implícitos y reúne las preguntas abiertas. El asesor de soluciones combina posiciones de la lista de precios y calcula con la calculadora, incluida una variante dentro del presupuesto. El redactor de ofertas escribe la oferta; una revisión de calidad integrada comprueba la integridad y los precios. Un formulario de entrada recoge los datos clave (cliente, plazo, presupuesto, montaje en fin de semana); antes del envío, una persona aprueba la oferta.",
+    "input": "La solicitud del cliente y vuestra lista de precios con descuentos y condiciones. El formulario recoge los datos clave; la lista de precios puedes escribirla en el texto o adjuntarla como archivo de Excel, CSV o PDF, como muestra el archivo de ejemplo.",
+    "result": "Un borrador de oferta con carta de presentación, tabla de partidas, totales, variantes, supuestos y preguntas abiertas. Solo tras tu aprobación guarda la ejecución la oferta en PDF y como archivo de Word editable.",
+    "adapt": "Adjunta tu lista de precios actual como archivo; así basta con la solicitud del cliente como texto. Las condiciones de pago y los textos estándar se añaden en el prompt de sistema del redactor de ofertas."
+  },
+  "agents": {
+    "needs": {
+      "name": "Analista de necesidades",
+      "description": "Identifica los requisitos explícitos e implícitos.",
+      "system": "Eres un asesor comercial con experiencia. Analiza la solicitud del cliente: requisitos explícitos, necesidades implícitas, condiciones como presupuesto, plazo y montaje, y criterios de decisión. Enumera las preguntas abiertas que deberían aclararse antes de una oferta vinculante y los supuestos con los que se puede trabajar hasta entonces.",
+      "task": "Analiza la necesidad en esta solicitud:\n\n{{input}}"
+    },
+    "solution": {
+      "name": "Asesor de soluciones",
+      "description": "Combina posiciones adecuadas y calcula con la calculadora.",
+      "system": "Eres asesor de soluciones. Configura con la lista de precios una solución que cubra la necesidad y calcula con la calculadora cantidades, subtotales, recargos y descuentos. Si el presupuesto no alcanza, diseña una segunda variante que se ajuste a él y explica las diferencias. Usa solo artículos y precios de la lista.",
+      "task": "Configura una solución con su cálculo.\n\nSolicitud y lista de precios:\n{{run.input}}\n\nAnálisis de necesidades:\n{{node:needs}}"
+    },
+    "offer": {
+      "name": "Redactor de ofertas",
+      "description": "Redacta el borrador de oferta para el cliente.",
+      "system": "Redactas ofertas en ventas B2B. Escribe una oferta amable y precisa: una breve carta que haga referencia a las inquietudes del cliente, una tabla de posiciones con cantidades y precios, totales, variantes, servicios como entrega y montaje, validez y las preguntas abiertas. Marca el documento como borrador para aprobación interna. Toma los precios solo del cálculo.",
+      "task": "Redacta el borrador de oferta.\n\nAnálisis de necesidades:\n{{node:needs}}\n\nSolución y cálculo:\n{{node:solution}}",
+      "criteria": {
+        "all_requirements": "La oferta responde a cada requisito del análisis de necesidades.",
+        "prices_consistent": "Todos los precios y totales coinciden con el cálculo.",
+        "open_points": "Las preguntas abiertas y los supuestos están claramente indicados."
+      }
+    }
+  },
+  "steps": {
+    "approve": {
+      "name": "Aprobar oferta",
+      "instructions": "Comprueba precios, descuentos, plazos de entrega y las preguntas abiertas antes de enviar la oferta. Un rechazo termina la ejecución; ajusta la entrada y vuelve a empezar."
+    }
+  },
+  "form": {
+    "customer": {
+      "label": "Cliente",
+      "description": "Empresa y persona de contacto",
+      "default": "Asesoría Fiscal Muestra, Lena Ejemplo"
+    },
+    "deadline": {
+      "label": "Oferta hasta",
+      "description": "Cuándo necesita el cliente la oferta",
+      "default": "2026-05-29"
+    },
+    "budget": {
+      "label": "Presupuesto (EUR netos)",
+      "description": "El marco que indicó el cliente",
+      "default": "60000"
+    },
+    "weekend": {
+      "label": "Montaje en fin de semana",
+      "description": "La actividad del cliente no debe interrumpirse",
+      "default": "true"
+    },
+    "price_list": {
+      "label": "Lista de precios como archivo",
+      "description": "Opcional: vuestra lista de precios en Excel, CSV o PDF. Sin archivo vale la lista de precios del texto."
+    }
+  },
+  "samples": {
+    "price_list": {
+      "name": "Lista_precios_mobiliario_oficina",
+      "description": "La lista de precios inventada de la tarea de prueba como archivo de Excel con artículos y condiciones.",
+      "content": {
+        "Lista de precios": [
+          [
+            "Artículo",
+            "Unidad",
+            "Precio neto (EUR)"
+          ],
+          [
+            "Mesa regulable en altura eléctrica, 160 x 80 cm",
+            "unidad",
+            690
+          ],
+          [
+            "Mesa fija, 160 x 80 cm",
+            "unidad",
+            320
+          ],
+          [
+            "Silla de oficina ergonómica premium",
+            "unidad",
+            540
+          ],
+          [
+            "Silla de oficina estándar",
+            "unidad",
+            290
+          ],
+          [
+            "Panel acústico separador de mesa",
+            "unidad",
+            210
+          ],
+          [
+            "Panel acústico de pared 120 x 60 cm",
+            "unidad",
+            140
+          ],
+          [
+            "Mesa de reuniones para 8 personas",
+            "unidad",
+            1450
+          ],
+          [
+            "Silla de reuniones",
+            "unidad",
+            180
+          ],
+          [
+            "Entrega y montaje",
+            "puesto",
+            45
+          ]
+        ],
+        "Condiciones": [
+          [
+            "Condición",
+            "Regla"
+          ],
+          [
+            "Recargo de fin de semana",
+            "20 % sobre el montaje"
+          ],
+          [
+            "Descuento por volumen",
+            "5 % a partir de 25.000 EUR de mercancía, 8 % a partir de 50.000 EUR"
+          ],
+          [
+            "Validez de las ofertas",
+            "30 días"
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "request_text": {
+      "name": "Solicitud y lista de precios en el texto"
+    },
+    "price_list_file": {
+      "name": "Lista de precios como archivo de Excel",
+      "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nCorreo de Lena Ejemplo, office manager de Asesoría Fiscal Muestra (35 puestos de trabajo, se muda en junio):\n«Buenos días: el 15 de junio nos mudamos a unas oficinas nuevas y necesitamos mobiliario para 35 puestos.\nPara nosotros son importantes las mesas regulables en altura, porque varios compañeros tienen problemas de\nespalda, y una mejor acústica en la zona abierta (12 puestos). Además necesitamos dos salas de reuniones para\n8 personas cada una. Nuestro presupuesto es de unos 60.000 euros netos. ¿Podrían enviarnos una oferta antes de\nfin de mes? El montaje debería hacerse el fin de semana para no interrumpir la actividad.»\n\nNuestra lista de precios se adjunta como archivo de Excel."
+    }
+  }
+}

@@ -1,0 +1,124 @@
+{
+  "name": "Analisi finanziaria",
+  "field": "Finanza e investimenti",
+  "description": "Analizzare i fondamentali di un'impresa, ricalcolare gli indicatori e rivedere criticamente i risultati.",
+  "start": "Compito",
+  "output": "Risultato",
+  "file_name": "Analisi finanziaria",
+  "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nAnalizza la redditività e la stabilità finanziaria di Esempio Industrie S.p.A. (un'impresa fittizia).\n\n| Voce (mln EUR) | 2024 | 2025 |\n|---|---|---|\n| Ricavi | 980 | 1.250 |\n| Risultato operativo (EBIT) | 140 | 210 |\n| Utile netto | 95 | 150 |\n| Flusso di cassa operativo | 160 | 190 |\n| Investimenti | 70 | 130 |\n| Patrimonio netto | 610 | 700 |\n| Totale attivo | 1.450 | 1.700 |\n| Indebitamento finanziario netto | 220 | 260 |\n\nNota dalla relazione annuale: circa un terzo della crescita nel 2025 deriva dall'acquisizione di un concorrente.",
+  "guide": {
+    "problem": "I numeri delle relazioni annuali vengono citati in fretta, ma raramente ricalcolati e messi nel contesto. Il workflow estrae i numeri, calcola con esattezza margini e crescita e fa rivedere criticamente il risultato.",
+    "flow": "Una catena sequenziale di tre agenti: l'agente di ricerca ordina i numeri con periodo e unità, l'agente di analisi calcola gli indicatori con la calcolatrice e l'agente di revisione controlla calcoli e logica e riassume il risultato in modo strutturato.",
+    "input": "I dati finanziari di un'impresa per almeno due anni, per esempio dalla relazione annuale o trimestrale, e gli effetti straordinari noti. Puoi incollare i dati o allegarli come file Excel, CSV o PDF; il file di esempio contiene gli indicatori dell'attività di prova.",
+    "result": "Una verifica strutturata con sintesi, indicatori principali, errori o rischi trovati, limiti dell'analisi e indicazione se l'analisi è da considerare corretta, anche in PDF e come file Excel. L'agente di ricerca propone i dati estratti per la conoscenza; viene adottato solo ciò che confermi. Il risultato non è una consulenza sugli investimenti.",
+    "adapt": "Allega direttamente la relazione annuale o la vostra tabella degli indicatori. Altri indicatori, come la leva finanziaria o il free cash flow, si aggiungono nel prompt di sistema dell'agente di analisi. Per molte imprese in sequenza conviene l'elaborazione in batch con una riga per impresa."
+  },
+  "agents": {
+    "research": {
+      "name": "Agente di ricerca",
+      "description": "Raccoglie numeri e contesto dei dati finanziari.",
+      "system": "Sei un analista di ricerca finanziaria. Estrai tutti i numeri dal compito, indica periodo e unità e ordinali in una tabella. Aggiungi brevemente cosa significano i numeri e annota effetti particolari come acquisizioni o voci non ricorrenti. Non inventare numeri che non sono indicati.",
+      "task": "{{input}}"
+    },
+    "analysis": {
+      "name": "Agente di analisi",
+      "description": "Calcola margini, crescita e indici di stabilità con la calcolatrice.",
+      "system": "Sei un analista finanziario senior. Usa la calcolatrice per calcolare tutti gli indicatori: crescita dei ricavi, margine EBIT, margine netto, indice di patrimonializzazione, free cash flow (flusso di cassa operativo meno investimenti) e il rapporto tra indebitamento finanziario netto ed EBIT. Spiega ogni risultato in una frase e tieni conto degli effetti particolari, per esempio la crescita organica senza l'acquisizione.",
+      "task": "Calcola gli indicatori a partire da questi risultati della ricerca:\n\n{{node:research}}"
+    },
+    "review": {
+      "name": "Agente di revisione",
+      "description": "Rivede l'analisi e la riassume in modo strutturato.",
+      "system": "Sei un revisore meticoloso. Controlla l'analisi per errori di calcolo e di logica, verifica che gli effetti particolari siano trattati correttamente e riassumi il risultato per la direzione. Indica i limiti dell'analisi. Non dare raccomandazioni di acquisto o di vendita.",
+      "task": "Rivedi questa analisi e riassumila:\n\n{{input}}",
+      "fields": {
+        "summary": "Sintesi in 2-3 frasi",
+        "key_figures": "Indicatori",
+        "issues": "Errori o rischi individuati",
+        "limitations": "Limiti dell'analisi",
+        "approved": "L'analisi è corretta?"
+      }
+    }
+  },
+  "form": {
+    "figures": {
+      "label": "Dati finanziari come file",
+      "description": "Facoltativo: indicatori in Excel o CSV o una relazione annuale in PDF, fino a 3 file. Senza file valgono i dati nel testo."
+    }
+  },
+  "samples": {
+    "figures": {
+      "name": "Indicatori_Esempio_Industrie",
+      "description": "Gli indicatori fittizi dell'attività di prova come file Excel con un foglio di note.",
+      "content": {
+        "Indicatori": [
+          [
+            "Voce (mln EUR)",
+            "2024",
+            "2025"
+          ],
+          [
+            "Ricavi",
+            980,
+            1250
+          ],
+          [
+            "Risultato operativo (EBIT)",
+            140,
+            210
+          ],
+          [
+            "Utile netto",
+            95,
+            150
+          ],
+          [
+            "Flusso di cassa operativo",
+            160,
+            190
+          ],
+          [
+            "Investimenti",
+            70,
+            130
+          ],
+          [
+            "Patrimonio netto",
+            610,
+            700
+          ],
+          [
+            "Totale attivo",
+            1450,
+            1700
+          ],
+          [
+            "Indebitamento finanziario netto",
+            220,
+            260
+          ]
+        ],
+        "Note": [
+          [
+            "Nota"
+          ],
+          [
+            "Impresa fittizia Esempio Industrie S.p.A."
+          ],
+          [
+            "Circa un terzo della crescita nel 2025 deriva dall'acquisizione di un concorrente."
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "figures_text": {
+      "name": "Indicatori nel testo"
+    },
+    "figures_file": {
+      "name": "Indicatori come file Excel",
+      "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nAnalizza la redditività e la stabilità finanziaria di Esempio Industrie S.p.A. (un'impresa fittizia). Gli indicatori e le note sono nel file Excel allegato."
+    }
+  }
+}

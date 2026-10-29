@@ -1,0 +1,55 @@
+{
+  "name": "Evaluate a business idea",
+  "field": "Self-employed and founders",
+  "description": "Evaluate a business idea in parallel for market potential, profitability and risks and reach a verdict.",
+  "start": "Business idea",
+  "output": "Evaluation",
+  "file_name": "Business_idea_assessment",
+  "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nIdea: mobile bicycle repair service \"Bike Rescue\" in a city of 180,000 inhabitants.\nA cargo bike with tools goes to customers at home or at the office; booking via a simple website.\n\nThe founder's assumptions:\n- Average job EUR 65 net, material share 30 %\n- Capacity 6 jobs per day, 20 working days per month; on average 50 % utilised in the first year\n- Start-up investment EUR 18,000 (cargo bike, tools, website), financed from savings\n- Running costs EUR 1,400 per month (insurance, storage, phone, software, marketing)\n- Desired owner's salary EUR 2,500 per month\n- Target groups: commuters, families with cargo bikes, companies with bike leasing for employees\n- Known: three bike shops in the city with waiting times of two to three weeks in spring",
+  "guide": {
+    "problem": "Before starting a business it pays to take a sober look at the market, figures and risks. The workflow has three experts examine the idea at the same time and a jury reach a justified verdict.",
+    "flow": "Three agents work in parallel: the market analyst estimates target groups and competition, the profitability calculator works out break-even and scenarios with the calculator tool, the risk analyst looks for weak points. The investor jury weighs everything and delivers a structured verdict with a score.",
+    "input": "A description of the idea with offering, target groups, prices, costs, capacity and known competitors.",
+    "result": "A structured verdict (pursue, adapt or drop) with a score, strengths, risks, assumptions to test and concrete next steps for validation, also as a PDF report.",
+    "adapt": "Describe your idea with your figures. The more honest the assumptions, the more useful the verdict. Upload your own market data or survey results as knowledge and assign them to the market analyst."
+  },
+  "agents": {
+    "market": {
+      "name": "Market analyst",
+      "description": "Estimates target groups, demand and competition.",
+      "system": "You are a market analyst for start-ups. Describe the target groups, their needs and willingness to pay, estimate the market potential with a transparent, cautious rough calculation and analyse the competition. Mark which details come from the description and which are based on general knowledge and must be checked locally.",
+      "task": "Analyse the market for this idea:\n\n{{input}}"
+    },
+    "economics": {
+      "name": "Profitability calculator",
+      "description": "Calculates contribution margin, break-even and scenarios with the calculator tool.",
+      "system": "You are a start-up adviser focused on finance. Use the calculator tool to calculate the contribution margin per job, monthly revenue and profit, break-even in jobs per month (including the owner's salary) and the payback of the start-up investment. Calculate three scenarios (cautious, expected, optimistic) and show how sensitive the result is to utilisation and price.",
+      "task": "Calculate the profitability of this idea:\n\n{{input}}"
+    },
+    "risks": {
+      "name": "Risk analyst",
+      "description": "Looks for weak points and risks of the idea.",
+      "system": "You are an experienced start-up coach and deliberately play devil's advocate. Look for the biggest risks: demand, seasonality, dependence on one person, competition, legal requirements, scalability and financing. Rate each risk by likelihood and impact and propose a cheap way to test it before founding.",
+      "task": "Analyse the risks of this idea:\n\n{{input}}"
+    },
+    "jury": {
+      "name": "Investor jury",
+      "description": "Weighs market, figures and risks and reaches a verdict.",
+      "system": "You are a jury of experienced founders and investors. Weigh market, profitability and risks against each other and reach a verdict: pursue, adapt or drop. Give a score from 1 to 10 and justify it. Name the assumptions that must be tested first and concrete, inexpensive next steps. Be honest but fair.",
+      "task": "Evaluate the idea.\n\nMarket analysis:\n{{node:market}}\n\nProfitability:\n{{node:economics}}\n\nRisks:\n{{node:risks}}",
+      "fields": {
+        "verdict": "Verdict (pursue, adapt or drop) with reasons",
+        "score": "Score from 1 to 10",
+        "strengths": "Strengths of the idea",
+        "risks": "Main risks",
+        "assumptions_to_test": "Assumptions that must be tested first",
+        "next_steps": "Concrete next steps"
+      }
+    }
+  },
+  "tests": {
+    "idea": {
+      "name": "Mobile bicycle repair service"
+    }
+  }
+}

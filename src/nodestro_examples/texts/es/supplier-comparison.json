@@ -1,0 +1,129 @@
+{
+  "name": "Comparar ofertas de proveedores",
+  "field": "Logística y compras",
+  "description": "Comparar ofertas por coste total y riesgo de suministro y derivar una recomendación justificada.",
+  "start": "Ofertas",
+  "output": "Recomendación",
+  "file_name": "Comparación de proveedores",
+  "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nNecesidad: pieza torneada de acero inoxidable DT-40, 24.000 unidades al año, pedidos de 2.000 unidades al mes\nPrecio objetivo: 2,10 EUR por unidad puesto en planta\n\nOferta A – Ejemplo Precisión GmbH (Alemania, a 80 km)\n- Precio 2,35 EUR/unidad, puesto en planta, plazo de entrega 2 semanas\n- Pedido mínimo 1.000 unidades, pago a 30 días\n- Tasa de reclamaciones el año pasado 0,4 %, certificación IATF 16949\n\nOferta B – Example Components Ltd. (Extremo Oriente, transporte marítimo)\n- Precio 1,62 EUR/unidad en fábrica, flete y aranceles estimados en 0,28 EUR/unidad, plazo 10 semanas\n- Pedido mínimo 12.000 unidades, pago 30 % por adelantado y el resto al embarque\n- Sin historial de suministro, ISO 9001, muestras aprobadas\n\nOferta C – Muestra Piezas Metálicas s.r.o. (Chequia, a 450 km)\n- Precio 1,98 EUR/unidad, flete 0,07 EUR/unidad, plazo 4 semanas\n- Pedido mínimo 4.000 unidades, pago a 45 días\n- Tasa de reclamaciones el año pasado 1,1 %, ISO 9001, capacidad ocupada al 90 % según el proveedor\n\nSupuestos internos: coste de capital 8 % anual, coste de almacenaje 0,03 EUR por unidad y mes,\ncoste por reclamación (inspección, selección) 0,90 EUR por pieza defectuosa.",
+  "guide": {
+    "problem": "El precio unitario más bajo rara vez es la oferta más barata. El flujo compara las ofertas por coste total y riesgo de suministro y justifica una recomendación para compras.",
+    "flow": "El analista de costes y el analista de riesgos trabajan en paralelo. Uno calcula con la calculadora el coste total de propiedad de cada oferta y el otro valora plazo, dependencias y calidad. La recomendación de compra sopesa ambos y entrega un resultado estructurado.",
+    "input": "Varias ofertas con precio, flete, plazo de entrega, cantidad mínima, condiciones de pago y datos de calidad, además de vuestros costes internos. Puedes escribir las ofertas en el texto o adjuntarlas como archivos, incluso mezcladas en PDF, Word y Excel; los tres archivos de ejemplo muestran justo eso.",
+    "result": "Una recomendación estructurada con clasificación, justificaciones, riesgos, puntos de negociación y supuestos utilizados. La ejecución la guarda además como informe en PDF y como archivo de Excel con una hoja por lista.",
+    "adapt": "Adjunta vuestras ofertas como archivos e indica la necesidad y los costes en el texto. Si tenéis ponderaciones fijas (por ejemplo 50 % coste, 30 % riesgo, 20 % calidad), añádelas en el prompt de sistema de la recomendación de compra. Los contratos marco o las evaluaciones de proveedores puedes guardarlos como conocimiento y asignarlos al analista de riesgos."
+  },
+  "agents": {
+    "cost": {
+      "name": "Analista de costes",
+      "description": "Calcula el coste total de cada oferta con la calculadora.",
+      "system": "Eres analista de costes en compras. Calcula para cada oferta el coste total por unidad y por año: precio, flete y aranceles, capital inmovilizado por pedidos mínimos y anticipos, coste de almacenaje y coste esperado de las reclamaciones. Usa la calculadora para cada cálculo y muestra el procedimiento. Compara el resultado con el precio objetivo e indica qué supuestos influyen más en el resultado.",
+      "task": "Calcula el coste total de estas ofertas:\n\n{{input}}"
+    },
+    "risk": {
+      "name": "Analista de riesgos",
+      "description": "Valora plazos, dependencias, capacidad y riesgos de calidad.",
+      "system": "Eres gestor de riesgos de la cadena de suministro. Valora los riesgos de suministro de cada oferta: plazo y flexibilidad, ruta de transporte, ocupación de la capacidad, historial de calidad y certificación, compromiso financiero y dependencia. Valora cada riesgo por probabilidad e impacto (alto, medio, bajo) y propone medidas de protección, por ejemplo stock de seguridad o una segunda fuente.",
+      "task": "Valora los riesgos de suministro de estas ofertas:\n\n{{input}}"
+    },
+    "recommendation": {
+      "name": "Recomendación de compra",
+      "description": "Sopesa costes y riesgos y recomienda un proveedor.",
+      "system": "Eres director de compras y preparas una decisión de adjudicación. Sopesa coste total y riesgos y recomienda un proveedor o una combinación, por ejemplo una fuente principal con una segunda fuente. Justifica la clasificación de forma comprensible, indica los riesgos restantes y puntos concretos para la negociación. Enumera todos los supuestos de los que depende la recomendación.",
+      "task": "Deriva una recomendación.\n\nAnálisis de costes:\n{{node:cost}}\n\nAnálisis de riesgos:\n{{node:risk}}",
+      "fields": {
+        "recommended_supplier": "Proveedor o combinación recomendada",
+        "ranking": "Clasificación de las ofertas con una breve justificación",
+        "reasons": "Motivos principales de la recomendación",
+        "risks": "Riesgos restantes y medidas de protección",
+        "negotiation_points": "Puntos para la negociación",
+        "assumptions": "Supuestos de los que depende la recomendación"
+      }
+    }
+  },
+  "form": {
+    "offers": {
+      "label": "Archivos de ofertas",
+      "description": "Opcional: las ofertas en PDF, Word, Excel o CSV, hasta 10 archivos. Sin archivos valen las ofertas del texto; con archivos, en el texto bastan la necesidad, el precio objetivo y los supuestos internos."
+    }
+  },
+  "samples": {
+    "offer_a": {
+      "name": "Oferta_A_Ejemplo_Precision",
+      "description": "Oferta A como carta en PDF (inventada).",
+      "content": "# Oferta n.º 2026-0412\n\n**Ejemplo Precisión GmbH**, Alemania (a 80 km de su planta)\n\nEstimados señores: gracias por su consulta sobre la pieza torneada de acero inoxidable DT-40. Les ofrecemos:\n\n| Concepto | Dato |\n|---|---|\n| Precio | 2,35 EUR por unidad, puesto en planta |\n| Plazo de entrega | 2 semanas |\n| Pedido mínimo | 1.000 unidades |\n| Condiciones de pago | 30 días netos |\n| Certificación | IATF 16949 |\n| Tasa de reclamaciones el año pasado | 0,4 % |\n\nLa oferta es válida 60 días. Atentamente, Departamento comercial (ficticio)"
+    },
+    "offer_b": {
+      "name": "Oferta_B_Example_Components",
+      "description": "Oferta B como documento de Word (inventada).",
+      "content": "# Quotation Q-77-DT40\n\n**Example Components Ltd.** (Extremo Oriente, transporte marítimo)\n\n## Condiciones\n\n- Precio: 1,62 EUR por unidad en fábrica\n- Flete y aranceles: según nuestra estimación, 0,28 EUR por unidad\n- Plazo de entrega: 10 semanas, incluido el transporte marítimo\n- Pedido mínimo: 12.000 unidades\n- Pago: 30 % por adelantado con el pedido, el resto al embarque\n\n## Calidad\n\nCertificación ISO 9001. Las primeras muestras se aprobaron. Todavía no hay historial de suministro con ustedes."
+    },
+    "offer_c": {
+      "name": "Oferta_C_Muestra_Piezas_Metalicas",
+      "description": "Oferta C como tabla de Excel (inventada).",
+      "content": {
+        "Oferta": [
+          [
+            "Concepto",
+            "Valor",
+            "Unidad"
+          ],
+          [
+            "Proveedor",
+            "Muestra Piezas Metálicas s.r.o. (Chequia, 450 km)",
+            ""
+          ],
+          [
+            "Precio",
+            1.98,
+            "EUR/unidad"
+          ],
+          [
+            "Flete",
+            0.07,
+            "EUR/unidad"
+          ],
+          [
+            "Plazo de entrega",
+            4,
+            "semanas"
+          ],
+          [
+            "Pedido mínimo",
+            4000,
+            "unidades"
+          ],
+          [
+            "Condiciones de pago",
+            45,
+            "días"
+          ],
+          [
+            "Tasa de reclamaciones el año pasado",
+            1.1,
+            "%"
+          ],
+          [
+            "Certificación",
+            "ISO 9001",
+            ""
+          ],
+          [
+            "Capacidad ocupada según el proveedor",
+            90,
+            "%"
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "offers_text": {
+      "name": "Tres ofertas en el texto"
+    },
+    "offers_files": {
+      "name": "Tres ofertas en PDF, Word y Excel",
+      "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nNecesidad: pieza torneada de acero inoxidable DT-40, 24.000 unidades al año, pedidos de 2.000 unidades al mes\nPrecio objetivo: 2,10 EUR por unidad puesto en planta\n\nLas tres ofertas se adjuntan como archivos.\n\nSupuestos internos: coste de capital 8 % anual, coste de almacenaje 0,03 EUR por unidad y mes,\ncoste por reclamación (inspección, selección) 0,90 EUR por pieza defectuosa."
+    }
+  }
+}

@@ -1,0 +1,194 @@
+{
+  "name": "Investigate a complaint with 8D",
+  "field": "Quality management",
+  "description": "Work through a customer complaint step by step with the 8D method and document it as a report.",
+  "start": "Complaint",
+  "output": "8D report",
+  "file_name": "8D report",
+  "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nCustomer: Example Automotive Inc., South plant\nPart: plastic housing G-220 (PA6-GF30, injection moulded), batch 24-117, delivered on 12 March, 4,000 pieces\nComplaint of 18 March: snap-fit hooks break off during assembly. The customer checked 2,000 parts, 46 are\ndefective (2.3 %). They require containment actions within 24 hours and an 8D report within 10 days.\n\nInternal information:\n- Batch 24-117 was produced on machine SG-4 with a newly reworked mould (maintenance on 5 March).\n- The material came from a new delivery; the drying time was cut from 4 to 2.5 hours because of time pressure.\n- Outgoing inspection checks dimensions and appearance according to a sampling plan, but no mechanical load on the hooks.\n- Stock: 1,200 parts from batch 24-117 and 3,000 parts from batch 24-121 (same mould, normal drying).\n- There were no comparable complaints in the past 12 months.",
+  "guide": {
+    "problem": "Complaints call for fast containment and a sound root-cause analysis. The 8D method defines the steps; the workflow works through them in a structured way and documents them consistently.",
+    "flow": "A sequential chain: the first agent describes the problem and the containment actions (D1 to D3), the second looks for the causes of occurrence and non-detection (D4), the third plans corrective and preventive actions (D5 to D7). The report agent compiles everything into a structured 8D report. A decision node checks the severity: in critical cases an extra agent plans the emergency containment for the next 24 hours. Before the report goes to the customer, a person releases it.",
+    "input": "The customer's complaint with part, batch, defect and defect rate, plus known internal information on production, material and inspection. You can also attach the complaint letter, measurement data and photos of the defect as files; the sample files contain a fictional complaint letter (PDF) and measurements (Excel).",
+    "result": "A structured 8D report with one field each for D1 to D8 and a list of open points the team still has to clarify. After approval, the run saves the report as a PDF and as an editable Word file. The report agent also proposes findings for knowledge; only what you explicitly adopt is stored.",
+    "adapt": "Replace the test data with your complaint and attach inspection records, drawings or photos directly. If you use your own form, adjust the fields of the report agent under “Output format”. Findings you adopted from earlier complaints can be assigned to the root-cause analysis as knowledge."
+  },
+  "agents": {
+    "problem": {
+      "name": "Problem description D1–D3",
+      "description": "Describes the team, the problem (is/is not) and the containment actions.",
+      "system": "You are a quality engineer who leads 8D teams. Work on steps D1 to D3: propose a cross-functional team with roles, describe the problem precisely using 5W2H and an is/is-not analysis, and define containment actions (blocking, sorting, replacement delivery, informing the customer). For each containment action, state how its effectiveness is checked.",
+      "task": "Work on D1 to D3 for this complaint:\n\n{{input}}",
+      "fields": {
+        "analysis": "D1 to D3 as text: team, problem description (5W2H, is/is not) and containment actions with effectiveness checks",
+        "critical": "true if the case is critical: safety or legal relevance, a stopped customer line or affected stock that is still being shipped"
+      }
+    },
+    "root_cause": {
+      "name": "Root-cause analysis D4",
+      "description": "Looks for the causes of occurrence and non-detection with 5 Whys.",
+      "system": "You are an expert in root-cause analysis in manufacturing. Work on D4: analyse separately why the defect occurred and why it was not detected. Use a 5-Why chain for each and draw on the facts of the complaint. Rate how well each cause is supported and name tests or checks that verify it.",
+      "task": "Analyse the causes (D4).\n\nComplaint:\n{{run.input}}\n\nResult D1–D3:\n{{node:problem}}"
+    },
+    "actions": {
+      "name": "Action planning D5–D7",
+      "description": "Plans corrective actions, their verification and prevention.",
+      "system": "You are a quality manager. Work on D5 to D7: define permanent corrective actions for each verified or likely cause, describe how their effectiveness will be proven, and derive preventive actions that stop similar defects in other products, for example updates to the FMEA, the control plan or work instructions. Name owners as roles and realistic dates.",
+      "task": "Plan D5 to D7 based on this root-cause analysis:\n\n{{node:root_cause}}"
+    },
+    "report": {
+      "name": "8D report",
+      "description": "Compiles all steps into a structured 8D report.",
+      "system": "You write 8D reports for customers. Summarise the results of the previous steps completely and factually without adding new facts. Check that the steps fit together, and list contradictions or causes that are not yet verified as open points. D8 contains a closing note that recognises the team and states what is still missing before closure.",
+      "task": "Write the 8D report.\n\nD1–D3:\n{{node:problem}}\n\nD4:\n{{node:root_cause}}\n\nD5–D7:\n{{node:actions}}\n\nEmergency containment (critical cases only):\n{{node:containment}}",
+      "fields": {
+        "d1_team": "D1 team with roles",
+        "d2_problem": "D2 problem description",
+        "d3_containment": "D3 containment actions with effectiveness check",
+        "d4_root_causes": "D4 causes of occurrence and non-detection",
+        "d5_corrective_actions": "D5 corrective actions",
+        "d6_verification": "D6 proof of effectiveness",
+        "d7_prevention": "D7 preventive actions",
+        "d8_closure": "D8 closure and recognition",
+        "open_points": "Open points and assumptions not yet verified"
+      }
+    },
+    "containment": {
+      "name": "Emergency containment",
+      "description": "Plans the containment for the next 24 hours in critical cases.",
+      "system": "You are the quality manager on call. For a critical complaint, plan the containment for the next 24 hours: block and sort all suspect stock and batches, secure deliveries in transit, arrange a 100 % inspection or a replacement delivery and inform the customer with a clear status. Name a responsible role, a deadline and how its effectiveness is checked for every action, and list what remains open.",
+      "task": "Plan the emergency containment for this critical complaint.\n\nComplaint:\n{{run.input}}\n\nD1–D3:\n{{node:problem}}"
+    }
+  },
+  "steps": {
+    "severity": {
+      "name": "Severity",
+      "branches": {
+        "critical": "Critical"
+      },
+      "default": "Standard"
+    },
+    "release": {
+      "name": "Release report",
+      "instructions": "Check that the 8D report only contains verified facts, that unresolved causes are marked as open and that the containment actions are realistic. Only then release it for sending to the customer."
+    }
+  },
+  "form": {
+    "documents": {
+      "label": "Complaint documents",
+      "description": "Optional: the complaint letter (PDF, Word), measurement data (Excel, CSV) or photos of the defect (PNG, JPEG, WebP), up to 8 files. Without files, the text applies."
+    }
+  },
+  "samples": {
+    "complaint": {
+      "name": "Complaint_G-220_batch_24-117",
+      "description": "A fictional complaint letter from the customer as a PDF.",
+      "content": "# Complaint no. R-2026-031\n\n**From:** Example Automotive Inc., South plant, incoming inspection\n\n**To:** Quality management, supplier of plastic housings\n\n**Date:** 18 March 2026\n\n## Affected part\n\n| Item | Value |\n|---|---|\n| Part | Plastic housing G-220 (PA6-GF30) |\n| Batch | 24-117 |\n| Delivery date | 12 March 2026 |\n| Quantity delivered | 4,000 pieces |\n\n## Description of the defect\n\nDuring assembly, the snap-fit hooks on the housings break off as soon as the cover is clipped on. We checked 2,000 parts; 46 parts are defective (2.3 %). The fracture surfaces look brittle.\n\n## Our requirements\n\n1. Containment actions within 24 hours, including sorting of the stock at our site.\n2. An 8D report within 10 days.\n3. A statement on which other batches may be affected.\n\nContact: Ms Erica Sample, supplier quality (fictional)"
+    },
+    "measurements": {
+      "name": "Measurements_snap-fit_hooks",
+      "description": "Fictional pull-out forces of the snap-fit hooks per batch with drying time, as an Excel file.",
+      "content": {
+        "Pull-out force": [
+          [
+            "Sample",
+            "Batch",
+            "Drying time (h)",
+            "Pull-out force (N)",
+            "Minimum (N)"
+          ],
+          [
+            1,
+            "24-117",
+            2.5,
+            38,
+            45
+          ],
+          [
+            2,
+            "24-117",
+            2.5,
+            41,
+            45
+          ],
+          [
+            3,
+            "24-117",
+            2.5,
+            47,
+            45
+          ],
+          [
+            4,
+            "24-117",
+            2.5,
+            36,
+            45
+          ],
+          [
+            5,
+            "24-117",
+            2.5,
+            44,
+            45
+          ],
+          [
+            6,
+            "24-121",
+            4,
+            58,
+            45
+          ],
+          [
+            7,
+            "24-121",
+            4,
+            61,
+            45
+          ],
+          [
+            8,
+            "24-121",
+            4,
+            57,
+            45
+          ],
+          [
+            9,
+            "24-121",
+            4,
+            60,
+            45
+          ],
+          [
+            10,
+            "24-121",
+            4,
+            59,
+            45
+          ]
+        ],
+        "Notes": [
+          [
+            "Note"
+          ],
+          [
+            "Measured in the lab on 19 March 2026, five parts per batch from stock."
+          ],
+          [
+            "The residual moisture of the granulate was not documented for batch 24-117."
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "complaint_text": {
+      "name": "Complaint in the text"
+    },
+    "complaint_files": {
+      "name": "Complaint letter and measurements as files",
+      "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nComplaint from Example Automotive Inc. about housing G-220; the complaint letter and the measurements are attached as files.\n\nInternal information:\n- Batch 24-117 was produced on machine SG-4 with a newly reworked mould (maintenance on 5 March).\n- The material came from a new delivery; the drying time was cut from 4 to 2.5 hours because of time pressure.\n- Outgoing inspection checks dimensions and appearance according to a sampling plan, but no mechanical load on the hooks.\n- Stock: 1,200 parts from batch 24-117 and 3,000 parts from batch 24-121 (same mould, normal drying)."
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "name": "Plan a club festival",
+  "field": "Clubs and associations",
+  "description": "Plan the schedule, tasks and budget of a club festival, prepare communication and create a board paper.",
+  "start": "Key facts",
+  "output": "Board paper",
+  "file_name": "Board paper",
+  "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nClub: SC Exampleville, 420 members, including 130 children and young people\nOccasion: summer festival for the 75th anniversary on Saturday, 2026-07-11, 2 pm to 10 pm, sports ground\nPlanning date: 2026-05-04\nExpected guests: about 300\nProgramme wishes: children's olympics, honouring long-standing members, live band in the evening\nHelpers: 25 volunteers have agreed to help, each in shifts of 3 hours\nBudget: club funds EUR 3,000, sponsorship confirmed EUR 1,500 (Sample Drinks), expected income\nfrom sales: drinks EUR 2,400, food EUR 1,800, raffle EUR 600\nKnown costs: band EUR 1,200, marquee hire EUR 900, bouncy castle EUR 250, food and drinks purchase about EUR 1,900,\ntrophies and awards EUR 300",
+  "guide": {
+    "problem": "Club festivals are organised by volunteers in their free time. The workflow creates the schedule, tasks, budget and communication and summarises everything in a paper for the board meeting.",
+    "flow": "The schedule planner and the budget planner work in parallel; one counts back from the festival with the date tool, the other calculates the budget with the calculator tool. The communication planner prepares invitations and posts in line with the schedule. The board paper combines everything; a quality check looks at completeness and responsibilities.",
+    "input": "Occasion, date, place, number of guests, programme wishes, helpers, budget and known costs.",
+    "result": "A board paper with a timeline up to the event, tasks and responsibilities, shift plan, budget with surplus or shortfall, communication plan and proposed resolutions, also as a Word file to send to the board.",
+    "adapt": "Enter the key facts of your festival. Permits and conditions differ by municipality; add known requirements to the input. Logos and poster templates can be stored as knowledge."
+  },
+  "agents": {
+    "schedule": {
+      "name": "Schedule planner",
+      "description": "Plans the timeline, tasks and shifts backwards from the festival day.",
+      "system": "You organise club events. Calculate the time left until the festival with the days_between tool and plan backwards: milestones with dates, tasks with responsibility as a role, a programme for the festival day and a shift plan for the helpers. Think of permits, insurance, hygiene, first aid and clearing up, and mark points to clarify with the municipality.",
+      "task": "Plan the schedule and tasks for this festival:\n\n{{input}}"
+    },
+    "budget": {
+      "name": "Budget planner",
+      "description": "Calculates income, spending and buffer with the calculator tool.",
+      "system": "You are the club treasurer. Use the calculator tool to create a budget: income, spending, a 10 % buffer for the unexpected and the expected result. Calculate a cautious scenario with 30 % less sales income, for example in bad weather. Propose how a shortfall could be covered.",
+      "task": "Create the budget for this festival:\n\n{{input}}"
+    },
+    "communication": {
+      "name": "Communication planner",
+      "description": "Prepares invitations, posts and a press release.",
+      "system": "You do public relations for clubs. In line with the schedule, create a communication plan with dates and channels (members' letter, notice board, social media, local newspaper) and draft texts: an invitation to the members, a social media post and a short press release. Write warmly and invitingly.",
+      "task": "Plan the communication for this schedule:\n\n{{node:schedule}}"
+    },
+    "board_paper": {
+      "name": "Board paper",
+      "description": "Summarises planning, budget and communication for the board.",
+      "system": "You prepare decision papers for club boards. Summarise the schedule, tasks, budget and communication clearly, at most two pages. Finish with concrete proposed resolutions, open points and the next three dates. Take figures only from the budget.",
+      "task": "Create the board paper.\n\nSchedule and tasks:\n{{node:schedule}}\n\nBudget:\n{{node:budget}}\n\nCommunication:\n{{node:communication}}",
+      "criteria": {
+        "complete": "The paper contains schedule, tasks, budget, communication and proposed resolutions.",
+        "responsibilities": "Every task has a responsible role and a date.",
+        "budget_consistent": "All figures match the budget."
+      }
+    }
+  },
+  "tests": {
+    "summer_party": {
+      "name": "Summer festival for the club anniversary"
+    }
+  }
+}

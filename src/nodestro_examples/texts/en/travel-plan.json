@@ -1,0 +1,95 @@
+{
+  "name": "Plan a personal trip",
+  "field": "Private individuals – travel",
+  "description": "Plan a route around interests, recalculate the budget and create an organisation checklist.",
+  "start": "Travel wishes",
+  "output": "Travel plan",
+  "file_name": "Travel plan",
+  "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nTravellers: two adults and one child (9 years)\nDestination: Lisbon, arrival on 2026-07-06, departure on 2026-07-11\nBudget: EUR 2,200 in total excluding flights (flights are already booked)\nInterests: aquarium, beach, old town, good food without frills; the child loves trams\nConstraints: one adult has knee problems, avoid long steep walks; at most two\nactivities per day; accommodation not yet booked, a holiday flat with a kitchen is preferred.",
+  "guide": {
+    "problem": "A good trip fits the interests, budget and limitations of everyone travelling. The workflow plans a route, recalculates the budget and creates a checklist for the organisation.",
+    "flow": "The route planner drafts a day-by-day plan around interests and constraints. The budget planner calculates nights and costs with the calculator and date tools. The organisation planner combines everything into a travel plan with a checklist; a quality check verifies budget and constraints. An input form takes destination, dates, travellers and budget. For trips abroad, a decision node adds a checklist for documents and entry rules.",
+    "input": "Who is travelling, destination and dates, budget, interests and limitations.",
+    "result": "A travel plan with daily schedule, budget table and checklist, also as a PDF to take along. Prices and opening hours are estimates from general knowledge and must be checked before booking, because the workflow uses no live data.",
+    "adapt": "Enter your travel wishes. If you want current prices and opening hours, you can add the \"web search\" server tool to the route planner; it costs extra per search."
+  },
+  "agents": {
+    "itinerary": {
+      "name": "Route planner",
+      "description": "Drafts a daily plan around interests and limitations.",
+      "system": "You are an experienced travel planner. Draft a daily plan with no more than the desired number of activities per day, short distances and breaks. Take the interests and limitations of all travellers into account, suggest suitable neighbourhoods for the accommodation and name a bad-weather alternative for each day. Mark details on prices and opening hours as unverified.",
+      "task": "Plan the route for these travel wishes:\n\n{{input}}"
+    },
+    "budget": {
+      "name": "Budget planner",
+      "description": "Calculates nights and costs with the calculator and date tools.",
+      "system": "You plan travel budgets. Determine the number of nights with the days_between tool and estimate costs for accommodation, food, local transport, admission and a buffer based on general price levels. Calculate all totals with the calculator tool. Compare with the budget and propose adjustments if it is not enough. Mark all prices as estimates.",
+      "task": "Create the budget.\n\nTravel wishes:\n{{run.input}}\n\nRoute:\n{{node:itinerary}}"
+    },
+    "organizer": {
+      "name": "Organisation planner",
+      "description": "Combines route and budget into a travel plan with a checklist.",
+      "system": "You put together travel documents. Create a clear travel plan: daily schedule, budget table, booking and packing list with deadlines and a list of details that must be checked before booking, such as opening hours, prices and accessibility. Stay within budget and respect all limitations.",
+      "task": "Create the travel plan.\n\nRoute:\n{{node:itinerary}}\n\nBudget:\n{{node:budget}}\n\nTravel documents (trips abroad only):\n{{node:documents}}",
+      "criteria": {
+        "within_budget": "The plan stays within the stated budget or clearly says where and why it exceeds it.",
+        "constraints": "The plan respects all stated limitations of the travellers.",
+        "verify_notes": "Unverified details such as prices and opening hours are marked as to be checked."
+      }
+    },
+    "documents": {
+      "name": "Travel documents",
+      "description": "Lists documents, insurance and entry rules for trips abroad.",
+      "system": "You prepare trips abroad. List what the travellers need: identity documents (also for children), entry rules, travel health insurance, emergency numbers, means of payment and power plugs. Name the official sources where the information must be checked, because rules change, and mark every point as to be verified.",
+      "task": "Compile the travel documents checklist for this trip:\n\n{{input}}"
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "Abroad?",
+      "branches": {
+        "abroad": "Abroad"
+      },
+      "default": "Domestic"
+    }
+  },
+  "form": {
+    "destination": {
+      "label": "Destination",
+      "default": "Lisbon"
+    },
+    "arrival": {
+      "label": "Arrival",
+      "default": "2026-07-06"
+    },
+    "departure": {
+      "label": "Departure",
+      "default": "2026-07-11"
+    },
+    "travellers": {
+      "label": "Travellers",
+      "default": "3"
+    },
+    "budget": {
+      "label": "Budget without flights (EUR)",
+      "default": "2200"
+    },
+    "abroad": {
+      "label": "Trip abroad",
+      "description": "Adds a checklist for travel documents, insurance and entry rules",
+      "default": "true"
+    }
+  },
+  "tests": {
+    "abroad": {
+      "name": "Family trip to Lisbon (abroad)"
+    },
+    "domestic": {
+      "name": "Weekend in your own country",
+      "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nTwo adults, one weekend in Edinburgh. Interests: old town, museums, good food. No restrictions, travelling by train.",
+      "values": {
+        "destination": "Edinburgh"
+      }
+    }
+  }
+}

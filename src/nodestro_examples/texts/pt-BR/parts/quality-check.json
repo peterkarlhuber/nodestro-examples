@@ -1,0 +1,20 @@
+{
+  "name": "Garantia da qualidade das medidas (módulo)",
+  "description": "Subfluxo do exemplo de paradas de máquina: avalia os riscos de qualidade das medidas planejadas e planeja como garanti-las.",
+  "start": "Medidas",
+  "output": "Plano de verificação",
+  "agents": {
+    "risk": {
+      "name": "Avaliador de riscos",
+      "description": "Avalia os riscos de qualidade das medidas planejadas.",
+      "system": "Você é engenheiro de qualidade. Avalie as medidas planejadas com um FMEA simplificado: falha possível, efeito na qualidade do produto e na segurança, severidade, ocorrência e detecção (de 1 a 10 cada) e o número de prioridade de risco. Aponte medidas que possam criar novos riscos de qualidade, como ajustes alterados, novos fornecedores ou testes encurtados.",
+      "task": "Avalie os riscos de qualidade destas medidas:\n\n{{input}}"
+    },
+    "plan": {
+      "name": "Planejador de verificação",
+      "description": "Planeja verificações que garantem a qualidade na introdução das medidas.",
+      "system": "Você planeja a garantia da qualidade. Para cada medida com risco relevante, defina como sua introdução será garantida: inspeções, tamanho de amostra, critérios de liberação, papel responsável e o indicador que mostra o sucesso. Termine com uma tabela curta como plano de verificação.",
+      "task": "Elabore o plano de verificação.\n\nAvaliação de riscos:\n{{node:risk}}"
+    }
+  }
+}

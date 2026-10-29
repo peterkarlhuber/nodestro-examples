@@ -1,0 +1,160 @@
+{
+  "name": "Préparer une offre personnalisée",
+  "field": "Vente",
+  "description": "Analyser la demande d'un client, chiffrer une solution adaptée et rédiger une offre.",
+  "start": "Demande du client",
+  "output": "Projet d'offre",
+  "file_name": "Offre",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nE-mail de Mme Léna Exemple, office manager du cabinet Fiduciaire Modèle (35 postes de travail, déménage en juin) :\n« Bonjour, nous emménageons le 15 juin dans de nouveaux locaux et avons besoin de mobilier pour 35 postes.\nLes bureaux réglables en hauteur sont importants pour nous, car plusieurs collègues ont mal au dos, ainsi qu'une\nmeilleure acoustique dans l'open space (12 postes). Il nous faut aussi deux salles de réunion pour 8 personnes\nchacune. Notre budget est d'environ 60 000 euros HT. Pourriez-vous nous envoyer une offre d'ici la fin du mois ?\nLe montage devrait avoir lieu le week-end pour que l'activité continue. »\n\nNotre liste de prix (HT) :\n- Bureau réglable en hauteur électrique, 160 x 80 cm : 690 EUR\n- Bureau fixe, 160 x 80 cm : 320 EUR\n- Siège de bureau ergonomique premium : 540 EUR ; standard : 290 EUR\n- Écran acoustique de bureau : 210 EUR ; panneau acoustique mural 120 x 60 cm : 140 EUR\n- Table de réunion pour 8 personnes : 1 450 EUR ; chaise de réunion : 180 EUR\n- Livraison et montage : 45 EUR par poste, majoration week-end de 20 % sur le montage\n- Remise sur quantité : 5 % à partir de 25 000 EUR de marchandises, 8 % à partir de 50 000 EUR",
+  "guide": {
+    "problem": "Une bonne offre répond au besoin réel du client, pas seulement à ses mots-clés. Le workflow clarifie le besoin, chiffre une solution adaptée et rédige une offre complète.",
+    "flow": "L'analyste des besoins distingue les exigences explicites et implicites et rassemble les questions ouvertes. Le conseiller solution compose des positions de la liste de prix et calcule avec la calculatrice, y compris une variante dans le budget. Le rédacteur d'offre rédige l'offre ; une vérification qualité intégrée contrôle l'exhaustivité et les prix. Un formulaire de saisie reprend les données clés (client, échéance, budget, montage le week-end) ; avant l'envoi, une personne valide l'offre.",
+    "input": "La demande du client et votre liste de prix avec remises et conditions. Le formulaire reprend les données clés ; vous pouvez écrire la liste de prix dans le texte ou la joindre en fichier Excel, CSV ou PDF, comme le montre le fichier d'exemple.",
+    "result": "Un projet d'offre avec lettre d'accompagnement, tableau des positions, totaux, variantes, hypothèses et questions ouvertes. Ce n'est qu'après votre validation que l'exécution enregistre l'offre en PDF et en fichier Word modifiable.",
+    "adapt": "Joignez votre liste de prix actuelle en fichier ; la demande du client suffit alors comme texte. Ajoutez les conditions de paiement et les formulations types dans le prompt système du rédacteur d'offre."
+  },
+  "agents": {
+    "needs": {
+      "name": "Analyste des besoins",
+      "description": "Dégage les exigences explicites et implicites.",
+      "system": "Tu es un conseiller commercial expérimenté. Analyse la demande du client : exigences explicites, besoins implicites, contraintes comme le budget, le délai et le montage, et critères de décision. Liste les questions ouvertes à clarifier avant une offre ferme et les hypothèses avec lesquelles on peut travailler d'ici là.",
+      "task": "Analyse le besoin dans cette demande :\n\n{{input}}"
+    },
+    "solution": {
+      "name": "Conseiller solution",
+      "description": "Compose les positions adaptées et calcule avec la calculatrice.",
+      "system": "Tu es conseiller solution. Compose à partir de la liste de prix une solution qui répond au besoin et calcule avec la calculatrice quantités, sous-totaux, majorations et remises. Si le budget ne suffit pas, conçois une seconde variante qui le respecte et explique les différences. N'utilise que des articles et des prix de la liste.",
+      "task": "Compose une solution chiffrée.\n\nDemande et liste de prix :\n{{run.input}}\n\nAnalyse des besoins :\n{{node:needs}}"
+    },
+    "offer": {
+      "name": "Rédacteur d'offre",
+      "description": "Rédige le projet d'offre pour le client.",
+      "system": "Tu rédiges des offres en vente B2B. Écris une offre aimable et précise : une courte lettre qui fait référence aux attentes du client, un tableau des positions avec quantités et prix, les totaux, les variantes, les prestations comme la livraison et le montage, la validité et les questions ouvertes. Indique que le document est un projet soumis à validation interne. Reprends les prix uniquement du chiffrage.",
+      "task": "Rédige le projet d'offre.\n\nAnalyse des besoins :\n{{node:needs}}\n\nSolution et chiffrage :\n{{node:solution}}",
+      "criteria": {
+        "all_requirements": "L'offre répond à chaque exigence de l'analyse des besoins.",
+        "prices_consistent": "Tous les prix et totaux correspondent au chiffrage.",
+        "open_points": "Les questions ouvertes et les hypothèses sont clairement indiquées."
+      }
+    }
+  },
+  "steps": {
+    "approve": {
+      "name": "Valider l'offre",
+      "instructions": "Vérifie les prix, remises, délais de livraison et les questions ouvertes avant l'envoi de l'offre. Un refus termine l'exécution ; ajuste la saisie et relance."
+    }
+  },
+  "form": {
+    "customer": {
+      "label": "Client",
+      "description": "Entreprise et interlocuteur",
+      "default": "Fiduciaire Modèle, Léna Exemple"
+    },
+    "deadline": {
+      "label": "Offre attendue le",
+      "description": "Date à laquelle le client a besoin de l'offre",
+      "default": "2026-05-29"
+    },
+    "budget": {
+      "label": "Budget (EUR HT)",
+      "description": "Le cadre indiqué par le client",
+      "default": "60000"
+    },
+    "weekend": {
+      "label": "Montage le week-end",
+      "description": "L'activité du client ne doit pas être interrompue",
+      "default": "true"
+    },
+    "price_list": {
+      "label": "Liste de prix en fichier",
+      "description": "Facultatif : votre liste de prix en Excel, CSV ou PDF. Sans fichier, la liste de prix du texte fait foi."
+    }
+  },
+  "samples": {
+    "price_list": {
+      "name": "Liste_prix_mobilier_bureau",
+      "description": "La liste de prix fictive de la tâche de test en fichier Excel avec articles et conditions.",
+      "content": {
+        "Liste de prix": [
+          [
+            "Article",
+            "Unité",
+            "Prix HT (EUR)"
+          ],
+          [
+            "Bureau réglable en hauteur électrique, 160 x 80 cm",
+            "pièce",
+            690
+          ],
+          [
+            "Bureau fixe, 160 x 80 cm",
+            "pièce",
+            320
+          ],
+          [
+            "Siège de bureau ergonomique premium",
+            "pièce",
+            540
+          ],
+          [
+            "Siège de bureau standard",
+            "pièce",
+            290
+          ],
+          [
+            "Écran acoustique de bureau",
+            "pièce",
+            210
+          ],
+          [
+            "Panneau acoustique mural 120 x 60 cm",
+            "pièce",
+            140
+          ],
+          [
+            "Table de réunion pour 8 personnes",
+            "pièce",
+            1450
+          ],
+          [
+            "Chaise de réunion",
+            "pièce",
+            180
+          ],
+          [
+            "Livraison et montage",
+            "poste",
+            45
+          ]
+        ],
+        "Conditions": [
+          [
+            "Condition",
+            "Règle"
+          ],
+          [
+            "Majoration week-end",
+            "20 % sur le montage"
+          ],
+          [
+            "Remise sur quantité",
+            "5 % à partir de 25 000 EUR de marchandises, 8 % à partir de 50 000 EUR"
+          ],
+          [
+            "Validité des offres",
+            "30 jours"
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "request_text": {
+      "name": "Demande et liste de prix dans le texte"
+    },
+    "price_list_file": {
+      "name": "Liste de prix en fichier Excel",
+      "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nE-mail de Mme Léna Exemple, office manager du cabinet Fiduciaire Modèle (35 postes de travail, déménage en juin) :\n« Bonjour, nous emménageons le 15 juin dans de nouveaux locaux et avons besoin de mobilier pour 35 postes.\nLes bureaux réglables en hauteur sont importants pour nous, car plusieurs collègues ont mal au dos, ainsi qu'une\nmeilleure acoustique dans l'open space (12 postes). Il nous faut aussi deux salles de réunion pour 8 personnes\nchacune. Notre budget est d'environ 60 000 euros HT. Pourriez-vous nous envoyer une offre d'ici la fin du mois ?\nLe montage devrait avoir lieu le week-end pour que l'activité continue. »\n\nNotre liste de prix est jointe en fichier Excel."
+    }
+  }
+}

@@ -1,0 +1,129 @@
+{
+  "name": "Comparar propostas de fornecedores",
+  "field": "Logística e compras",
+  "description": "Comparar propostas por custo total e risco de fornecimento e derivar uma recomendação justificada.",
+  "start": "Propostas",
+  "output": "Recomendação",
+  "file_name": "Comparação de fornecedores",
+  "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nDemanda: peça torneada de aço inox DT-40, 24.000 peças por ano, pedidos de 2.000 peças por mês\nPreço-alvo: 2,10 EUR por peça entregue na fábrica\n\nProposta A – Exemplo Precisão GmbH (Alemanha, a 80 km)\n- Preço 2,35 EUR/peça, entregue na fábrica, prazo de entrega 2 semanas\n- Pedido mínimo 1.000 peças, prazo de pagamento 30 dias\n- Taxa de reclamações no último ano 0,4 %, certificação IATF 16949\n\nProposta B – Exemplo Componentes Ltd. (Extremo Oriente, frete marítimo)\n- Preço 1,62 EUR/peça na fábrica do fornecedor, frete e impostos estimados em 0,28 EUR/peça, prazo de entrega 10 semanas\n- Pedido mínimo 12.000 peças, pagamento de 30 % antecipado, saldo no embarque\n- Ainda sem histórico de entregas, ISO 9001, amostras aprovadas\n\nProposta C – Amostra Peças Metálicas s.r.o. (República Tcheca, a 450 km)\n- Preço 1,98 EUR/peça, frete 0,07 EUR/peça, prazo de entrega 4 semanas\n- Pedido mínimo 4.000 peças, prazo de pagamento 45 dias\n- Taxa de reclamações no último ano 1,1 %, ISO 9001, capacidade 90 % utilizada segundo o fornecedor\n\nPremissas internas: custo de capital 8 % ao ano, custo de armazenagem 0,03 EUR por peça e mês,\ncusto por reclamação (inspeção, seleção) 0,90 EUR por peça defeituosa.",
+  "guide": {
+    "problem": "O menor preço unitário raramente é a proposta mais barata. O workflow compara propostas por custo total e risco de fornecimento e justifica uma recomendação para compras.",
+    "flow": "O analista de custos e o analista de riscos trabalham em paralelo. Um calcula o custo total de propriedade por proposta com a calculadora, o outro avalia prazo de entrega, dependências e qualidade. A recomendação de compra pondera os dois e entrega um resultado estruturado.",
+    "input": "Várias propostas com preço, frete, prazo de entrega, quantidade mínima, condições de pagamento e dados de qualidade, além dos seus custos internos. Você pode escrever as propostas no texto ou anexá-las como arquivos, inclusive misturando PDF, Word e Excel; os três arquivos de exemplo mostram exatamente isso.",
+    "result": "Uma recomendação estruturada com classificação, justificativas, riscos, pontos de negociação e premissas usadas. A execução também a salva como relatório em PDF e como arquivo Excel com uma planilha por lista.",
+    "adapt": "Anexe as suas propostas como arquivos e informe a demanda e os custos no texto. Se você tem pesos fixos (por exemplo 50 % custo, 30 % risco, 20 % qualidade), acrescente-os no prompt de sistema da recomendação de compra. Contratos-quadro ou avaliações de fornecedores podem ser salvos como conhecimento e atribuídos ao analista de riscos."
+  },
+  "agents": {
+    "cost": {
+      "name": "Analista de custos",
+      "description": "Calcula o custo total por proposta com a calculadora.",
+      "system": "Você é analista de custos em compras. Calcule para cada proposta o custo total por peça e por ano: preço, frete e impostos, capital imobilizado por pedidos mínimos e pagamentos antecipados, custo de armazenagem e custo esperado de reclamações. Use a calculadora em cada cálculo e mostre como chegou ao resultado. Compare o resultado com o preço-alvo e mostre quais premissas mais influenciam o resultado.",
+      "task": "Calcule o custo total destas propostas:\n\n{{input}}"
+    },
+    "risk": {
+      "name": "Analista de riscos",
+      "description": "Avalia riscos de prazo, dependência, capacidade e qualidade.",
+      "system": "Você é gerente de riscos da cadeia de suprimentos. Avalie os riscos de fornecimento de cada proposta: prazo de entrega e flexibilidade, rota de transporte, utilização da capacidade, histórico de qualidade e certificação, comprometimento financeiro e dependência. Avalie cada risco por probabilidade e impacto (alto, médio, baixo) e proponha salvaguardas, por exemplo estoque de segurança ou uma segunda fonte.",
+      "task": "Avalie os riscos de fornecimento destas propostas:\n\n{{input}}"
+    },
+    "recommendation": {
+      "name": "Recomendação de compra",
+      "description": "Pondera custos e riscos e recomenda um fornecedor.",
+      "system": "Você é gerente de compras e prepara uma decisão de fornecimento. Pondere custo total e risco e recomende um fornecedor ou uma combinação, por exemplo uma fonte principal com uma segunda fonte. Justifique o ranking com clareza, indique os riscos restantes e pontos concretos de negociação. Liste cada premissa da qual a recomendação depende.",
+      "task": "Derive uma recomendação.\n\nAnálise de custos:\n{{node:cost}}\n\nAnálise de riscos:\n{{node:risk}}",
+      "fields": {
+        "recommended_supplier": "Fornecedor ou combinação recomendada",
+        "ranking": "Ranking das propostas com justificativa curta",
+        "reasons": "Principais motivos da recomendação",
+        "risks": "Riscos restantes e salvaguardas",
+        "negotiation_points": "Pontos para a negociação",
+        "assumptions": "Premissas das quais a recomendação depende"
+      }
+    }
+  },
+  "form": {
+    "offers": {
+      "label": "Arquivos das propostas",
+      "description": "Opcional: as propostas em PDF, Word, Excel ou CSV, até 10 arquivos. Sem arquivos valem as propostas do texto; com arquivos, o texto só precisa da demanda, do preço-alvo e das premissas internas."
+    }
+  },
+  "samples": {
+    "offer_a": {
+      "name": "Proposta_A_Exemplo_Precisao",
+      "description": "Proposta A como carta em PDF (fictícia).",
+      "content": "# Proposta nº 2026-0412\n\n**Exemplo Precisão GmbH**, Alemanha (a 80 km da sua fábrica)\n\nPrezados, agradecemos a sua consulta sobre a peça torneada de aço inox DT-40. Oferecemos:\n\n| Item | Dado |\n|---|---|\n| Preço | 2,35 EUR por peça, entregue na fábrica |\n| Prazo de entrega | 2 semanas |\n| Pedido mínimo | 1.000 peças |\n| Prazo de pagamento | 30 dias líquidos |\n| Certificação | IATF 16949 |\n| Taxa de reclamações no último ano | 0,4 % |\n\nA proposta é válida por 60 dias. Atenciosamente, Comercial (fictício)"
+    },
+    "offer_b": {
+      "name": "Proposta_B_Exemplo_Componentes",
+      "description": "Proposta B como documento Word (fictícia).",
+      "content": "# Quotation Q-77-DT40\n\n**Exemplo Componentes Ltd.** (Extremo Oriente, frete marítimo)\n\n## Condições\n\n- Preço: 1,62 EUR por peça na fábrica do fornecedor\n- Frete e impostos: estimados por nós em 0,28 EUR por peça\n- Prazo de entrega: 10 semanas, incluindo o frete marítimo\n- Pedido mínimo: 12.000 peças\n- Pagamento: 30 % antecipado no pedido, saldo no embarque\n\n## Qualidade\n\nCertificação ISO 9001. As primeiras amostras foram aprovadas. Ainda não há histórico de entregas com vocês."
+    },
+    "offer_c": {
+      "name": "Proposta_C_Amostra_Pecas_Metalicas",
+      "description": "Proposta C como planilha Excel (fictícia).",
+      "content": {
+        "Proposta": [
+          [
+            "Item",
+            "Valor",
+            "Unidade"
+          ],
+          [
+            "Fornecedor",
+            "Amostra Peças Metálicas s.r.o. (República Tcheca, 450 km)",
+            ""
+          ],
+          [
+            "Preço",
+            1.98,
+            "EUR/peça"
+          ],
+          [
+            "Frete",
+            0.07,
+            "EUR/peça"
+          ],
+          [
+            "Prazo de entrega",
+            4,
+            "semanas"
+          ],
+          [
+            "Pedido mínimo",
+            4000,
+            "peças"
+          ],
+          [
+            "Prazo de pagamento",
+            45,
+            "dias"
+          ],
+          [
+            "Taxa de reclamações no último ano",
+            1.1,
+            "%"
+          ],
+          [
+            "Certificação",
+            "ISO 9001",
+            ""
+          ],
+          [
+            "Capacidade utilizada segundo o fornecedor",
+            90,
+            "%"
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "offers_text": {
+      "name": "Três propostas no texto"
+    },
+    "offers_files": {
+      "name": "Três propostas em PDF, Word e Excel",
+      "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nDemanda: peça torneada de aço inox DT-40, 24.000 peças por ano, pedidos de 2.000 peças por mês\nPreço-alvo: 2,10 EUR por peça entregue na fábrica\n\nAs três propostas estão anexadas como arquivos.\n\nPremissas internas: custo de capital 8 % ao ano, custo de armazenagem 0,03 EUR por peça e mês,\ncusto por reclamação (inspeção, seleção) 0,90 EUR por peça defeituosa."
+    }
+  }
+}

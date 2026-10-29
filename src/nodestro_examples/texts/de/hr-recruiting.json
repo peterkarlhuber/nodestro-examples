@@ -1,0 +1,68 @@
+{
+  "name": "Stelle ausschreiben und Interviews vorbereiten",
+  "field": "Personalwesen",
+  "description": "Stellenprofil entwickeln, Stellenanzeige formulieren, strukturierte Interviewfragen vorbereiten und auf Fairness prüfen.",
+  "start": "Stellenbedarf",
+  "output": "Unterlagen zur Stelle",
+  "file_name": "Stellenausschreibung",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nUnternehmen: Beispiel Logistik GmbH, 220 Mitarbeitende, Standort Musterstadt, hybrides Arbeiten möglich (2 Tage/Woche)\nStelle: Junior Data Analyst (m/w/d), Vollzeit, unbefristet, Team Controlling (5 Personen)\nNotizen der Teamleiterin:\n- Soll Berichte zu Lieferzeiten und Kosten aufbauen und pflegen (Excel, Power BI), Daten aus dem ERP aufbereiten\n- Wichtig: sorgfältig, kann Zahlen verständlich erklären, arbeitet gern mit dem Lager und dem Vertrieb zusammen\n- Studium in Wirtschaft, Statistik oder ähnlich, oder vergleichbare Ausbildung mit Erfahrung\n- SQL-Grundkenntnisse wären schön, Python ein Plus\n- „Am liebsten jemand Junges, der ins Team passt, und mit Deutsch als Muttersprache“\n- Gehaltsband 48.000–54.000 EUR, 30 Urlaubstage, Weiterbildungsbudget 1.500 EUR pro Jahr",
+  "guide": {
+    "problem": "Gute Einstellungen beginnen mit einem klaren Profil und fairen, vergleichbaren Interviews. Der Workflow macht aus losen Notizen ein Stellenprofil, eine Anzeige und einen Interviewleitfaden und prüft alles auf Fairness.",
+    "flow": "Der Profil-Agent ordnet Aufgaben und Anforderungen. Daraus entstehen parallel die Stellenanzeige und der Interviewleitfaden. Der Fairness-Prüfer kontrolliert beide auf diskriminierende oder unzulässige Formulierungen, etwa zu Alter oder Muttersprache, und nennt, was ein Mensch prüfen muss. Hat er Beanstandungen, leitet ein Entscheidungsknoten die Unterlagen an eine Überarbeitung, die seine Vorschläge umsetzt; sonst bleibt es bei den ersten Fassungen.",
+    "input": "Notizen zur Stelle: Aufgaben, gewünschte Qualifikationen, Team, Rahmenbedingungen und Vergütung.",
+    "result": "Stellenprofil, Stellenanzeige und Interviewleitfaden mit Bewertungsankern, eine strukturierte Fairness-Prüfung und bei Beanstandungen eine überarbeitete Fassung mit Änderungsliste, zusätzlich als Word-Datei. Die Unterlagen müssen vor der Veröffentlichung von HR oder einer fachkundigen Person freigegeben werden.",
+    "adapt": "Ersetze die Notizen durch deinen Stellenbedarf. Euer Arbeitgeberprofil und eure Benefits kannst du als Wissen hinterlegen und dem Anzeigen-Agenten zuweisen. Rechtliche Vorgaben eures Landes ergänzt du im System-Prompt des Fairness-Prüfers."
+  },
+  "agents": {
+    "profile": {
+      "name": "Stellenprofil",
+      "description": "Ordnet Aufgaben, Muss- und Kann-Anforderungen und Kompetenzen.",
+      "system": "Du bist HR-Business-Partner. Entwickle aus den Notizen ein Stellenprofil: Zweck der Stelle, Hauptaufgaben, Muss- und Kann-Anforderungen, fachliche und überfachliche Kompetenzen sowie Rahmenbedingungen. Formuliere Anforderungen tätigkeitsbezogen und überprüfbar. Übernimm keine Wünsche, die sich auf geschützte Merkmale wie Alter, Herkunft, Geschlecht oder Muttersprache beziehen, sondern vermerke sie als zu klärenden Punkt.",
+      "task": "Entwickle das Stellenprofil aus diesen Notizen:\n\n{{input}}"
+    },
+    "job_ad": {
+      "name": "Stellenanzeige",
+      "description": "Formuliert eine ansprechende, inklusive Stellenanzeige.",
+      "system": "Du schreibst Stellenanzeigen, die Menschen ansprechen und niemanden ausschließen. Schreibe eine Anzeige mit Einleitung zum Unternehmen, Aufgaben, Profil (Muss und Kann klar getrennt), Angebot und Bewerbungsweg. Nutze geschlechtsneutrale, klare Sprache und vermeide unnötige Hürden. Verwende nur Angaben aus dem Stellenprofil.",
+      "task": "Schreibe die Stellenanzeige zu diesem Profil:\n\n{{node:profile}}"
+    },
+    "interview": {
+      "name": "Interviewleitfaden",
+      "description": "Bereitet strukturierte Interviewfragen mit Bewertungsankern vor.",
+      "system": "Du bist Experte für strukturierte Personalauswahl. Erstelle einen Interviewleitfaden für 60 Minuten: Ablauf, acht bis zehn Fragen zu den wichtigsten Anforderungen (verhaltensbezogene und situative Fragen), je Frage das geprüfte Kriterium und Bewertungsanker für schwach, mittel und stark. Alle Bewerbenden erhalten dieselben Fragen. Stelle keine Fragen zu Privatleben, Familienplanung, Gesundheit, Herkunft oder Religion.",
+      "task": "Erstelle den Interviewleitfaden zu diesem Profil:\n\n{{node:profile}}"
+    },
+    "fairness": {
+      "name": "Fairness-Prüfer",
+      "description": "Prüft Anzeige und Leitfaden auf Diskriminierung und unzulässige Fragen.",
+      "system": "Du prüfst Personalunterlagen auf Fairness und Gleichbehandlung. Suche in Anzeige und Leitfaden nach Formulierungen, die direkt oder indirekt nach Alter, Geschlecht, Herkunft, Sprache, Religion, Behinderung oder anderen geschützten Merkmalen benachteiligen, nach unzulässigen Interviewfragen und nach Anforderungen ohne Bezug zur Tätigkeit. Schlage konkrete Änderungen vor. Gib ausdrücklich an, dass die Unterlagen vor der Verwendung von einer fachkundigen Person freigegeben werden müssen.",
+      "task": "Prüfe diese Unterlagen auf Fairness.\n\nStellenanzeige:\n{{node:job_ad}}\n\nInterviewleitfaden:\n{{node:interview}}",
+      "fields": {
+        "approved": "Ohne Änderungen verwendbar?",
+        "issues": "Gefundene Probleme mit Fundstelle",
+        "suggested_changes": "Konkrete Änderungsvorschläge",
+        "human_checks": "Punkte, die HR oder eine fachkundige Person prüfen muss"
+      }
+    },
+    "revise": {
+      "name": "Überarbeitung",
+      "description": "Setzt die Änderungsvorschläge der Fairness-Prüfung in Anzeige und Leitfaden um.",
+      "system": "Du überarbeitest Personalunterlagen nach einer Fairness-Prüfung. Setze jeden Änderungsvorschlag um, entferne beanstandete Formulierungen und unzulässige Fragen und lass alles andere unverändert. Gib die vollständige überarbeitete Stellenanzeige und den vollständigen überarbeiteten Interviewleitfaden aus und liste am Ende jede Änderung mit kurzer Begründung auf. Kennzeichne Punkte, die du nicht lösen konntest, für die Prüfung durch HR.",
+      "task": "Überarbeite die Unterlagen.\n\nStellenanzeige:\n{{node:job_ad}}\n\nInterviewleitfaden:\n{{node:interview}}\n\nFairness-Prüfung:\n{{node:fairness}}"
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "Nachbesserung nötig?",
+      "branches": {
+        "revise": "Überarbeiten"
+      },
+      "default": "Unauffällig"
+    }
+  },
+  "tests": {
+    "notes": {
+      "name": "Notizen mit problematischen Wünschen"
+    }
+  }
+}

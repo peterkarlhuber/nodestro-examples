@@ -1,0 +1,127 @@
+{
+  "name": "Analyse construction delays",
+  "field": "Construction",
+  "description": "Calculate schedule deviations, classify causes, develop countermeasures and report to the client.",
+  "start": "Project status",
+  "output": "Status report",
+  "file_name": "Status report",
+  "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nProject: new day-care centre \"Sunny View\", Exampletown; client: Exampletown municipality\nContractual completion date: 2026-09-30; report date: 2026-05-15\n\n| Milestone | Planned | Actual / forecast | Remark |\n|---|---|---|---|\n| Shell complete | 2026-02-27 | 2026-03-20 | 9 frost days in January, concrete work suspended |\n| Roof watertight | 2026-03-27 | 2026-04-24 | Late delivery of roof elements (supplier reports material shortage) |\n| Windows installed | 2026-04-17 | 2026-05-29 (forecast) | Design change to escape windows at the request of the fire safety review |\n| Building services first fix | 2026-05-22 | 2026-06-19 (forecast) | Depends on windows; electrician on site with only 2 instead of 4 people |\n| Interior finishing complete | 2026-08-28 | open | — |\n| Acceptance | 2026-09-30 | open | Contractual penalty 0.2 % of the contract sum per working day, max. 5 % |\n\nContract sum of the general contractor: EUR 3.2 m. The client expects a report for the meeting on 2026-05-20.",
+  "guide": {
+    "problem": "Delays on site add up, and clients quickly need a clear picture. The workflow calculates deviations, classifies causes, develops countermeasures and writes a status report.",
+    "flow": "The schedule analyst and the cause analyst work in parallel. One calculates delays and float with the date and calculator tools, the other sorts causes by area of responsibility and documentation needs; both also evaluate attached schedules, site diaries and photos. The countermeasure planner develops acceleration options, and the report agent summarises everything for the client. Before the report leaves the project team, a person approves it.",
+    "input": "A schedule overview with planned and actual milestones, remarks on causes, report date and contractual conditions, as text or as files: schedule as Excel, site diary as PDF, photos as images. The sample files contain a schedule and an extract from the site diary.",
+    "result": "A factual status report with schedule situation, causes, countermeasures, decisions needed and risks. After approval, the run saves it as a PDF and as an editable Word file. Questions on contractual penalties and extensions of time remain subject to expert and legal review.",
+    "adapt": "Export your schedule from your project software as Excel and attach the site diary and photos. For a regular report you can run the copy on a schedule; the approval then waits for you."
+  },
+  "agents": {
+    "schedule": {
+      "name": "Schedule analyst",
+      "description": "Calculates delays, float and consequences with the date and calculator tools.",
+      "system": "You are a construction scheduler. Calculate the delay of each milestone in calendar days with the days_between tool and derive the effect on the completion date if the delay continues. Show the dependencies between milestones and use the calculator tool to work out which contractual penalty could arise for an assumed delay, explicitly as a scenario.",
+      "task": "Analyse the schedule position:\n\n{{input}}"
+    },
+    "causes": {
+      "name": "Cause analyst",
+      "description": "Classifies causes by area of responsibility and documentation needs.",
+      "system": "You are a site manager experienced in claims management. Assign each delay to a cause category: weather, supply chain, design change, staffing or other. Mark whose area of responsibility it probably falls under according to the information available, which evidence should be documented and which notices of hindrance might be needed. Make no legal assessment.",
+      "task": "Classify the causes of the delays:\n\n{{input}}"
+    },
+    "countermeasures": {
+      "name": "Countermeasure planner",
+      "description": "Develops acceleration measures with cost and effect.",
+      "system": "You are a project controller. Develop countermeasures to hold the completion date or limit the delay, for example resequencing work, additional capacity or parallel working. Rate each measure by time gained, cost, risk and the decisions needed from the client. Recommend a package of measures.",
+      "task": "Develop countermeasures.\n\nSchedule analysis:\n{{node:schedule}}\n\nCauses:\n{{node:causes}}"
+    },
+    "report": {
+      "name": "Report to the client",
+      "description": "Summarises schedule position, causes and measures factually.",
+      "system": "You write status reports for public clients: factual, clear and without assigning blame. Structure it into schedule position, causes, countermeasures, decisions needed and risks, at most one page. Point out that questions on contractual penalties and extensions of time must be reviewed professionally and legally.",
+      "task": "Write the status report.\n\nSchedule analysis:\n{{node:schedule}}\n\nCountermeasures:\n{{node:countermeasures}}"
+    }
+  },
+  "steps": {
+    "release": {
+      "name": "Approve report",
+      "instructions": "Check the status report before it goes to the client: are dates and delays correct, are causes described factually and without blame, and is it clear which decisions the client is to make? Statements on contractual penalties and extensions of time must have been checked by an expert. If you reject it, write what is missing; the run then ends without report files."
+    }
+  },
+  "form": {
+    "project_files": {
+      "label": "Project documents",
+      "description": "Optional: schedule (Excel, CSV), site diary or minutes (PDF, Word) and site photos (PNG, JPEG, WebP), up to 10 files."
+    }
+  },
+  "samples": {
+    "schedule": {
+      "name": "Schedule_day_care_Sunny_View",
+      "description": "The fictional schedule of the test task as an Excel file.",
+      "content": {
+        "Schedule": [
+          [
+            "Milestone",
+            "Planned",
+            "Actual or forecast",
+            "Status",
+            "Remark"
+          ],
+          [
+            "Shell complete",
+            "2026-02-27",
+            "2026-03-20",
+            "done",
+            "9 frost days in January, concrete work suspended"
+          ],
+          [
+            "Roof watertight",
+            "2026-03-27",
+            "2026-04-24",
+            "done",
+            "Late delivery of roof elements (material shortage at the supplier)"
+          ],
+          [
+            "Windows installed",
+            "2026-04-17",
+            "2026-05-29",
+            "forecast",
+            "Design change to escape windows at the request of the fire safety review"
+          ],
+          [
+            "Building services first fix",
+            "2026-05-22",
+            "2026-06-19",
+            "forecast",
+            "Depends on windows; electrician with 2 instead of 4 people"
+          ],
+          [
+            "Interior finishing complete",
+            "2026-08-28",
+            "",
+            "open",
+            ""
+          ],
+          [
+            "Acceptance",
+            "2026-09-30",
+            "",
+            "open",
+            "Contractual penalty 0.2 % of the contract sum per working day, max. 5 %"
+          ]
+        ]
+      }
+    },
+    "site_diary": {
+      "name": "Site_diary_extract_April_May",
+      "description": "A fictional extract from the site diary as a PDF.",
+      "content": "# Site diary day-care centre “Sunny View” – extract\n\nSYNTHETIC SAMPLE DATA – entirely fictional.\n\n| Date | Entry |\n|---|---|\n| 2026-04-08 | Supplier of the roof elements confirms delivery date 2026-04-20 instead of 2026-03-20. |\n| 2026-04-24 | Roof watertight. Accepted by site management without defects. |\n| 2026-04-29 | Fire safety inspector requires changed escape windows in group rooms 2 and 3; design change commissioned. |\n| 2026-05-06 | Window manufacturer reports a new lead time of 3 weeks for the changed elements. |\n| 2026-05-11 | Electrical: only 2 fitters on site, company cites sickness absence. |\n| 2026-05-13 | Client asks about the impact on the opening date 2026-10-01. |"
+    }
+  },
+  "tests": {
+    "schedule_text": {
+      "name": "Schedule overview in the text"
+    },
+    "project_files": {
+      "name": "Schedule and site diary as files",
+      "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nProject: new day-care centre \"Sunny View\", Exampletown; client: Exampletown municipality\nContractual completion date: 2026-09-30; report date: 2026-05-15\nContract sum of the general contractor: EUR 3.2 m. The client expects a report for the meeting on 2026-05-20.\n\nThe schedule and the site diary are attached as files."
+    }
+  }
+}

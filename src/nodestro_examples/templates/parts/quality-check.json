@@ -1,0 +1,47 @@
+{
+  "id": "quality-check",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160
+    },
+    {
+      "id": "risk",
+      "type": "agent",
+      "x": 340,
+      "y": 160,
+      "role": "analysis",
+      "icon": "shield"
+    },
+    {
+      "id": "plan",
+      "type": "agent",
+      "x": 680,
+      "y": 160,
+      "role": "planning",
+      "icon": "check"
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1020,
+      "y": 160
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "risk"
+    ],
+    [
+      "risk",
+      "plan"
+    ],
+    [
+      "plan",
+      "output"
+    ]
+  ]
+}

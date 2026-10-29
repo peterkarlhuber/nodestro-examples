@@ -1,0 +1,55 @@
+{
+  "name": "Geschäftsidee bewerten",
+  "field": "Selbstständige und Gründer",
+  "description": "Eine Geschäftsidee parallel nach Marktpotenzial, Wirtschaftlichkeit und Risiken bewerten und ein Urteil fällen.",
+  "start": "Geschäftsidee",
+  "output": "Bewertung",
+  "file_name": "Bewertung_Geschaeftsidee",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nIdee: Mobiler Fahrradreparaturservice „Rad-Retter“ in einer Stadt mit 180.000 Einwohnern.\nEin Lastenrad mit Werkzeug fährt zu Kunden nach Hause oder ins Büro; Buchung über eine einfache Website.\n\nAnnahmen der Gründerin:\n- Durchschnittlicher Auftrag 65 EUR netto, Materialanteil 30 %\n- Kapazität 6 Aufträge pro Tag, 20 Arbeitstage pro Monat; im ersten Jahr im Schnitt 50 % ausgelastet\n- Startinvestition 18.000 EUR (Lastenrad, Werkzeug, Website), finanziert aus Ersparnissen\n- Laufende Kosten 1.400 EUR pro Monat (Versicherung, Lager, Telefon, Software, Marketing)\n- Gewünschter Unternehmerlohn 2.500 EUR pro Monat\n- Zielgruppen: Berufspendler, Familien mit Lastenrad, Firmen mit Dienstrad-Leasing\n- Bekannt: drei stationäre Werkstätten in der Stadt mit Wartezeiten von zwei bis drei Wochen im Frühjahr",
+  "guide": {
+    "problem": "Vor einer Gründung lohnt ein nüchterner Blick auf Markt, Zahlen und Risiken. Der Workflow lässt drei Fachleute gleichzeitig prüfen und eine Jury ein begründetes Urteil fällen.",
+    "flow": "Drei Agenten arbeiten parallel: Der Marktanalyst schätzt Zielgruppen und Wettbewerb, der Wirtschaftlichkeitsrechner rechnet Break-even und Szenarien mit dem Rechner-Tool, der Risikoanalyst sucht Schwachstellen. Die Investoren-Jury wägt alles ab und liefert ein strukturiertes Urteil mit Punktzahl.",
+    "input": "Eine Beschreibung der Idee mit Angebot, Zielgruppen, Preisen, Kosten, Kapazität und bekannten Wettbewerbern.",
+    "result": "Ein strukturiertes Urteil (weiterverfolgen, anpassen oder verwerfen) mit Punktzahl, Stärken, Risiken, zu prüfenden Annahmen und konkreten nächsten Schritten zur Validierung, zusätzlich als PDF-Bericht.",
+    "adapt": "Beschreibe deine Idee mit deinen Zahlen. Je ehrlicher die Annahmen, desto nützlicher das Urteil. Eigene Marktdaten oder Umfrageergebnisse lädst du als Wissen hoch und weist sie dem Marktanalysten zu."
+  },
+  "agents": {
+    "market": {
+      "name": "Marktanalyst",
+      "description": "Schätzt Zielgruppen, Nachfrage und Wettbewerb ein.",
+      "system": "Du bist Marktanalyst für Gründungen. Beschreibe Zielgruppen, ihren Bedarf und ihre Zahlungsbereitschaft, schätze das Marktpotenzial mit einer nachvollziehbaren, vorsichtigen Überschlagsrechnung und analysiere den Wettbewerb. Kennzeichne, welche Angaben aus der Beschreibung stammen und welche auf allgemeinem Wissen beruhen und vor Ort geprüft werden müssen.",
+      "task": "Analysiere den Markt für diese Idee:\n\n{{input}}"
+    },
+    "economics": {
+      "name": "Wirtschaftlichkeitsrechner",
+      "description": "Rechnet Deckungsbeitrag, Break-even und Szenarien mit dem Rechner-Tool.",
+      "system": "Du bist Gründungsberater mit Fokus auf Finanzen. Berechne mit dem Rechner-Tool Deckungsbeitrag pro Auftrag, Monatsumsatz und -ergebnis, Break-even in Aufträgen pro Monat (einschließlich Unternehmerlohn) und die Amortisation der Startinvestition. Rechne drei Szenarien (vorsichtig, erwartet, optimistisch) und zeige, wie empfindlich das Ergebnis auf Auslastung und Preis reagiert.",
+      "task": "Rechne die Wirtschaftlichkeit dieser Idee:\n\n{{input}}"
+    },
+    "risks": {
+      "name": "Risikoanalyst",
+      "description": "Sucht Schwachstellen und Risiken der Idee.",
+      "system": "Du bist ein erfahrener Gründungscoach und spielst bewusst den Advocatus Diaboli. Suche die größten Risiken: Nachfrage, Saisonalität, Abhängigkeit von einer Person, Wettbewerb, rechtliche Anforderungen, Skalierbarkeit und Finanzierung. Bewerte jedes Risiko nach Wahrscheinlichkeit und Auswirkung und schlage eine günstige Möglichkeit vor, es vor der Gründung zu testen.",
+      "task": "Analysiere die Risiken dieser Idee:\n\n{{input}}"
+    },
+    "jury": {
+      "name": "Investoren-Jury",
+      "description": "Wägt Markt, Zahlen und Risiken ab und fällt ein Urteil.",
+      "system": "Du bist eine Jury aus erfahrenen Gründerinnen und Investoren. Wäge Markt, Wirtschaftlichkeit und Risiken gegeneinander ab und fälle ein Urteil: weiterverfolgen, anpassen oder verwerfen. Vergib eine Punktzahl von 1 bis 10 und begründe sie. Nenne die Annahmen, die zuerst getestet werden müssen, und konkrete, günstige nächste Schritte. Sei ehrlich, aber fair.",
+      "task": "Bewerte die Idee.\n\nMarktanalyse:\n{{node:market}}\n\nWirtschaftlichkeit:\n{{node:economics}}\n\nRisiken:\n{{node:risks}}",
+      "fields": {
+        "verdict": "Urteil (weiterverfolgen, anpassen oder verwerfen) mit Begründung",
+        "score": "Punktzahl von 1 bis 10",
+        "strengths": "Stärken der Idee",
+        "risks": "Wichtigste Risiken",
+        "assumptions_to_test": "Annahmen, die zuerst getestet werden müssen",
+        "next_steps": "Konkrete nächste Schritte"
+      }
+    }
+  },
+  "tests": {
+    "idea": {
+      "name": "Mobiler Fahrradreparaturservice"
+    }
+  }
+}

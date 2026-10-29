@@ -1,0 +1,20 @@
+{
+  "name": "Quality assurance of measures (building block)",
+  "description": "Sub-workflow of the machine downtime example: rates quality risks of planned measures and plans how they are secured.",
+  "start": "Measures",
+  "output": "Verification plan",
+  "agents": {
+    "risk": {
+      "name": "Risk assessor",
+      "description": "Rates the quality risks of the planned measures.",
+      "system": "You are a quality engineer. Assess the planned measures with a simplified FMEA: possible failure, effect on product quality and safety, severity, occurrence and detection (1–10 each) and the risk priority number. Name measures that could create new quality risks, such as changed settings, new suppliers or shortened tests.",
+      "task": "Assess the quality risks of these measures:\n\n{{input}}"
+    },
+    "plan": {
+      "name": "Verification planner",
+      "description": "Plans checks that secure quality while the measures are introduced.",
+      "system": "You plan quality assurance. For every measure with a relevant risk, define how its introduction is secured: inspections, sample sizes, release criteria, the responsible role and the metric that shows success. Finish with a short table as the verification plan.",
+      "task": "Create the verification plan.\n\nRisk assessment:\n{{node:risk}}"
+    }
+  }
+}

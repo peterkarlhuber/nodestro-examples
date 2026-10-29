@@ -1,0 +1,246 @@
+{
+  "name": "Revisar el presupuesto familiar y ahorrar",
+  "field": "Particulares – finanzas",
+  "description": "Evaluar los ingresos y gastos de un hogar y encontrar posibilidades de ahorro realistas.",
+  "start": "Presupuesto familiar",
+  "output": "Revisión del presupuesto",
+  "file_name": "Presupuesto familiar",
+  "input": "DATOS DE EJEMPLO SINTÉTICOS – hogar totalmente inventado, solo para probar.\n\nHogar: dos adultos y un niño (7 años), piso de alquiler\nIngresos netos al mes: 2.900 EUR + 1.450 EUR (media jornada) + 255 EUR de prestación por hijo\nObjetivo: ahorrar 400 EUR al mes para tener en dos años un fondo de emergencia de tres meses de ingresos netos.\n\nGastos fijos al mes:\n- Alquiler con calefacción 1.380 EUR, electricidad 95 EUR, internet y móvil (3 contratos) 112 EUR\n- Coche: cuota del préstamo 289 EUR, seguro 74 EUR, impuesto 18 EUR\n- Seguros: responsabilidad civil 7 EUR, hogar 14 EUR, incapacidad laboral 68 EUR\n- Guardería/actividades extraescolares 210 EUR, club deportivo del niño 25 EUR\n- Streaming y suscripciones: 4 servicios, 52 EUR en total; gimnasio 2 × 39 EUR (uno sin usar desde hace 5 meses)\n\nGastos variables, media de los últimos 3 meses:\n- Alimentación 780 EUR, restaurantes y comida a domicilio 240 EUR, combustible 160 EUR\n- Ropa 130 EUR, ocio 150 EUR, varios 260 EUR\nSaldo actual en la cuenta de ahorro: 1.800 EUR",
+  "guide": {
+    "problem": "A final de mes suele quedar menos de lo esperado. El flujo recalcula un presupuesto familiar, encuentra potencial de ahorro y comprueba si las propuestas son realistas en el día a día.",
+    "flow": "El analista de presupuesto calcula totales, excedente y porcentajes por categoría con la calculadora. El asesor de ahorro estima ahorros concretos, también recalculados. La comprobación de realidad recibe ambos resultados, revisa la viabilidad y entrega un resultado estructurado.",
+    "input": "Ingresos, gastos fijos y variables de un hogar y un objetivo de ahorro. En lugar de teclearlo todo, puedes adjuntar movimientos bancarios o un libro de cuentas como archivo CSV o Excel; el archivo de ejemplo contiene un mes inventado.",
+    "result": "Una revisión estructurada del presupuesto con el excedente mensual actual, el potencial de ahorro, medidas, primeros pasos rápidos y avisos, además como archivo de Excel. No sustituye el asesoramiento financiero ni el de deudas.",
+    "adapt": "Adjunta tus propios movimientos bancarios o introduce tus cifras; añade prioridades personales, como «el coche se queda», en el texto. Los extractos bancarios contienen datos personales: se quedan contigo y solo se pasan al modelo para esta ejecución."
+  },
+  "agents": {
+    "budget": {
+      "name": "Analista de presupuesto",
+      "description": "Calcula ingresos, gastos, excedente y porcentajes con la calculadora.",
+      "system": "Eres asesor de economía doméstica. Calcula con la calculadora: total de ingresos, total de gastos fijos y variables, excedente mensual, tasa de ahorro y porcentaje de cada categoría sobre los ingresos netos. Compara con el objetivo de ahorro y muestra la diferencia. Presenta los resultados en una tabla clara.",
+      "task": "Evalúa este presupuesto familiar:\n\n{{input}}"
+    },
+    "savings": {
+      "name": "Asesor de ahorro",
+      "description": "Encuentra posibilidades de ahorro concretas y estima su efecto.",
+      "system": "Eres asesor de consumo. Encuentra posibilidades de ahorro concretas: contratos sin usar, cambios de tarifa, gastos variables con margen y hábitos. Estima con prudencia el ahorro mensual de cada medida y súmalas con la calculadora. No recomiendes productos financieros, préstamos ni inversiones ni la cancelación de seguros importantes.",
+      "task": "Encuentra posibilidades de ahorro a partir de esta evaluación:\n\n{{node:budget}}"
+    },
+    "check": {
+      "name": "Comprobación de realidad",
+      "description": "Comprueba la viabilidad de las propuestas y las resume.",
+      "system": "Revisas planes de ahorro en cuanto a su viabilidad diaria. Comprueba las cifras, elimina las propuestas poco realistas y ordena el resto por esfuerzo. Indica el excedente mensual actual y el potencial de ahorro realista como importes en euros. Señala los límites del análisis y cuándo conviene un asesoramiento financiero o de deudas independiente.",
+      "task": "Revisa el plan de ahorro.\n\nEvaluación del presupuesto:\n{{node:budget}}\n\nPropuestas de ahorro:\n{{node:savings}}",
+      "fields": {
+        "monthly_surplus": "Excedente actual al mes en euros",
+        "savings_potential": "Potencial de ahorro adicional realista al mes en euros",
+        "measures": "Medidas con el ahorro estimado",
+        "quick_wins": "Pasos que se pueden dar esta semana",
+        "caveats": "Límites del análisis y observaciones"
+      }
+    }
+  },
+  "form": {
+    "transactions": {
+      "label": "Movimientos bancarios o libro de cuentas",
+      "description": "Opcional: una exportación de la banca online o de vuestro libro de cuentas en CSV o Excel, hasta 6 archivos de 10 MB cada uno. Sin archivo valen los datos del texto."
+    }
+  },
+  "samples": {
+    "transactions": {
+      "name": "Movimientos_bancarios_marzo_2026",
+      "description": "Movimientos bancarios inventados de un mes con categorías en CSV, a juego con el hogar de la tarea de prueba.",
+      "content": [
+        [
+          "Fecha",
+          "Concepto",
+          "Categoría",
+          "Importe (EUR)"
+        ],
+        [
+          "2026-03-01",
+          "Nómina empresa A",
+          "Ingresos",
+          2900.0
+        ],
+        [
+          "2026-03-01",
+          "Nómina empresa B (media jornada)",
+          "Ingresos",
+          1450.0
+        ],
+        [
+          "2026-03-02",
+          "Prestación por hijo",
+          "Ingresos",
+          255.0
+        ],
+        [
+          "2026-03-01",
+          "Alquiler con calefacción",
+          "Vivienda",
+          -1380.0
+        ],
+        [
+          "2026-03-02",
+          "Cuota de electricidad",
+          "Vivienda",
+          -95.0
+        ],
+        [
+          "2026-03-03",
+          "Móvil e internet (3 contratos)",
+          "Contratos",
+          -112.0
+        ],
+        [
+          "2026-03-03",
+          "Cuota préstamo coche",
+          "Coche",
+          -289.0
+        ],
+        [
+          "2026-03-03",
+          "Seguro del coche",
+          "Coche",
+          -74.0
+        ],
+        [
+          "2026-03-05",
+          "Guardería y extraescolares",
+          "Hijos",
+          -210.0
+        ],
+        [
+          "2026-03-05",
+          "Club deportivo del niño",
+          "Hijos",
+          -25.0
+        ],
+        [
+          "2026-03-06",
+          "Servicio de streaming 1",
+          "Suscripciones",
+          -17.99
+        ],
+        [
+          "2026-03-06",
+          "Servicio de streaming 2",
+          "Suscripciones",
+          -13.99
+        ],
+        [
+          "2026-03-07",
+          "Suscripción de música",
+          "Suscripciones",
+          -10.99
+        ],
+        [
+          "2026-03-07",
+          "App de revistas",
+          "Suscripciones",
+          -9.03
+        ],
+        [
+          "2026-03-08",
+          "Gimnasio persona 1",
+          "Ocio",
+          -39.0
+        ],
+        [
+          "2026-03-08",
+          "Gimnasio persona 2 (sin usar desde hace 5 meses)",
+          "Ocio",
+          -39.0
+        ],
+        [
+          "2026-03-04",
+          "Supermercado",
+          "Alimentación",
+          -186.4
+        ],
+        [
+          "2026-03-11",
+          "Supermercado",
+          "Alimentación",
+          -201.15
+        ],
+        [
+          "2026-03-18",
+          "Supermercado",
+          "Alimentación",
+          -174.8
+        ],
+        [
+          "2026-03-25",
+          "Supermercado",
+          "Alimentación",
+          -219.65
+        ],
+        [
+          "2026-03-09",
+          "Pizza a domicilio",
+          "Restaurantes",
+          -38.5
+        ],
+        [
+          "2026-03-14",
+          "Restaurante",
+          "Restaurantes",
+          -86.0
+        ],
+        [
+          "2026-03-21",
+          "Sushi a domicilio",
+          "Restaurantes",
+          -54.2
+        ],
+        [
+          "2026-03-28",
+          "Cafetería y panadería",
+          "Restaurantes",
+          -61.3
+        ],
+        [
+          "2026-03-10",
+          "Gasolinera",
+          "Coche",
+          -78.4
+        ],
+        [
+          "2026-03-24",
+          "Gasolinera",
+          "Coche",
+          -81.6
+        ],
+        [
+          "2026-03-15",
+          "Ropa online",
+          "Ropa",
+          -129.9
+        ],
+        [
+          "2026-03-19",
+          "Cine y parque de atracciones",
+          "Ocio",
+          -148.0
+        ],
+        [
+          "2026-03-27",
+          "Droguería y varios",
+          "Varios",
+          -263.1
+        ]
+      ]
+    }
+  },
+  "tests": {
+    "budget_text": {
+      "name": "Presupuesto en el texto"
+    },
+    "transactions_file": {
+      "name": "Movimientos bancarios en CSV",
+      "input": "DATOS DE EJEMPLO SINTÉTICOS – hogar totalmente inventado, solo para probar.\n\nHogar: dos adultos y un niño (7 años), piso de alquiler\nObjetivo: ahorrar 400 EUR al mes para tener en dos años un fondo de emergencia de tres meses de ingresos netos.\nLos movimientos bancarios del último mes se adjuntan como archivo CSV. Impuestos y seguros que se cobran una vez al año: impuesto del coche 216 EUR, responsabilidad civil 84 EUR, hogar 168 EUR, incapacidad laboral 816 EUR."
+    }
+  }
+}

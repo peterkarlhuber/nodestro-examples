@@ -1,0 +1,124 @@
+{
+  "name": "Analyse financière",
+  "field": "Finance et investissement",
+  "description": "Analyser les fondamentaux d'une entreprise, recalculer les indicateurs et examiner les résultats de façon critique.",
+  "start": "Tâche",
+  "output": "Résultat",
+  "file_name": "Analyse financière",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nAnalyse la rentabilité et la stabilité financière d'Exemple Industries SA (entreprise fictive).\n\n| Indicateur (M EUR) | 2024 | 2025 |\n|---|---|---|\n| Chiffre d'affaires | 980 | 1 250 |\n| Résultat opérationnel (EBIT) | 140 | 210 |\n| Résultat net | 95 | 150 |\n| Flux de trésorerie opérationnel | 160 | 190 |\n| Investissements | 70 | 130 |\n| Capitaux propres | 610 | 700 |\n| Total du bilan | 1 450 | 1 700 |\n| Endettement financier net | 220 | 260 |\n\nRemarque du rapport annuel : environ un tiers de la croissance de 2025 provient de l'acquisition d'un concurrent.",
+  "guide": {
+    "problem": "Les chiffres des rapports annuels sont vite cités, mais rarement recalculés et mis en perspective. Le workflow extrait les chiffres, calcule exactement marges et croissance et fait examiner le résultat de façon critique.",
+    "flow": "Une chaîne séquentielle de trois agents : l'agent de recherche organise les chiffres avec période et unité, l'agent d'analyse calcule les indicateurs avec la calculatrice, et l'agent de revue contrôle calculs et logique et résumez le résultat de façon structurée.",
+    "input": "Les chiffres financiers d'une entreprise sur au moins deux ans, par exemple tirés d'un rapport annuel ou trimestriel, ainsi que les effets exceptionnels connus. Vous pouvez coller les chiffres ou les joindre en fichier Excel, CSV ou PDF ; le fichier d'exemple contient les indicateurs de la tâche de test.",
+    "result": "Un examen structuré avec synthèse, principaux indicateurs, erreurs ou risques relevés, limites de l'analyse et indication de la validité de l'analyse, aussi en PDF et en fichier Excel. L'agent de recherche propose les chiffres extraits pour la connaissance ; seul ce que vous confirmez est adopté. Le résultat n'est pas un conseil en investissement.",
+    "adapt": "Joignez directement le rapport annuel ou votre tableau d'indicateurs. D'autres indicateurs, comme le taux d'endettement ou le free cash-flow, s'ajoutent dans le prompt système de l'agent d'analyse. Pour de nombreuses entreprises à la suite, utilisez le traitement par lots avec une ligne par entreprise."
+  },
+  "agents": {
+    "research": {
+      "name": "Agent de recherche",
+      "description": "Rassemble les chiffres et le contexte des données financières.",
+      "system": "Tu es analyste financier chargé de la recherche. Extrais chaque chiffre de la tâche, indique sa période et son unité et range-les dans un tableau. Ajoute brièvement ce que signifient les chiffres et note les effets exceptionnels comme des acquisitions ou des éléments non récurrents. N'invente aucun chiffre qui n'est pas donné.",
+      "task": "{{input}}"
+    },
+    "analysis": {
+      "name": "Agent d'analyse",
+      "description": "Calcule marges, croissance et ratios de solidité avec la calculatrice.",
+      "system": "Tu es analyste financier senior. Calcule avec la calculatrice tous les indicateurs importants : croissance du chiffre d'affaires, marge d'EBIT, marge nette, ratio de capitaux propres, free cash-flow (flux de trésorerie opérationnel moins investissements) et le rapport entre endettement financier net et EBIT. Explique chaque résultat en une phrase et tiens compte des effets exceptionnels, par exemple la croissance organique hors acquisition.",
+      "task": "Calcule les indicateurs clés à partir de ces résultats de recherche :\n\n{{node:research}}"
+    },
+    "review": {
+      "name": "Agent de revue",
+      "description": "Vérifie l'analyse et la résume de façon structurée.",
+      "system": "Tu es un relecteur minutieux. Contrôle l'analyse pour détecter les erreurs de calcul et de logique, vérifie que les effets exceptionnels sont correctement pris en compte et résume le résultat pour la direction. Indique les limites de l'analyse. Ne donne aucune recommandation d'achat ou de vente.",
+      "task": "Vérifie cette analyse et résume-la :\n\n{{input}}",
+      "fields": {
+        "summary": "Résumé en 2 ou 3 phrases",
+        "key_figures": "Indicateurs clés",
+        "issues": "Erreurs ou risques détectés",
+        "limitations": "Limites de l'analyse",
+        "approved": "L'analyse est-elle correcte ?"
+      }
+    }
+  },
+  "form": {
+    "figures": {
+      "label": "Chiffres financiers en fichier",
+      "description": "Facultatif : des indicateurs en Excel ou CSV ou un rapport annuel en PDF, jusqu'à 3 fichiers. Sans fichier, les chiffres du texte font foi."
+    }
+  },
+  "samples": {
+    "figures": {
+      "name": "Indicateurs_Exemple_Industries",
+      "description": "Les indicateurs fictifs de la tâche de test en fichier Excel avec une feuille de remarques.",
+      "content": {
+        "Indicateurs": [
+          [
+            "Indicateur (M EUR)",
+            "2024",
+            "2025"
+          ],
+          [
+            "Chiffre d'affaires",
+            980,
+            1250
+          ],
+          [
+            "Résultat opérationnel (EBIT)",
+            140,
+            210
+          ],
+          [
+            "Résultat net",
+            95,
+            150
+          ],
+          [
+            "Flux de trésorerie opérationnel",
+            160,
+            190
+          ],
+          [
+            "Investissements",
+            70,
+            130
+          ],
+          [
+            "Capitaux propres",
+            610,
+            700
+          ],
+          [
+            "Total du bilan",
+            1450,
+            1700
+          ],
+          [
+            "Endettement financier net",
+            220,
+            260
+          ]
+        ],
+        "Remarques": [
+          [
+            "Remarque"
+          ],
+          [
+            "Entreprise fictive Exemple Industries SA."
+          ],
+          [
+            "Environ un tiers de la croissance de 2025 provient de l'acquisition d'un concurrent."
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "figures_text": {
+      "name": "Indicateurs dans le texte"
+    },
+    "figures_file": {
+      "name": "Indicateurs en fichier Excel",
+      "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nAnalyse la rentabilité et la stabilité financière d'Exemple Industries SA (entreprise fictive). Les indicateurs et les remarques figurent dans le fichier Excel joint."
+    }
+  }
+}

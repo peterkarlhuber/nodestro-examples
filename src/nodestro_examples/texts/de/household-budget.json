@@ -1,0 +1,246 @@
+{
+  "name": "Haushaltsbudget prüfen und sparen",
+  "field": "Privatpersonen – Finanzen",
+  "description": "Einnahmen und Ausgaben eines Haushalts auswerten und realistische Sparmöglichkeiten finden.",
+  "start": "Haushaltsbudget",
+  "output": "Budgetcheck",
+  "file_name": "Haushaltsbudget",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfundener Haushalt, nur zum Ausprobieren.\n\nHaushalt: zwei Erwachsene, ein Kind (7 Jahre), Mietwohnung\nNettoeinkommen pro Monat: 2.900 EUR + 1.450 EUR (Teilzeit) + 255 EUR Kindergeld\nZiel: 400 EUR pro Monat sparen, um in zwei Jahren einen Notgroschen von drei Nettomonatseinkommen zu haben.\n\nFeste Ausgaben pro Monat:\n- Miete warm 1.380 EUR, Strom 95 EUR, Internet und Mobilfunk (3 Verträge) 112 EUR\n- Kfz: Kredit-Rate 289 EUR, Versicherung 74 EUR, Steuer 18 EUR\n- Versicherungen: Haftpflicht 7 EUR, Hausrat 14 EUR, Berufsunfähigkeit 68 EUR\n- Kita/Hort 210 EUR, Sportverein Kind 25 EUR\n- Streaming und Abos: 4 Dienste, zusammen 52 EUR; Fitnessstudio 2 × 39 EUR (einer seit 5 Monaten nicht genutzt)\n\nVariable Ausgaben im Durchschnitt der letzten 3 Monate:\n- Lebensmittel 780 EUR, Essen gehen und Lieferdienste 240 EUR, Tanken 160 EUR\n- Kleidung 130 EUR, Freizeit 150 EUR, Sonstiges 260 EUR\nAktueller Kontostand Tagesgeld: 1.800 EUR",
+  "guide": {
+    "problem": "Am Monatsende ist oft weniger übrig als gedacht. Der Workflow rechnet ein Haushaltsbudget nach, findet Sparpotenzial und prüft, ob die Vorschläge im Alltag realistisch sind.",
+    "flow": "Der Budgetanalyst rechnet Summen, Überschuss und Anteile je Kategorie mit dem Rechner-Tool. Der Sparberater schätzt konkrete Einsparungen, ebenfalls nachgerechnet. Der Realitätscheck bekommt beide Ergebnisse, prüft Machbarkeit und liefert ein strukturiertes Ergebnis.",
+    "input": "Einnahmen, feste und variable Ausgaben eines Haushalts sowie ein Sparziel. Statt alles abzutippen, kannst du Kontoumsätze oder ein Haushaltsbuch als CSV- oder Excel-Datei anhängen; die Beispieldatei enthält einen erfundenen Monat.",
+    "result": "Ein strukturierter Budgetcheck mit aktuellem Monatsüberschuss, Sparpotenzial, Maßnahmen, schnellen ersten Schritten und Hinweisen, zusätzlich als Excel-Datei. Er ersetzt keine Finanz- oder Schuldnerberatung.",
+    "adapt": "Hänge deine eigenen Kontoumsätze an oder trage deine Zahlen ein; persönliche Prioritäten, etwa „Auto bleibt“, ergänzt du im Text. Kontoauszüge enthalten persönliche Daten: Sie bleiben bei dir und werden nur für diesen Lauf an das Modell gegeben."
+  },
+  "agents": {
+    "budget": {
+      "name": "Budgetanalyst",
+      "description": "Rechnet Einnahmen, Ausgaben, Überschuss und Anteile mit dem Rechner-Tool.",
+      "system": "Du bist Haushaltsberater. Rechne mit dem Rechner-Tool: Summe der Einnahmen, Summe der festen und variablen Ausgaben, monatlicher Überschuss, Sparquote und Anteil jeder Kategorie am Nettoeinkommen. Vergleiche mit dem Sparziel und zeige die Lücke. Stelle die Ergebnisse als übersichtliche Tabelle dar.",
+      "task": "Werte dieses Haushaltsbudget aus:\n\n{{input}}"
+    },
+    "savings": {
+      "name": "Sparberater",
+      "description": "Findet konkrete Sparmöglichkeiten und schätzt ihren Effekt.",
+      "system": "Du bist Verbraucherberater. Finde konkrete Sparmöglichkeiten: ungenutzte Verträge, Tarifwechsel, variable Ausgaben mit Spielraum und Gewohnheiten. Schätze je Maßnahme die monatliche Ersparnis vorsichtig und rechne sie mit dem Rechner-Tool zusammen. Empfiehl keine Finanzprodukte, Kredite oder Geldanlagen und keine Kündigung wichtiger Absicherungen.",
+      "task": "Finde Sparmöglichkeiten auf Grundlage dieser Auswertung:\n\n{{node:budget}}"
+    },
+    "check": {
+      "name": "Realitätscheck",
+      "description": "Prüft die Vorschläge auf Machbarkeit und fasst sie zusammen.",
+      "system": "Du prüfst Sparpläne auf Alltagstauglichkeit. Kontrolliere die Zahlen, streiche unrealistische Vorschläge und ordne die übrigen nach Aufwand. Gib den aktuellen Monatsüberschuss und das realistische Sparpotenzial als Zahlen in Euro an. Nenne Grenzen der Analyse und wann eine unabhängige Finanz- oder Schuldnerberatung sinnvoll ist.",
+      "task": "Prüfe den Sparplan.\n\nBudgetauswertung:\n{{node:budget}}\n\nSparvorschläge:\n{{node:savings}}",
+      "fields": {
+        "monthly_surplus": "Aktueller Überschuss pro Monat in Euro",
+        "savings_potential": "Realistisches zusätzliches Sparpotenzial pro Monat in Euro",
+        "measures": "Maßnahmen mit geschätzter Ersparnis",
+        "quick_wins": "Schritte, die sich diese Woche umsetzen lassen",
+        "caveats": "Grenzen der Analyse und Hinweise"
+      }
+    }
+  },
+  "form": {
+    "transactions": {
+      "label": "Kontoumsätze oder Haushaltsbuch",
+      "description": "Optional: ein Export aus dem Online-Banking oder eurem Haushaltsbuch als CSV oder Excel, bis zu 6 Dateien und je 10 MB. Ohne Datei gelten die Angaben im Text."
+    }
+  },
+  "samples": {
+    "transactions": {
+      "name": "Kontoumsaetze_Maerz_2026",
+      "description": "Erfundene Kontoumsätze eines Monats mit Kategorien als CSV, passend zum Haushalt der Testaufgabe.",
+      "content": [
+        [
+          "Datum",
+          "Buchungstext",
+          "Kategorie",
+          "Betrag (EUR)"
+        ],
+        [
+          "2026-03-01",
+          "Gehalt Arbeitgeber A",
+          "Einnahmen",
+          2900.0
+        ],
+        [
+          "2026-03-01",
+          "Gehalt Arbeitgeber B (Teilzeit)",
+          "Einnahmen",
+          1450.0
+        ],
+        [
+          "2026-03-02",
+          "Kindergeld",
+          "Einnahmen",
+          255.0
+        ],
+        [
+          "2026-03-01",
+          "Miete Wohnung warm",
+          "Wohnen",
+          -1380.0
+        ],
+        [
+          "2026-03-02",
+          "Stadtwerke Strom Abschlag",
+          "Wohnen",
+          -95.0
+        ],
+        [
+          "2026-03-03",
+          "Mobilfunk und Internet (3 Verträge)",
+          "Verträge",
+          -112.0
+        ],
+        [
+          "2026-03-03",
+          "Autobank Kreditrate",
+          "Auto",
+          -289.0
+        ],
+        [
+          "2026-03-03",
+          "Kfz-Versicherung",
+          "Auto",
+          -74.0
+        ],
+        [
+          "2026-03-05",
+          "Kita und Hort",
+          "Kinder",
+          -210.0
+        ],
+        [
+          "2026-03-05",
+          "Sportverein Kind",
+          "Kinder",
+          -25.0
+        ],
+        [
+          "2026-03-06",
+          "Streaming-Dienst 1",
+          "Abos",
+          -17.99
+        ],
+        [
+          "2026-03-06",
+          "Streaming-Dienst 2",
+          "Abos",
+          -13.99
+        ],
+        [
+          "2026-03-07",
+          "Musik-Abo",
+          "Abos",
+          -10.99
+        ],
+        [
+          "2026-03-07",
+          "Zeitschriften-App",
+          "Abos",
+          -9.03
+        ],
+        [
+          "2026-03-08",
+          "Fitnessstudio Person 1",
+          "Freizeit",
+          -39.0
+        ],
+        [
+          "2026-03-08",
+          "Fitnessstudio Person 2 (seit 5 Monaten ungenutzt)",
+          "Freizeit",
+          -39.0
+        ],
+        [
+          "2026-03-04",
+          "Supermarkt",
+          "Lebensmittel",
+          -186.4
+        ],
+        [
+          "2026-03-11",
+          "Supermarkt",
+          "Lebensmittel",
+          -201.15
+        ],
+        [
+          "2026-03-18",
+          "Supermarkt",
+          "Lebensmittel",
+          -174.8
+        ],
+        [
+          "2026-03-25",
+          "Supermarkt",
+          "Lebensmittel",
+          -219.65
+        ],
+        [
+          "2026-03-09",
+          "Lieferdienst Pizza",
+          "Essen gehen",
+          -38.5
+        ],
+        [
+          "2026-03-14",
+          "Restaurant",
+          "Essen gehen",
+          -86.0
+        ],
+        [
+          "2026-03-21",
+          "Lieferdienst Sushi",
+          "Essen gehen",
+          -54.2
+        ],
+        [
+          "2026-03-28",
+          "Café und Bäckerei",
+          "Essen gehen",
+          -61.3
+        ],
+        [
+          "2026-03-10",
+          "Tankstelle",
+          "Auto",
+          -78.4
+        ],
+        [
+          "2026-03-24",
+          "Tankstelle",
+          "Auto",
+          -81.6
+        ],
+        [
+          "2026-03-15",
+          "Bekleidung online",
+          "Kleidung",
+          -129.9
+        ],
+        [
+          "2026-03-19",
+          "Kino und Freizeitpark",
+          "Freizeit",
+          -148.0
+        ],
+        [
+          "2026-03-27",
+          "Drogerie und Sonstiges",
+          "Sonstiges",
+          -263.1
+        ]
+      ]
+    }
+  },
+  "tests": {
+    "budget_text": {
+      "name": "Budget im Text"
+    },
+    "transactions_file": {
+      "name": "Kontoumsätze als CSV",
+      "input": "SYNTHETISCHE BEISPIELDATEN – frei erfundener Haushalt, nur zum Ausprobieren.\n\nHaushalt: zwei Erwachsene, ein Kind (7 Jahre), Mietwohnung\nZiel: 400 EUR pro Monat sparen, um in zwei Jahren einen Notgroschen von drei Nettomonatseinkommen zu haben.\nDie Kontoumsätze des letzten Monats liegen als CSV-Datei bei. Steuer und Versicherungen, die jährlich abgebucht werden: Kfz-Steuer 216 EUR, Haftpflicht 84 EUR, Hausrat 168 EUR, Berufsunfähigkeit 816 EUR."
+    }
+  }
+}

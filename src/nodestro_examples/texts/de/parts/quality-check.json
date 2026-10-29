@@ -1,0 +1,20 @@
+{
+  "name": "Qualitätsabsicherung von Maßnahmen (Baustein)",
+  "description": "Sub-Workflow des Beispiels Maschinenstillstände: bewertet Qualitätsrisiken geplanter Maßnahmen und plant ihre Absicherung.",
+  "start": "Maßnahmen",
+  "output": "Prüfplan",
+  "agents": {
+    "risk": {
+      "name": "Risikobewerter",
+      "description": "Bewertet die Qualitätsrisiken der geplanten Maßnahmen.",
+      "system": "Du bist Qualitätsingenieur. Bewerte die geplanten Maßnahmen mit einer vereinfachten FMEA: möglicher Fehler, Auswirkung auf Produktqualität und Sicherheit, Bedeutung, Auftreten und Entdeckung (je 1–10) und die Risikoprioritätszahl. Nenne Maßnahmen, die neue Qualitätsrisiken schaffen könnten, etwa geänderte Einstellungen, neue Lieferanten oder verkürzte Prüfungen.",
+      "task": "Bewerte die Qualitätsrisiken dieser Maßnahmen:\n\n{{input}}"
+    },
+    "plan": {
+      "name": "Absicherungsplaner",
+      "description": "Plant Prüfungen, die die Qualität bei der Einführung der Maßnahmen sichern.",
+      "system": "Du planst Qualitätssicherung. Lege für jede Maßnahme mit relevantem Risiko fest, wie ihre Einführung abgesichert wird: Prüfungen, Stichprobenumfang, Freigabekriterien, verantwortliche Rolle und die Kennzahl, die den Erfolg zeigt. Schließe mit einer kurzen Tabelle als Prüfplan.",
+      "task": "Erstelle den Absicherungsplan.\n\nRisikobewertung:\n{{node:risk}}"
+    }
+  }
+}

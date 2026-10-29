@@ -1,0 +1,48 @@
+{
+  "name": "Développer une campagne de dons",
+  "field": "Organisations à but non lucratif",
+  "description": "Concevoir une campagne de dons, évaluer l'impact possible du projet et vérifier la crédibilité.",
+  "start": "Description du projet",
+  "output": "Concept de campagne",
+  "file_name": "Campagne de dons",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nOrganisation : Amis de la lecture Villexemple (association fictive), 60 bénévoles, une salariée à temps partiel\nProjet : « Parrains de lecture à l'école primaire » – des bénévoles lisent chaque semaine pendant une année scolaire\navec des enfants qui ont besoin de soutien en lecture.\nJusqu'ici : 2025/26 dans 4 écoles avec 48 enfants. Retour des enseignants : 31 des 48 enfants lisent plus\ncouramment (une appréciation, pas une mesure standardisée).\nObjectif : extension à 8 écoles et 100 enfants pour l'année scolaire 2026/27\nBesoin de financement : 25 000 EUR (coordination 15 000 EUR, livres et matériel 6 000 EUR, formations 4 000 EUR)\nPériode de campagne : 2026-09-01 au 2026-11-30\nCanaux existants : newsletter (1 200 destinataires), Instagram (900 abonnés), bons contacts avec le journal local",
+  "guide": {
+    "problem": "Les campagnes de dons ont besoin d'une histoire touchante, mais aussi d'affirmations honnêtes sur l'impact. Le workflow développe une campagne, évalue l'impact possible et vérifie si les promesses sont crédibles et éthiquement acceptables.",
+    "flow": "Le développeur de campagne et l'analyste d'impact travaillent en parallèle : l'un conçoit le message, les cibles et les actions, l'autre construit un modèle d'impact avec indicateurs et calcule le coût par enfant avec la calculatrice. Le contrôleur de crédibilité vérifie les deux ; le résultat contient les trois parties.",
+    "input": "Organisation, projet, résultats obtenus, objectif, besoin de financement, période de campagne et canaux existants.",
+    "result": "Un concept de campagne avec calendrier et projets de textes, un modèle d'impact avec indicateurs et un examen structuré des affirmations exagérées, des remarques éthiques et un plan de mesure de l'impact, aussi en fichier Word. L'analyste d'impact propose son modèle d'impact pour la connaissance, par exemple pour de futures demandes de financement ; seul ce que vous confirmez est enregistré.",
+    "adapt": "Décrivez votre projet et vos résultats aussi honnêtement que possible. Chargez des rapports annuels ou des évaluations comme connaissance et attribuez-les à l'analyste d'impact."
+  },
+  "agents": {
+    "campaign": {
+      "name": "Développeur de campagne",
+      "description": "Conçoit le message, les cibles, les canaux et le calendrier de la campagne.",
+      "system": "Tu es expert en collecte de fonds pour les organisations à but non lucratif. Développe une campagne de dons : message central, cibles, appels au don comme « Avec 50 euros … », canaux, un calendrier sur la période de campagne et trois projets de textes (newsletter, réseaux sociaux, communiqué de presse). Raconte l'histoire avec respect et sans images misérabilistes, et n'utilise que les résultats indiqués dans la description.",
+      "task": "Développe la campagne pour ce projet :\n\n{{input}}"
+    },
+    "impact": {
+      "name": "Analyste d'impact",
+      "description": "Construit un modèle d'impact avec indicateurs et le coût par enfant.",
+      "system": "Tu es analyste d'impact pour des projets sociaux. Construis un modèle d'impact (ressources, activités, réalisations, résultats, impact), propose des indicateurs mesurables avec une méthode de collecte et utilise la calculatrice pour calculer le coût par enfant et par poste de coûts. Évalue honnêtement ce que prouvent les résultats obtenus et ce qu'ils ne prouvent pas.",
+      "task": "Construis le modèle d'impact pour ce projet :\n\n{{input}}"
+    },
+    "integrity": {
+      "name": "Contrôleur de crédibilité",
+      "description": "Vérifie les affirmations sous l'angle de l'exagération, de l'éthique et des preuves.",
+      "system": "Tu vérifies la crédibilité et l'éthique de supports de collecte de fonds. Compare les affirmations de la campagne avec le modèle d'impact : qu'est-ce qui est prouvé, qu'est-ce qui est exagéré, qu'est-ce qui devrait être formulé plus prudemment ? Sois attentif à la dignité des personnes représentées, à la protection des données pour les photos d'enfants et à la transparence sur l'utilisation des fonds. Propose un plan simple de mesure de l'impact.",
+      "task": "Vérifie la campagne et le modèle d'impact.\n\nCampagne :\n{{node:campaign}}\n\nModèle d'impact :\n{{node:impact}}",
+      "fields": {
+        "credible": "La campagne est-elle crédible sous sa forme actuelle ?",
+        "overstated_claims": "Affirmations exagérées ou non étayées, avec une meilleure formulation",
+        "ethical_notes": "Remarques éthiques et protection des données",
+        "suggested_changes": "Autres propositions d'amélioration",
+        "measurement_plan": "Plan simple de mesure de l'impact"
+      }
+    }
+  },
+  "tests": {
+    "reading_mentors": {
+      "name": "Parrains de lecture à l'école primaire"
+    }
+  }
+}

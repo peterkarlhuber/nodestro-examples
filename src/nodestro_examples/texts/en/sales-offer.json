@@ -1,0 +1,160 @@
+{
+  "name": "Prepare a tailored offer",
+  "field": "Sales",
+  "description": "Analyse a customer request, calculate a suitable solution and draft an offer.",
+  "start": "Customer request",
+  "output": "Draft offer",
+  "file_name": "Offer",
+  "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nEmail from Ms Lena Example, office manager of Sample Tax Advisers (35 workstations, moving in June):\n\"Hello, we are moving into new premises on 15 June and need new furniture for 35 workstations.\nHeight-adjustable desks are important to us because several colleagues have back problems, and we need better\nacoustics in the open-plan area (12 desks). We also need two meeting rooms for 8 people each.\nOur budget is around EUR 60,000 net. Could you send us an offer by the end of the month?\nInstallation should take place at the weekend so that work can continue.\"\n\nOur price list (net):\n- Desk, electrically height-adjustable, 160 x 80 cm: EUR 690\n- Desk, fixed height, 160 x 80 cm: EUR 320\n- Ergonomic office chair premium: EUR 540; standard: EUR 290\n- Acoustic desk divider: EUR 210; acoustic wall panel 120 x 60 cm: EUR 140\n- Conference table for 8 people: EUR 1,450; conference chair: EUR 180\n- Delivery and installation: EUR 45 per workstation, weekend surcharge 20 % on installation\n- Volume discount: 5 % from EUR 25,000 goods value, 8 % from EUR 50,000",
+  "guide": {
+    "problem": "A good offer answers the customer's actual need, not just their keywords. The workflow clarifies the need, calculates a suitable solution and drafts a complete offer.",
+    "flow": "The needs analyst separates explicit and unspoken requirements and collects open questions. The solution consultant puts together items from the price list and calculates with the calculator tool, including a variant within budget. The offer writer drafts the offer; a built-in quality check verifies completeness and prices. An input form takes the key facts (customer, deadline, budget, weekend assembly); before sending, a person approves the offer.",
+    "input": "The customer's request and your price list with discounts and terms. The form takes the key data; you can write the price list into the text or attach it as an Excel, CSV or PDF file, as the sample file shows.",
+    "result": "A draft offer with cover letter, item table, totals, variants, assumptions and open questions. Only after your approval does the run save the offer as a PDF and as an editable Word file.",
+    "adapt": "Attach your current price list as a file; then the customer request is enough as text. Add payment terms and standard wording in the system prompt of the offer writer."
+  },
+  "agents": {
+    "needs": {
+      "name": "Needs analyst",
+      "description": "Works out explicit and unspoken requirements.",
+      "system": "You are an experienced sales consultant. Analyse the customer request: explicit requirements, unspoken needs, constraints such as budget, deadline and installation, and decision criteria. List the open questions that should be clarified before a binding offer, and the assumptions that can be used until then.",
+      "task": "Analyse the needs in this request:\n\n{{input}}"
+    },
+    "solution": {
+      "name": "Solution consultant",
+      "description": "Puts together suitable items and calculates with the calculator tool.",
+      "system": "You are a solution consultant. Put together a solution from the price list that meets the need, and calculate quantities, subtotals, surcharges and discounts with the calculator tool. If the budget is not enough, design a second variant that stays within budget and explain the differences. Use only items and prices from the price list.",
+      "task": "Put together a solution with a calculation.\n\nRequest and price list:\n{{run.input}}\n\nNeeds analysis:\n{{node:needs}}"
+    },
+    "offer": {
+      "name": "Offer writer",
+      "description": "Writes the draft offer for the customer.",
+      "system": "You write offers in B2B sales. Write a friendly, precise offer: a short cover letter that refers to the customer's concerns, an item table with quantities and prices, totals, variants, services such as delivery and installation, validity and the open questions. Mark the document as a draft for internal approval. Take prices only from the calculation.",
+      "task": "Write the draft offer.\n\nNeeds analysis:\n{{node:needs}}\n\nSolution and calculation:\n{{node:solution}}",
+      "criteria": {
+        "all_requirements": "The offer addresses every requirement from the needs analysis.",
+        "prices_consistent": "All prices and totals match the calculation.",
+        "open_points": "Open questions and assumptions are clearly stated."
+      }
+    }
+  },
+  "steps": {
+    "approve": {
+      "name": "Approve offer",
+      "instructions": "Check prices, discounts, delivery dates and the open questions before the offer is sent. A rejection ends the run; adjust the input and start again."
+    }
+  },
+  "form": {
+    "customer": {
+      "label": "Customer",
+      "description": "Company and contact person",
+      "default": "Sample Tax Advisers, Lena Example"
+    },
+    "deadline": {
+      "label": "Offer due",
+      "description": "When the customer needs the offer",
+      "default": "2026-05-29"
+    },
+    "budget": {
+      "label": "Budget (EUR net)",
+      "description": "The range the customer mentioned",
+      "default": "60000"
+    },
+    "weekend": {
+      "label": "Assembly at the weekend",
+      "description": "The customer's business must not be interrupted",
+      "default": "true"
+    },
+    "price_list": {
+      "label": "Price list as a file",
+      "description": "Optional: your price list as Excel, CSV or PDF. Without a file, the price list in the text applies."
+    }
+  },
+  "samples": {
+    "price_list": {
+      "name": "Price_list_office_furniture",
+      "description": "The fictional price list of the test task as an Excel file with items and terms.",
+      "content": {
+        "Price list": [
+          [
+            "Item",
+            "Unit",
+            "Net price (EUR)"
+          ],
+          [
+            "Desk, electrically height-adjustable, 160 x 80 cm",
+            "piece",
+            690
+          ],
+          [
+            "Desk, fixed height, 160 x 80 cm",
+            "piece",
+            320
+          ],
+          [
+            "Ergonomic office chair premium",
+            "piece",
+            540
+          ],
+          [
+            "Office chair standard",
+            "piece",
+            290
+          ],
+          [
+            "Acoustic desk divider",
+            "piece",
+            210
+          ],
+          [
+            "Acoustic wall panel 120 x 60 cm",
+            "piece",
+            140
+          ],
+          [
+            "Conference table for 8 people",
+            "piece",
+            1450
+          ],
+          [
+            "Conference chair",
+            "piece",
+            180
+          ],
+          [
+            "Delivery and installation",
+            "workstation",
+            45
+          ]
+        ],
+        "Terms": [
+          [
+            "Term",
+            "Rule"
+          ],
+          [
+            "Weekend surcharge",
+            "20 % on installation"
+          ],
+          [
+            "Volume discount",
+            "5 % from EUR 25,000 goods value, 8 % from EUR 50,000"
+          ],
+          [
+            "Validity of offers",
+            "30 days"
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "request_text": {
+      "name": "Request and price list in the text"
+    },
+    "price_list_file": {
+      "name": "Price list as an Excel file",
+      "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nEmail from Ms Lena Example, office manager of Sample Tax Advisers (35 workstations, moving in June):\n\"Hello, we are moving into new premises on 15 June and need new furniture for 35 workstations.\nHeight-adjustable desks are important to us because several colleagues have back problems, and we need better\nacoustics in the open-plan area (12 desks). We also need two meeting rooms for 8 people each.\nOur budget is around EUR 60,000 net. Could you send us an offer by the end of the month?\nInstallation should take place at the weekend so that work can continue.\"\n\nOur price list is attached as an Excel file."
+    }
+  }
+}

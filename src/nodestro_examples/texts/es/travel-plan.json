@@ -1,0 +1,95 @@
+{
+  "name": "Planificar un viaje a medida",
+  "field": "Particulares – viajes",
+  "description": "Planificar una ruta según los intereses, recalcular el presupuesto y crear una lista de organización.",
+  "start": "Deseos de viaje",
+  "output": "Plan de viaje",
+  "file_name": "Plan de viaje",
+  "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nViajeros: dos adultos y un niño (9 años)\nDestino: Lisboa, llegada el 2026-07-06, salida el 2026-07-11\nPresupuesto: 2.200 EUR en total sin vuelos (los vuelos ya están reservados)\nIntereses: acuario, playa, casco antiguo, buena comida sin lujos; al niño le encantan los tranvías\nCondiciones: un adulto tiene problemas de rodilla, evitar caminatas largas y empinadas; como máximo dos\nactividades al día; alojamiento aún sin reservar, se prefiere un apartamento con cocina.",
+  "guide": {
+    "problem": "Un buen viaje se adapta a los intereses, el presupuesto y las limitaciones de todos los viajeros. El flujo planifica una ruta, recalcula el presupuesto y crea una lista para la organización.",
+    "flow": "El planificador de rutas diseña un plan diario según intereses y condiciones. El planificador de presupuesto calcula noches y costes con la calculadora y la herramienta de fechas. El organizador reúne todo en un plan de viaje con lista de comprobación; una revisión de calidad comprueba presupuesto y limitaciones. Un formulario de entrada recoge destino, fechas, viajeros y presupuesto. Para viajes al extranjero, un nodo de decisión añade una lista de documentos y requisitos de entrada.",
+    "input": "Quién viaja, destino y fechas, presupuesto, intereses y limitaciones.",
+    "result": "Un plan de viaje con programa diario, tabla de presupuesto y lista de comprobación, además en PDF para llevar. Los precios y horarios son estimaciones basadas en conocimientos generales y deben comprobarse antes de reservar, porque el flujo de trabajo no usa datos en tiempo real.",
+    "adapt": "Introduce tus deseos de viaje. Si quieres precios y horarios actuales, puedes añadir al planificador de rutas la herramienta de servidor «búsqueda web»; cada búsqueda tiene un coste adicional."
+  },
+  "agents": {
+    "itinerary": {
+      "name": "Planificador de rutas",
+      "description": "Diseña un plan diario según intereses y limitaciones.",
+      "system": "Eres un planificador de viajes con experiencia. Diseña un plan diario con como máximo el número deseado de actividades por día, trayectos cortos y pausas. Ten en cuenta los intereses y las limitaciones de todos los viajeros, propone barrios adecuados para el alojamiento e indica para cada día una alternativa en caso de mal tiempo. Marca los datos sobre precios y horarios como no comprobados.",
+      "task": "Planifica la ruta para estos deseos de viaje:\n\n{{input}}"
+    },
+    "budget": {
+      "name": "Planificador de presupuesto",
+      "description": "Calcula noches y costes con la calculadora y la herramienta de fechas.",
+      "system": "Planificas presupuestos de viaje. Determina el número de noches con la herramienta days_between y estima los costes de alojamiento, comida, transporte local, entradas y un margen según niveles de precios generales. Calcula todos los totales con la calculadora. Compara con el presupuesto y propone ajustes si no alcanza. Marca todos los precios como estimaciones.",
+      "task": "Elabora el presupuesto.\n\nDeseos de viaje:\n{{run.input}}\n\nRuta:\n{{node:itinerary}}"
+    },
+    "organizer": {
+      "name": "Organizador del viaje",
+      "description": "Reúne ruta y presupuesto en un plan de viaje con lista de comprobación.",
+      "system": "Preparas documentación de viaje. Crea un plan de viaje claro: programa diario, tabla de presupuesto, lista de reservas y equipaje con plazos y una lista de datos que deben comprobarse antes de reservar, como horarios, precios y accesibilidad. Mantente dentro del presupuesto y respeta todas las limitaciones.",
+      "task": "Crea el plan de viaje.\n\nRuta:\n{{node:itinerary}}\n\nPresupuesto:\n{{node:budget}}\n\nDocumentos de viaje (solo viajes al extranjero):\n{{node:documents}}",
+      "criteria": {
+        "within_budget": "El plan se mantiene dentro del presupuesto indicado o explica claramente dónde y por qué lo supera.",
+        "constraints": "El plan respeta todas las limitaciones indicadas de los viajeros.",
+        "verify_notes": "Los datos no comprobados, como precios y horarios, están marcados como pendientes de verificar."
+      }
+    },
+    "documents": {
+      "name": "Documentos de viaje",
+      "description": "Enumera documentos, seguro y requisitos de entrada para viajes al extranjero.",
+      "system": "Preparas viajes al extranjero. Enumera lo que necesitan los viajeros: documentos de identidad (también para niños), requisitos de entrada, seguro médico de viaje, números de emergencia, medios de pago y enchufes. Indica las fuentes oficiales donde deben comprobarse los datos, porque las normas cambian, y marca cada punto como pendiente de verificar.",
+      "task": "Elabora la lista de documentos de viaje para este viaje:\n\n{{input}}"
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "¿Extranjero?",
+      "branches": {
+        "abroad": "Extranjero"
+      },
+      "default": "Nacional"
+    }
+  },
+  "form": {
+    "destination": {
+      "label": "Destino",
+      "default": "Lisboa"
+    },
+    "arrival": {
+      "label": "Llegada",
+      "default": "2026-07-06"
+    },
+    "departure": {
+      "label": "Salida",
+      "default": "2026-07-11"
+    },
+    "travellers": {
+      "label": "Viajeros",
+      "default": "3"
+    },
+    "budget": {
+      "label": "Presupuesto sin vuelos (EUR)",
+      "default": "2200"
+    },
+    "abroad": {
+      "label": "Viaje al extranjero",
+      "description": "Añade una lista de documentos de viaje, seguro y requisitos de entrada",
+      "default": "true"
+    }
+  },
+  "tests": {
+    "abroad": {
+      "name": "Viaje familiar a Lisboa (extranjero)"
+    },
+    "domestic": {
+      "name": "Fin de semana en el propio país",
+      "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nDos adultos, un fin de semana en Sevilla. Intereses: casco antiguo, museos, buena comida. Sin limitaciones, viaje en tren.",
+      "values": {
+        "destination": "Sevilla"
+      }
+    }
+  }
+}

@@ -1,0 +1,159 @@
+{
+  "id": "construction-delay",
+  "number": 19,
+  "category": "industry",
+  "level": "advanced",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 180,
+      "form": [
+        {
+          "name": "project_files",
+          "type": "file",
+          "accept": [
+            "xlsx",
+            "csv",
+            "pdf",
+            "docx",
+            "image"
+          ],
+          "multiple": true,
+          "max_files": 10
+        }
+      ]
+    },
+    {
+      "id": "schedule",
+      "type": "agent",
+      "x": 360,
+      "y": 40,
+      "role": "analysis",
+      "icon": "calculator",
+      "tools": [
+        "days_between",
+        "calculator"
+      ]
+    },
+    {
+      "id": "causes",
+      "type": "agent",
+      "x": 360,
+      "y": 320,
+      "role": "analysis",
+      "icon": "search"
+    },
+    {
+      "id": "countermeasures",
+      "type": "agent",
+      "x": 720,
+      "y": 180,
+      "role": "planning",
+      "icon": "target"
+    },
+    {
+      "id": "report",
+      "type": "agent",
+      "x": 1080,
+      "y": 180,
+      "role": "writing",
+      "icon": "file",
+      "effort": "low"
+    },
+    {
+      "id": "release",
+      "type": "approval",
+      "x": 2040,
+      "y": 180,
+      "approval": {
+        "on_reject": "stop",
+        "require_comment_on_reject": true,
+        "show": [
+          "report"
+        ]
+      }
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 2380,
+      "y": 180,
+      "files": [
+        "pdf",
+        "docx"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "schedule"
+    ],
+    [
+      "start",
+      "causes"
+    ],
+    [
+      "schedule",
+      "countermeasures"
+    ],
+    [
+      "causes",
+      "countermeasures"
+    ],
+    [
+      "schedule",
+      "report"
+    ],
+    [
+      "countermeasures",
+      "report"
+    ],
+    [
+      "report",
+      "release"
+    ],
+    [
+      "release",
+      "output",
+      "approved"
+    ]
+  ],
+  "samples": [
+    {
+      "id": "schedule",
+      "format": "xlsx",
+      "field": "project_files"
+    },
+    {
+      "id": "site_diary",
+      "format": "pdf",
+      "field": "project_files"
+    }
+  ],
+  "tests": [
+    {
+      "id": "schedule_text",
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "project_files",
+      "input": "own",
+      "samples": [
+        "schedule",
+        "site_diary"
+      ],
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

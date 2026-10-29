@@ -1,0 +1,95 @@
+{
+  "name": "Responder consultas de clientes",
+  "field": "Atención al cliente",
+  "description": "Clasificar consultas, comprobar políticas y plazos y redactar borradores de respuesta.",
+  "start": "Consultas",
+  "output": "Borradores de respuesta",
+  "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nFecha de hoy: 2026-03-20\n\nExtracto de nuestra política de servicio (tienda online de ejemplo «Cocina Muestra»):\n- Devoluciones: 30 días desde la entrega, artículo sin usar en su embalaje original; la devolución es gratuita.\n- Garantía: 2 años; en caso de defecto, reparación o sustitución tras revisión; una foto del defecto ayuda.\n- Plazo de entrega: 2–4 días laborables; si el retraso supera 7 días laborables ofrecemos la cancelación gratuita.\n- Vales y gestos comerciales de más de 20 EUR solo con la aprobación de la jefatura de equipo.\n\nConsulta 1 – Jonás Ejemplo, pedido 10442, entregado el 2026-02-27:\n«La sartén no sirve para mi placa de inducción. ¿Puedo devolverla? Todavía está en su embalaje original.»\n\nConsulta 2 – María Muestra, pedido 10518, entregado el 2026-01-15:\n«¡Se ha soltado el asa de mi olla a los dos meses! Es muy molesto. Quiero que me devuelvan el dinero.»\n\nConsulta 3 – Alí Ejemplar, pedido 10603, realizado el 2026-03-09, aún no entregado:\n«¿Dónde está mi pedido? Necesito el juego de cuchillos para un regalo este fin de semana.»\n\nConsulta 4 – Sofía Prueba:\n«¿Tenéis también moldes de silicona sin plastificantes?»",
+  "guide": {
+    "problem": "En atención al cliente llegan muchas consultas a la vez y cada una necesita la regla y el tono adecuados. El flujo ordena las consultas, comprueba políticas y plazos y prepara respuestas para su aprobación.",
+    "flow": "Un clasificador rápido ordena cada consulta por tema, urgencia y estado de ánimo. El revisor de políticas aplica la política de servicio y recalcula los plazos con la herramienta de fechas. El redactor de respuestas escribe los borradores; una revisión de calidad comprueba que no se prometa nada que vaya más allá de la política. Un nodo de decisión envía primero los escalados a un agente de desescalada. Cada borrador espera una aprobación; un rechazo con comentarios da lugar a una versión revisada.",
+    "input": "Varias consultas de clientes con datos de pedido y entrega, la fecha de hoy y vuestra política de servicio, como extracto en el texto o como archivo (PDF, Word, Markdown); el archivo de ejemplo contiene una política más detallada.",
+    "result": "Para cada consulta, una clasificación, la regla aplicable con la comprobación del plazo y un borrador de respuesta que una persona aprueba antes de enviarlo.",
+    "adapt": "Adjunta vuestra política completa y las preguntas frecuentes como archivo, o súbelas como conocimiento y asígnalas al revisor de políticas si se aplican de forma permanente. El tono de tu marca (tú o usted, despedida) se define en el prompt de sistema del redactor de respuestas. Para muchas consultas a la vez, usa el procesamiento por lotes."
+  },
+  "agents": {
+    "triage": {
+      "name": "Clasificador",
+      "description": "Ordena cada consulta por tema, urgencia y estado de ánimo.",
+      "system": "Clasificas consultas de clientes. Ordena cada consulta: tema (devolución, reclamación, entrega, pregunta sobre el producto, otros), urgencia (alta, media, baja), estado de ánimo (positivo, neutro, molesto), datos relevantes como número de pedido y fecha, y datos que faltan. Responde con una tabla compacta con una fila por consulta.",
+      "task": "{{input}}",
+      "fields": {
+        "overview": "Tabla con una fila por consulta: tema, urgencia, estado de ánimo, datos relevantes e información que falta",
+        "escalation": "true si al menos un cliente está molesto o pide más de lo que permiten las directrices"
+      }
+    },
+    "policy": {
+      "name": "Revisor de políticas",
+      "description": "Aplica la política de servicio y comprueba plazos con la herramienta de fechas.",
+      "system": "Eres jefe de equipo de atención al cliente. Determina para cada consulta qué regla de la política de servicio se aplica. Calcula los plazos con la herramienta days_between en lugar de estimarlos. Decide qué se puede prometer, qué necesita aprobación y qué información falta del cliente. Si la política no cubre una respuesta, dilo con claridad.",
+      "task": "Comprueba la política para estas consultas.\n\nConsultas y política:\n{{run.input}}\n\nClasificación:\n{{node:triage}}"
+    },
+    "reply": {
+      "name": "Redactor de respuestas",
+      "description": "Escribe borradores de respuesta amables para su aprobación.",
+      "system": "Escribes respuestas de atención al cliente: amables, claras, orientadas a soluciones y tratando de usted. Responde a la consulta y al estado de ánimo, indica el siguiente paso y pide de forma concreta la información que falta. Promete solo lo que permita la revisión de políticas. Marca cada respuesta como borrador e indica cuándo se necesita la aprobación de la jefatura de equipo.",
+      "task": "Redacta un borrador de respuesta para cada consulta.\n\nClasificación:\n{{node:triage}}\n\nRevisión de políticas:\n{{node:policy}}\n\nDesescalada (solo en escalados):\n{{node:deescalation}}",
+      "criteria": {
+        "policy_compliant": "Cada respuesta cumple la política de servicio y los resultados de la comprobación de plazos.",
+        "tone": "Las respuestas son amables, claras y responden al estado de ánimo del cliente.",
+        "no_promises": "No se promete nada que necesite aprobación o que no figure en la política."
+      }
+    },
+    "deescalation": {
+      "name": "Desescalada",
+      "description": "Prepara cómo tratar a clientes molestos y qué necesita aprobación.",
+      "system": "Eres una gestora de reclamaciones con experiencia. Para cada cliente molesto y cada exigencia que vaya más allá de las directrices, propón cómo calmar la situación: reconocer el problema, la solución dentro de las directrices, posibles gestos comerciales y cuáles necesitan la aprobación del responsable del equipo. No prometas nada tú misma.",
+      "task": "Prepara la desescalada.\n\nConsultas y directrices:\n{{run.input}}\n\nClasificación:\n{{node:triage}}"
+    },
+    "revise": {
+      "name": "Revisión",
+      "description": "Revisa los borradores según los comentarios de la aprobación.",
+      "system": "Revisas respuestas de atención al cliente. Aplica exactamente los comentarios de la persona revisora, deja todo lo demás sin cambios y respeta las directrices de servicio. Marca cada respuesta como borrador revisado.",
+      "task": "Revisa los borradores de respuesta.\n\nBorradores:\n{{node:reply}}\n\nComentarios:\n{{node:approve}}"
+    }
+  },
+  "steps": {
+    "route": {
+      "name": "¿Escalado?",
+      "branches": {
+        "escalate": "Escalar"
+      },
+      "default": "Estándar"
+    },
+    "approve": {
+      "name": "Aprobar respuestas",
+      "instructions": "Lee cada borrador antes de enviarlo: tono, hechos y compromisos. Si lo rechazas, indica qué debe cambiar; los borradores se revisan entonces."
+    }
+  },
+  "form": {
+    "policies": {
+      "label": "Política de servicio como archivo",
+      "description": "Opcional: vuestras políticas o preguntas frecuentes en PDF, Word, Markdown o texto, hasta 5 archivos. Sin archivo vale el extracto del texto."
+    }
+  },
+  "samples": {
+    "policies": {
+      "name": "Politica_servicio_Cocina_Muestra",
+      "description": "Una política de servicio inventada más completa, en PDF.",
+      "content": "# Política de servicio de la tienda online «Cocina Muestra» (ficticia)\n\nVersión: 01/01/2026\n\n## 1. Devoluciones\n\n- 30 días desde la entrega, artículo sin usar en su embalaje original.\n- La devolución es gratuita; enviamos la etiqueta de devolución por correo electrónico.\n- Reembolso en un plazo de 5 días laborables tras recibir el artículo.\n\n## 2. Garantía\n\n- 2 años desde la entrega.\n- En caso de defecto, primero reparación o sustitución tras revisión; una foto del defecto acelera la revisión.\n- El reembolso del precio solo es posible si fallan la reparación o la sustitución.\n\n## 3. Entrega\n\n- Plazo de entrega de 2–4 días laborables.\n- Si el retraso supera 7 días laborables, ofrecemos la cancelación gratuita.\n- Envío exprés posible para pedidos hasta las 14 h por 9,90 EUR.\n\n## 4. Gestos comerciales\n\n- El equipo de atención puede conceder vales y gestos comerciales de hasta 20 EUR por sí mismo.\n- Todo lo que supere 20 EUR, solo con la aprobación de la jefatura de equipo.\n\n## 5. Preguntas sobre productos\n\n- Información sobre materiales solo a partir de las fichas técnicas; ante la duda, preguntar en lugar de suponer."
+    }
+  },
+  "tests": {
+    "four_requests": {
+      "name": "Cuatro consultas, una de ellas enfadada"
+    },
+    "calm_request": {
+      "name": "Una pregunta amable sobre un producto",
+      "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nFecha de hoy: 2026-03-20\n\nExtracto de nuestra política de servicio (tienda online de ejemplo «Cocina Muestra»):\n- Devoluciones: 30 días desde la entrega, artículo sin usar en su embalaje original; la devolución es gratuita.\n- Preguntas sobre productos: información sobre materiales solo a partir de las fichas técnicas.\n\nConsulta 1 – Lea Ejemplo:\n«Hola, ¿la sartén de hierro fundido de vuestra tienda sirve para inducción? ¡Gracias y un saludo!»"
+    },
+    "policies_file": {
+      "name": "Política como archivo PDF",
+      "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nFecha de hoy: 2026-03-20\nNuestra política de servicio se adjunta como archivo.\n\nConsulta 1 – Jonás Ejemplo, pedido 10442, entregado el 2026-02-27:\n«La sartén no sirve para mi placa de inducción. ¿Puedo devolverla? Todavía está en su embalaje original.»\n\nConsulta 2 – María Muestra, pedido 10518, entregado el 2026-01-15:\n«¡Se ha soltado el asa de mi olla a los dos meses! Es muy molesto. Quiero que me devuelvan el dinero.»"
+    }
+  }
+}

@@ -1,0 +1,177 @@
+{
+  "name": "Trasformare una domanda di ricerca in ipotesi",
+  "field": "Ricerca e sviluppo",
+  "description": "Analizzare una domanda di ricerca, sviluppare ipotesi verificabili, esaminarle criticamente e ricavarne un piano sperimentale.",
+  "start": "Domanda di ricerca",
+  "output": "Piano sperimentale",
+  "file_name": "Piano sperimentale",
+  "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nDomanda di ricerca: è possibile ridurre la temperatura di polimerizzazione della nostra vernice in polvere PL-7 da\n180 °C a 165 °C senza compromettere l'adesione su acciaio zincato? L'obiettivo è risparmiare circa il 10 % di\nenergia nel forno.\n\nProva preliminare (5 lamiere ciascuna, prova di quadrettatura secondo ISO 2409, 0 = adesione migliore, 5 = peggiore):\n- 180 °C, 15 min: 0, 0, 1, 0, 1\n- 165 °C, 15 min: 1, 0, 2, 1, 1\n- 165 °C, 20 min: 0, 1, 0, 1, 0\n\nVincoli: 40 lamiere di prova disponibili a settimana, forno libero per le prove due giorni a settimana,\nil pretrattamento delle lamiere finora è stato eseguito in due giorni diversi.",
+  "guide": {
+    "problem": "Una buona ricerca inizia con una domanda precisa e verificabile. Il workflow scompone una domanda di ricerca, formula ipotesi, le sottopone a una critica metodologica e ricava un piano sperimentale realistico.",
+    "flow": "Una catena sequenziale con ritorno: l'analista chiarisce variabili e presupposti, l'agente delle ipotesi formula ipotesi verificabili con ipotesi nulle, il critico metodologico le confronta con i dati preliminari usando la calcolatrice e indica i fattori di confondimento. Il pianificatore sperimentale usa insieme ipotesi e critica.",
+    "input": "Una domanda di ricerca con obiettivo, dati di prove preliminari e vincoli come materiale, tempo e attrezzature. Puoi allegare dati di misura e documenti come file; il file di esempio contiene i valori della prova preliminare per lamiera.",
+    "result": "Un piano sperimentale con ipotesi, fattori e livelli, dimensione del campione, metodo di misura, analisi e criteri di interruzione, più i rischi aperti, anche come file Word. Il pianificatore sperimentale propone il piano per la conoscenza; sei tu a decidere se salvarlo.",
+    "adapt": "Sostituisci domanda e prova preliminare con le tue e allega direttamente i dati di misura. La letteratura che ti serve spesso puoi caricarla come conoscenza in modalità \"Ricerca\" e assegnarla all'analista della domanda, così lavora con citazioni. Le vostre linee guida statistiche si aggiungono nel critico metodologico."
+  },
+  "agents": {
+    "framing": {
+      "name": "Analista della domanda",
+      "description": "Chiarisce obiettivo, variabili, vincoli e lacune di conoscenza.",
+      "system": "Sei un ricercatore che struttura domande di ricerca. Scomponi la domanda in obiettivo, variabili indipendenti e dipendenti, possibili fattori di confondimento e vincoli. Riassumi cosa mostrano i dati esistenti e cosa no, e separa le conoscenze consolidate dalle supposizioni.",
+      "task": "Analizza questa domanda di ricerca:\n\n{{input}}"
+    },
+    "hypotheses": {
+      "name": "Sviluppatore di ipotesi",
+      "description": "Formula ipotesi verificabili con previsioni e ipotesi nulle.",
+      "system": "Formuli ipotesi scientifiche. Ricava dall'analisi da tre a cinque ipotesi verificabili. Per ciascuna indica l'ipotesi nulla, una previsione misurabile, il metodo di misura e cosa vale come conferma o confutazione. Ordinale per rilevanza rispetto all'obiettivo.",
+      "task": "Sviluppa ipotesi sulla base di questa analisi:\n\n{{node:framing}}"
+    },
+    "critic": {
+      "name": "Critico metodologico",
+      "description": "Verifica la verificabilità delle ipotesi, i fattori di confondimento e i dati disponibili.",
+      "system": "Sei un metodologo e revisore rigoroso. Verifica per ogni ipotesi falsificabilità, misurabilità, fattori di confondimento e distorsioni. Analizza i dati preliminari disponibili con la calcolatrice (per esempio medie e intervalli) e giudica se i dati consentono una conclusione. Indica quali ipotesi vanno scartate, precisate o mantenute.",
+      "task": "Esamina criticamente queste ipotesi.\n\nDomanda di ricerca e dati:\n{{run.input}}\n\nIpotesi:\n{{node:hypotheses}}"
+    },
+    "design": {
+      "name": "Pianificatore sperimentale",
+      "description": "Ricava un piano sperimentale da ipotesi e critica.",
+      "system": "Pianifichi esperimenti secondo i principi della progettazione degli esperimenti. Per le ipotesi mantenute progetta un piano: fattori e livelli, ripetizioni, randomizzazione e blocchi contro i fattori di confondimento, metodo di misura, metodo di analisi, criteri di arresto e di successo e un calendario compatibile con i vincoli. Concludi con i rischi aperti.",
+      "task": "Progetta il piano sperimentale.\n\nIpotesi:\n{{node:hypotheses}}\n\nCritica metodologica:\n{{node:critic}}"
+    }
+  },
+  "form": {
+    "research_files": {
+      "label": "Documenti di ricerca",
+      "description": "Facoltativo: dati di misura (CSV, Excel, JSON) e documenti come rapporti di prova o articoli (PDF, Word, Markdown), fino a 6 file. Senza file valgono le indicazioni nel testo."
+    }
+  },
+  "samples": {
+    "pretest": {
+      "name": "Prova_preliminare_PL-7",
+      "description": "I valori fittizi di quadrettatura della prova preliminare per lamiera, con giorno di pretrattamento, in CSV.",
+      "content": [
+        [
+          "Temperatura_C",
+          "Tempo_min",
+          "Lamiera",
+          "Giorno_pretrattamento",
+          "Quadrettatura_ISO2409"
+        ],
+        [
+          180,
+          15,
+          1,
+          "Giorno 1",
+          0
+        ],
+        [
+          180,
+          15,
+          2,
+          "Giorno 1",
+          0
+        ],
+        [
+          180,
+          15,
+          3,
+          "Giorno 2",
+          1
+        ],
+        [
+          180,
+          15,
+          4,
+          "Giorno 2",
+          0
+        ],
+        [
+          180,
+          15,
+          5,
+          "Giorno 2",
+          1
+        ],
+        [
+          165,
+          15,
+          6,
+          "Giorno 1",
+          1
+        ],
+        [
+          165,
+          15,
+          7,
+          "Giorno 1",
+          0
+        ],
+        [
+          165,
+          15,
+          8,
+          "Giorno 2",
+          2
+        ],
+        [
+          165,
+          15,
+          9,
+          "Giorno 2",
+          1
+        ],
+        [
+          165,
+          15,
+          10,
+          "Giorno 2",
+          1
+        ],
+        [
+          165,
+          20,
+          11,
+          "Giorno 1",
+          0
+        ],
+        [
+          165,
+          20,
+          12,
+          "Giorno 1",
+          1
+        ],
+        [
+          165,
+          20,
+          13,
+          "Giorno 1",
+          0
+        ],
+        [
+          165,
+          20,
+          14,
+          "Giorno 2",
+          1
+        ],
+        [
+          165,
+          20,
+          15,
+          "Giorno 2",
+          0
+        ]
+      ]
+    }
+  },
+  "tests": {
+    "question_text": {
+      "name": "Domanda e prova preliminare nel testo"
+    },
+    "pretest_file": {
+      "name": "Dati della prova preliminare in CSV",
+      "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nDomanda di ricerca: è possibile ridurre la temperatura di polimerizzazione della nostra vernice in polvere PL-7 da 180 °C a 165 °C senza compromettere l'adesione su acciaio zincato? L'obiettivo è risparmiare circa il 10 % di energia nel forno.\n\nI valori della prova preliminare (quadrettatura secondo ISO 2409, 0 = adesione migliore) sono allegati come file CSV.\n\nVincoli: 40 lamiere di prova disponibili a settimana, forno libero per le prove due giorni a settimana."
+    }
+  }
+}

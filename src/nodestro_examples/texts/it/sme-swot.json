@@ -1,0 +1,54 @@
+{
+  "name": "Strategia SWOT per una piccola impresa",
+  "field": "Imprese e PMI",
+  "description": "Analizzare la situazione interna ed esterna di un'impresa, sviluppare una strategia basata sulla SWOT e rivederla criticamente.",
+  "start": "Profilo aziendale",
+  "output": "Strategia",
+  "file_name": "Strategia SWOT",
+  "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nImpresa: Falegnameria Esempio S.r.l., piccola città nel sud della Germania, fondata nel 1987\nPersonale: 14 persone (di cui 2 apprendisti), titolare di 61 anni, successione non definita\nFatturato: 2023 1,9 mln EUR, 2024 1,8 mln EUR; redditività delle vendite più recente 4 %\nComposizione del fatturato: arredamento d'interni per privati 55 %, progetti commerciali (studi, uffici) 30 %, riparazioni 15 %\nPunti di forza secondo il titolare: alta qualità, clienti abituali fedeli, macchina CNC propria dal 2022\nProblemi: tempi di consegna lunghi (attualmente 14 settimane), due posti da falegname vacanti da un anno,\nquasi nessuna presenza online (sito del 2015, nessun social media), preventivi calcolati a mano\nContesto: aumento dei prezzi del legno, programmi regionali di incentivi per la riqualificazione energetica,\nnuovi quartieri residenziali entro 20 km, un mobilificio con studio cucine ha aperto nelle vicinanze\nObiettivo del titolare: tra tre anni un'impresa stabile, pronta per il passaggio, con una redditività di almeno il 7 %",
+  "guide": {
+    "problem": "Molte piccole imprese conoscono i propri problemi, ma non l'ordine migliore per affrontarli. Il workflow crea un'analisi SWOT, ne ricava strategie e le sottopone a un revisore critico.",
+    "flow": "L'analisi interna (punti di forza, debolezze) e l'analisi del contesto (opportunità, minacce) procedono in parallelo. Lo sviluppatore della strategia le combina in strategie secondo la matrice TOWS e un piano a 90 giorni. Il revisore critico cerca punti deboli e informazioni mancanti; il risultato contiene strategia e revisione. Alla fine il risultato viene salvato con l'esecuzione come file Markdown e PDF.",
+    "input": "Un breve profilo aziendale con cifre chiave, offerta, punti di forza, problemi, contesto di mercato e obiettivi.",
+    "result": "Una matrice SWOT con strategie derivate e un piano a 90 giorni, più una revisione critica strutturata con giudizio, punti deboli, informazioni mancanti e prossimi passi.",
+    "adapt": "Descrivi la tua impresa nello stesso stile. Più precisi sono numeri e obiettivi, più concreta è la strategia. Puoi caricare studi di settore o sondaggi tra i clienti come conoscenza e assegnarli all'analisi del contesto."
+  },
+  "agents": {
+    "internal": {
+      "name": "Analisi interna",
+      "description": "Ricava punti di forza e debolezze dai dati aziendali.",
+      "system": "Sei un consulente aziendale per piccole e medie imprese. Analizza i fattori interni: offerta, clienti, personale, processi, finanze, dotazione e organizzazione. Ricava punti di forza e debolezze concreti e sostienili con dati del profilo. Valuta l'importanza di ogni punto per l'obiettivo dell'impresa (alta, media, bassa).",
+      "task": "Analizza i punti di forza e le debolezze di questa impresa:\n\n{{input}}"
+    },
+    "external": {
+      "name": "Analisi del contesto",
+      "description": "Ricava opportunità e minacce dal mercato e dal contesto.",
+      "system": "Sei un analista di mercato. Analizza i fattori esterni di un'impresa: domanda, concorrenza, andamento dei costi, mercato del lavoro, incentivi, tecnologia e normativa. Ricava opportunità e minacce. Basati sui dati del profilo e su conoscenze di settore generalmente note; segnala ciò che è conoscenza generale e va verificato a livello locale.",
+      "task": "Analizza le opportunità e le minacce nel contesto di questa impresa:\n\n{{input}}"
+    },
+    "strategy": {
+      "name": "Sviluppatore della strategia",
+      "description": "Sviluppa strategie secondo la matrice TOWS e un piano a 90 giorni.",
+      "system": "Sei un consulente di strategia. Riassumi punti di forza, debolezze, opportunità e minacce in una matrice SWOT e sviluppa strategie con la logica TOWS: SO (usare i punti di forza per cogliere le opportunità), WO, ST e WT. Scegli le due o tre strategie più efficaci per l'obiettivo e motiva la scelta. Elabora un piano a 90 giorni con passi concreti, responsabili e traguardi misurabili.",
+      "task": "Sviluppa la strategia.\n\nAnalisi interna:\n{{node:internal}}\n\nAnalisi del contesto:\n{{node:external}}"
+    },
+    "critic": {
+      "name": "Revisore critico",
+      "description": "Mette alla prova la strategia e scopre i punti deboli.",
+      "system": "Sei un membro critico di un comitato consultivo che esamina le strategie prima che un'impresa investa denaro. Verifica se la strategia può raggiungere l'obiettivo, se è adeguata alle risorse e quali ipotesi non sono state verificate. Indica contraddizioni, rischi di attuazione e informazioni mancanti prima di una decisione. Sii costruttivo: ogni punto debole è accompagnato da un suggerimento.",
+      "task": "Esamina criticamente questa strategia:\n\n{{input}}",
+      "fields": {
+        "verdict": "Giudizio complessivo in due o tre frasi",
+        "robust_points": "Parti solide della strategia",
+        "weak_points": "Punti deboli con suggerimenti di miglioramento",
+        "missing_information": "Informazioni mancanti prima di una decisione",
+        "next_steps": "Prossimi passi consigliati"
+      }
+    }
+  },
+  "tests": {
+    "profile": {
+      "name": "Falegnameria con successione non definita"
+    }
+  }
+}

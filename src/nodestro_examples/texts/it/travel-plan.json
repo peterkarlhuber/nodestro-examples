@@ -1,0 +1,95 @@
+{
+  "name": "Pianificare un viaggio personale",
+  "field": "Privati – viaggi",
+  "description": "Pianificare un itinerario in base agli interessi, ricalcolare il budget e creare una checklist organizzativa.",
+  "start": "Desideri di viaggio",
+  "output": "Piano di viaggio",
+  "file_name": "Piano di viaggio",
+  "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nViaggiatori: due adulti e un bambino (9 anni)\nDestinazione: Lisbona, arrivo il 2026-07-06, partenza il 2026-07-11\nBudget: 2.200 EUR in totale esclusi i voli (i voli sono già prenotati)\nInteressi: acquario, spiaggia, centro storico, buona cucina senza fronzoli; il bambino adora i tram\nVincoli: un adulto ha problemi al ginocchio, evitare lunghe camminate ripide; al massimo due\nattività al giorno; alloggio non ancora prenotato, preferibile un appartamento per vacanze con cucina.",
+  "guide": {
+    "problem": "Un buon viaggio rispetta interessi, budget e limiti di tutti i viaggiatori. Il workflow pianifica un itinerario, ricalcola il budget e crea una checklist per l'organizzazione.",
+    "flow": "Il pianificatore dell'itinerario progetta un programma giorno per giorno in base a interessi e vincoli. Il pianificatore del budget calcola notti e costi con la calcolatrice e lo strumento delle date. Il pianificatore dell'organizzazione unisce tutto in un piano di viaggio con checklist; un controllo qualità verifica budget e vincoli. Un modulo di input raccoglie destinazione, date, viaggiatori e budget. Per i viaggi all'estero un nodo decisionale aggiunge una lista di documenti e regole d'ingresso.",
+    "input": "Chi viaggia, destinazione e date, budget, interessi e limiti.",
+    "result": "Un piano di viaggio con programma giornaliero, tabella del budget e checklist, anche in PDF da portare con sé. Prezzi e orari sono stime basate su conoscenze generali e vanno verificati prima di prenotare, perché il workflow non usa dati in tempo reale.",
+    "adapt": "Inserisci i tuoi desideri di viaggio. Se vuoi prezzi e orari aggiornati, puoi aggiungere lo strumento server \"ricerca web\" al pianificatore dell'itinerario; ha un costo aggiuntivo per ogni ricerca."
+  },
+  "agents": {
+    "itinerary": {
+      "name": "Pianificatore dell'itinerario",
+      "description": "Progetta un programma giornaliero in base a interessi e limiti.",
+      "system": "Sei un pianificatore di viaggi esperto. Progetta un programma giornaliero con al massimo il numero di attività desiderato al giorno, spostamenti brevi e pause. Tieni conto degli interessi e dei limiti di tutti i viaggiatori, suggerisci quartieri adatti per l'alloggio e indica per ogni giorno un'alternativa in caso di maltempo. Segnala le indicazioni su prezzi e orari come non verificate.",
+      "task": "Pianifica l'itinerario per questi desideri di viaggio:\n\n{{input}}"
+    },
+    "budget": {
+      "name": "Pianificatore del budget",
+      "description": "Calcola notti e costi con la calcolatrice e lo strumento delle date.",
+      "system": "Pianifichi budget di viaggio. Determina il numero di notti con lo strumento days_between e stima i costi di alloggio, pasti, trasporti locali, ingressi e una riserva in base ai livelli di prezzo generali. Calcola tutti i totali con la calcolatrice. Confronta con il budget e proponi adeguamenti se non basta. Segnala tutti i prezzi come stime.",
+      "task": "Prepara il budget.\n\nDesideri di viaggio:\n{{run.input}}\n\nItinerario:\n{{node:itinerary}}"
+    },
+    "organizer": {
+      "name": "Pianificatore dell'organizzazione",
+      "description": "Unisce itinerario e budget in un piano di viaggio con checklist.",
+      "system": "Prepari documenti di viaggio. Crea un piano di viaggio chiaro: programma giornaliero, tabella del budget, lista di prenotazioni e bagagli con scadenze e un elenco di informazioni da verificare prima della prenotazione, come orari, prezzi e accessibilità. Rispetta il budget e tutti i limiti.",
+      "task": "Crea il piano di viaggio.\n\nItinerario:\n{{node:itinerary}}\n\nBudget:\n{{node:budget}}\n\nDocumenti di viaggio (solo viaggi all'estero):\n{{node:documents}}",
+      "criteria": {
+        "within_budget": "Il piano rientra nel budget indicato o dice chiaramente dove e perché lo supera.",
+        "constraints": "Il piano rispetta tutti i limiti indicati dei viaggiatori.",
+        "verify_notes": "Le informazioni non verificate come prezzi e orari sono segnalate come da verificare."
+      }
+    },
+    "documents": {
+      "name": "Documenti di viaggio",
+      "description": "Elenca documenti, assicurazione e regole d'ingresso per i viaggi all'estero.",
+      "system": "Prepari viaggi all'estero. Elenca ciò di cui hanno bisogno i viaggiatori: documenti d'identità (anche per i bambini), regole d'ingresso, assicurazione sanitaria di viaggio, numeri di emergenza, mezzi di pagamento e prese elettriche. Indica le fonti ufficiali presso cui verificare le informazioni, perché le regole cambiano, e contrassegna ogni punto come da verificare.",
+      "task": "Prepara la lista dei documenti di viaggio per questo viaggio:\n\n{{input}}"
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "Estero?",
+      "branches": {
+        "abroad": "Estero"
+      },
+      "default": "Nazionale"
+    }
+  },
+  "form": {
+    "destination": {
+      "label": "Destinazione",
+      "default": "Lisbona"
+    },
+    "arrival": {
+      "label": "Arrivo",
+      "default": "2026-07-06"
+    },
+    "departure": {
+      "label": "Partenza",
+      "default": "2026-07-11"
+    },
+    "travellers": {
+      "label": "Viaggiatori",
+      "default": "3"
+    },
+    "budget": {
+      "label": "Budget senza voli (EUR)",
+      "default": "2200"
+    },
+    "abroad": {
+      "label": "Viaggio all'estero",
+      "description": "Aggiunge una lista di documenti di viaggio, assicurazione e regole d'ingresso",
+      "default": "true"
+    }
+  },
+  "tests": {
+    "abroad": {
+      "name": "Viaggio in famiglia a Lisbona (estero)"
+    },
+    "domestic": {
+      "name": "Fine settimana nel proprio paese",
+      "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nDue adulti, un fine settimana a Firenze. Interessi: centro storico, musei, buona cucina. Nessuna limitazione, viaggio in treno.",
+      "values": {
+        "destination": "Firenze"
+      }
+    }
+  }
+}

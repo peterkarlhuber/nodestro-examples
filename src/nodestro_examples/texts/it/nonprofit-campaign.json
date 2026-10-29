@@ -1,0 +1,48 @@
+{
+  "name": "Sviluppare una campagna di raccolta fondi",
+  "field": "Organizzazioni non profit",
+  "description": "Progettare una campagna di raccolta fondi, valutare il possibile impatto del progetto e verificarne la credibilità.",
+  "start": "Descrizione del progetto",
+  "output": "Concept della campagna",
+  "file_name": "Campagna di raccolta fondi",
+  "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nOrganizzazione: Amici della Lettura Città Esempio (associazione fittizia), 60 volontari, una dipendente part-time\nProgetto: \"Padrini di lettura nelle scuole primarie\" – volontari leggono ogni settimana per un anno scolastico con\nbambini che hanno bisogno di sostegno nella lettura.\nFinora: 2025/26 in 4 scuole con 48 bambini. Riscontro degli insegnanti: 31 bambini su 48 leggono in modo più\nscorrevole (una valutazione, non una misurazione standardizzata).\nObiettivo: estensione a 8 scuole e 100 bambini nell'anno scolastico 2026/27\nFabbisogno: 25.000 EUR (coordinamento 15.000 EUR, libri e materiali 6.000 EUR, formazione 4.000 EUR)\nPeriodo della campagna: dal 2026-09-01 al 2026-11-30\nCanali esistenti: newsletter (1.200 destinatari), Instagram (900 follower), buoni contatti con il giornale locale",
+  "guide": {
+    "problem": "Le campagne di raccolta fondi hanno bisogno di una storia che coinvolga, ma anche di affermazioni oneste sull'impatto. Il workflow sviluppa una campagna, valuta il possibile impatto e verifica se le promesse sono credibili ed eticamente corrette.",
+    "flow": "Lo sviluppatore della campagna e l'analista dell'impatto lavorano in parallelo: uno progetta messaggio, target e azioni, l'altro costruisce un modello di impatto con indicatori e calcola il costo per bambino con la calcolatrice. Il revisore della credibilità controlla entrambi; il risultato contiene tutte e tre le parti.",
+    "input": "Organizzazione, progetto, risultati finora, obiettivo, fabbisogno, periodo della campagna e canali esistenti.",
+    "result": "Un concept di campagna con calendario e bozze di testi, un modello d'impatto con indicatori e una verifica strutturata di affermazioni esagerate, avvertenze etiche e un piano di misurazione dell'impatto, anche come file Word. L'analista dell'impatto propone il suo modello d'impatto per la conoscenza, per esempio per future richieste di finanziamento; viene salvato solo ciò che confermi.",
+    "adapt": "Descrivi il tuo progetto e i tuoi risultati nel modo più onesto possibile. Carica bilanci sociali o valutazioni come conoscenza e assegnali all'analista dell'impatto."
+  },
+  "agents": {
+    "campaign": {
+      "name": "Sviluppatore della campagna",
+      "description": "Progetta messaggio, target, canali e calendario della campagna.",
+      "system": "Sei un esperto di raccolta fondi per organizzazioni non profit. Sviluppa una campagna di raccolta fondi: messaggio centrale, target, inviti alla donazione come \"Con 50 euro …\", canali, un calendario sul periodo della campagna e tre bozze di testi (newsletter, social media, comunicato stampa). Racconta la storia con rispetto e senza immagini pietistiche, e usa solo i risultati indicati nella descrizione.",
+      "task": "Sviluppa la campagna per questo progetto:\n\n{{input}}"
+    },
+    "impact": {
+      "name": "Analista dell'impatto",
+      "description": "Costruisce un modello di impatto con indicatori e il costo per bambino.",
+      "system": "Sei un analista dell'impatto per progetti sociali. Costruisci un modello di impatto (risorse, attività, output, outcome, impatto), proponi indicatori misurabili con un metodo di rilevazione e usa la calcolatrice per calcolare il costo per bambino e per voce di costo. Valuta onestamente cosa dimostrano i risultati finora e cosa no.",
+      "task": "Costruisci il modello di impatto per questo progetto:\n\n{{input}}"
+    },
+    "integrity": {
+      "name": "Revisore della credibilità",
+      "description": "Verifica le affermazioni per esagerazioni, etica ed evidenze.",
+      "system": "Verifichi la credibilità e l'etica dei materiali di raccolta fondi. Confronta le affermazioni della campagna con il modello di impatto: cosa è dimostrato, cosa è esagerato, cosa andrebbe formulato con più prudenza? Fai attenzione alla dignità delle persone rappresentate, alla protezione dei dati nelle foto di bambini e alla trasparenza sull'uso dei fondi. Proponi un piano semplice per misurare l'impatto.",
+      "task": "Verifica la campagna e il modello di impatto.\n\nCampagna:\n{{node:campaign}}\n\nModello di impatto:\n{{node:impact}}",
+      "fields": {
+        "credible": "La campagna è credibile nella forma attuale?",
+        "overstated_claims": "Affermazioni esagerate o non supportate, con una formulazione migliore",
+        "ethical_notes": "Note etiche e protezione dei dati",
+        "suggested_changes": "Altri suggerimenti di miglioramento",
+        "measurement_plan": "Piano semplice per misurare l'impatto"
+      }
+    }
+  },
+  "tests": {
+    "reading_mentors": {
+      "name": "Padrini di lettura nelle scuole primarie"
+    }
+  }
+}

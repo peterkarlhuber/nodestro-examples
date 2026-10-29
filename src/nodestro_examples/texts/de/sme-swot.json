@@ -1,0 +1,54 @@
+{
+  "name": "SWOT-Strategie für ein KMU",
+  "field": "Unternehmen und KMU",
+  "description": "Unternehmenssituation intern und extern analysieren, eine SWOT-basierte Strategie entwickeln und kritisch prüfen.",
+  "start": "Unternehmensprofil",
+  "output": "Strategie",
+  "file_name": "SWOT-Strategie",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nUnternehmen: Tischlerei Holzwerk Muster GmbH, Kleinstadt in Süddeutschland, gegründet 1987\nMitarbeitende: 14 (davon 2 Auszubildende), Inhaber 61 Jahre, Nachfolge ungeklärt\nUmsatz: 2023 1,9 Mio. EUR, 2024 1,8 Mio. EUR; Umsatzrendite zuletzt 4 %\nUmsatzanteile: Innenausbau für Privatkunden 55 %, Objektgeschäft (Praxen, Büros) 30 %, Reparaturen 15 %\nStärken laut Inhaber: hohe Qualität, treue Stammkunden, eigene CNC-Maschine seit 2022\nProbleme: lange Lieferzeiten (aktuell 14 Wochen), zwei offene Gesellenstellen seit einem Jahr,\nkaum Online-Auftritt (Website von 2015, keine Social-Media-Präsenz), Angebote werden von Hand kalkuliert\nUmfeld: steigende Holzpreise, regionale Förderprogramme für energetische Sanierung,\nneue Baugebiete im Umkreis von 20 km, ein Möbelhaus mit Küchenstudio hat in der Nähe eröffnet\nZiel des Inhabers: in drei Jahren ein stabiles, übergabefähiges Unternehmen mit mindestens 7 % Umsatzrendite",
+  "guide": {
+    "problem": "Viele kleine Unternehmen kennen ihre Probleme, aber nicht die beste Reihenfolge, sie anzugehen. Der Workflow erstellt eine SWOT-Analyse, leitet daraus Strategien ab und lässt sie von einem kritischen Prüfer hinterfragen.",
+    "flow": "Interne Analyse (Stärken, Schwächen) und Umfeldanalyse (Chancen, Risiken) laufen parallel. Der Strategieentwickler kombiniert beides zu Strategien nach der TOWS-Matrix und einem 90-Tage-Plan. Der kritische Prüfer sucht Schwachstellen und fehlende Informationen; das Ergebnis enthält Strategie und Prüfung. Am Ende wird das Ergebnis als Markdown- und PDF-Datei mit dem Lauf gespeichert.",
+    "input": "Ein kurzes Unternehmensprofil mit Kennzahlen, Angebot, Stärken, Problemen, Marktumfeld und Zielen.",
+    "result": "Eine SWOT-Matrix mit abgeleiteten Strategien und einem 90-Tage-Plan sowie eine strukturierte kritische Prüfung mit Urteil, Schwachstellen, fehlenden Informationen und nächsten Schritten.",
+    "adapt": "Beschreibe dein Unternehmen im gleichen Stil. Je genauer Zahlen und Ziele sind, desto konkreter wird die Strategie. Branchenstudien oder Kundenbefragungen kannst du als Wissen hochladen und der Umfeldanalyse zuweisen."
+  },
+  "agents": {
+    "internal": {
+      "name": "Interne Analyse",
+      "description": "Arbeitet Stärken und Schwächen aus den Unternehmensdaten heraus.",
+      "system": "Du bist Unternehmensberater für kleine und mittlere Unternehmen. Analysiere die internen Faktoren: Angebot, Kunden, Personal, Prozesse, Finanzen, Ausstattung und Organisation. Leite daraus konkrete Stärken und Schwächen ab und belege jede mit Angaben aus dem Profil. Bewerte die Bedeutung jedes Punktes für das Ziel des Unternehmens (hoch, mittel, gering).",
+      "task": "Analysiere Stärken und Schwächen dieses Unternehmens:\n\n{{input}}"
+    },
+    "external": {
+      "name": "Umfeldanalyse",
+      "description": "Leitet Chancen und Risiken aus Markt und Umfeld ab.",
+      "system": "Du bist Marktanalyst. Analysiere die externen Faktoren eines Unternehmens: Nachfrage, Wettbewerb, Kostenentwicklung, Arbeitsmarkt, Förderung, Technologie und Regulierung. Leite daraus Chancen und Risiken ab. Stütze dich auf die Angaben im Profil und auf allgemein bekanntes Branchenwissen; kennzeichne, was allgemeines Wissen ist und vor Ort geprüft werden sollte.",
+      "task": "Analysiere Chancen und Risiken im Umfeld dieses Unternehmens:\n\n{{input}}"
+    },
+    "strategy": {
+      "name": "Strategieentwickler",
+      "description": "Entwickelt Strategien nach der TOWS-Matrix und einen 90-Tage-Plan.",
+      "system": "Du bist Strategieberater. Fasse Stärken, Schwächen, Chancen und Risiken in einer SWOT-Matrix zusammen und entwickle daraus Strategien nach der TOWS-Logik: SO (Stärken nutzen, um Chancen zu ergreifen), WO, ST und WT. Wähle die zwei bis drei wirksamsten Strategien für das Ziel aus und begründe die Wahl. Erstelle einen 90-Tage-Plan mit konkreten Schritten, Verantwortlichen und messbaren Zwischenzielen.",
+      "task": "Entwickle die Strategie.\n\nInterne Analyse:\n{{node:internal}}\n\nUmfeldanalyse:\n{{node:external}}"
+    },
+    "critic": {
+      "name": "Kritischer Prüfer",
+      "description": "Hinterfragt die Strategie und deckt Schwachstellen auf.",
+      "system": "Du bist ein kritischer Beirat und prüfst Strategien, bevor ein Unternehmen Geld investiert. Prüfe, ob die Strategie das Ziel erreichen kann, ob sie zu den Ressourcen passt und welche Annahmen ungeprüft sind. Benenne Widersprüche, Risiken der Umsetzung und Informationen, die vor einer Entscheidung fehlen. Sei konstruktiv: zu jeder Schwachstelle gehört ein Vorschlag.",
+      "task": "Prüfe diese Strategie kritisch:\n\n{{input}}",
+      "fields": {
+        "verdict": "Gesamturteil in zwei bis drei Sätzen",
+        "robust_points": "Tragfähige Teile der Strategie",
+        "weak_points": "Schwachstellen mit Verbesserungsvorschlag",
+        "missing_information": "Informationen, die vor einer Entscheidung fehlen",
+        "next_steps": "Empfohlene nächste Schritte"
+      }
+    }
+  },
+  "tests": {
+    "profile": {
+      "name": "Tischlerei mit ungeklärter Nachfolge"
+    }
+  }
+}

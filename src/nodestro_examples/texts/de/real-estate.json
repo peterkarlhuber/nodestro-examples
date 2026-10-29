@@ -1,0 +1,68 @@
+{
+  "name": "Immobilienangebote vergleichen",
+  "field": "Immobilienwirtschaft",
+  "description": "Zwei Kaufangebote nach Rendite, Lage und Zustand vergleichen und Chancen und Risiken bewerten.",
+  "start": "Angebote",
+  "output": "Bewertung",
+  "file_name": "Immobilienvergleich",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nZiel: Kauf einer Eigentumswohnung zur Vermietung. Eigenkapital 80.000 EUR, Rest per Darlehen\nmit 3,8 % Zins und 2 % Tilgung pro Jahr. Kaufnebenkosten etwa 10 % des Kaufpreises.\n\nAngebot 1 – Stadtrand, Baujahr 1994\n- 3 Zimmer, 74 m², Kaufpreis 245.000 EUR, Stellplatz inklusive\n- Erzielbare Kaltmiete laut Makler 11,50 EUR/m²; aktuell vermietet für 9,20 EUR/m²\n- Hausgeld 310 EUR/Monat, davon nicht umlagefähig 95 EUR\n- Instandhaltungsrücklage der Gemeinschaft 38.000 EUR für 24 Wohnungen; Dachsanierung in 3 Jahren geplant\n- S-Bahn 8 Minuten zu Fuß, neues Gewerbegebiet in der Nähe angekündigt\n\nAngebot 2 – Innenstadt, Altbau 1910, 2015 saniert\n- 2 Zimmer, 58 m², Kaufpreis 289.000 EUR, kein Stellplatz\n- Leerstehend; vergleichbare Wohnungen werden für 15,00 EUR/m² vermietet\n- Hausgeld 280 EUR/Monat, davon nicht umlagefähig 80 EUR\n- Instandhaltungsrücklage 112.000 EUR für 10 Wohnungen; keine großen Maßnahmen bekannt\n- Lage beliebt, Mietpreisbremse gilt in der Stadt",
+  "guide": {
+    "problem": "Bei Immobilien entscheiden Zahlen und Lage gemeinsam. Der Workflow rechnet Rendite und Cashflow nach, analysiert Objekt und Lage und stellt Chancen und Risiken gegenüber.",
+    "flow": "Der Renditerechner berechnet Brutto- und Nettomietrendite sowie den monatlichen Cashflow mit dem Rechner-Tool, parallel bewertet der Objekt- und Lageanalyst Zustand, Rücklagen und Umfeld. Die Bewertung führt beides in einem strukturierten Vergleich zusammen.",
+    "input": "Mindestens zwei Angebote mit Kaufpreis, Fläche, Miete, Hausgeld, Rücklagen und Lage sowie deine Finanzierungsannahmen. Exposés, Protokolle und Grundrisse hängst du als PDF, Word oder Bild an; die Beispieldateien enthalten ein Exposé mit Protokollauszug und einen Grundriss zu Angebot 2.",
+    "result": "Ein strukturierter Vergleich mit Kennzahlen, bevorzugtem Angebot, Chancen, Risiken und Prüfpunkten vor einer Entscheidung, zusätzlich als PDF. Er ersetzt keine Finanz-, Steuer- oder Rechtsberatung und keine Besichtigung.",
+    "adapt": "Trage deine Angebote und Finanzierungsdaten ein und hänge Exposés, Protokolle der Eigentümerversammlung oder Grundrisse direkt an. Einen Mietspiegel, den du immer wieder brauchst, kannst du als Wissen hinterlegen und dem Objekt- und Lageanalysten zuweisen."
+  },
+  "agents": {
+    "returns": {
+      "name": "Renditerechner",
+      "description": "Rechnet Rendite, Finanzierung und Cashflow mit dem Rechner-Tool.",
+      "system": "Du bist Immobilienanalyst. Berechne für jedes Angebot mit dem Rechner-Tool: Gesamtinvestition mit Nebenkosten, Darlehensbetrag, Jahreskaltmiete (aktuell und erzielbar), Bruttomietrendite, Nettomietrendite nach nicht umlagefähigen Kosten, monatliche Rate und monatlichen Cashflow vor Steuern. Lege den Rechenweg offen und zeige, wie stark eine um 10 % niedrigere Miete das Ergebnis verändert.",
+      "task": "Rechne diese Angebote durch:\n\n{{input}}"
+    },
+    "property": {
+      "name": "Objekt- und Lageanalyst",
+      "description": "Bewertet Zustand, Rücklagen, Vermietbarkeit und Lage.",
+      "system": "Du bist Gutachter für Wohnimmobilien. Bewerte für jedes Angebot Zustand und Baujahr, Höhe der Instandhaltungsrücklage je Wohnung, anstehende Maßnahmen, Vermietungssituation und rechtliche Rahmenbedingungen wie eine Mietpreisbremse sowie Lage und Entwicklung des Umfelds. Nenne Unterlagen, die vor einem Kauf eingesehen werden müssen.",
+      "task": "Bewerte Objekt und Lage dieser Angebote:\n\n{{input}}"
+    },
+    "assessment": {
+      "name": "Chancen-Risiken-Bewertung",
+      "description": "Stellt Zahlen und Objektbewertung gegenüber und vergleicht strukturiert.",
+      "system": "Du berätst private Kapitalanleger. Stelle Rendite und Objektbewertung gegenüber, nenne für jedes Angebot Chancen und Risiken und begründe, welches Angebot unter den genannten Annahmen besser passt. Formuliere die Präferenz vorsichtig und liste auf, was vor einer Entscheidung geprüft werden muss, etwa Besichtigung, Protokolle, Finanzierung und Steuern.",
+      "task": "Vergleiche die Angebote.\n\nRenditerechnung:\n{{node:returns}}\n\nObjekt- und Lagebewertung:\n{{node:property}}",
+      "fields": {
+        "comparison": "Wichtigste Kennzahlen beider Angebote im Vergleich",
+        "preferred_offer": "Angebot, das unter den Annahmen besser passt, mit Begründung",
+        "opportunities": "Chancen",
+        "risks": "Risiken",
+        "checks_before_decision": "Prüfungen vor einer Entscheidung"
+      }
+    }
+  },
+  "form": {
+    "documents": {
+      "label": "Objektunterlagen",
+      "description": "Optional: Exposés, Protokolle der Eigentümerversammlung, Energieausweise (PDF, Word) oder Grundrisse und Fotos (PNG, JPEG, WebP), bis zu 8 Dateien."
+    }
+  },
+  "samples": {
+    "expose": {
+      "name": "Expose_Angebot_2_Altbau",
+      "description": "Ein erfundenes Exposé zu Angebot 2 mit Auszug aus dem Protokoll der Eigentümerversammlung, als PDF.",
+      "content": "# Exposé: 2-Zimmer-Altbauwohnung in der Innenstadt\n\nSYNTHETISCHE BEISPIELDATEN – frei erfunden.\n\n| Angabe | Wert |\n|---|---|\n| Baujahr | 1910, Kernsanierung 2015 |\n| Wohnfläche | 58 m² (siehe Grundriss) |\n| Kaufpreis | 289.000 EUR |\n| Hausgeld | 280 EUR/Monat, davon nicht umlagefähig 80 EUR |\n| Energieausweis | Verbrauchsausweis, 128 kWh/(m²·a), Gas-Zentralheizung von 2015 |\n| Zustand | leerstehend, bezugsfrei |\n\n## Lage\n\nRuhige Seitenstraße, 5 Minuten zur U-Bahn, Läden und Ärzte fußläufig. In der Stadt gilt die Mietpreisbremse.\n\n## Auszug aus dem Protokoll der Eigentümerversammlung vom 12.11.2025\n\n- TOP 4: Die Gemeinschaft lässt bis Mitte 2026 ein Gutachten zur Fassade erstellen. Eine Sanierung in den Jahren 2027–2028 wird erwartet; ob eine Sonderumlage nötig wird, ist offen.\n- TOP 5: Die Instandhaltungsrücklage beträgt 112.000 EUR für 10 Wohnungen.\n- TOP 6: Der Hausverwaltervertrag läuft Ende 2026 aus."
+    },
+    "floor_plan": {
+      "name": "Grundriss_Angebot_2",
+      "description": "Ein vereinfachter, erfundener Grundriss der 58-m²-Wohnung aus Angebot 2 als Bild (PNG)."
+    }
+  },
+  "tests": {
+    "two_offers": {
+      "name": "Zwei Angebote im Text"
+    },
+    "with_documents": {
+      "name": "Mit Exposé und Grundriss"
+    }
+  }
+}

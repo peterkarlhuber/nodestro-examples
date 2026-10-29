@@ -1,0 +1,153 @@
+{
+  "id": "farm-planning",
+  "number": 21,
+  "category": "industry",
+  "level": "advanced",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160,
+      "form": [
+        {
+          "name": "field_data",
+          "type": "file",
+          "accept": [
+            "xlsx",
+            "csv"
+          ],
+          "multiple": true,
+          "max_files": 3,
+          "max_size_mb": 10
+        }
+      ]
+    },
+    {
+      "id": "rotation",
+      "type": "agent",
+      "x": 340,
+      "y": 160,
+      "role": "planning",
+      "icon": "list"
+    },
+    {
+      "id": "margins",
+      "type": "agent",
+      "x": 680,
+      "y": 160,
+      "role": "analysis",
+      "icon": "calculator",
+      "tools": [
+        "calculator"
+      ]
+    },
+    {
+      "id": "review",
+      "type": "agent",
+      "x": 1020,
+      "y": 160,
+      "role": "review",
+      "icon": "check",
+      "output_name": "FarmPlanReview",
+      "output_fields": [
+        {
+          "name": "plan_summary",
+          "type": "string"
+        },
+        {
+          "name": "total_margin_eur",
+          "type": "number"
+        },
+        {
+          "name": "rule_checks",
+          "type": "string_list"
+        },
+        {
+          "name": "risks",
+          "type": "string_list"
+        },
+        {
+          "name": "open_questions",
+          "type": "string_list"
+        }
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1360,
+      "y": 160,
+      "files": [
+        "xlsx"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "rotation"
+    ],
+    [
+      "rotation",
+      "margins"
+    ],
+    [
+      "rotation",
+      "review"
+    ],
+    [
+      "margins",
+      "review"
+    ],
+    [
+      "review",
+      "output"
+    ],
+    [
+      "start",
+      "margins"
+    ]
+  ],
+  "samples": [
+    {
+      "id": "fields",
+      "format": "xlsx",
+      "field": "field_data"
+    }
+  ],
+  "tests": [
+    {
+      "id": "farm_text",
+      "checks": [
+        {
+          "field": "total_margin_eur",
+          "operator": "gt",
+          "value": 0
+        },
+        {
+          "field": "rule_checks",
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "field_file",
+      "input": "own",
+      "samples": [
+        "fields"
+      ],
+      "checks": [
+        {
+          "field": "total_margin_eur",
+          "operator": "gt",
+          "value": 0
+        },
+        {
+          "field": "rule_checks",
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

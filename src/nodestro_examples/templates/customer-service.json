@@ -1,0 +1,215 @@
+{
+  "id": "customer-service",
+  "number": 8,
+  "category": "customers",
+  "level": "beginner",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160,
+      "form": [
+        {
+          "name": "policies",
+          "type": "file",
+          "accept": [
+            "pdf",
+            "docx",
+            "md",
+            "txt"
+          ],
+          "multiple": true,
+          "max_files": 5
+        }
+      ]
+    },
+    {
+      "id": "triage",
+      "type": "agent",
+      "x": 340,
+      "y": 160,
+      "role": "analysis",
+      "icon": "list",
+      "model": "claude-haiku-5-5",
+      "effort": "low",
+      "output_name": "Triage",
+      "output_fields": [
+        {
+          "name": "overview",
+          "type": "string"
+        },
+        {
+          "name": "escalation",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "id": "policy",
+      "type": "agent",
+      "x": 680,
+      "y": 160,
+      "role": "research",
+      "icon": "shield",
+      "tools": [
+        "days_between"
+      ]
+    },
+    {
+      "id": "reply",
+      "type": "agent",
+      "x": 1020,
+      "y": 160,
+      "role": "writing",
+      "icon": "chat",
+      "criteria": [
+        "policy_compliant",
+        "tone",
+        "no_promises"
+      ]
+    },
+    {
+      "id": "route",
+      "type": "condition",
+      "x": 340,
+      "y": 380,
+      "condition": {
+        "source": "triage",
+        "rules": [
+          {
+            "id": "escalate",
+            "field": "escalation",
+            "operator": "is_true"
+          }
+        ]
+      }
+    },
+    {
+      "id": "deescalation",
+      "type": "agent",
+      "x": 680,
+      "y": 380,
+      "role": "planning",
+      "icon": "users"
+    },
+    {
+      "id": "approve",
+      "type": "approval",
+      "x": 1360,
+      "y": 160,
+      "approval": {
+        "on_reject": "branch",
+        "require_comment_on_reject": true,
+        "show": [
+          "reply"
+        ]
+      }
+    },
+    {
+      "id": "revise",
+      "type": "agent",
+      "x": 1700,
+      "y": 380,
+      "role": "writing",
+      "icon": "pen"
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 2040,
+      "y": 160
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "triage"
+    ],
+    [
+      "triage",
+      "policy"
+    ],
+    [
+      "triage",
+      "route"
+    ],
+    [
+      "route",
+      "deescalation",
+      "escalate"
+    ],
+    [
+      "triage",
+      "reply"
+    ],
+    [
+      "policy",
+      "reply"
+    ],
+    [
+      "deescalation",
+      "reply"
+    ],
+    [
+      "reply",
+      "approve"
+    ],
+    [
+      "approve",
+      "output",
+      "approved"
+    ],
+    [
+      "approve",
+      "revise",
+      "rejected"
+    ],
+    [
+      "revise",
+      "output"
+    ],
+    [
+      "start",
+      "policy"
+    ]
+  ],
+  "samples": [
+    {
+      "id": "policies",
+      "format": "pdf",
+      "field": "policies"
+    }
+  ],
+  "tests": [
+    {
+      "id": "four_requests",
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "calm_request",
+      "input": "own",
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "policies_file",
+      "input": "own",
+      "samples": [
+        "policies"
+      ],
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

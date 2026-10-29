@@ -1,0 +1,127 @@
+{
+  "name": "Analyser les retards de chantier",
+  "field": "Bâtiment et travaux publics",
+  "description": "Calculer les écarts de planning, classer les causes, développer des contre-mesures et rendre compte au maître d'ouvrage.",
+  "start": "État du projet",
+  "output": "Rapport d'avancement",
+  "file_name": "Rapport d'avancement",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nProjet : nouvelle crèche « Beau Soleil », Villexemple ; maître d'ouvrage : commune de Villexemple\nDate d'achèvement contractuelle : 2026-09-30 ; date du rapport : 2026-05-15\n\n| Jalon | Prévu | Réel / prévision | Remarque |\n|---|---|---|---|\n| Gros œuvre terminé | 2026-02-27 | 2026-03-20 | 9 jours de gel en janvier, bétonnage suspendu |\n| Mise hors d'eau | 2026-03-27 | 2026-04-24 | Livraison tardive des éléments de toiture (le fournisseur signale une pénurie de matériaux) |\n| Menuiseries posées | 2026-04-17 | 2026-05-29 (prévision) | Modification des fenêtres d'évacuation à la demande du contrôle incendie |\n| Lots techniques, première phase | 2026-05-22 | 2026-06-19 (prévision) | Dépend des fenêtres ; électricien sur site avec seulement 2 personnes au lieu de 4 |\n| Second œuvre terminé | 2026-08-28 | ouvert | — |\n| Réception | 2026-09-30 | ouvert | Pénalité contractuelle 0,2 % du montant du marché par jour ouvré, max. 5 % |\n\nMontant du marché de l'entreprise générale : 3,2 M EUR. Le maître d'ouvrage attend un rapport pour la réunion du 2026-05-20.",
+  "guide": {
+    "problem": "Les retards de chantier s'accumulent et les maîtres d'ouvrage ont vite besoin d'une vision claire. Le workflow calcule les écarts, classe les causes, développe des contre-mesures et rédige un rapport d'avancement.",
+    "flow": "L'analyste du planning et l'analyste des causes travaillent en parallèle. L'un calcule retards et marges avec les outils de dates et de calcul, l'autre classe les causes par domaine de responsabilité et besoin de documentation ; tous deux analysent aussi les plannings, journaux de chantier et photos joints. Le planificateur de contre-mesures élabore des options d'accélération et l'agent de rapport résume le tout pour le maître d'ouvrage. Avant que le rapport ne quitte l'équipe projet, une personne le valide.",
+    "input": "Un planning avec jalons prévus et réels, remarques sur les causes, date du rapport et conditions contractuelles, en texte ou en fichiers : planning en Excel, journal de chantier en PDF, photos en image. Les fichiers d'exemple contiennent un planning et un extrait du journal de chantier.",
+    "result": "Un rapport d'avancement factuel avec situation du planning, causes, contre-mesures, décisions à prendre et risques. Après validation, l'exécution l'enregistre en PDF et en fichier Word modifiable. Les questions de pénalités et de prolongation de délai restent soumises à un examen technique et juridique.",
+    "adapt": "Exportez votre planning depuis votre logiciel de projet en Excel et joignez le journal de chantier et les photos. Pour un rapport régulier, vous pouvez planifier la copie ; la validation vous attend alors."
+  },
+  "agents": {
+    "schedule": {
+      "name": "Analyste du planning",
+      "description": "Calcule retards, marges et conséquences avec l'outil de dates et la calculatrice.",
+      "system": "Tu es planificateur de travaux. Calcule le retard de chaque jalon en jours calendaires avec l'outil days_between et déduis l'effet sur la date d'achèvement si le retard se poursuit. Montre les dépendances entre jalons et utilise la calculatrice pour déterminer quelle pénalité contractuelle pourrait résulter d'un retard supposé, explicitement sous forme de scénario.",
+      "task": "Analyse la situation du planning :\n\n{{input}}"
+    },
+    "causes": {
+      "name": "Analyste des causes",
+      "description": "Classe les causes par domaine de responsabilité et besoin de documentation.",
+      "system": "Tu es conducteur de travaux expérimenté en gestion des réclamations. Attribue chaque retard à une catégorie de cause : météo, chaîne d'approvisionnement, modification de conception, effectifs ou autre. Indique de quel domaine de responsabilité il relève probablement d'après les informations disponibles, quelles preuves devraient être documentées et quelles notifications d'empêchement pourraient être nécessaires. Ne donne pas d'appréciation juridique.",
+      "task": "Classe les causes des retards :\n\n{{input}}"
+    },
+    "countermeasures": {
+      "name": "Planificateur de contre-mesures",
+      "description": "Développe des mesures d'accélération avec coût et effet.",
+      "system": "Tu es contrôleur de projet. Développe des contre-mesures pour tenir la date d'achèvement ou limiter le retard, par exemple réorganiser l'enchaînement des travaux, ajouter des capacités ou travailler en parallèle. Évalue chaque mesure selon le temps gagné, le coût, le risque et les décisions nécessaires du maître d'ouvrage. Recommande un ensemble de mesures.",
+      "task": "Développe des contre-mesures.\n\nAnalyse du planning :\n{{node:schedule}}\n\nCauses :\n{{node:causes}}"
+    },
+    "report": {
+      "name": "Rapport au maître d'ouvrage",
+      "description": "Résume de façon factuelle la situation du planning, les causes et les mesures.",
+      "system": "Tu rédiges des rapports d'avancement pour des maîtres d'ouvrage publics : factuels, clairs et sans chercher de coupable. Structure-le en situation du planning, causes, contre-mesures, décisions nécessaires et risques, sur une page au maximum. Signale que les questions de pénalités et de prolongation de délai doivent faire l'objet d'un examen professionnel et juridique.",
+      "task": "Rédige le rapport d'avancement.\n\nAnalyse du planning :\n{{node:schedule}}\n\nContre-mesures :\n{{node:countermeasures}}"
+    }
+  },
+  "steps": {
+    "release": {
+      "name": "Valider le rapport",
+      "instructions": "Vérifie le rapport d'avancement avant qu'il parte au maître d'ouvrage : les dates et les retards sont-ils justes, les causes sont-elles décrites de façon factuelle et sans chercher de coupable, et voit-on clairement quelles décisions le maître d'ouvrage doit prendre ? Les affirmations sur les pénalités et la prolongation de délai doivent avoir été vérifiées par un expert. En cas de refus, écris ce qui manque ; l'exécution se termine alors sans fichiers de rapport."
+    }
+  },
+  "form": {
+    "project_files": {
+      "label": "Documents du projet",
+      "description": "Facultatif : planning (Excel, CSV), journal de chantier ou comptes rendus (PDF, Word) et photos du chantier (PNG, JPEG, WebP), jusqu'à 10 fichiers."
+    }
+  },
+  "samples": {
+    "schedule": {
+      "name": "Planning_creche_Beau_Soleil",
+      "description": "Le planning fictif de la tâche de test en fichier Excel.",
+      "content": {
+        "Planning": [
+          [
+            "Jalon",
+            "Prévu",
+            "Réel ou prévision",
+            "Statut",
+            "Remarque"
+          ],
+          [
+            "Gros œuvre terminé",
+            "2026-02-27",
+            "2026-03-20",
+            "terminé",
+            "9 jours de gel en janvier, bétonnage suspendu"
+          ],
+          [
+            "Mise hors d'eau",
+            "2026-03-27",
+            "2026-04-24",
+            "terminé",
+            "Livraison tardive des éléments de toiture (pénurie de matériaux chez le fournisseur)"
+          ],
+          [
+            "Menuiseries posées",
+            "2026-04-17",
+            "2026-05-29",
+            "prévision",
+            "Modification des fenêtres d'évacuation à la demande du contrôle incendie"
+          ],
+          [
+            "Lots techniques, première phase",
+            "2026-05-22",
+            "2026-06-19",
+            "prévision",
+            "Dépend des fenêtres ; électricien avec 2 personnes au lieu de 4"
+          ],
+          [
+            "Second œuvre terminé",
+            "2026-08-28",
+            "",
+            "ouvert",
+            ""
+          ],
+          [
+            "Réception",
+            "2026-09-30",
+            "",
+            "ouvert",
+            "Pénalité contractuelle 0,2 % du montant du marché par jour ouvré, max. 5 %"
+          ]
+        ]
+      }
+    },
+    "site_diary": {
+      "name": "Journal_chantier_extrait_avril_mai",
+      "description": "Un extrait fictif du journal de chantier en PDF.",
+      "content": "# Journal de chantier crèche « Beau Soleil » – extrait\n\nDONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives.\n\n| Date | Entrée |\n|---|---|\n| 2026-04-08 | Le fournisseur des éléments de toiture confirme une livraison le 2026-04-20 au lieu du 2026-03-20. |\n| 2026-04-24 | Mise hors d'eau. Réception par la maîtrise d'œuvre sans réserve. |\n| 2026-04-29 | Le contrôleur incendie exige des fenêtres d'évacuation modifiées dans les salles 2 et 3 ; modification commandée. |\n| 2026-05-06 | Le menuisier annonce un nouveau délai de 3 semaines pour les éléments modifiés. |\n| 2026-05-11 | Électricité : seulement 2 monteurs sur site, l'entreprise invoque des arrêts maladie. |\n| 2026-05-13 | Le maître d'ouvrage demande l'impact sur la date d'ouverture du 2026-10-01. |"
+    }
+  },
+  "tests": {
+    "schedule_text": {
+      "name": "Planning dans le texte"
+    },
+    "project_files": {
+      "name": "Planning et journal de chantier en fichiers",
+      "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nProjet : nouvelle crèche « Beau Soleil », Villexemple ; maître d'ouvrage : commune de Villexemple\nDate d'achèvement contractuelle : 2026-09-30 ; date du rapport : 2026-05-15\nMontant du marché de l'entreprise générale : 3,2 M EUR. Le maître d'ouvrage attend un rapport pour la réunion du 2026-05-20.\n\nLe planning et le journal de chantier sont joints en fichiers."
+    }
+  }
+}

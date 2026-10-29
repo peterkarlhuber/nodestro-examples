@@ -1,0 +1,95 @@
+{
+  "name": "Responder solicitações de clientes",
+  "field": "Atendimento ao cliente",
+  "description": "Classificar solicitações, verificar políticas e prazos e redigir respostas.",
+  "start": "Solicitações",
+  "output": "Rascunhos de resposta",
+  "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nData de hoje: 2026-03-20\n\nTrecho da nossa política de atendimento (loja online de exemplo \"Cozinha Amostra\"):\n- Devoluções: 30 dias a partir da entrega, produto sem uso na embalagem original; a devolução é gratuita.\n- Garantia: 2 anos; em caso de defeito, reparo ou troca após análise, uma foto do defeito ajuda.\n- Prazo de entrega: 2–4 dias úteis; em caso de atraso de mais de 7 dias úteis oferecemos cancelamento gratuito.\n- Vales e gestos de cortesia acima de 20 EUR somente após aprovação da liderança da equipe.\n\nSolicitação 1 – Jonas Exemplo, pedido 10442, entregue em 2026-02-27:\n\"A frigideira não funciona no meu cooktop de indução. Posso devolver? Ainda está na embalagem original.\"\n\nSolicitação 2 – Maria Amostra, pedido 10518, entregue em 2026-01-15:\n\"O cabo da minha panela soltou, depois de dois meses! Isso é muito chato. Quero meu dinheiro de volta.\"\n\nSolicitação 3 – Ali Instância, pedido 10603, feito em 2026-03-09, ainda não entregue:\n\"Onde está meu pedido? Preciso do jogo de facas como presente no fim de semana.\"\n\nSolicitação 4 – Sofia Teste:\n\"Vocês também têm formas de silicone para assar sem plastificantes?\"",
+  "guide": {
+    "problem": "No atendimento ao cliente muitas solicitações chegam ao mesmo tempo, e cada uma precisa da regra certa e do tom certo. O workflow classifica as solicitações, verifica políticas e prazos e prepara respostas para aprovação.",
+    "flow": "Um classificador rápido organiza cada solicitação por assunto, urgência e humor. O verificador de políticas aplica a política de atendimento e recalcula prazos com a ferramenta de datas. O redator de respostas redige as respostas; uma verificação de qualidade garante que nada seja prometido além da política. Um nó de decisão envia os escalonamentos primeiro a um agente de desescalada. Cada rascunho aguarda aprovação; uma rejeição com retorno gera uma versão revisada.",
+    "input": "Várias solicitações de clientes com dados de pedido e entrega, a data de hoje e a sua política de atendimento, como trecho no texto ou como arquivo (PDF, Word, Markdown); o arquivo de exemplo contém uma política mais detalhada.",
+    "result": "Para cada solicitação, uma classificação, a regra aplicável com verificação de prazo e um rascunho de resposta que uma pessoa aprova antes do envio.",
+    "adapt": "Anexe a sua política completa e as perguntas frequentes como arquivo, ou carregue-as como conhecimento e atribua-as ao verificador de políticas se valerem de forma permanente. O tom da sua marca (você ou senhor/senhora, despedida) é definido no prompt de sistema do redator de respostas. Para muitas solicitações de uma vez, use o processamento em lote."
+  },
+  "agents": {
+    "triage": {
+      "name": "Classificador",
+      "description": "Organiza cada solicitação por assunto, urgência e humor.",
+      "system": "Você classifica solicitações de clientes. Classifique cada solicitação: assunto (devolução, reclamação, entrega, dúvida sobre produto, outro), urgência (alta, média, baixa), humor (positivo, neutro, irritado), dados relevantes como número do pedido e data, e informações ausentes. Responda com uma tabela compacta com uma linha por solicitação.",
+      "task": "{{input}}",
+      "fields": {
+        "overview": "Tabela com uma linha por solicitação: tema, urgência, humor, dados relevantes e informações que faltam",
+        "escalation": "true se pelo menos um cliente estiver irritado ou pedir mais do que as diretrizes permitem"
+      }
+    },
+    "policy": {
+      "name": "Verificador de políticas",
+      "description": "Aplica a política de atendimento e verifica prazos com a ferramenta de datas.",
+      "system": "Você é líder de equipe no atendimento ao cliente. Determine para cada solicitação qual regra da política de atendimento se aplica. Calcule prazos com a ferramenta days_between em vez de estimá-los. Decida o que pode ser prometido, o que precisa de aprovação e quais informações faltam do cliente. Se a política não cobrir uma resposta, diga isso com clareza.",
+      "task": "Verifique a política para estas solicitações.\n\nSolicitações e política:\n{{run.input}}\n\nClassificação:\n{{node:triage}}"
+    },
+    "reply": {
+      "name": "Redator de respostas",
+      "description": "Redige rascunhos de resposta cordiais para aprovação.",
+      "system": "Você redige respostas de atendimento ao cliente: cordiais, claras, orientadas a soluções e educadas. Responda à preocupação e ao humor, indique o próximo passo e peça especificamente as informações que faltam. Prometa apenas o que a verificação de políticas permite. Marque cada resposta como rascunho e indique quando é necessária a aprovação da liderança da equipe.",
+      "task": "Redija um rascunho de resposta para cada solicitação.\n\nClassificação:\n{{node:triage}}\n\nVerificação de políticas:\n{{node:policy}}\n\nDesescalada (somente em escalonamentos):\n{{node:deescalation}}",
+      "criteria": {
+        "policy_compliant": "Cada resposta está de acordo com a política de atendimento e com os resultados da verificação de prazos.",
+        "tone": "As respostas são cordiais, claras e respondem ao humor do cliente.",
+        "no_promises": "Nada é prometido que precise de aprovação ou não esteja coberto pela política."
+      }
+    },
+    "deescalation": {
+      "name": "Desescalada",
+      "description": "Prepara como lidar com clientes irritados e o que precisa de aprovação.",
+      "system": "Você é uma gestora de reclamações experiente. Para cada cliente irritado e cada exigência além das diretrizes, proponha como acalmar a situação: reconhecer o problema, a solução dentro das diretrizes, possíveis gestos de cortesia e quais deles precisam da aprovação da liderança da equipe. Não prometa nada por conta própria.",
+      "task": "Prepare a desescalada.\n\nSolicitações e diretrizes:\n{{run.input}}\n\nClassificação:\n{{node:triage}}"
+    },
+    "revise": {
+      "name": "Revisão",
+      "description": "Revisa os rascunhos conforme o retorno da aprovação.",
+      "system": "Você revisa respostas de atendimento ao cliente. Aplique exatamente o retorno da pessoa revisora, mantenha todo o resto sem alterações e respeite as diretrizes de atendimento. Marque cada resposta como rascunho revisado.",
+      "task": "Revise os rascunhos de resposta.\n\nRascunhos:\n{{node:reply}}\n\nRetorno:\n{{node:approve}}"
+    }
+  },
+  "steps": {
+    "route": {
+      "name": "Escalonar?",
+      "branches": {
+        "escalate": "Escalonar"
+      },
+      "default": "Padrão"
+    },
+    "approve": {
+      "name": "Aprovar respostas",
+      "instructions": "Leia cada rascunho antes do envio: tom, fatos e promessas. Se rejeitar, diga o que precisa mudar; os rascunhos são então revisados."
+    }
+  },
+  "form": {
+    "policies": {
+      "label": "Política de atendimento como arquivo",
+      "description": "Opcional: as suas políticas ou perguntas frequentes em PDF, Word, Markdown ou texto, até 5 arquivos. Sem arquivo vale o trecho do texto."
+    }
+  },
+  "samples": {
+    "policies": {
+      "name": "Politica_atendimento_Cozinha_Amostra",
+      "description": "Uma política de atendimento fictícia mais completa, em PDF.",
+      "content": "# Política de atendimento da loja online \"Cozinha Amostra\" (fictícia)\n\nVersão: 01/01/2026\n\n## 1. Devoluções\n\n- 30 dias a partir da entrega, produto sem uso na embalagem original.\n- A devolução é gratuita; enviamos a etiqueta de devolução por e-mail.\n- Reembolso em até 5 dias úteis após o recebimento do produto.\n\n## 2. Garantia\n\n- 2 anos a partir da entrega.\n- Em caso de defeito, primeiro reparo ou troca após análise; uma foto do defeito agiliza a análise.\n- O reembolso do valor só é possível se o reparo ou a troca falharem.\n\n## 3. Entrega\n\n- Prazo de entrega de 2–4 dias úteis.\n- Em caso de atraso de mais de 7 dias úteis, oferecemos cancelamento gratuito.\n- Envio expresso disponível para pedidos até as 14h, por 9,90 EUR.\n\n## 4. Gestos de cortesia\n\n- A equipe de atendimento pode conceder sozinha vales e gestos de cortesia de até 20 EUR.\n- Valores acima de 20 EUR somente após aprovação da liderança da equipe.\n\n## 5. Perguntas sobre produtos\n\n- Informações sobre materiais somente a partir das fichas técnicas; na dúvida, perguntar em vez de supor."
+    }
+  },
+  "tests": {
+    "four_requests": {
+      "name": "Quatro solicitações, uma delas irritada"
+    },
+    "calm_request": {
+      "name": "Uma pergunta gentil sobre um produto",
+      "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nData de hoje: 2026-03-20\n\nTrecho da nossa política de atendimento (loja online de exemplo \"Cozinha Amostra\"):\n- Devoluções: 30 dias a partir da entrega, produto sem uso na embalagem original; a devolução é gratuita.\n- Perguntas sobre produtos: informações sobre materiais somente a partir das fichas técnicas.\n\nSolicitação 1 – Lea Exemplo:\n\"Oi, a frigideira de ferro fundido da loja de vocês serve para indução? Obrigada e um abraço!\""
+    },
+    "policies_file": {
+      "name": "Política como arquivo PDF",
+      "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nData de hoje: 2026-03-20\nNossa política de atendimento está anexada como arquivo.\n\nSolicitação 1 – Jonas Exemplo, pedido 10442, entregue em 2026-02-27:\n\"A frigideira não funciona no meu cooktop de indução. Posso devolver? Ainda está na embalagem original.\"\n\nSolicitação 2 – Maria Amostra, pedido 10518, entregue em 2026-01-15:\n\"O cabo da minha panela soltou, depois de dois meses! Isso é muito chato. Quero meu dinheiro de volta.\""
+    }
+  }
+}

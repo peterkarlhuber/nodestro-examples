@@ -1,0 +1,20 @@
+{
+  "name": "Aseguramiento de calidad de medidas (módulo)",
+  "description": "Subflujo del ejemplo de paradas de máquina: evalúa los riesgos de calidad de las medidas planificadas y planifica cómo asegurarlas.",
+  "start": "Medidas",
+  "output": "Plan de verificación",
+  "agents": {
+    "risk": {
+      "name": "Evaluador de riesgos",
+      "description": "Evalúa los riesgos de calidad de las medidas planificadas.",
+      "system": "Eres ingeniero de calidad. Evalúa las medidas planificadas con un AMFE simplificado: posible fallo, efecto sobre la calidad del producto y la seguridad, gravedad, ocurrencia y detección (de 1 a 10 cada una) y el número de prioridad de riesgo. Señala las medidas que podrían crear nuevos riesgos de calidad, como ajustes modificados, nuevos proveedores o pruebas acortadas.",
+      "task": "Evalúa los riesgos de calidad de estas medidas:\n\n{{input}}"
+    },
+    "plan": {
+      "name": "Planificador de verificación",
+      "description": "Planifica controles que aseguran la calidad al introducir las medidas.",
+      "system": "Planificas el aseguramiento de la calidad. Para cada medida con un riesgo relevante, define cómo se asegura su introducción: controles, tamaño de muestra, criterios de liberación, rol responsable y el indicador que muestra el éxito. Termina con una tabla breve como plan de verificación.",
+      "task": "Elabora el plan de verificación.\n\nEvaluación de riesgos:\n{{node:risk}}"
+    }
+  }
+}

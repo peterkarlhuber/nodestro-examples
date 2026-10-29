@@ -1,0 +1,174 @@
+{
+  "id": "hr-recruiting",
+  "number": 9,
+  "category": "administration",
+  "level": "advanced",
+  "sensitive": true,
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 180
+    },
+    {
+      "id": "profile",
+      "type": "agent",
+      "x": 340,
+      "y": 180,
+      "role": "analysis",
+      "icon": "users"
+    },
+    {
+      "id": "job_ad",
+      "type": "agent",
+      "x": 680,
+      "y": 40,
+      "role": "writing",
+      "icon": "pen"
+    },
+    {
+      "id": "interview",
+      "type": "agent",
+      "x": 680,
+      "y": 320,
+      "role": "planning",
+      "icon": "chat"
+    },
+    {
+      "id": "fairness",
+      "type": "agent",
+      "x": 1020,
+      "y": 180,
+      "role": "review",
+      "icon": "scale",
+      "output_name": "FairnessReview",
+      "output_fields": [
+        {
+          "name": "approved",
+          "type": "boolean"
+        },
+        {
+          "name": "issues",
+          "type": "string_list"
+        },
+        {
+          "name": "suggested_changes",
+          "type": "string_list"
+        },
+        {
+          "name": "human_checks",
+          "type": "string_list"
+        }
+      ]
+    },
+    {
+      "id": "gate",
+      "type": "condition",
+      "x": 1360,
+      "y": 380,
+      "condition": {
+        "source": "fairness",
+        "rules": [
+          {
+            "id": "revise",
+            "field": "approved",
+            "operator": "is_false"
+          }
+        ]
+      }
+    },
+    {
+      "id": "revise",
+      "type": "agent",
+      "x": 1700,
+      "y": 380,
+      "role": "writing",
+      "icon": "pen"
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1360,
+      "y": 180,
+      "files": [
+        "docx"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "profile"
+    ],
+    [
+      "profile",
+      "job_ad"
+    ],
+    [
+      "profile",
+      "interview"
+    ],
+    [
+      "job_ad",
+      "fairness"
+    ],
+    [
+      "interview",
+      "fairness"
+    ],
+    [
+      "job_ad",
+      "output"
+    ],
+    [
+      "interview",
+      "output"
+    ],
+    [
+      "fairness",
+      "output"
+    ],
+    [
+      "job_ad",
+      "gate"
+    ],
+    [
+      "interview",
+      "gate"
+    ],
+    [
+      "fairness",
+      "gate"
+    ],
+    [
+      "gate",
+      "revise",
+      "revise"
+    ],
+    [
+      "revise",
+      "output"
+    ]
+  ],
+  "tests": [
+    {
+      "id": "notes",
+      "checks": [
+        {
+          "node": "job_ad",
+          "operator": "is_not_empty"
+        },
+        {
+          "node": "interview",
+          "operator": "is_not_empty"
+        },
+        {
+          "node": "fairness",
+          "field": "human_checks",
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

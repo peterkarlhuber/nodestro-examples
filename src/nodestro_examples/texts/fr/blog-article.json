@@ -1,0 +1,51 @@
+{
+  "name": "Article de blog",
+  "field": "Marketing et contenu",
+  "description": "Cerner le public, établir le plan, rédiger l'article et le relire.",
+  "start": "Sujet",
+  "output": "Article",
+  "file_name": "Article de blog",
+  "input": "Pourquoi les éditeurs visuels de workflows rendent les agents IA plus accessibles",
+  "guide": {
+    "problem": "Les bons articles naissent d'un public clair et d'un plan réfléchi. Le workflow répartit le travail comme une rédaction et vérifie le résultat avant publication.",
+    "flow": "Le public et le plan sont élaborés en parallèle avec un modèle rapide. Le rédacteur en tire l'article ; une vérification qualité intégrée contrôle qu'il suit le plan et répond aux questions des lecteurs. La relecture vérifie longueur et lisibilité avec l'outil de statistiques de texte et signale les affirmations non vérifiées.",
+    "input": "Un sujet en une phrase. Vous pouvez ajouter le public, le ton ou la longueur souhaitée directement dans l'entrée.",
+    "result": "Un article terminé en Markdown avec intertitres, une méta-description et de courtes notes de relecture avec le nombre de mots et les affirmations à étayer avant publication. L'exécution enregistre aussi le résultat en fichier Markdown et HTML que vous pouvez reprendre dans votre CMS.",
+    "adapt": "Change le sujet dans l'entrée. Vous pouvez charger votre guide de style comme connaissance et l'attribuer au rédacteur et à la relecture. La longueur souhaitée se règle dans le prompt système du rédacteur."
+  },
+  "agents": {
+    "audience": {
+      "name": "Public",
+      "description": "Décrit les lecteurs, leurs questions et ce qu'ils savent déjà.",
+      "system": "Tu décris le public d'un article : qui sont les lecteurs, ce qu'ils savent déjà et quelles trois questions ils se posent. Sois concis.",
+      "task": "{{input}}"
+    },
+    "outline": {
+      "name": "Plan",
+      "description": "Propose le titre et le plan.",
+      "system": "Tu proposes un titre accrocheur et un plan en cinq parties pour un article. Indique en une phrase ce que chaque partie doit apporter.",
+      "task": "{{input}}"
+    },
+    "writer": {
+      "name": "Rédacteur",
+      "description": "Rédige l'article à partir du plan et du public.",
+      "system": "Tu es une journaliste tech expérimentée. Rédige un article clair et vivant d'environ 700 mots avec des intertitres Markdown. Explique les termes techniques à leur première apparition et utilise des exemples concrets. N'invente ni études, ni chiffres, ni citations.",
+      "task": "Rédige l'article sur le sujet « {{run.input}} ».\n\nPublic :\n{{node:audience}}\n\nPlan :\n{{node:outline}}",
+      "criteria": {
+        "follows_outline": "L'article suit le plan.",
+        "audience": "L'article répond aux questions du public."
+      }
+    },
+    "editor": {
+      "name": "Relecture",
+      "description": "Vérifie longueur et lisibilité et livre la version finale.",
+      "system": "Tu es correcteur. Détermine le nombre de mots et de phrases de l'article avec l'outil de statistiques de texte. Améliore la clarté, l'orthographe et la fluidité sans modifier le contenu ni la structure. Donne d'abord la version finale révisée en Markdown, puis une méta-description de 155 caractères au plus et enfin des notes de relecture : nombre de mots, principales modifications et affirmations à étayer avant publication.",
+      "task": "Relis cet article :\n\n{{input}}"
+    }
+  },
+  "tests": {
+    "topic": {
+      "name": "Sujet en une phrase"
+    }
+  }
+}

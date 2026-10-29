@@ -1,0 +1,259 @@
+{
+  "id": "quality-8d",
+  "number": 2,
+  "category": "industry",
+  "level": "advanced",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160,
+      "form": [
+        {
+          "name": "documents",
+          "type": "file",
+          "accept": [
+            "pdf",
+            "docx",
+            "xlsx",
+            "csv",
+            "image"
+          ],
+          "multiple": true,
+          "max_files": 8
+        }
+      ]
+    },
+    {
+      "id": "problem",
+      "type": "agent",
+      "x": 340,
+      "y": 160,
+      "role": "analysis",
+      "icon": "file",
+      "output_name": "D1D3",
+      "output_fields": [
+        {
+          "name": "analysis",
+          "type": "string"
+        },
+        {
+          "name": "critical",
+          "type": "boolean"
+        }
+      ]
+    },
+    {
+      "id": "root_cause",
+      "type": "agent",
+      "x": 680,
+      "y": 160,
+      "role": "analysis",
+      "icon": "search"
+    },
+    {
+      "id": "actions",
+      "type": "agent",
+      "x": 1020,
+      "y": 160,
+      "role": "planning",
+      "icon": "shield"
+    },
+    {
+      "id": "report",
+      "type": "agent",
+      "x": 1360,
+      "y": 160,
+      "role": "writing",
+      "icon": "list",
+      "output_name": "EightDReport",
+      "output_fields": [
+        {
+          "name": "d1_team",
+          "type": "string"
+        },
+        {
+          "name": "d2_problem",
+          "type": "string"
+        },
+        {
+          "name": "d3_containment",
+          "type": "string_list"
+        },
+        {
+          "name": "d4_root_causes",
+          "type": "string_list"
+        },
+        {
+          "name": "d5_corrective_actions",
+          "type": "string_list"
+        },
+        {
+          "name": "d6_verification",
+          "type": "string_list"
+        },
+        {
+          "name": "d7_prevention",
+          "type": "string_list"
+        },
+        {
+          "name": "d8_closure",
+          "type": "string"
+        },
+        {
+          "name": "open_points",
+          "type": "string_list"
+        }
+      ],
+      "proposals": "generated"
+    },
+    {
+      "id": "severity",
+      "type": "condition",
+      "x": 680,
+      "y": 380,
+      "condition": {
+        "source": "problem",
+        "rules": [
+          {
+            "id": "critical",
+            "field": "critical",
+            "operator": "is_true"
+          }
+        ]
+      }
+    },
+    {
+      "id": "containment",
+      "type": "agent",
+      "x": 1020,
+      "y": 380,
+      "role": "planning",
+      "icon": "shield"
+    },
+    {
+      "id": "release",
+      "type": "approval",
+      "x": 1700,
+      "y": 160,
+      "approval": {
+        "on_reject": "stop",
+        "show": [
+          "report"
+        ]
+      }
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 2040,
+      "y": 160,
+      "files": [
+        "pdf",
+        "docx"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "problem"
+    ],
+    [
+      "problem",
+      "root_cause"
+    ],
+    [
+      "problem",
+      "severity"
+    ],
+    [
+      "severity",
+      "containment",
+      "critical"
+    ],
+    [
+      "root_cause",
+      "actions"
+    ],
+    [
+      "problem",
+      "report"
+    ],
+    [
+      "root_cause",
+      "report"
+    ],
+    [
+      "actions",
+      "report"
+    ],
+    [
+      "containment",
+      "report"
+    ],
+    [
+      "report",
+      "release"
+    ],
+    [
+      "release",
+      "output",
+      "approved"
+    ],
+    [
+      "start",
+      "root_cause"
+    ]
+  ],
+  "samples": [
+    {
+      "id": "complaint",
+      "format": "pdf",
+      "field": "documents"
+    },
+    {
+      "id": "measurements",
+      "format": "xlsx",
+      "field": "documents"
+    }
+  ],
+  "tests": [
+    {
+      "id": "complaint_text",
+      "checks": [
+        {
+          "field": "d4_root_causes",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "d5_corrective_actions",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "open_points",
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "complaint_files",
+      "input": "own",
+      "samples": [
+        "complaint",
+        "measurements"
+      ],
+      "checks": [
+        {
+          "field": "d2_problem",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "d4_root_causes",
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

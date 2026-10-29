@@ -1,0 +1,246 @@
+{
+  "name": "Verificar o orçamento doméstico e economizar",
+  "field": "Pessoas físicas – finanças",
+  "description": "Avaliar receitas e despesas de uma família e encontrar formas realistas de economizar.",
+  "start": "Orçamento doméstico",
+  "output": "Verificação do orçamento",
+  "file_name": "Orçamento doméstico",
+  "input": "DADOS DE EXEMPLO SINTÉTICOS – uma família totalmente fictícia, apenas para testar.\n\nFamília: dois adultos, uma criança (7 anos), apartamento alugado\nRenda líquida por mês: 2.900 EUR + 1.450 EUR (meio período) + 255 EUR de auxílio para filhos\nObjetivo: poupar 400 EUR por mês para formar em dois anos uma reserva de emergência de três meses de renda líquida.\n\nDespesas fixas por mês:\n- Aluguel com aquecimento 1.380 EUR, eletricidade 95 EUR, internet e celular (3 contratos) 112 EUR\n- Carro: parcela do financiamento 289 EUR, seguro 74 EUR, imposto 18 EUR\n- Seguros: responsabilidade civil 7 EUR, residencial 14 EUR, invalidez 68 EUR\n- Creche/contraturno 210 EUR, clube esportivo da criança 25 EUR\n- Streaming e assinaturas: 4 serviços, 52 EUR no total; academia 2 × 39 EUR (uma sem uso há 5 meses)\n\nDespesas variáveis, média dos últimos 3 meses:\n- Supermercado 780 EUR, restaurantes e delivery 240 EUR, combustível 160 EUR\n- Roupas 130 EUR, lazer 150 EUR, diversos 260 EUR\nSaldo atual da poupança: 1.800 EUR",
+  "guide": {
+    "problem": "No fim do mês muitas vezes sobra menos do que o esperado. O workflow recalcula um orçamento doméstico, encontra potenciais de economia e verifica se as sugestões são realistas no dia a dia.",
+    "flow": "O analista de orçamento calcula totais, saldo e participações por categoria com a calculadora. O consultor de economia estima economias concretas, também recalculadas. A verificação de realidade recebe os dois resultados, verifica a viabilidade e entrega um resultado estruturado.",
+    "input": "Receitas, despesas fixas e variáveis de uma família e uma meta de poupança. Em vez de digitar tudo, você pode anexar o extrato bancário ou um controle de gastos como arquivo CSV ou Excel; o arquivo de exemplo contém um mês fictício.",
+    "result": "Uma verificação estruturada do orçamento com o saldo mensal atual, potencial de economia, medidas, primeiros passos rápidos e observações, também como arquivo Excel. Não substitui aconselhamento financeiro ou de endividamento.",
+    "adapt": "Anexe o seu próprio extrato ou informe os seus números; prioridades pessoais, como \"o carro fica\", vão no texto. Extratos bancários contêm dados pessoais: eles ficam com você e só são passados ao modelo para esta execução."
+  },
+  "agents": {
+    "budget": {
+      "name": "Analista de orçamento",
+      "description": "Calcula receitas, despesas, saldo e participações com a calculadora.",
+      "system": "Você é consultor de orçamento doméstico. Use a calculadora para calcular: receita total, total das despesas fixas e variáveis, saldo mensal, taxa de poupança e a participação de cada categoria na renda líquida. Compare com a meta de poupança e mostre a diferença. Apresente os resultados em uma tabela clara.",
+      "task": "Avalie este orçamento doméstico:\n\n{{input}}"
+    },
+    "savings": {
+      "name": "Consultor de economia",
+      "description": "Encontra formas concretas de economizar e estima seu efeito.",
+      "system": "Você é consultor de consumo. Encontre formas concretas de economizar: contratos sem uso, troca de tarifas, despesas variáveis com margem e hábitos. Estime com cautela a economia mensal de cada medida e some-as com a calculadora. Não recomende produtos financeiros, empréstimos ou investimentos e não sugira cancelar seguros importantes.",
+      "task": "Encontre formas de economizar com base nesta avaliação:\n\n{{node:budget}}"
+    },
+    "check": {
+      "name": "Verificação de realidade",
+      "description": "Verifica a viabilidade das sugestões e as resume.",
+      "system": "Você verifica planos de economia quanto à praticidade no dia a dia. Confira os números, descarte sugestões irrealistas e ordene as demais por esforço. Indique o saldo mensal atual e o potencial de economia realista como valores em euros. Aponte os limites da análise e quando um aconselhamento financeiro independente ou de endividamento faz sentido.",
+      "task": "Verifique o plano de economia.\n\nAvaliação do orçamento:\n{{node:budget}}\n\nSugestões de economia:\n{{node:savings}}",
+      "fields": {
+        "monthly_surplus": "Saldo atual por mês em euros",
+        "savings_potential": "Potencial adicional de economia realista por mês em euros",
+        "measures": "Medidas com economia estimada",
+        "quick_wins": "Passos que podem ser dados nesta semana",
+        "caveats": "Limites da análise e observações"
+      }
+    }
+  },
+  "form": {
+    "transactions": {
+      "label": "Extrato bancário ou controle de gastos",
+      "description": "Opcional: uma exportação do internet banking ou do seu controle de gastos em CSV ou Excel, até 6 arquivos de 10 MB cada. Sem arquivo valem as informações do texto."
+    }
+  },
+  "samples": {
+    "transactions": {
+      "name": "Extrato_bancario_marco_2026",
+      "description": "Lançamentos bancários fictícios de um mês com categorias em CSV, de acordo com a família da tarefa de teste.",
+      "content": [
+        [
+          "Data",
+          "Descrição",
+          "Categoria",
+          "Valor (EUR)"
+        ],
+        [
+          "2026-03-01",
+          "Salário empregador A",
+          "Receitas",
+          2900.0
+        ],
+        [
+          "2026-03-01",
+          "Salário empregador B (meio período)",
+          "Receitas",
+          1450.0
+        ],
+        [
+          "2026-03-02",
+          "Auxílio para filhos",
+          "Receitas",
+          255.0
+        ],
+        [
+          "2026-03-01",
+          "Aluguel com aquecimento",
+          "Moradia",
+          -1380.0
+        ],
+        [
+          "2026-03-02",
+          "Parcela de eletricidade",
+          "Moradia",
+          -95.0
+        ],
+        [
+          "2026-03-03",
+          "Celular e internet (3 contratos)",
+          "Contratos",
+          -112.0
+        ],
+        [
+          "2026-03-03",
+          "Parcela do financiamento do carro",
+          "Carro",
+          -289.0
+        ],
+        [
+          "2026-03-03",
+          "Seguro do carro",
+          "Carro",
+          -74.0
+        ],
+        [
+          "2026-03-05",
+          "Creche e contraturno",
+          "Filhos",
+          -210.0
+        ],
+        [
+          "2026-03-05",
+          "Clube esportivo da criança",
+          "Filhos",
+          -25.0
+        ],
+        [
+          "2026-03-06",
+          "Serviço de streaming 1",
+          "Assinaturas",
+          -17.99
+        ],
+        [
+          "2026-03-06",
+          "Serviço de streaming 2",
+          "Assinaturas",
+          -13.99
+        ],
+        [
+          "2026-03-07",
+          "Assinatura de música",
+          "Assinaturas",
+          -10.99
+        ],
+        [
+          "2026-03-07",
+          "App de revistas",
+          "Assinaturas",
+          -9.03
+        ],
+        [
+          "2026-03-08",
+          "Academia pessoa 1",
+          "Lazer",
+          -39.0
+        ],
+        [
+          "2026-03-08",
+          "Academia pessoa 2 (sem uso há 5 meses)",
+          "Lazer",
+          -39.0
+        ],
+        [
+          "2026-03-04",
+          "Supermercado",
+          "Alimentação",
+          -186.4
+        ],
+        [
+          "2026-03-11",
+          "Supermercado",
+          "Alimentação",
+          -201.15
+        ],
+        [
+          "2026-03-18",
+          "Supermercado",
+          "Alimentação",
+          -174.8
+        ],
+        [
+          "2026-03-25",
+          "Supermercado",
+          "Alimentação",
+          -219.65
+        ],
+        [
+          "2026-03-09",
+          "Delivery de pizza",
+          "Restaurantes",
+          -38.5
+        ],
+        [
+          "2026-03-14",
+          "Restaurante",
+          "Restaurantes",
+          -86.0
+        ],
+        [
+          "2026-03-21",
+          "Delivery de sushi",
+          "Restaurantes",
+          -54.2
+        ],
+        [
+          "2026-03-28",
+          "Café e padaria",
+          "Restaurantes",
+          -61.3
+        ],
+        [
+          "2026-03-10",
+          "Posto de combustível",
+          "Carro",
+          -78.4
+        ],
+        [
+          "2026-03-24",
+          "Posto de combustível",
+          "Carro",
+          -81.6
+        ],
+        [
+          "2026-03-15",
+          "Roupas online",
+          "Roupas",
+          -129.9
+        ],
+        [
+          "2026-03-19",
+          "Cinema e parque de diversões",
+          "Lazer",
+          -148.0
+        ],
+        [
+          "2026-03-27",
+          "Farmácia e diversos",
+          "Diversos",
+          -263.1
+        ]
+      ]
+    }
+  },
+  "tests": {
+    "budget_text": {
+      "name": "Orçamento no texto"
+    },
+    "transactions_file": {
+      "name": "Extrato bancário em CSV",
+      "input": "DADOS DE EXEMPLO SINTÉTICOS – uma família totalmente fictícia, apenas para testar.\n\nFamília: dois adultos, uma criança (7 anos), apartamento alugado\nObjetivo: poupar 400 EUR por mês para formar em dois anos uma reserva de emergência de três meses de renda líquida.\nOs lançamentos bancários do último mês estão anexados como arquivo CSV. Impostos e seguros cobrados uma vez por ano: imposto do carro 216 EUR, responsabilidade civil 84 EUR, residencial 168 EUR, invalidez 816 EUR."
+    }
+  }
+}

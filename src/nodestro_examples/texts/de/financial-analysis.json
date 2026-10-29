@@ -1,0 +1,124 @@
+{
+  "name": "Finanzanalyse",
+  "field": "Finanzen und Investments",
+  "description": "Ein Unternehmen fundamental analysieren, Kennzahlen nachrechnen und die Ergebnisse kritisch prüfen.",
+  "start": "Aufgabe",
+  "output": "Ergebnis",
+  "file_name": "Finanzanalyse",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nAnalysiere die Profitabilität und finanzielle Stabilität der Beispiel Industrie AG (fiktives Unternehmen).\n\n| Kennzahl (Mio. EUR) | 2024 | 2025 |\n|---|---|---|\n| Umsatz | 980 | 1.250 |\n| Operatives Ergebnis (EBIT) | 140 | 210 |\n| Nettoergebnis | 95 | 150 |\n| Operativer Cashflow | 160 | 190 |\n| Investitionen | 70 | 130 |\n| Eigenkapital | 610 | 700 |\n| Bilanzsumme | 1.450 | 1.700 |\n| Nettofinanzverschuldung | 220 | 260 |\n\nHinweis aus dem Geschäftsbericht: Das Wachstum 2025 stammt zu etwa einem Drittel aus der Übernahme eines Wettbewerbers.",
+  "guide": {
+    "problem": "Kennzahlen aus Geschäftsberichten sind schnell zitiert, aber selten sauber nachgerechnet und eingeordnet. Der Workflow extrahiert die Zahlen, rechnet Margen und Wachstum exakt und lässt das Ergebnis kritisch prüfen.",
+    "flow": "Eine sequenzielle Kette mit drei Agenten: Der Recherche-Agent ordnet die Zahlen mit Zeitraum und Einheit, der Analyse-Agent berechnet Kennzahlen mit dem Rechner-Tool, und der Review-Agent prüft Rechenweg und Logik und fasst das Ergebnis strukturiert zusammen.",
+    "input": "Finanzzahlen eines Unternehmens für mindestens zwei Jahre, zum Beispiel aus Geschäftsbericht oder Quartalsmitteilung, sowie bekannte Sondereffekte. Die Zahlen kannst du einfügen oder als Excel-, CSV- oder PDF-Datei anhängen; die Beispieldatei enthält die Kennzahlen der Testaufgabe.",
+    "result": "Eine strukturierte Prüfung mit Zusammenfassung, wichtigsten Kennzahlen, gefundenen Fehlern oder Risiken, Grenzen der Analyse und der Angabe, ob die Analyse als korrekt gilt, zusätzlich als PDF und Excel-Datei. Der Recherche-Agent schlägt die extrahierten Zahlen für das Wissen vor; übernommen wird nur, was du bestätigst. Das Ergebnis ist keine Anlageberatung.",
+    "adapt": "Hänge den Geschäftsbericht oder eure Kennzahlentabelle direkt an. Weitere Kennzahlen, etwa Verschuldungsgrad oder Free Cashflow, ergänzt du im System-Prompt des Analyse-Agenten. Für viele Unternehmen nacheinander eignet sich die Stapelverarbeitung mit einer Zeile je Unternehmen."
+  },
+  "agents": {
+    "research": {
+      "name": "Recherche-Agent",
+      "description": "Sammelt Kennzahlen und Kontext zu den Finanzdaten.",
+      "system": "Du bist Finanzanalyst in der Recherche. Extrahiere jede Zahl aus der Aufgabe, nenne Zeitraum und Einheit und ordne sie in einer Tabelle. Ergänze kurz, was die Zahlen bedeuten, und halte Sondereffekte wie Übernahmen oder Einmaleffekte fest. Erfinde keine Zahlen, die nicht gegeben sind.",
+      "task": "{{input}}"
+    },
+    "analysis": {
+      "name": "Analyse-Agent",
+      "description": "Berechnet Margen, Wachstum und Stabilitätskennzahlen mit dem Rechner-Tool.",
+      "system": "Du bist Senior-Finanzanalyst. Berechne mit dem Rechner-Tool alle wichtigen Kennzahlen: Umsatzwachstum, EBIT-Marge, Nettomarge, Eigenkapitalquote, Free Cashflow (operativer Cashflow minus Investitionen) und das Verhältnis von Nettofinanzverschuldung zu EBIT. Erkläre jedes Ergebnis in einem Satz und berücksichtige Sondereffekte, zum Beispiel organisches Wachstum ohne Übernahme.",
+      "task": "Berechne die wichtigsten Kennzahlen aus diesen Rechercheergebnissen:\n\n{{node:research}}"
+    },
+    "review": {
+      "name": "Review-Agent",
+      "description": "Prüft die Analyse und fasst sie strukturiert zusammen.",
+      "system": "Du bist ein sorgfältiger Prüfer. Kontrolliere die Analyse auf Rechen- und Logikfehler, prüfe, ob Sondereffekte richtig berücksichtigt sind, und fasse das Ergebnis für die Geschäftsleitung zusammen. Nenne die Grenzen der Analyse. Gib keine Kauf- oder Verkaufsempfehlung.",
+      "task": "Prüfe diese Analyse und fasse sie zusammen:\n\n{{input}}",
+      "fields": {
+        "summary": "Zusammenfassung in 2-3 Sätzen",
+        "key_figures": "Wichtigste Kennzahlen",
+        "issues": "Gefundene Fehler oder Risiken",
+        "limitations": "Grenzen der Analyse",
+        "approved": "Ist die Analyse korrekt?"
+      }
+    }
+  },
+  "form": {
+    "figures": {
+      "label": "Finanzzahlen als Datei",
+      "description": "Optional: Kennzahlen als Excel oder CSV oder ein Geschäftsbericht als PDF, bis zu 3 Dateien. Ohne Datei gelten die Zahlen im Text."
+    }
+  },
+  "samples": {
+    "figures": {
+      "name": "Kennzahlen_Beispiel_Industrie_AG",
+      "description": "Die erfundenen Kennzahlen der Testaufgabe als Excel-Datei mit einem Blatt für Hinweise.",
+      "content": {
+        "Kennzahlen": [
+          [
+            "Kennzahl (Mio. EUR)",
+            "2024",
+            "2025"
+          ],
+          [
+            "Umsatz",
+            980,
+            1250
+          ],
+          [
+            "Operatives Ergebnis (EBIT)",
+            140,
+            210
+          ],
+          [
+            "Nettoergebnis",
+            95,
+            150
+          ],
+          [
+            "Operativer Cashflow",
+            160,
+            190
+          ],
+          [
+            "Investitionen",
+            70,
+            130
+          ],
+          [
+            "Eigenkapital",
+            610,
+            700
+          ],
+          [
+            "Bilanzsumme",
+            1450,
+            1700
+          ],
+          [
+            "Nettofinanzverschuldung",
+            220,
+            260
+          ]
+        ],
+        "Hinweise": [
+          [
+            "Hinweis"
+          ],
+          [
+            "Fiktives Unternehmen Beispiel Industrie AG."
+          ],
+          [
+            "Das Wachstum 2025 stammt zu etwa einem Drittel aus der Übernahme eines Wettbewerbers."
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "figures_text": {
+      "name": "Kennzahlen im Text"
+    },
+    "figures_file": {
+      "name": "Kennzahlen als Excel-Datei",
+      "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nAnalysiere die Profitabilität und finanzielle Stabilität der Beispiel Industrie AG (fiktives Unternehmen). Die Kennzahlen und Hinweise stehen in der angehängten Excel-Datei."
+    }
+  }
+}

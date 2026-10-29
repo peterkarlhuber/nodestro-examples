@@ -1,0 +1,130 @@
+{
+  "id": "sme-swot",
+  "number": 4,
+  "category": "business",
+  "level": "advanced",
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 180
+    },
+    {
+      "id": "internal",
+      "type": "agent",
+      "x": 360,
+      "y": 40,
+      "role": "analysis",
+      "icon": "search"
+    },
+    {
+      "id": "external",
+      "type": "agent",
+      "x": 360,
+      "y": 320,
+      "role": "research",
+      "icon": "globe"
+    },
+    {
+      "id": "strategy",
+      "type": "agent",
+      "x": 720,
+      "y": 180,
+      "role": "planning",
+      "icon": "target"
+    },
+    {
+      "id": "critic",
+      "type": "agent",
+      "x": 1080,
+      "y": 320,
+      "role": "review",
+      "icon": "scale",
+      "output_name": "StrategyReview",
+      "output_fields": [
+        {
+          "name": "verdict",
+          "type": "string"
+        },
+        {
+          "name": "robust_points",
+          "type": "string_list"
+        },
+        {
+          "name": "weak_points",
+          "type": "string_list"
+        },
+        {
+          "name": "missing_information",
+          "type": "string_list"
+        },
+        {
+          "name": "next_steps",
+          "type": "string_list"
+        }
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1440,
+      "y": 180,
+      "files": [
+        "md",
+        "pdf"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "internal"
+    ],
+    [
+      "start",
+      "external"
+    ],
+    [
+      "internal",
+      "strategy"
+    ],
+    [
+      "external",
+      "strategy"
+    ],
+    [
+      "strategy",
+      "critic"
+    ],
+    [
+      "strategy",
+      "output"
+    ],
+    [
+      "critic",
+      "output"
+    ]
+  ],
+  "tests": [
+    {
+      "id": "profile",
+      "checks": [
+        {
+          "node": "strategy",
+          "operator": "is_not_empty"
+        },
+        {
+          "node": "critic",
+          "field": "next_steps",
+          "operator": "is_not_empty"
+        },
+        {
+          "node": "critic",
+          "field": "missing_information",
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

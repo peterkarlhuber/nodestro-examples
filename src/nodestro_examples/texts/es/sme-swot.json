@@ -1,0 +1,54 @@
+{
+  "name": "Estrategia DAFO para una pyme",
+  "field": "Empresas y pymes",
+  "description": "Analizar la situación interna y externa de una empresa, desarrollar una estrategia basada en el DAFO y revisarla críticamente.",
+  "start": "Perfil de la empresa",
+  "output": "Estrategia",
+  "file_name": "Estrategia DAFO",
+  "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nEmpresa: Carpintería Madera Ejemplo S.L., pequeña ciudad del sur de Alemania, fundada en 1987\nPlantilla: 14 personas (2 aprendices), propietario de 61 años, sucesión sin resolver\nFacturación: 2023 1,9 M EUR, 2024 1,8 M EUR; rentabilidad sobre ventas recientemente del 4 %\nReparto de la facturación: interiorismo para particulares 55 %, proyectos para empresas (consultas, oficinas) 30 %, reparaciones 15 %\nFortalezas según el propietario: alta calidad, clientes fieles, máquina CNC propia desde 2022\nProblemas: plazos de entrega largos (actualmente 14 semanas), dos puestos de oficial vacantes desde hace un año,\ncasi sin presencia online (web de 2015, sin redes sociales), los presupuestos se calculan a mano\nEntorno: precios de la madera al alza, programas regionales de ayudas para la rehabilitación energética,\nnuevas urbanizaciones en un radio de 20 km, una tienda de muebles con estudio de cocinas ha abierto cerca\nObjetivo del propietario: en tres años, una empresa estable y lista para el traspaso con al menos un 7 % de rentabilidad",
+  "guide": {
+    "problem": "Muchas pequeñas empresas conocen sus problemas, pero no el mejor orden para abordarlos. El flujo crea un análisis DAFO, deriva estrategias y las somete a un revisor crítico.",
+    "flow": "El análisis interno (fortalezas, debilidades) y el análisis del entorno (oportunidades, amenazas) se ejecutan en paralelo. El desarrollador de estrategia combina ambos en estrategias según la matriz CAME/TOWS y un plan de 90 días. El revisor crítico busca puntos débiles e información que falta; el resultado incluye estrategia y revisión. Al final, el resultado se guarda con la ejecución como archivo Markdown y PDF.",
+    "input": "Un breve perfil de la empresa con cifras clave, oferta, fortalezas, problemas, entorno de mercado y objetivos.",
+    "result": "Una matriz DAFO con estrategias derivadas y un plan de 90 días, además de una revisión crítica estructurada con valoración, puntos débiles, información que falta y próximos pasos.",
+    "adapt": "Describe tu empresa con el mismo estilo. Cuanto más precisos sean las cifras y los objetivos, más concreta será la estrategia. Puedes subir estudios sectoriales o encuestas a clientes como conocimiento y asignarlos al análisis del entorno."
+  },
+  "agents": {
+    "internal": {
+      "name": "Análisis interno",
+      "description": "Extrae fortalezas y debilidades de los datos de la empresa.",
+      "system": "Eres consultor de empresas para pymes. Analiza los factores internos: oferta, clientes, personal, procesos, finanzas, equipamiento y organización. Deriva fortalezas y debilidades concretas y respalda cada una con datos del perfil. Valora la importancia de cada punto para el objetivo de la empresa (alta, media, baja).",
+      "task": "Analiza las fortalezas y debilidades de esta empresa:\n\n{{input}}"
+    },
+    "external": {
+      "name": "Análisis del entorno",
+      "description": "Deriva oportunidades y amenazas del mercado y del entorno.",
+      "system": "Eres analista de mercado. Analiza los factores externos de una empresa: demanda, competencia, evolución de costes, mercado laboral, ayudas, tecnología y regulación. Deriva oportunidades y amenazas. Apóyate en los datos del perfil y en conocimiento sectorial generalmente conocido; indica qué es conocimiento general y debe comprobarse en la zona.",
+      "task": "Analiza las oportunidades y amenazas del entorno de esta empresa:\n\n{{input}}"
+    },
+    "strategy": {
+      "name": "Desarrollador de estrategia",
+      "description": "Desarrolla estrategias según la matriz TOWS y un plan de 90 días.",
+      "system": "Eres consultor de estrategia. Resume fortalezas, debilidades, oportunidades y amenazas en una matriz DAFO y desarrolla estrategias con la lógica TOWS: FO (usar fortalezas para aprovechar oportunidades), DO, FA y DA. Elige las dos o tres estrategias más eficaces para el objetivo y justifica la elección. Elabora un plan de 90 días con pasos concretos, responsables e hitos medibles.",
+      "task": "Desarrolla la estrategia.\n\nAnálisis interno:\n{{node:internal}}\n\nAnálisis del entorno:\n{{node:external}}"
+    },
+    "critic": {
+      "name": "Revisor crítico",
+      "description": "Cuestiona la estrategia y descubre puntos débiles.",
+      "system": "Eres miembro crítico de un consejo asesor y revisas estrategias antes de que una empresa invierta dinero. Comprueba si la estrategia puede alcanzar el objetivo, si encaja con los recursos y qué supuestos no se han comprobado. Señala contradicciones, riesgos de implantación e información que falta antes de decidir. Sé constructivo: cada punto débil va acompañado de una propuesta.",
+      "task": "Revisa críticamente esta estrategia:\n\n{{input}}",
+      "fields": {
+        "verdict": "Valoración global en dos o tres frases",
+        "robust_points": "Partes sólidas de la estrategia",
+        "weak_points": "Puntos débiles con propuesta de mejora",
+        "missing_information": "Información que falta antes de decidir",
+        "next_steps": "Próximos pasos recomendados"
+      }
+    }
+  },
+  "tests": {
+    "profile": {
+      "name": "Carpintería con la sucesión sin resolver"
+    }
+  }
+}

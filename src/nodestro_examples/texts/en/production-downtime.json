@@ -1,0 +1,203 @@
+{
+  "name": "Analyse machine downtime",
+  "field": "Manufacturing and industry",
+  "description": "Evaluate a downtime log, develop root-cause hypotheses and prioritise improvement measures.",
+  "start": "Downtime log",
+  "output": "Action plan",
+  "file_name": "Downtime analysis",
+  "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nPlant: Example Plant North, filling line L2 (beverages, 3 shifts)\nPeriod: weeks 14–15, total planned production time 14,400 minutes\nTarget: downtime below 3 % of planned production time\n\n| No. | Date | Shift | Machine | Duration (min) | Fault code | Operator note |\n|---|---|---|---|---|---|---|\n| 1 | 1 Apr | Early | Labeller | 45 | E-17 label tear | New label reel from supplier B |\n| 2 | 1 Apr | Late | Filler | 120 | F-03 valve leaking | Seal replaced, spare part had to be fetched from the central store |\n| 3 | 2 Apr | Night | Labeller | 30 | E-17 label tear | Reel from supplier B again |\n| 4 | 3 Apr | Early | Packer | 25 | P-08 carton jam | Cartons seem damp |\n| 5 | 3 Apr | Late | Labeller | 50 | E-17 label tear | Web tension readjusted |\n| 6 | 4 Apr | Early | Filler | 90 | F-11 format change | Change from 0.5 l to 1 l, standard time 45 min |\n| 7 | 7 Apr | Night | Labeller | 40 | E-17 label tear | New operator in training |\n| 8 | 8 Apr | Early | Packer | 35 | P-08 carton jam | Roof of the carton store in hall 3 leaking? |\n| 9 | 9 Apr | Late | Filler | 60 | F-03 valve leaking | Same valve group as on 1 Apr |\n| 10 | 10 Apr | Early | Labeller | 55 | E-17 label tear | Reel from supplier B, glue seems weak |\n| 11 | 11 Apr | Late | Filler | 95 | F-11 format change | Format part had to be searched for |\n| 12 | 14 Apr | Night | Packer | 20 | P-02 sensor fault | Light barrier cleaned |",
+  "guide": {
+    "problem": "Downtime costs production time, but patterns are easily lost in long logs. The workflow turns a downtime log into a justified, prioritised list of measures.",
+    "flow": "Two agents work in parallel: the downtime analyst calculates totals, shares and a Pareto ranking with the calculator tool, while the root-cause analyst develops hypotheses along the 6M. The action planner combines both, and a built-in quality check makes sure every measure is justified. If the downtime share is above the 3 % target, a decision node starts a quality sub-workflow that rates the risks of the measures and plans how they are secured.",
+    "input": "A downtime log (date, shift, machine, duration, fault code, note) and the planned production time. You can paste the log into the text as a table or put it into the optional file field as a CSV or Excel file; the sample file “Downtime_log_L2_weeks14-15.xlsx” contains the same twelve fictional entries as the test task.",
+    "result": "A prioritised table of immediate actions, investigations and permanent measures, each with expected effect, effort, responsible role and indicator, plus the data analysis with the downtime share and the three most important next steps. The run also saves everything as Markdown and as an Excel file with the tables.",
+    "adapt": "Put an export from your MES or spreadsheet into the file field; long logs work too, because the agents read large files selectively. For a weekly evaluation you can run the copy on a schedule. In the system prompt of the action planner you can add your methodology, for example TPM pillars or a fixed rating scheme."
+  },
+  "agents": {
+    "downtime": {
+      "name": "Downtime analyst",
+      "description": "Evaluates the log quantitatively and calculates with the calculator tool.",
+      "system": "You are a data analyst in maintenance. Evaluate downtime logs quantitatively: totals and shares per machine, fault code and shift, frequency and mean duration, a Pareto ranking and the share of planned production time compared with the target. Check every figure with the calculator tool instead of estimating it. Present the results as compact tables and point out anomalies such as repetitions or clusters in particular shifts.",
+      "task": "Evaluate this downtime log quantitatively:\n\n{{input}}",
+      "fields": {
+        "analysis": "The quantitative evaluation as text with tables",
+        "downtime_share_percent": "Share of downtime in the planned production time in percent"
+      }
+    },
+    "causes": {
+      "name": "Root-cause analyst",
+      "description": "Develops root-cause hypotheses along the 6M and proposes checks.",
+      "system": "You are an experienced production engineer who facilitates root-cause analyses. Derive root-cause hypotheses from the entries and notes and group them by the 6M: man, machine, material, method, measurement, milieu (environment). For each hypothesis, name the supporting entries, its plausibility (high, medium, low) and a check that confirms or rejects it. Formulate hypotheses, not established causes.",
+      "task": "Develop root-cause hypotheses for these stoppages:\n\n{{input}}"
+    },
+    "measures": {
+      "name": "Action planner",
+      "description": "Combines the analysis and hypotheses into prioritised measures.",
+      "system": "You are an expert in lean production and TPM. Develop concrete improvement measures from the data analysis and the root-cause hypotheses. Distinguish immediate actions, verification tasks that confirm hypotheses and permanent corrective measures. Rate each measure by expected effect (minutes saved, where derivable), effort and lead time, and prioritise them in a table. Name a responsible role and a metric to check effectiveness for each measure. Finish with the three most important next steps.",
+      "task": "Derive prioritised improvement measures.\n\nData analysis:\n{{node:downtime}}\n\nRoot-cause hypotheses:\n{{node:causes}}",
+      "criteria": {
+        "linked_to_findings": "Every measure traceably refers to a finding of the data analysis or a root-cause hypothesis.",
+        "prioritised": "The measures are prioritised with reasons based on effect and effort.",
+        "owners_and_metrics": "Every measure names a responsible role and a metric to check its effectiveness."
+      }
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "Target missed?",
+      "branches": {
+        "above_target": "Above 3 %"
+      },
+      "default": "On target"
+    },
+    "quality": {
+      "name": "Quality assurance"
+    }
+  },
+  "form": {
+    "log_file": {
+      "label": "Downtime log as a file",
+      "description": "Optional: an export from your MES or spreadsheet as CSV or Excel (XLSX), at most 10 MB. Without a file, the agents evaluate the table in the text."
+    }
+  },
+  "samples": {
+    "log": {
+      "name": "Downtime_log_L2_weeks14-15",
+      "description": "Excel export with the twelve fictional stoppages of filling line L2 from the test task.",
+      "content": {
+        "Stoppages": [
+          [
+            "No.",
+            "Date",
+            "Shift",
+            "Machine",
+            "Duration (min)",
+            "Fault code",
+            "Operator note"
+          ],
+          [
+            1,
+            "2026-04-01",
+            "Early",
+            "Labeller",
+            45,
+            "E-17 label tear",
+            "New label reel from supplier B"
+          ],
+          [
+            2,
+            "2026-04-01",
+            "Late",
+            "Filler",
+            120,
+            "F-03 valve leaking",
+            "Seal replaced, spare part had to be fetched from the central store"
+          ],
+          [
+            3,
+            "2026-04-02",
+            "Night",
+            "Labeller",
+            30,
+            "E-17 label tear",
+            "Reel from supplier B again"
+          ],
+          [
+            4,
+            "2026-04-03",
+            "Early",
+            "Packer",
+            25,
+            "P-08 carton jam",
+            "Cartons seem damp"
+          ],
+          [
+            5,
+            "2026-04-03",
+            "Late",
+            "Labeller",
+            50,
+            "E-17 label tear",
+            "Web tension readjusted"
+          ],
+          [
+            6,
+            "2026-04-04",
+            "Early",
+            "Filler",
+            90,
+            "F-11 format change",
+            "Change from 0.5 l to 1 l, standard time 45 min"
+          ],
+          [
+            7,
+            "2026-04-07",
+            "Night",
+            "Labeller",
+            40,
+            "E-17 label tear",
+            "New operator in training"
+          ],
+          [
+            8,
+            "2026-04-08",
+            "Early",
+            "Packer",
+            35,
+            "P-08 carton jam",
+            "Roof of the carton store in hall 3 leaking?"
+          ],
+          [
+            9,
+            "2026-04-09",
+            "Late",
+            "Filler",
+            60,
+            "F-03 valve leaking",
+            "Same valve group as on 1 Apr"
+          ],
+          [
+            10,
+            "2026-04-10",
+            "Early",
+            "Labeller",
+            55,
+            "E-17 label tear",
+            "Reel from supplier B, glue seems weak"
+          ],
+          [
+            11,
+            "2026-04-11",
+            "Late",
+            "Filler",
+            95,
+            "F-11 format change",
+            "Format part had to be searched for"
+          ],
+          [
+            12,
+            "2026-04-14",
+            "Night",
+            "Packer",
+            20,
+            "P-02 sensor fault",
+            "Light barrier cleaned"
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "above_target": {
+      "name": "Log in the text, target missed (4.6 %)"
+    },
+    "within_target": {
+      "name": "Quiet fortnight, target met",
+      "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nPlant: Example Plant North, filling line L2 (beverages, 3 shifts)\nPeriod: weeks 16–17, total planned production time 14,400 minutes\nTarget: downtime below 3 % of planned production time\n\n| No. | Date | Shift | Machine | Duration (min) | Fault code | Operator note |\n|---|---|---|---|---|---|---|\n| 1 | 15 Apr | Early | Filler | 70 | F-11 format change | Change from 0.5 l to 1 l with the new checklist |\n| 2 | 17 Apr | Late | Labeller | 25 | E-17 label tear | Reel from supplier A |\n| 3 | 21 Apr | Night | Packer | 20 | P-02 sensor fault | Light barrier cleaned |\n| 4 | 23 Apr | Early | Filler | 60 | F-11 format change | Change from 1 l to 0.5 l |\n| 5 | 24 Apr | Late | Labeller | 30 | E-04 glue application | Glue nozzle cleaned |"
+    },
+    "log_file": {
+      "name": "Log as an Excel file",
+      "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nPlant: Example Plant North, filling line L2 (beverages, 3 shifts)\nPeriod: weeks 14–15, total planned production time 14,400 minutes\nTarget: downtime below 3 % of planned production time\n\nThe downtime log is attached as an Excel file."
+    }
+  }
+}

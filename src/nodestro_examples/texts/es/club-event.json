@@ -1,0 +1,52 @@
+{
+  "name": "Planificar la fiesta del club",
+  "field": "Asociaciones y clubes",
+  "description": "Planificar programa, tareas y presupuesto de una fiesta del club, preparar la comunicación y elaborar una propuesta para la junta directiva.",
+  "start": "Datos básicos",
+  "output": "Propuesta para la junta",
+  "file_name": "Propuesta para la junta",
+  "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nClub: CD Villaejemplo, 420 socios, de ellos 130 niños y jóvenes\nOcasión: fiesta de verano por el 75.º aniversario el sábado 2026-07-11, de 14 a 22 h, en el recinto deportivo\nFecha de planificación: 2026-05-04\nAsistentes previstos: unas 300 personas\nDeseos de programa: olimpiada infantil, homenaje a socios veteranos, música en directo por la noche\nVoluntarios: 25 personas se han comprometido, cada una en turnos de 3 horas\nPresupuesto: caja del club 3.000 EUR, patrocinio confirmado 1.500 EUR (Bebidas Muestra), ingresos previstos\npor ventas: bebidas 2.400 EUR, comida 1.800 EUR, rifa 600 EUR\nCostes conocidos: grupo de música 1.200 EUR, alquiler de carpa 900 EUR, castillo hinchable 250 EUR, compra de comida\ny bebida unos 1.900 EUR, trofeos y homenajes 300 EUR",
+  "guide": {
+    "problem": "Las fiestas de los clubes las organizan voluntarios en su tiempo libre. El flujo crea calendario, tareas, presupuesto y comunicación y lo reúne todo en una propuesta para la reunión de la junta.",
+    "flow": "El planificador del programa y el planificador del presupuesto trabajan en paralelo; uno cuenta hacia atrás desde la fiesta con la herramienta de fechas y el otro calcula el presupuesto con la calculadora. El planificador de comunicación prepara invitaciones y publicaciones acordes con el calendario. La propuesta para la junta lo reúne todo; una revisión de calidad comprueba que esté completa y que haya responsables.",
+    "input": "Ocasión, fecha, lugar, número de asistentes, deseos de programa, voluntarios, presupuesto y costes conocidos.",
+    "result": "Una propuesta para la junta con calendario hasta la fiesta, tareas y responsables, plan de turnos, presupuesto con superávit o déficit, plan de comunicación y propuestas de acuerdo, además como archivo de Word para enviar a la junta.",
+    "adapt": "Introduce los datos de tu fiesta. Los permisos y requisitos varían según el municipio; añade los que conozcas a la entrada. Los logotipos y plantillas de carteles pueden guardarse como conocimiento."
+  },
+  "agents": {
+    "schedule": {
+      "name": "Planificador del programa",
+      "description": "Planifica calendario, tareas y turnos hacia atrás desde el día de la fiesta.",
+      "system": "Organizas eventos de clubes. Calcula con la herramienta days_between el tiempo que queda hasta la fiesta y planifica hacia atrás: hitos con fecha, tareas con un rol responsable, el programa del día de la fiesta y un cuadrante de turnos para los voluntarios. Piensa en permisos, seguro, higiene, primeros auxilios y recogida, y marca los puntos que hay que aclarar con el ayuntamiento.",
+      "task": "Planifica el programa y las tareas de esta fiesta:\n\n{{input}}"
+    },
+    "budget": {
+      "name": "Planificador del presupuesto",
+      "description": "Calcula ingresos, gastos y margen con la calculadora.",
+      "system": "Eres tesorero del club. Elabora con la calculadora un presupuesto: ingresos, gastos, un margen del 10 % para imprevistos y el resultado previsto. Calcula un escenario prudente con un 30 % menos de ingresos por ventas, por ejemplo si hace mal tiempo. Propone cómo cubrir un posible déficit.",
+      "task": "Elabora el presupuesto de esta fiesta:\n\n{{input}}"
+    },
+    "communication": {
+      "name": "Planificador de comunicación",
+      "description": "Prepara invitaciones, publicaciones y una nota de prensa.",
+      "system": "Te encargas de la comunicación de clubes. De acuerdo con el calendario, crea un plan de comunicación con fechas y canales (carta a los socios, tablón de anuncios, redes sociales, periódico local) y borradores de texto: una invitación para los socios, una publicación para redes sociales y una breve nota de prensa. Escribe con calidez y de forma atractiva.",
+      "task": "Planifica la comunicación para este calendario:\n\n{{node:schedule}}"
+    },
+    "board_paper": {
+      "name": "Propuesta para la junta",
+      "description": "Resume planificación, presupuesto y comunicación para la junta directiva.",
+      "system": "Preparas propuestas de acuerdo para juntas directivas de clubes. Resume de forma clara calendario, tareas, presupuesto y comunicación, en dos páginas como máximo. Termina con propuestas de acuerdo concretas, puntos abiertos y las tres próximas fechas. Toma las cifras solo del presupuesto.",
+      "task": "Elabora la propuesta para la junta.\n\nPrograma y tareas:\n{{node:schedule}}\n\nPresupuesto:\n{{node:budget}}\n\nComunicación:\n{{node:communication}}",
+      "criteria": {
+        "complete": "La propuesta contiene calendario, tareas, presupuesto, comunicación y propuestas de acuerdo.",
+        "responsibilities": "Cada tarea tiene un rol responsable y una fecha.",
+        "budget_consistent": "Todas las cifras coinciden con el presupuesto."
+      }
+    }
+  },
+  "tests": {
+    "summer_party": {
+      "name": "Fiesta de verano por el aniversario del club"
+    }
+  }
+}

@@ -1,0 +1,52 @@
+{
+  "name": "Organiser la fête d'une association",
+  "field": "Associations",
+  "description": "Planifier le calendrier, les tâches et le budget d'une fête associative, préparer la communication et rédiger une note pour le bureau.",
+  "start": "Informations clés",
+  "output": "Note pour le bureau",
+  "file_name": "Note pour le bureau",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nAssociation : SC Villexemple, 420 membres, dont 130 enfants et jeunes\nOccasion : fête d'été pour les 75 ans le samedi 2026-07-11, de 14 h à 22 h, terrain de sport\nDate de planification : 2026-05-04\nInvités attendus : environ 300\nSouhaits de programme : olympiades pour enfants, hommage aux membres de longue date, groupe en concert le soir\nBénévoles : 25 bénévoles ont accepté d'aider, chacun par créneaux de 3 heures\nBudget : fonds de l'association 3 000 EUR, sponsoring confirmé 1 500 EUR (Boissons Exemple), recettes attendues\ndes ventes : boissons 2 400 EUR, restauration 1 800 EUR, tombola 600 EUR\nCoûts connus : groupe 1 200 EUR, location de chapiteau 900 EUR, château gonflable 250 EUR, achat de nourriture et\nde boissons environ 1 900 EUR, trophées et récompenses 300 EUR",
+  "guide": {
+    "problem": "Les fêtes associatives sont organisées par des bénévoles sur leur temps libre. Le workflow crée le calendrier, les tâches, le budget et la communication, et résumez le tout dans une note pour la réunion du bureau.",
+    "flow": "Le planificateur du calendrier et le planificateur budgétaire travaillent en parallèle ; l'un compte à rebours depuis la fête avec l'outil de dates, l'autre calcule le budget avec la calculatrice. Le planificateur de la communication prépare invitations et publications en phase avec le calendrier. La note pour le bureau réunit le tout ; une vérification qualité contrôle l'exhaustivité et les responsabilités.",
+    "input": "Occasion, date, lieu, nombre d'invités, souhaits de programme, bénévoles, budget et coûts connus.",
+    "result": "Une note pour le bureau avec calendrier jusqu'à la fête, tâches et responsables, planning des créneaux, budget avec excédent ou déficit, plan de communication et propositions de décision, aussi en fichier Word à envoyer au bureau.",
+    "adapt": "Saisissez les informations clés de votre fête. Les autorisations et conditions varient selon la commune ; ajoutez les exigences connues dans l'entrée. Les logos et modèles d'affiches peuvent être enregistrés comme connaissance."
+  },
+  "agents": {
+    "schedule": {
+      "name": "Planificateur du calendrier",
+      "description": "Planifie à rebours depuis le jour de la fête le calendrier, les tâches et les créneaux.",
+      "system": "Tu organises des événements associatifs. Calcule le temps restant jusqu'à la fête avec l'outil days_between et planifie à rebours : jalons avec dates, tâches avec responsabilité sous forme de rôle, programme du jour de la fête et planning des créneaux pour les bénévoles. Pense aux autorisations, à l'assurance, à l'hygiène, aux premiers secours et au rangement, et signale les points à clarifier avec la commune.",
+      "task": "Planifie le calendrier et les tâches de cette fête :\n\n{{input}}"
+    },
+    "budget": {
+      "name": "Planificateur budgétaire",
+      "description": "Calcule recettes, dépenses et réserve avec la calculatrice.",
+      "system": "Tu es le trésorier de l'association. Utilise la calculatrice pour établir un budget : recettes, dépenses, une réserve de 10 % pour les imprévus et le résultat attendu. Calcule un scénario prudent avec 30 % de recettes de vente en moins, par exemple en cas de mauvais temps. Propose comment un déficit pourrait être couvert.",
+      "task": "Établis le budget de cette fête :\n\n{{input}}"
+    },
+    "communication": {
+      "name": "Planificateur de la communication",
+      "description": "Prépare invitations, publications et communiqué de presse.",
+      "system": "Tu fais les relations publiques d'associations. En phase avec le calendrier, crée un plan de communication avec dates et canaux (lettre aux membres, panneau d'affichage, réseaux sociaux, journal local) et rédige des textes : une invitation aux membres, une publication pour les réseaux sociaux et un court communiqué de presse. Écris de façon chaleureuse et engageante.",
+      "task": "Planifie la communication pour ce calendrier :\n\n{{node:schedule}}"
+    },
+    "board_paper": {
+      "name": "Note pour le bureau",
+      "description": "Résume planification, budget et communication pour le bureau.",
+      "system": "Tu prépares des notes de décision pour les bureaux d'associations. Résume clairement le calendrier, les tâches, le budget et la communication, sur deux pages au maximum. Termine par des propositions de décision concrètes, les points ouverts et les trois prochaines dates. Prends les chiffres uniquement dans le budget.",
+      "task": "Rédige la note pour le bureau.\n\nCalendrier et tâches :\n{{node:schedule}}\n\nBudget :\n{{node:budget}}\n\nCommunication :\n{{node:communication}}",
+      "criteria": {
+        "complete": "La note contient calendrier, tâches, budget, communication et propositions de décision.",
+        "responsibilities": "Chaque tâche a un rôle responsable et une date.",
+        "budget_consistent": "Tous les chiffres correspondent au budget."
+      }
+    }
+  },
+  "tests": {
+    "summer_party": {
+      "name": "Fête d'été pour l'anniversaire de l'association"
+    }
+  }
+}

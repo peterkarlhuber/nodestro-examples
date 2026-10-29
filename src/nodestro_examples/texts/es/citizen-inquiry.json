@@ -1,0 +1,63 @@
+{
+  "name": "Responder una consulta ciudadana",
+  "field": "Instituciones públicas",
+  "description": "Analizar una consulta ciudadana, buscar las normas aplicables y preparar un borrador de respuesta objetivo.",
+  "start": "Consulta ciudadana",
+  "output": "Borrador de respuesta",
+  "file_name": "Borrador de respuesta",
+  "input": "DATOS DE EJEMPLO SINTÉTICOS – municipio y normas totalmente inventados, solo para probar.\n\nCorreo al Ayuntamiento de Villamuestra del 2026-04-14, remitente: Sr. Pablo Ejemplo, calle de los Tilos 12:\n«Estimados señores: quiero instalar en mi jardín una caseta de unos 4 x 3 metros y 2,60 metros de altura, a\naproximadamente 1 metro de la valla del vecino. ¿Necesito una licencia? Además, la farola delante del número 14\nlleva semanas rota y por la noche está completamente oscuro. ¿Cuándo la van a reparar? Ya lo comuniqué por\nteléfono en marzo.»\n\nExtracto de la información interna del ayuntamiento (ficticia):\n- Normativa urbanística (extracto): las construcciones sin estancias habitables de hasta 30 m³ de volumen bruto no\n  requieren licencia. Aun así deben respetar las distancias a linderos; en el lindero se permiten construcciones\n  auxiliares de hasta 3 m de altura de muro y 9 m de longitud total. Los planes parciales pueden establecer otra cosa.\n- En la calle de los Tilos rige el plan parcial n.º 17 «Am Lindenhain»; es necesaria una revisión por urbanismo.\n- Alumbrado público: es competencia de la brigada de obras; avisos mediante el formulario online o el teléfono\n  0000-123, tramitación habitual en 10 días laborables. En el sistema no consta ningún aviso de marzo sobre la calle de los Tilos.",
+  "guide": {
+    "problem": "Las consultas ciudadanas suelen contener varios asuntos y deben responderse de forma correcta, comprensible y sin compromisos precipitados. El flujo descompone la consulta, busca las normas pertinentes en la información facilitada y prepara una respuesta.",
+    "flow": "Una cadena de tres agentes: el análisis de asuntos separa los asuntos y asigna competencias, la preparación de información busca las normas pertinentes únicamente en el extracto facilitado y el borrador de respuesta redacta una contestación cercana. Una revisión de calidad comprueba que solo se citen normas documentadas y que no haya compromisos vinculantes.",
+    "input": "La consulta de la ciudadana o el ciudadano y la información interna, normas y competencias pertinentes, como extracto en el texto o como archivos. También puedes adjuntar fotos de la consulta. El archivo de ejemplo es una hoja informativa inventada del ayuntamiento.",
+    "result": "Un borrador de respuesta en lenguaje sencillo con competencias, próximos pasos e indicaciones para la tramitación, además como archivo de Word para vuestro membrete. La preparación de información propone las normas encontradas, con su referencia, para el conocimiento, de modo que consultas posteriores puedan usarlas; solo se guarda lo que confirmes. El borrador debe revisarse y aprobarse técnicamente antes de enviarlo.",
+    "adapt": "Adjunta vuestras ordenanzas y hojas informativas o súbelas de forma permanente como conocimiento (modo «Búsqueda» con citas) y asígnalas a la preparación de información. El membrete y la despedida se añaden en el prompt de sistema del borrador de respuesta. Para muchas consultas a la vez, usa el procesamiento por lotes."
+  },
+  "agents": {
+    "triage": {
+      "name": "Análisis de asuntos",
+      "description": "Separa los asuntos y asigna competencias y urgencia.",
+      "system": "Trabajas en la atención a la ciudadanía de una administración. Descompón la consulta en asuntos individuales e indica para cada uno: tipo (información, queja, aviso, solicitud), unidad probablemente competente, urgencia y las preguntas que hay que responder. Sé breve y escribe en forma de lista.",
+      "task": "{{input}}"
+    },
+    "rules": {
+      "name": "Preparación de información",
+      "description": "Busca las normas pertinentes solo en la información facilitada.",
+      "system": "Eres técnica de la administración. Asigna a cada asunto las normas y competencias pertinentes y cita el pasaje del extracto facilitado. Usa exclusivamente la información facilitada y no inventes normas, plazos ni números de teléfono. Indica qué no puede responderse sin una revisión adicional y qué datos faltan de la persona que consulta.",
+      "task": "Prepara la información.\n\nConsulta e información interna:\n{{run.input}}\n\nAsuntos:\n{{node:triage}}"
+    },
+    "reply": {
+      "name": "Borrador de respuesta",
+      "description": "Redacta una respuesta objetiva y cercana para su aprobación.",
+      "system": "Redactas respuestas de una administración a la ciudadanía: corteses, objetivas, en lenguaje sencillo y sin jerga administrativa. Responde a cada asunto, indica la unidad competente y el siguiente paso y explica qué se está revisando todavía. No hagas compromisos vinculantes ni concedas autorizaciones. Empieza con la nota «BORRADOR – revisar antes de enviar» y termina con notas para el personal tramitador.",
+      "task": "Redacta el borrador de respuesta.\n\nAsuntos:\n{{node:triage}}\n\nInformación preparada:\n{{node:rules}}",
+      "criteria": {
+        "only_given_rules": "La respuesta solo cita normas, plazos y contactos de la información facilitada.",
+        "plain_language": "La respuesta es cortés y está escrita en un lenguaje sencillo y comprensible.",
+        "no_binding_commitment": "La respuesta no contiene compromisos vinculantes ni autorizaciones y está marcada como borrador."
+      }
+    }
+  },
+  "form": {
+    "documents": {
+      "label": "Documentación",
+      "description": "Opcional: ordenanzas, hojas informativas o listas de competencias (PDF, Word, Markdown, texto) y fotos de la consulta (PNG, JPEG, WebP), hasta 5 archivos. Sin archivos vale el extracto del texto."
+    }
+  },
+  "samples": {
+    "guidance": {
+      "name": "Hoja_informativa_construcciones_y_alumbrado",
+      "description": "Una hoja informativa inventada del ayuntamiento con normas sobre casetas de jardín y la competencia sobre farolas, en PDF.",
+      "content": "# Hoja informativa del Ayuntamiento de Villamuestra (ficticia)\n\nDATOS DE EJEMPLO SINTÉTICOS – normas totalmente inventadas, solo para probar.\n\n## Casetas de jardín y otras construcciones auxiliares\n\n1. Las construcciones sin estancias habitables de hasta 30 m³ de volumen bruto no requieren licencia (art. 12.1 de la normativa urbanística modelo, ficticia).\n2. Aun sin licencia deben respetarse las distancias a linderos. En el lindero se permiten construcciones auxiliares de hasta 3 m de altura de muro y 9 m de longitud total (art. 6.7).\n3. Los planes parciales pueden establecer otra cosa. En la calle de los Tilos rige el plan parcial n.º 17 «Am Lindenhain»; allí es necesaria una revisión por urbanismo.\n4. Información: Urbanismo, despacho 2.14, horario de atención martes y jueves de 9 a 12 h.\n\n## Alumbrado público\n\n- Es competencia de la brigada de obras.\n- Avisos mediante el formulario online «Avisos de incidencias» o el teléfono 0000-123.\n- Tramitación habitual en un plazo de 10 días laborables desde la recepción del aviso.\n- Los avisos telefónicos se registran en el sistema; si no consta ninguno, vuelva a avisar."
+    }
+  },
+  "tests": {
+    "two_concerns": {
+      "name": "Caseta de jardín y farola"
+    },
+    "guidance_file": {
+      "name": "Normas como hoja informativa",
+      "input": "DATOS DE EJEMPLO SINTÉTICOS – municipio y normas totalmente inventados, solo para probar.\n\nCorreo al Ayuntamiento de Villamuestra del 2026-04-14, remitente: Sr. Pablo Ejemplo, calle de los Tilos 12:\n«Estimados señores: quiero instalar en mi jardín una caseta de unos 4 x 3 metros y 2,60 metros de altura, a\naproximadamente 1 metro de la valla del vecino. ¿Necesito una licencia? Además, la farola delante del número 14\nlleva semanas rota y por la noche está completamente oscuro. ¿Cuándo la van a reparar? Ya lo comuniqué por\nteléfono en marzo.»\n\nLas normas aplicables están en la hoja informativa adjunta."
+    }
+  }
+}

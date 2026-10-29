@@ -1,0 +1,127 @@
+{
+  "name": "Analisar atrasos de obra",
+  "field": "Construção civil",
+  "description": "Calcular desvios de cronograma, classificar causas, desenvolver contramedidas e reportar ao contratante.",
+  "start": "Situação do projeto",
+  "output": "Relatório de situação",
+  "file_name": "Relatório de status",
+  "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nProjeto: nova creche \"Sol Nascente\", Cidade Exemplo; contratante: prefeitura de Cidade Exemplo\nData contratual de conclusão: 2026-09-30; data do relatório: 2026-05-15\n\n| Marco | Planejado | Real / previsão | Observação |\n|---|---|---|---|\n| Estrutura concluída | 2026-02-27 | 2026-03-20 | 9 dias de geada em janeiro, concretagem suspensa |\n| Cobertura estanque | 2026-03-27 | 2026-04-24 | Entrega atrasada dos elementos da cobertura (fornecedor relata falta de material) |\n| Esquadrias instaladas | 2026-04-17 | 2026-05-29 (previsão) | Mudança de projeto nas janelas de emergência a pedido da vistoria de incêndio |\n| Instalações, primeira etapa | 2026-05-22 | 2026-06-19 (previsão) | Depende das janelas; eletricista na obra com apenas 2 em vez de 4 pessoas |\n| Acabamento interno concluído | 2026-08-28 | em aberto | — |\n| Entrega | 2026-09-30 | em aberto | Multa contratual de 0,2 % do valor do contrato por dia útil, máx. 5 % |\n\nValor do contrato da construtora: 3,2 mi EUR. O contratante espera um relatório para a reunião de 2026-05-20.",
+  "guide": {
+    "problem": "Atrasos na obra se acumulam, e os contratantes precisam rapidamente de uma visão clara. O workflow calcula desvios, classifica causas, desenvolve contramedidas e redige um relatório de situação.",
+    "flow": "O analista de cronograma e o analista de causas trabalham em paralelo. Um calcula atrasos e folgas com as ferramentas de datas e calculadora, o outro organiza as causas por área de responsabilidade e necessidade de documentação; os dois também analisam cronogramas, diários de obra e fotos anexados. O planejador de contramedidas desenvolve opções de aceleração e o agente de relatório resume tudo para o contratante. Antes que o relatório saia da equipe do projeto, uma pessoa o libera.",
+    "input": "Um cronograma com marcos planejados e reais, observações sobre as causas, data do relatório e condições contratuais, como texto ou como arquivos: cronograma em Excel, diário de obra em PDF, fotos como imagem. Os arquivos de exemplo contêm um cronograma e um trecho do diário de obra.",
+    "result": "Um relatório de status objetivo com situação do cronograma, causas, contramedidas, decisões necessárias e riscos. Após a liberação, a execução o salva em PDF e como arquivo Word editável. Questões sobre multas e prorrogação de prazo ficam sujeitas a análise técnica e jurídica.",
+    "adapt": "Exporte o seu cronograma do software de projetos em Excel e anexe o diário de obra e as fotos. Para um relatório periódico, você pode agendar a cópia; a liberação fica então esperando por você."
+  },
+  "agents": {
+    "schedule": {
+      "name": "Analista de cronograma",
+      "description": "Calcula atrasos, folgas e consequências com a ferramenta de datas e a calculadora.",
+      "system": "Você é planejador de obras. Calcule o atraso de cada marco em dias corridos com a ferramenta days_between e derive o efeito sobre a data de conclusão se o atraso continuar. Mostre as dependências entre os marcos e use a calculadora para determinar qual multa contratual poderia surgir de um atraso suposto, explicitamente como cenário.",
+      "task": "Analise a posição do cronograma:\n\n{{input}}"
+    },
+    "causes": {
+      "name": "Analista de causas",
+      "description": "Classifica as causas por área de responsabilidade e necessidade de documentação.",
+      "system": "Você é gerente de obra com experiência em gestão de pleitos. Atribua cada atraso a uma categoria de causa: clima, cadeia de suprimentos, mudança de projeto, equipe ou outra. Indique em qual área de responsabilidade ele provavelmente se enquadra segundo as informações disponíveis, quais evidências devem ser documentadas e quais notificações de impedimento podem ser necessárias. Não faça avaliação jurídica.",
+      "task": "Classifique as causas dos atrasos:\n\n{{input}}"
+    },
+    "countermeasures": {
+      "name": "Planejador de contramedidas",
+      "description": "Desenvolve medidas de aceleração com custo e efeito.",
+      "system": "Você é controller de projetos. Desenvolva contramedidas para manter a data de conclusão ou limitar o atraso, por exemplo reorganizar a sequência de serviços, capacidade adicional ou trabalho em paralelo. Avalie cada medida por tempo ganho, custo, risco e decisões necessárias do contratante. Recomende um pacote de medidas.",
+      "task": "Desenvolva contramedidas.\n\nAnálise do cronograma:\n{{node:schedule}}\n\nCausas:\n{{node:causes}}"
+    },
+    "report": {
+      "name": "Relatório ao contratante",
+      "description": "Resume de forma objetiva a posição do cronograma, as causas e as medidas.",
+      "system": "Você redige relatórios de situação para contratantes públicos: objetivos, claros e sem atribuir culpa. Estruture-o em posição do cronograma, causas, contramedidas, decisões necessárias e riscos, em no máximo uma página. Indique que questões de multas contratuais e prorrogação de prazo precisam de análise técnica e jurídica.",
+      "task": "Redija o relatório de situação.\n\nAnálise do cronograma:\n{{node:schedule}}\n\nContramedidas:\n{{node:countermeasures}}"
+    }
+  },
+  "steps": {
+    "release": {
+      "name": "Liberar relatório",
+      "instructions": "Verifique o relatório de status antes que ele vá para o contratante: as datas e os atrasos estão corretos, as causas estão descritas de forma objetiva e sem atribuir culpa, e está claro quais decisões o contratante deve tomar? Afirmações sobre multas e prorrogação de prazo precisam ter sido verificadas por um especialista. Se recusar, escreva o que falta; a execução então termina sem arquivos de relatório."
+    }
+  },
+  "form": {
+    "project_files": {
+      "label": "Documentos do projeto",
+      "description": "Opcional: cronograma (Excel, CSV), diário de obra ou atas (PDF, Word) e fotos da obra (PNG, JPEG, WebP), até 10 arquivos."
+    }
+  },
+  "samples": {
+    "schedule": {
+      "name": "Cronograma_creche_Sol_Nascente",
+      "description": "O cronograma fictício da tarefa de teste como arquivo Excel.",
+      "content": {
+        "Cronograma": [
+          [
+            "Marco",
+            "Planejado",
+            "Real ou previsão",
+            "Status",
+            "Observação"
+          ],
+          [
+            "Estrutura concluída",
+            "2026-02-27",
+            "2026-03-20",
+            "concluído",
+            "9 dias de geada em janeiro, concretagem suspensa"
+          ],
+          [
+            "Cobertura estanque",
+            "2026-03-27",
+            "2026-04-24",
+            "concluído",
+            "Entrega atrasada dos elementos da cobertura (falta de material no fornecedor)"
+          ],
+          [
+            "Esquadrias instaladas",
+            "2026-04-17",
+            "2026-05-29",
+            "previsão",
+            "Mudança de projeto nas janelas de emergência a pedido da vistoria de incêndio"
+          ],
+          [
+            "Instalações, primeira etapa",
+            "2026-05-22",
+            "2026-06-19",
+            "previsão",
+            "Depende das janelas; eletricista com 2 em vez de 4 pessoas"
+          ],
+          [
+            "Acabamento interno concluído",
+            "2026-08-28",
+            "",
+            "em aberto",
+            ""
+          ],
+          [
+            "Entrega",
+            "2026-09-30",
+            "",
+            "em aberto",
+            "Multa contratual de 0,2 % do valor do contrato por dia útil, máx. 5 %"
+          ]
+        ]
+      }
+    },
+    "site_diary": {
+      "name": "Diario_de_obra_trecho_abril_maio",
+      "description": "Um trecho fictício do diário de obra em PDF.",
+      "content": "# Diário de obra creche \"Sol Nascente\" – trecho\n\nDADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios.\n\n| Data | Registro |\n|---|---|\n| 2026-04-08 | Fornecedor dos elementos da cobertura confirma entrega em 2026-04-20 em vez de 2026-03-20. |\n| 2026-04-24 | Cobertura estanque. Aceita pela fiscalização da obra sem defeitos. |\n| 2026-04-29 | Vistoria de incêndio exige janelas de emergência alteradas nas salas 2 e 3; mudança de projeto encomendada. |\n| 2026-05-06 | Fabricante das janelas informa novo prazo de 3 semanas para os elementos alterados. |\n| 2026-05-11 | Elétrica: apenas 2 montadores na obra, empresa alega afastamentos por doença. |\n| 2026-05-13 | Contratante pergunta sobre o impacto na data de inauguração de 2026-10-01. |"
+    }
+  },
+  "tests": {
+    "schedule_text": {
+      "name": "Cronograma no texto"
+    },
+    "project_files": {
+      "name": "Cronograma e diário de obra como arquivos",
+      "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nProjeto: nova creche \"Sol Nascente\", Cidade Exemplo; contratante: prefeitura de Cidade Exemplo\nData contratual de conclusão: 2026-09-30; data do relatório: 2026-05-15\nValor do contrato da construtora: 3,2 mi EUR. O contratante espera um relatório para a reunião de 2026-05-20.\n\nO cronograma e o diário de obra estão anexados como arquivos."
+    }
+  }
+}

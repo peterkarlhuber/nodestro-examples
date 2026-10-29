@@ -1,0 +1,68 @@
+{
+  "name": "Compare property offers",
+  "field": "Real estate",
+  "description": "Compare two purchase offers by yield, location and condition and assess opportunities and risks.",
+  "start": "Offers",
+  "output": "Assessment",
+  "file_name": "Property comparison",
+  "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nGoal: buy a flat to let. Equity EUR 80,000, the rest via a loan\nat 3.8 % interest and 2 % repayment per year. Purchase costs about 10 % of the purchase price.\n\nOffer 1 – outskirts, built in 1994\n- 3 rooms, 74 m², purchase price EUR 245,000, parking space included\n- Achievable net cold rent according to the agent EUR 11.50/m²; currently let for EUR 9.20/m²\n- Service charge EUR 310/month, of which EUR 95 cannot be passed on to tenants\n- Maintenance reserve of the owners' association EUR 38,000 for 24 flats; roof renovation planned in 3 years\n- Suburban train 8 minutes on foot, new business park announced nearby\n\nOffer 2 – city centre, period building from 1910, renovated in 2015\n- 2 rooms, 58 m², purchase price EUR 289,000, no parking space\n- Vacant; comparable flats are let for EUR 15.00/m²\n- Service charge EUR 280/month, of which EUR 80 cannot be passed on to tenants\n- Maintenance reserve EUR 112,000 for 10 flats; no major works known\n- Popular location, a rent cap applies in the city",
+  "guide": {
+    "problem": "With property, figures and location decide together. The workflow recalculates yield and cash flow, analyses the property and its location and sets opportunities against risks.",
+    "flow": "The yield calculator works out gross and net rental yield and the monthly cash flow with the calculator tool, while the property and location analyst assesses condition, reserves and surroundings in parallel. The assessment combines both in a structured comparison.",
+    "input": "At least two offers with purchase price, area, rent, service charge, reserves and location, plus your financing assumptions. Attach listings, minutes and floor plans as PDF, Word or image; the sample files contain a listing with an extract from the minutes and a floor plan for offer 2.",
+    "result": "A structured comparison with key figures, preferred offer, opportunities, risks and points to check before a decision, also as a PDF. It does not replace financial, tax or legal advice or a viewing.",
+    "adapt": "Enter your offers and financing data and attach listings, minutes of owners' meetings or floor plans directly. A rent index you need again and again can be stored as knowledge and assigned to the property and location analyst."
+  },
+  "agents": {
+    "returns": {
+      "name": "Yield calculator",
+      "description": "Calculates yield, financing and cash flow with the calculator tool.",
+      "system": "You are a property analyst. For each offer, use the calculator tool to calculate: total investment including purchase costs, loan amount, annual net cold rent (current and achievable), gross rental yield, net rental yield after non-recoverable costs, monthly instalment and monthly cash flow before tax. Show your workings and how much a 10 % lower rent changes the result.",
+      "task": "Run the numbers for these offers:\n\n{{input}}"
+    },
+    "property": {
+      "name": "Property and location analyst",
+      "description": "Assesses condition, reserves, lettability and location.",
+      "system": "You are a residential property surveyor. For each offer, assess the condition and year of construction, the maintenance reserve per flat, upcoming works, the letting situation and legal conditions such as a rent cap, as well as the location and how the area is developing. Name the documents that must be inspected before buying.",
+      "task": "Assess the property and location of these offers:\n\n{{input}}"
+    },
+    "assessment": {
+      "name": "Opportunity and risk assessment",
+      "description": "Sets the figures against the property assessment and compares in a structured way.",
+      "system": "You advise private investors. Set the yield against the property assessment, name opportunities and risks for each offer and explain which offer fits better under the stated assumptions. Phrase the preference cautiously and list what must be checked before a decision, such as a viewing, minutes, financing and tax.",
+      "task": "Compare the offers.\n\nYield calculation:\n{{node:returns}}\n\nProperty and location assessment:\n{{node:property}}",
+      "fields": {
+        "comparison": "Key figures of both offers compared",
+        "preferred_offer": "Offer that fits better under the assumptions, with reasons",
+        "opportunities": "Opportunities",
+        "risks": "Risks",
+        "checks_before_decision": "Checks before a decision"
+      }
+    }
+  },
+  "form": {
+    "documents": {
+      "label": "Property documents",
+      "description": "Optional: listings, minutes of the owners' meeting, energy certificates (PDF, Word) or floor plans and photos (PNG, JPEG, WebP), up to 8 files."
+    }
+  },
+  "samples": {
+    "expose": {
+      "name": "Listing_offer_2_period_building",
+      "description": "A fictional listing for offer 2 with an extract from the minutes of the owners' meeting, as a PDF.",
+      "content": "# Listing: 2-room flat in a period building in the city centre\n\nSYNTHETIC SAMPLE DATA – entirely fictional.\n\n| Item | Value |\n|---|---|\n| Built | 1910, fully renovated 2015 |\n| Living space | 58 m² (see floor plan) |\n| Purchase price | EUR 289,000 |\n| Service charge | EUR 280/month, of which EUR 80 cannot be passed on |\n| Energy certificate | consumption-based, 128 kWh/(m²·a), gas central heating from 2015 |\n| Condition | vacant, available immediately |\n\n## Location\n\nQuiet side street, 5 minutes to the underground, shops and doctors within walking distance. A rent cap applies in the city.\n\n## Extract from the minutes of the owners' meeting of 12 November 2025\n\n- Item 4: The owners' association will commission a report on the façade by mid-2026. A renovation in 2027–2028 is expected; whether a special levy will be needed is open.\n- Item 5: The maintenance reserve is EUR 112,000 for 10 flats.\n- Item 6: The property management contract expires at the end of 2026."
+    },
+    "floor_plan": {
+      "name": "Floor_plan_offer_2",
+      "description": "A simplified, fictional floor plan of the 58 m² flat from offer 2 as an image (PNG)."
+    }
+  },
+  "tests": {
+    "two_offers": {
+      "name": "Two offers in the text"
+    },
+    "with_documents": {
+      "name": "With listing and floor plan"
+    }
+  }
+}

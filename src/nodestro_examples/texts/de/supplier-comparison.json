@@ -1,0 +1,129 @@
+{
+  "name": "Lieferantenangebote vergleichen",
+  "field": "Logistik und Einkauf",
+  "description": "Angebote nach Gesamtkosten und Lieferrisiko vergleichen und eine begründete Empfehlung ableiten.",
+  "start": "Angebote",
+  "output": "Empfehlung",
+  "file_name": "Lieferantenvergleich",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nBedarf: Edelstahl-Drehteil DT-40, 24.000 Stück pro Jahr, Abruf monatlich 2.000 Stück\nZielpreis: 2,10 EUR pro Stück frei Werk\n\nAngebot A – Beispiel Präzision GmbH (Deutschland, 80 km entfernt)\n- Preis 2,35 EUR/Stück, Lieferung frei Werk, Lieferzeit 2 Wochen\n- Mindestbestellmenge 1.000 Stück, Zahlungsziel 30 Tage\n- Reklamationsquote im Vorjahr 0,4 %, zertifiziert nach IATF 16949\n\nAngebot B – Example Components Ltd. (Fernost, Seefracht)\n- Preis 1,62 EUR/Stück ab Werk, Fracht und Zoll geschätzt 0,28 EUR/Stück, Lieferzeit 10 Wochen\n- Mindestbestellmenge 12.000 Stück, Zahlung 30 % Anzahlung, Rest bei Verschiffung\n- Noch keine Lieferhistorie, ISO 9001, Muster bestanden\n\nAngebot C – Muster Metallteile s.r.o. (Tschechien, 450 km entfernt)\n- Preis 1,98 EUR/Stück, Fracht 0,07 EUR/Stück, Lieferzeit 4 Wochen\n- Mindestbestellmenge 4.000 Stück, Zahlungsziel 45 Tage\n- Reklamationsquote im Vorjahr 1,1 %, ISO 9001, Kapazität laut Lieferant zu 90 % ausgelastet\n\nInterne Annahmen: Kapitalkosten 8 % pro Jahr, Lagerkosten 0,03 EUR pro Stück und Monat,\nKosten je Reklamationsfall (Prüfung, Sortierung) 0,90 EUR je fehlerhaftem Teil.",
+  "guide": {
+    "problem": "Der günstigste Stückpreis ist selten das günstigste Angebot. Der Workflow vergleicht Angebote nach Gesamtkosten und Lieferrisiko und begründet eine Empfehlung für den Einkauf.",
+    "flow": "Kostenanalyst und Risikoanalyst arbeiten parallel. Der eine rechnet mit dem Rechner-Tool die Gesamtkosten (Total Cost of Ownership) je Angebot, der andere bewertet Lieferzeit, Abhängigkeiten und Qualität. Die Einkaufsempfehlung wägt beides ab und liefert ein strukturiertes Ergebnis.",
+    "input": "Mehrere Angebote mit Preis, Fracht, Lieferzeit, Mindestmenge, Zahlungsbedingungen und Qualitätsdaten sowie eure internen Kostensätze. Die Angebote kannst du in den Text schreiben oder als Dateien anhängen, auch gemischt als PDF, Word und Excel; die drei Beispieldateien zeigen genau das.",
+    "result": "Eine strukturierte Empfehlung mit Rangfolge, Begründungen, Risiken, Verhandlungspunkten und den getroffenen Annahmen. Der Lauf speichert sie zusätzlich als PDF-Bericht und als Excel-Datei mit je einem Blatt pro Liste.",
+    "adapt": "Hänge eure Angebote als Dateien an und trage Bedarf und Kostensätze in den Text ein. Wenn ihr feste Gewichtungen habt (zum Beispiel 50 % Kosten, 30 % Risiko, 20 % Qualität), ergänze sie im System-Prompt der Einkaufsempfehlung. Rahmenverträge oder Lieferantenbewertungen kannst du als Wissen hinterlegen und dem Risikoanalysten zuweisen."
+  },
+  "agents": {
+    "cost": {
+      "name": "Kostenanalyst",
+      "description": "Rechnet die Gesamtkosten je Angebot mit dem Rechner-Tool.",
+      "system": "Du bist Kostenanalyst im Einkauf. Berechne für jedes Angebot die Gesamtkosten pro Stück und pro Jahr: Preis, Fracht und Zoll, Kapitalbindung durch Mindestmengen und Anzahlungen, Lagerkosten und erwartete Kosten durch Reklamationen. Nutze für jede Rechnung das Rechner-Tool und lege den Rechenweg offen. Vergleiche das Ergebnis mit dem Zielpreis und zeige, welche Annahmen das Ergebnis am stärksten beeinflussen.",
+      "task": "Berechne die Gesamtkosten dieser Angebote:\n\n{{input}}"
+    },
+    "risk": {
+      "name": "Risikoanalyst",
+      "description": "Bewertet Lieferzeit, Abhängigkeiten, Kapazität und Qualitätsrisiken.",
+      "system": "Du bist Supply-Chain-Risikomanager. Bewerte für jedes Angebot die Lieferrisiken: Lieferzeit und Flexibilität, Transportweg, Kapazitätsauslastung, Qualitätshistorie und Zertifizierung, finanzielle Bindung und Abhängigkeit. Bewerte jedes Risiko nach Eintrittswahrscheinlichkeit und Auswirkung (hoch, mittel, gering) und schlage Maßnahmen zur Absicherung vor, zum Beispiel Sicherheitsbestand oder eine Zweitquelle.",
+      "task": "Bewerte die Lieferrisiken dieser Angebote:\n\n{{input}}"
+    },
+    "recommendation": {
+      "name": "Einkaufsempfehlung",
+      "description": "Wägt Kosten und Risiken ab und empfiehlt einen Lieferanten.",
+      "system": "Du bist Leiter Einkauf und bereitest eine Vergabeentscheidung vor. Wäge Gesamtkosten und Risiken ab und empfiehl einen Lieferanten oder eine Kombination, zum Beispiel eine Hauptquelle mit Zweitquelle. Begründe die Rangfolge nachvollziehbar, nenne die verbleibenden Risiken und konkrete Punkte für die Verhandlung. Liste alle Annahmen auf, von denen die Empfehlung abhängt.",
+      "task": "Leite eine Empfehlung ab.\n\nKostenanalyse:\n{{node:cost}}\n\nRisikoanalyse:\n{{node:risk}}",
+      "fields": {
+        "recommended_supplier": "Empfohlener Lieferant oder empfohlene Kombination",
+        "ranking": "Rangfolge der Angebote mit Kurzbegründung",
+        "reasons": "Wichtigste Gründe für die Empfehlung",
+        "risks": "Verbleibende Risiken und Absicherung",
+        "negotiation_points": "Punkte für die Verhandlung",
+        "assumptions": "Annahmen, von denen die Empfehlung abhängt"
+      }
+    }
+  },
+  "form": {
+    "offers": {
+      "label": "Angebotsdateien",
+      "description": "Optional: die Angebote als PDF, Word, Excel oder CSV, bis zu 10 Dateien. Ohne Dateien gelten die Angebote im Text; mit Dateien genügen im Text Bedarf, Zielpreis und interne Annahmen."
+    }
+  },
+  "samples": {
+    "offer_a": {
+      "name": "Angebot_A_Beispiel_Praezision",
+      "description": "Angebot A als PDF-Brief (erfunden).",
+      "content": "# Angebot Nr. 2026-0412\n\n**Beispiel Präzision GmbH**, Deutschland (80 km von Ihrem Werk)\n\nSehr geehrte Damen und Herren, vielen Dank für Ihre Anfrage zum Edelstahl-Drehteil DT-40. Wir bieten an:\n\n| Position | Angabe |\n|---|---|\n| Preis | 2,35 EUR pro Stück, frei Werk |\n| Lieferzeit | 2 Wochen |\n| Mindestbestellmenge | 1.000 Stück |\n| Zahlungsziel | 30 Tage netto |\n| Zertifizierung | IATF 16949 |\n| Reklamationsquote Vorjahr | 0,4 % |\n\nDas Angebot gilt 60 Tage. Mit freundlichen Grüßen, Vertrieb (fiktiv)"
+    },
+    "offer_b": {
+      "name": "Angebot_B_Example_Components",
+      "description": "Angebot B als Word-Dokument (erfunden).",
+      "content": "# Quotation Q-77-DT40\n\n**Example Components Ltd.** (Fernost, Seefracht)\n\n## Konditionen\n\n- Preis: 1,62 EUR pro Stück ab Werk\n- Fracht und Zoll: nach unserer Schätzung 0,28 EUR pro Stück\n- Lieferzeit: 10 Wochen inklusive Seefracht\n- Mindestbestellmenge: 12.000 Stück\n- Zahlung: 30 % Anzahlung bei Bestellung, Rest bei Verschiffung\n\n## Qualität\n\nZertifiziert nach ISO 9001. Erstmuster wurden bestanden. Eine Lieferhistorie mit Ihnen besteht noch nicht."
+    },
+    "offer_c": {
+      "name": "Angebot_C_Muster_Metallteile",
+      "description": "Angebot C als Excel-Tabelle (erfunden).",
+      "content": {
+        "Angebot": [
+          [
+            "Angabe",
+            "Wert",
+            "Einheit"
+          ],
+          [
+            "Lieferant",
+            "Muster Metallteile s.r.o. (Tschechien, 450 km)",
+            ""
+          ],
+          [
+            "Preis",
+            1.98,
+            "EUR/Stück"
+          ],
+          [
+            "Fracht",
+            0.07,
+            "EUR/Stück"
+          ],
+          [
+            "Lieferzeit",
+            4,
+            "Wochen"
+          ],
+          [
+            "Mindestbestellmenge",
+            4000,
+            "Stück"
+          ],
+          [
+            "Zahlungsziel",
+            45,
+            "Tage"
+          ],
+          [
+            "Reklamationsquote Vorjahr",
+            1.1,
+            "%"
+          ],
+          [
+            "Zertifizierung",
+            "ISO 9001",
+            ""
+          ],
+          [
+            "Kapazitätsauslastung laut Lieferant",
+            90,
+            "%"
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "offers_text": {
+      "name": "Drei Angebote im Text"
+    },
+    "offers_files": {
+      "name": "Drei Angebote als PDF, Word und Excel",
+      "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nBedarf: Edelstahl-Drehteil DT-40, 24.000 Stück pro Jahr, Abruf monatlich 2.000 Stück\nZielpreis: 2,10 EUR pro Stück frei Werk\n\nDie drei Angebote liegen als Dateien bei.\n\nInterne Annahmen: Kapitalkosten 8 % pro Jahr, Lagerkosten 0,03 EUR pro Stück und Monat,\nKosten je Reklamationsfall (Prüfung, Sortierung) 0,90 EUR je fehlerhaftem Teil."
+    }
+  }
+}

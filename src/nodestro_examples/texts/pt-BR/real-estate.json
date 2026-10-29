@@ -1,0 +1,68 @@
+{
+  "name": "Comparar ofertas de imóveis",
+  "field": "Imóveis",
+  "description": "Comparar duas ofertas de compra por rentabilidade, localização e estado e avaliar oportunidades e riscos.",
+  "start": "Ofertas",
+  "output": "Avaliação",
+  "file_name": "Comparação de imóveis",
+  "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nObjetivo: comprar um apartamento para alugar. Capital próprio 80.000 EUR, o restante por financiamento\ncom juros de 3,8 % e amortização de 2 % ao ano. Custos de aquisição cerca de 10 % do preço de compra.\n\nOferta 1 – periferia, construído em 1994\n- 3 cômodos, 74 m², preço de compra 245.000 EUR, vaga de garagem incluída\n- Aluguel líquido alcançável segundo o corretor 11,50 EUR/m²; atualmente alugado por 9,20 EUR/m²\n- Condomínio 310 EUR/mês, dos quais 95 EUR não podem ser repassados ao inquilino\n- Fundo de reserva do condomínio 38.000 EUR para 24 apartamentos; reforma do telhado prevista em 3 anos\n- Trem urbano a 8 minutos a pé, novo parque empresarial anunciado nas proximidades\n\nOferta 2 – centro, prédio antigo de 1910, reformado em 2015\n- 2 cômodos, 58 m², preço de compra 289.000 EUR, sem vaga de garagem\n- Desocupado; apartamentos comparáveis são alugados por 15,00 EUR/m²\n- Condomínio 280 EUR/mês, dos quais 80 EUR não podem ser repassados ao inquilino\n- Fundo de reserva 112.000 EUR para 10 apartamentos; nenhuma obra grande conhecida\n- Localização procurada, a cidade tem um teto para aluguéis",
+  "guide": {
+    "problem": "Em imóveis, números e localização decidem juntos. O workflow recalcula rentabilidade e fluxo de caixa, analisa o imóvel e sua localização e confronta oportunidades e riscos.",
+    "flow": "O calculista de rentabilidade determina o rendimento bruto e líquido do aluguel e o fluxo de caixa mensal com a calculadora, enquanto o analista de imóvel e localização avalia em paralelo estado, reservas e entorno. A avaliação reúne os dois em uma comparação estruturada.",
+    "input": "Pelo menos duas ofertas com preço de compra, área, aluguel, condomínio, fundo de reserva e localização, além das suas premissas de financiamento. Anúncios, atas e plantas você anexa como PDF, Word ou imagem; os arquivos de exemplo contêm um anúncio com trecho de ata e uma planta da oferta 2.",
+    "result": "Uma comparação estruturada com indicadores, oferta preferida, oportunidades, riscos e pontos a verificar antes de uma decisão, também em PDF. Não substitui aconselhamento financeiro, tributário ou jurídico nem uma visita.",
+    "adapt": "Informe as suas ofertas e dados de financiamento e anexe diretamente anúncios, atas de assembleia ou plantas. Um índice de aluguéis de que você precisa com frequência pode ser salvo como conhecimento e atribuído ao analista de imóvel e localização."
+  },
+  "agents": {
+    "returns": {
+      "name": "Calculista de rentabilidade",
+      "description": "Calcula rentabilidade, financiamento e fluxo de caixa com a calculadora.",
+      "system": "Você é analista imobiliário. Para cada oferta, use a calculadora para calcular: investimento total incluindo custos de aquisição, valor do financiamento, aluguel líquido anual (atual e alcançável), rendimento bruto do aluguel, rendimento líquido após custos não repassáveis, parcela mensal e fluxo de caixa mensal antes de impostos. Mostre seus cálculos e quanto um aluguel 10 % menor altera o resultado.",
+      "task": "Faça os cálculos destas ofertas:\n\n{{input}}"
+    },
+    "property": {
+      "name": "Analista de imóvel e localização",
+      "description": "Avalia estado, reservas, facilidade de locação e localização.",
+      "system": "Você é avaliador de imóveis residenciais. Para cada oferta, avalie o estado e o ano de construção, o fundo de reserva por apartamento, as obras previstas, a situação de locação e condições legais como o teto de aluguel, além da localização e da evolução do bairro. Indique os documentos que precisam ser analisados antes da compra.",
+      "task": "Avalie o imóvel e a localização destas ofertas:\n\n{{input}}"
+    },
+    "assessment": {
+      "name": "Avaliação de oportunidades e riscos",
+      "description": "Confronta os números com a avaliação do imóvel e compara de forma estruturada.",
+      "system": "Você assessora investidores pessoas físicas. Confronte a rentabilidade com a avaliação do imóvel, indique oportunidades e riscos de cada oferta e explique qual oferta combina melhor com as premissas informadas. Formule a preferência com cautela e liste o que precisa ser verificado antes de uma decisão, como visita, atas, financiamento e tributação.",
+      "task": "Compare as ofertas.\n\nCálculo de rentabilidade:\n{{node:returns}}\n\nAvaliação do imóvel e da localização:\n{{node:property}}",
+      "fields": {
+        "comparison": "Comparação dos indicadores das duas ofertas",
+        "preferred_offer": "Oferta que combina melhor com as premissas, com justificativa",
+        "opportunities": "Oportunidades",
+        "risks": "Riscos",
+        "checks_before_decision": "Verificações antes de uma decisão"
+      }
+    }
+  },
+  "form": {
+    "documents": {
+      "label": "Documentos do imóvel",
+      "description": "Opcional: anúncios, atas da assembleia de condomínio, certificados energéticos (PDF, Word) ou plantas e fotos (PNG, JPEG, WebP), até 8 arquivos."
+    }
+  },
+  "samples": {
+    "expose": {
+      "name": "Anuncio_oferta_2_predio_antigo",
+      "description": "Um anúncio fictício da oferta 2 com trecho da ata da assembleia de condomínio, em PDF.",
+      "content": "# Anúncio: apartamento de 2 cômodos em prédio antigo no centro\n\nDADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios.\n\n| Dado | Valor |\n|---|---|\n| Construção | 1910, reforma completa em 2015 |\n| Área útil | 58 m² (ver planta) |\n| Preço de compra | 289.000 EUR |\n| Condomínio | 280 EUR/mês, dos quais 80 EUR não podem ser repassados |\n| Certificado energético | por consumo, 128 kWh/(m²·a), aquecimento central a gás de 2015 |\n| Situação | desocupado, disponível imediatamente |\n\n## Localização\n\nRua lateral tranquila, a 5 minutos do metrô, lojas e médicos a pé. A cidade tem um teto para aluguéis.\n\n## Trecho da ata da assembleia de condomínio de 12/11/2025\n\n- Item 4: O condomínio vai encomendar até meados de 2026 um laudo da fachada. Uma reforma em 2027–2028 é esperada; ainda não se sabe se será necessária uma taxa extra.\n- Item 5: O fundo de reserva é de 112.000 EUR para 10 apartamentos.\n- Item 6: O contrato com a administradora termina no fim de 2026."
+    },
+    "floor_plan": {
+      "name": "Planta_oferta_2",
+      "description": "Uma planta simplificada e fictícia do apartamento de 58 m² da oferta 2 como imagem (PNG)."
+    }
+  },
+  "tests": {
+    "two_offers": {
+      "name": "Duas ofertas no texto"
+    },
+    "with_documents": {
+      "name": "Com anúncio e planta"
+    }
+  }
+}

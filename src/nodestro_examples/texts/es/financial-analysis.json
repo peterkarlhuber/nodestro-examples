@@ -1,0 +1,124 @@
+{
+  "name": "Análisis financiero",
+  "field": "Finanzas e inversiones",
+  "description": "Analizar los fundamentales de una empresa, recalcular indicadores y revisar críticamente los resultados.",
+  "start": "Tarea",
+  "output": "Resultado",
+  "file_name": "Análisis financiero",
+  "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nAnaliza la rentabilidad y la estabilidad financiera de Ejemplo Industrias S.A. (empresa ficticia).\n\n| Indicador (M EUR) | 2024 | 2025 |\n|---|---|---|\n| Ingresos | 980 | 1.250 |\n| Resultado operativo (EBIT) | 140 | 210 |\n| Resultado neto | 95 | 150 |\n| Flujo de caja operativo | 160 | 190 |\n| Inversiones | 70 | 130 |\n| Patrimonio neto | 610 | 700 |\n| Activo total | 1.450 | 1.700 |\n| Deuda financiera neta | 220 | 260 |\n\nNota del informe anual: alrededor de un tercio del crecimiento de 2025 procede de la adquisición de un competidor.",
+  "guide": {
+    "problem": "Las cifras de los informes anuales se citan rápido, pero rara vez se recalculan y se ponen en contexto. El flujo extrae las cifras, calcula márgenes y crecimiento con exactitud y somete el resultado a una revisión crítica.",
+    "flow": "Una cadena secuencial de tres agentes: el agente de investigación ordena las cifras con periodo y unidad, el agente de análisis calcula los indicadores con la calculadora y el agente de revisión comprueba cálculos y lógica y resume el resultado de forma estructurada.",
+    "input": "Cifras financieras de una empresa de al menos dos años, por ejemplo de un informe anual o trimestral, y los efectos extraordinarios conocidos. Puedes pegar las cifras o adjuntarlas como archivo de Excel, CSV o PDF; el archivo de ejemplo contiene los indicadores de la tarea de prueba.",
+    "result": "Una revisión estructurada con resumen, indicadores principales, errores o riesgos encontrados, límites del análisis e indicación de si el análisis se considera correcto, además en PDF y como archivo de Excel. El agente de investigación propone las cifras extraídas para el conocimiento; solo se adopta lo que confirmes. El resultado no es asesoramiento de inversión.",
+    "adapt": "Adjunta directamente el informe anual o vuestra tabla de indicadores. Otros indicadores, como el apalancamiento o el flujo de caja libre, se añaden en el prompt de sistema del agente de análisis. Para muchas empresas seguidas conviene el procesamiento por lotes con una fila por empresa."
+  },
+  "agents": {
+    "research": {
+      "name": "Agente de investigación",
+      "description": "Recopila cifras y contexto sobre los datos financieros.",
+      "system": "Eres analista financiero de investigación. Extrae cada cifra de la tarea, indica su periodo y unidad y ordénalas en una tabla. Añade brevemente qué significan las cifras y anota efectos extraordinarios como adquisiciones o partidas no recurrentes. No inventes cifras que no se den.",
+      "task": "{{input}}"
+    },
+    "analysis": {
+      "name": "Agente de análisis",
+      "description": "Calcula márgenes, crecimiento y ratios de estabilidad con la calculadora.",
+      "system": "Eres analista financiero sénior. Calcula con la calculadora todos los indicadores importantes: crecimiento de los ingresos, margen EBIT, margen neto, ratio de patrimonio neto, flujo de caja libre (flujo de caja operativo menos inversiones) y la relación entre deuda financiera neta y EBIT. Explica cada resultado en una frase y ten en cuenta los efectos extraordinarios, por ejemplo el crecimiento orgánico sin la adquisición.",
+      "task": "Calcula los indicadores clave a partir de estos resultados de investigación:\n\n{{node:research}}"
+    },
+    "review": {
+      "name": "Agente de revisión",
+      "description": "Revisa el análisis y lo resume de forma estructurada.",
+      "system": "Eres un revisor meticuloso. Comprueba el análisis en busca de errores de cálculo y de lógica, verifica que los efectos extraordinarios se traten correctamente y resume el resultado para la dirección. Indica los límites del análisis. No des recomendaciones de compra o venta.",
+      "task": "Revisa este análisis y resúmelo:\n\n{{input}}",
+      "fields": {
+        "summary": "Resumen en 2-3 frases",
+        "key_figures": "Cifras clave",
+        "issues": "Errores o riesgos encontrados",
+        "limitations": "Límites del análisis",
+        "approved": "¿Es correcto el análisis?"
+      }
+    }
+  },
+  "form": {
+    "figures": {
+      "label": "Cifras financieras como archivo",
+      "description": "Opcional: indicadores en Excel o CSV o un informe anual en PDF, hasta 3 archivos. Sin archivo valen las cifras del texto."
+    }
+  },
+  "samples": {
+    "figures": {
+      "name": "Indicadores_Ejemplo_Industrias",
+      "description": "Los indicadores inventados de la tarea de prueba como archivo de Excel con una hoja de notas.",
+      "content": {
+        "Indicadores": [
+          [
+            "Indicador (M EUR)",
+            "2024",
+            "2025"
+          ],
+          [
+            "Ingresos",
+            980,
+            1250
+          ],
+          [
+            "Resultado operativo (EBIT)",
+            140,
+            210
+          ],
+          [
+            "Resultado neto",
+            95,
+            150
+          ],
+          [
+            "Flujo de caja operativo",
+            160,
+            190
+          ],
+          [
+            "Inversiones",
+            70,
+            130
+          ],
+          [
+            "Patrimonio neto",
+            610,
+            700
+          ],
+          [
+            "Activo total",
+            1450,
+            1700
+          ],
+          [
+            "Deuda financiera neta",
+            220,
+            260
+          ]
+        ],
+        "Notas": [
+          [
+            "Nota"
+          ],
+          [
+            "Empresa ficticia Ejemplo Industrias S.A."
+          ],
+          [
+            "Alrededor de un tercio del crecimiento de 2025 procede de la adquisición de un competidor."
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "figures_text": {
+      "name": "Indicadores en el texto"
+    },
+    "figures_file": {
+      "name": "Indicadores como archivo de Excel",
+      "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nAnaliza la rentabilidad y la estabilidad financiera de Ejemplo Industrias S.A. (empresa ficticia). Los indicadores y las notas están en el archivo de Excel adjunto."
+    }
+  }
+}

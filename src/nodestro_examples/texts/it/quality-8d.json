@@ -1,0 +1,194 @@
+{
+  "name": "Gestire un reclamo con l'8D",
+  "field": "Gestione della qualità",
+  "description": "Gestire passo dopo passo un reclamo cliente con il metodo 8D e documentarlo in un rapporto.",
+  "start": "Reclamo",
+  "output": "Rapporto 8D",
+  "file_name": "Rapporto 8D",
+  "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nCliente: Esempio Automotive S.p.A., stabilimento Sud\nPezzo: alloggiamento in plastica G-220 (PA6-GF30, stampato a iniezione), lotto 24-117, consegnato il 12/03, 4.000 pezzi\nReclamo del 18/03: durante il montaggio i ganci a scatto si rompono. Il cliente ha controllato 2.000 pezzi, 46 sono\ndifettosi (2,3 %). Richiede azioni di contenimento entro 24 ore e un rapporto 8D entro 10 giorni.\n\nInformazioni interne:\n- Il lotto 24-117 è stato prodotto sulla macchina SG-4 con uno stampo appena rilavorato (manutenzione il 05/03).\n- Il materiale proveniva da una nuova fornitura; il tempo di essiccazione è stato ridotto da 4 a 2,5 ore per mancanza di tempo.\n- Il controllo finale verifica dimensioni e aspetto secondo un piano di campionamento, ma nessun carico meccanico sui ganci.\n- Giacenza: 1.200 pezzi del lotto 24-117 e 3.000 pezzi del lotto 24-121 (stesso stampo, essiccazione normale).\n- Negli ultimi 12 mesi non ci sono stati reclami simili.",
+  "guide": {
+    "problem": "I reclami richiedono un contenimento rapido e un'analisi delle cause solida. Il metodo 8D definisce i passi; il workflow li percorre in modo strutturato e li documenta in modo coerente.",
+    "flow": "Una catena sequenziale: il primo agente descrive il problema e le azioni di contenimento (D1–D3), il secondo cerca le cause di insorgenza e di mancata rilevazione (D4), il terzo pianifica azioni correttive e preventive (D5–D7). L'agente del rapporto riunisce tutto in un rapporto 8D strutturato. Un nodo decisionale verifica la gravità: nei casi critici un agente aggiuntivo pianifica il contenimento d'emergenza delle prossime 24 ore. Prima che il rapporto arrivi al cliente, una persona lo approva.",
+    "input": "Il reclamo del cliente con pezzo, lotto, difetto e tasso di difettosità, più le informazioni interne note su produzione, materiale e controllo. Puoi allegare anche la lettera di reclamo, dati di misura e foto del difetto come file; i file di esempio contengono una lettera di reclamo fittizia (PDF) e delle misure (Excel).",
+    "result": "Un rapporto 8D strutturato con un campo per ciascuna disciplina da D1 a D8 e un elenco di punti aperti che il team deve ancora chiarire. Dopo l'approvazione, l'esecuzione salva il rapporto in PDF e come file Word modificabile. L'agente del rapporto propone inoltre conoscenze da conservare; viene salvato solo ciò che adotti esplicitamente.",
+    "adapt": "Sostituisci i dati di prova con il tuo reclamo e allega direttamente verbali di controllo, disegni o foto. Se usi un modulo tuo, adatta i campi dell'agente del rapporto in \"Formato di output\". Le conoscenze adottate da reclami precedenti puoi assegnarle come conoscenza all'analisi delle cause."
+  },
+  "agents": {
+    "problem": {
+      "name": "Descrizione del problema D1–D3",
+      "description": "Descrive il team, il problema (è/non è) e le azioni di contenimento.",
+      "system": "Sei un ingegnere della qualità che guida team 8D. Lavora sulle fasi D1–D3: proponi un team interfunzionale con ruoli, descrivi il problema con precisione usando 5W2H e un'analisi è/non è, e definisci azioni di contenimento (blocco, selezione, consegna sostitutiva, informazione al cliente). Per ogni azione di contenimento indica come se ne verifica l'efficacia.",
+      "task": "Lavora su D1–D3 per questo reclamo:\n\n{{input}}",
+      "fields": {
+        "analysis": "Da D1 a D3 come testo: team, descrizione del problema (5W2H, è/non è) e azioni di contenimento con verifica dell'efficacia",
+        "critical": "true se il caso è critico: rilevanza per la sicurezza o legale, linea del cliente ferma o scorte coinvolte ancora in spedizione"
+      }
+    },
+    "root_cause": {
+      "name": "Analisi delle cause D4",
+      "description": "Cerca le cause di insorgenza e di mancata rilevazione con i 5 perché.",
+      "system": "Sei un esperto di analisi delle cause nella produzione. Lavora su D4: analizza separatamente perché il difetto si è verificato e perché non è stato rilevato. Usa per ciascun caso una catena di 5 perché e basati sui fatti del reclamo. Valuta quanto ogni causa è supportata e indica prove o verifiche che la confermino.",
+      "task": "Analizza le cause (D4).\n\nReclamo:\n{{run.input}}\n\nRisultato D1–D3:\n{{node:problem}}"
+    },
+    "actions": {
+      "name": "Pianificazione delle azioni D5–D7",
+      "description": "Pianifica azioni correttive, la loro verifica e la prevenzione.",
+      "system": "Sei un responsabile della qualità. Lavora su D5–D7: definisci azioni correttive permanenti per ogni causa verificata o probabile, descrivi come se ne dimostrerà l'efficacia e ricava azioni preventive che evitino difetti simili su altri prodotti, per esempio aggiornamenti della FMEA, del piano di controllo o delle istruzioni di lavoro. Indica i responsabili come ruoli e scadenze realistiche.",
+      "task": "Pianifica D5–D7 sulla base di questa analisi delle cause:\n\n{{node:root_cause}}"
+    },
+    "report": {
+      "name": "Rapporto 8D",
+      "description": "Riunisce tutte le fasi in un rapporto 8D strutturato.",
+      "system": "Scrivi rapporti 8D per i clienti. Riassumi i risultati delle fasi precedenti in modo completo e oggettivo, senza aggiungere fatti nuovi. Verifica che le fasi siano coerenti tra loro ed elenca contraddizioni o cause non ancora verificate come punti aperti. D8 contiene una nota di chiusura che riconosce il lavoro del team e indica cosa manca ancora prima della chiusura.",
+      "task": "Scrivi il rapporto 8D.\n\nD1–D3:\n{{node:problem}}\n\nD4:\n{{node:root_cause}}\n\nD5–D7:\n{{node:actions}}\n\nContenimento d'emergenza (solo nei casi critici):\n{{node:containment}}",
+      "fields": {
+        "d1_team": "D1 team con ruoli",
+        "d2_problem": "D2 descrizione del problema",
+        "d3_containment": "D3 azioni di contenimento con verifica dell'efficacia",
+        "d4_root_causes": "D4 cause di insorgenza e di mancata rilevazione",
+        "d5_corrective_actions": "D5 azioni correttive",
+        "d6_verification": "D6 dimostrazione dell'efficacia",
+        "d7_prevention": "D7 azioni preventive",
+        "d8_closure": "D8 chiusura e riconoscimento",
+        "open_points": "Punti aperti e ipotesi non ancora verificate"
+      }
+    },
+    "containment": {
+      "name": "Contenimento d'emergenza",
+      "description": "Pianifica il contenimento delle prossime 24 ore nei casi critici.",
+      "system": "Sei il responsabile qualità reperibile. Per un reclamo critico pianifica il contenimento delle prossime 24 ore: bloccare e selezionare tutte le scorte e i lotti sospetti, mettere in sicurezza le consegne in transito, organizzare un controllo al 100 % o una consegna sostitutiva e informare il cliente con uno stato chiaro. Indica per ogni azione un ruolo responsabile, una scadenza e come se ne verifica l'efficacia, ed elenca ciò che resta aperto.",
+      "task": "Pianifica il contenimento d'emergenza per questo reclamo critico.\n\nReclamo:\n{{run.input}}\n\nD1–D3:\n{{node:problem}}"
+    }
+  },
+  "steps": {
+    "severity": {
+      "name": "Gravità",
+      "branches": {
+        "critical": "Critico"
+      },
+      "default": "Standard"
+    },
+    "release": {
+      "name": "Approvare il rapporto",
+      "instructions": "Verifica che il rapporto 8D contenga solo fatti accertati, che le cause non chiarite siano indicate come aperte e che le azioni di contenimento siano realistiche. Solo allora approvalo per l'invio al cliente."
+    }
+  },
+  "form": {
+    "documents": {
+      "label": "Documenti del reclamo",
+      "description": "Facoltativo: lettera di reclamo (PDF, Word), dati di misura (Excel, CSV) o foto del difetto (PNG, JPEG, WebP), fino a 8 file. Senza file vale il testo."
+    }
+  },
+  "samples": {
+    "complaint": {
+      "name": "Reclamo_G-220_lotto_24-117",
+      "description": "Lettera di reclamo fittizia del cliente in PDF.",
+      "content": "# Reclamo n. R-2026-031\n\n**Da:** Esempio Automotive S.p.A., stabilimento Sud, controllo in accettazione\n\n**A:** Gestione qualità, fornitore di alloggiamenti in plastica\n\n**Data:** 18/03/2026\n\n## Pezzo interessato\n\n| Dato | Valore |\n|---|---|\n| Pezzo | Alloggiamento in plastica G-220 (PA6-GF30) |\n| Lotto | 24-117 |\n| Data di consegna | 12/03/2026 |\n| Quantità consegnata | 4.000 pezzi |\n\n## Descrizione del difetto\n\nDurante il montaggio i ganci a scatto degli alloggiamenti si rompono non appena si aggancia il coperchio. Abbiamo controllato 2.000 pezzi; 46 sono difettosi (2,3 %). Le superfici di frattura appaiono fragili.\n\n## Le nostre richieste\n\n1. Azioni di contenimento entro 24 ore, compresa la selezione delle giacenze presso di noi.\n2. Un rapporto 8D entro 10 giorni.\n3. Un'indicazione di quali altri lotti possono essere interessati.\n\nReferente: sig.ra Erica Campione, qualità fornitori (fittizia)"
+    },
+    "measurements": {
+      "name": "Misure_ganci",
+      "description": "Forze di estrazione fittizie dei ganci per lotto, con tempo di essiccazione, in un file Excel.",
+      "content": {
+        "Forza di estrazione": [
+          [
+            "Campione",
+            "Lotto",
+            "Tempo di essiccazione (h)",
+            "Forza di estrazione (N)",
+            "Minimo (N)"
+          ],
+          [
+            1,
+            "24-117",
+            2.5,
+            38,
+            45
+          ],
+          [
+            2,
+            "24-117",
+            2.5,
+            41,
+            45
+          ],
+          [
+            3,
+            "24-117",
+            2.5,
+            47,
+            45
+          ],
+          [
+            4,
+            "24-117",
+            2.5,
+            36,
+            45
+          ],
+          [
+            5,
+            "24-117",
+            2.5,
+            44,
+            45
+          ],
+          [
+            6,
+            "24-121",
+            4,
+            58,
+            45
+          ],
+          [
+            7,
+            "24-121",
+            4,
+            61,
+            45
+          ],
+          [
+            8,
+            "24-121",
+            4,
+            57,
+            45
+          ],
+          [
+            9,
+            "24-121",
+            4,
+            60,
+            45
+          ],
+          [
+            10,
+            "24-121",
+            4,
+            59,
+            45
+          ]
+        ],
+        "Note": [
+          [
+            "Nota"
+          ],
+          [
+            "Misura in laboratorio il 19/03/2026, cinque pezzi di magazzino per lotto."
+          ],
+          [
+            "L'umidità residua del granulo non è stata documentata per il lotto 24-117."
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "complaint_text": {
+      "name": "Reclamo nel testo"
+    },
+    "complaint_files": {
+      "name": "Lettera di reclamo e misure come file",
+      "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nReclamo di Esempio Automotive S.p.A. sull'alloggiamento G-220; la lettera di reclamo e le misure sono allegate come file.\n\nInformazioni interne:\n- Il lotto 24-117 è stato prodotto sulla macchina SG-4 con uno stampo appena rilavorato (manutenzione il 05/03).\n- Il materiale proveniva da una nuova fornitura; il tempo di essiccazione è stato ridotto da 4 a 2,5 ore per mancanza di tempo.\n- Il controllo finale verifica dimensioni e aspetto secondo un piano di campionamento, ma nessun carico meccanico sui ganci.\n- Giacenza: 1.200 pezzi del lotto 24-117 e 3.000 pezzi del lotto 24-121 (stesso stampo, essiccazione normale)."
+    }
+  }
+}

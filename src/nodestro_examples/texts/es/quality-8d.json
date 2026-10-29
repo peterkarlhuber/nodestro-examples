@@ -1,0 +1,194 @@
+{
+  "name": "Investigar una reclamación con 8D",
+  "field": "Gestión de la calidad",
+  "description": "Tratar paso a paso una reclamación de cliente con el método 8D y documentarla en un informe.",
+  "start": "Reclamación",
+  "output": "Informe 8D",
+  "file_name": "Informe 8D",
+  "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nCliente: Ejemplo Automoción S.A., planta Sur\nPieza: carcasa de plástico G-220 (PA6-GF30, inyección), lote 24-117, entregado el 12/03, 4.000 unidades\nReclamación del 18/03: durante el montaje se rompen las pestañas de encaje. El cliente ha revisado 2.000 piezas y\n46 son defectuosas (2,3 %). Exige acciones de contención en 24 horas y un informe 8D en 10 días.\n\nInformación interna:\n- El lote 24-117 se fabricó en la máquina SG-4 con un molde recién reparado (mantenimiento el 05/03).\n- El material procedía de una entrega nueva; por presión de plazos, el secado se redujo de 4 a 2,5 horas.\n- La inspección final revisa medidas y aspecto según un plan de muestreo, pero no la carga mecánica de las pestañas.\n- Existencias: 1.200 piezas del lote 24-117 y 3.000 piezas del lote 24-121 (mismo molde, secado normal).\n- En los últimos 12 meses no hubo reclamaciones comparables.",
+  "guide": {
+    "problem": "Las reclamaciones exigen contención rápida y un análisis de causas riguroso. El método 8D marca los pasos; el flujo los recorre de forma estructurada y los documenta de manera uniforme.",
+    "flow": "Una cadena secuencial: el primer agente describe el problema y las acciones de contención (D1 a D3), el segundo busca las causas de aparición y de no detección (D4) y el tercero planifica acciones correctivas y preventivas (D5 a D7). El agente de informe lo reúne todo en un informe 8D estructurado. Un nodo de decisión comprueba la gravedad: en casos críticos, un agente adicional planifica la contención de emergencia para las próximas 24 horas. Antes de que el informe llegue al cliente, una persona lo libera.",
+    "input": "La reclamación del cliente con pieza, lote, defecto y tasa de defectos, además de la información interna conocida sobre fabricación, material e inspección. Puedes adjuntar también la carta de reclamación, datos de medición y fotos del defecto como archivos; los archivos de ejemplo contienen una carta de reclamación inventada (PDF) y mediciones (Excel).",
+    "result": "Un informe 8D estructurado con un campo para cada disciplina D1 a D8 y una lista de puntos abiertos que el equipo aún debe aclarar. Tras la aprobación, la ejecución guarda el informe en PDF y como archivo de Word editable. El agente del informe propone además conclusiones para el conocimiento; solo se guarda lo que adoptes expresamente.",
+    "adapt": "Sustituye los datos de prueba por vuestra reclamación y adjunta directamente protocolos de inspección, planos o fotos. Si usáis un formulario propio, ajusta los campos del agente del informe en «Formato de salida». Las conclusiones adoptadas de reclamaciones anteriores puedes asignarlas como conocimiento al análisis de causas."
+  },
+  "agents": {
+    "problem": {
+      "name": "Descripción del problema D1–D3",
+      "description": "Describe el equipo, el problema (es / no es) y las acciones de contención.",
+      "system": "Eres ingeniero de calidad y diriges equipos 8D. Trabaja los pasos D1 a D3: propone un equipo multidisciplinar con roles, describe el problema con precisión mediante 5W2H y un análisis es / no es, y define acciones de contención (bloqueo, selección, entrega de reposición, información al cliente). Indica para cada acción de contención cómo se comprueba su eficacia.",
+      "task": "Trabaja D1 a D3 para esta reclamación:\n\n{{input}}",
+      "fields": {
+        "analysis": "D1 a D3 como texto: equipo, descripción del problema (5W2H, es/no es) y acciones de contención con verificación de eficacia",
+        "critical": "true si el caso es crítico: relevancia de seguridad o legal, línea del cliente parada o stock afectado que todavía se está enviando"
+      }
+    },
+    "root_cause": {
+      "name": "Análisis de causas D4",
+      "description": "Busca las causas de aparición y de no detección con los 5 porqués.",
+      "system": "Eres experto en análisis de causa raíz en fabricación. Trabaja D4: analiza por separado por qué apareció el defecto y por qué no se detectó. Usa en cada caso una cadena de 5 porqués y apóyate en los hechos de la reclamación. Valora lo bien fundamentada que está cada causa e indica ensayos o comprobaciones que la verifiquen.",
+      "task": "Analiza las causas (D4).\n\nReclamación:\n{{run.input}}\n\nResultado D1–D3:\n{{node:problem}}"
+    },
+    "actions": {
+      "name": "Planificación de acciones D5–D7",
+      "description": "Planifica acciones correctivas, su verificación y la prevención.",
+      "system": "Eres responsable de calidad. Trabaja D5 a D7: define acciones correctivas permanentes para cada causa verificada o probable, describe cómo se demostrará su eficacia y deriva acciones preventivas que eviten defectos similares en otros productos, por ejemplo cambios en el AMFE, el plan de control o las instrucciones de trabajo. Indica responsables como roles y fechas realistas.",
+      "task": "Planifica D5 a D7 a partir de este análisis de causas:\n\n{{node:root_cause}}"
+    },
+    "report": {
+      "name": "Informe 8D",
+      "description": "Reúne todos los pasos en un informe 8D estructurado.",
+      "system": "Redactas informes 8D para clientes. Resume los resultados de los pasos anteriores de forma completa y objetiva, sin añadir hechos nuevos. Comprueba que los pasos encajen entre sí e incluye en los puntos abiertos las contradicciones o las causas aún no verificadas. D8 contiene una nota de cierre que reconoce al equipo e indica lo que falta hasta el cierre.",
+      "task": "Redacta el informe 8D.\n\nD1–D3:\n{{node:problem}}\n\nD4:\n{{node:root_cause}}\n\nD5–D7:\n{{node:actions}}\n\nContención de emergencia (solo en casos críticos):\n{{node:containment}}",
+      "fields": {
+        "d1_team": "D1 equipo con roles",
+        "d2_problem": "D2 descripción del problema",
+        "d3_containment": "D3 acciones de contención con comprobación de eficacia",
+        "d4_root_causes": "D4 causas de aparición y de no detección",
+        "d5_corrective_actions": "D5 acciones correctivas",
+        "d6_verification": "D6 demostración de la eficacia",
+        "d7_prevention": "D7 acciones preventivas",
+        "d8_closure": "D8 cierre y reconocimiento",
+        "open_points": "Puntos abiertos y suposiciones aún no verificadas"
+      }
+    },
+    "containment": {
+      "name": "Contención de emergencia",
+      "description": "Planifica la contención de las próximas 24 horas en casos críticos.",
+      "system": "Eres el responsable de calidad de guardia. Para una reclamación crítica, planifica la contención de las próximas 24 horas: bloquear y seleccionar todo el stock y los lotes sospechosos, asegurar los envíos en tránsito, organizar una inspección al 100 % o una entrega de sustitución e informar al cliente con un estado claro. Indica para cada acción un rol responsable, un plazo y cómo se comprueba su eficacia, y enumera lo que queda pendiente.",
+      "task": "Planifica la contención de emergencia para esta reclamación crítica.\n\nReclamación:\n{{run.input}}\n\nD1–D3:\n{{node:problem}}"
+    }
+  },
+  "steps": {
+    "severity": {
+      "name": "Gravedad",
+      "branches": {
+        "critical": "Crítico"
+      },
+      "default": "Estándar"
+    },
+    "release": {
+      "name": "Liberar informe",
+      "instructions": "Comprueba que el informe 8D solo contiene hechos verificados, que las causas sin aclarar están marcadas como abiertas y que las acciones de contención son realistas. Solo entonces libéralo para enviarlo al cliente."
+    }
+  },
+  "form": {
+    "documents": {
+      "label": "Documentación de la reclamación",
+      "description": "Opcional: carta de reclamación (PDF, Word), datos de medición (Excel, CSV) o fotos del defecto (PNG, JPEG, WebP), hasta 8 archivos. Sin archivos, vale el texto."
+    }
+  },
+  "samples": {
+    "complaint": {
+      "name": "Reclamacion_G-220_lote_24-117",
+      "description": "Carta de reclamación inventada del cliente en PDF.",
+      "content": "# Reclamación n.º R-2026-031\n\n**De:** Ejemplo Automoción S.A., planta Sur, inspección de entrada\n\n**Para:** Gestión de calidad, proveedor de carcasas de plástico\n\n**Fecha:** 18/03/2026\n\n## Pieza afectada\n\n| Dato | Valor |\n|---|---|\n| Pieza | Carcasa de plástico G-220 (PA6-GF30) |\n| Lote | 24-117 |\n| Fecha de entrega | 12/03/2026 |\n| Cantidad entregada | 4.000 unidades |\n\n## Descripción del defecto\n\nDurante el montaje se rompen las pestañas de encaje de las carcasas en cuanto se encaja la tapa. Hemos revisado 2.000 piezas; 46 son defectuosas (2,3 %). Las superficies de rotura parecen frágiles.\n\n## Nuestras exigencias\n\n1. Acciones de contención en 24 horas, incluida la selección de las existencias en nuestras instalaciones.\n2. Un informe 8D en un plazo de 10 días.\n3. Una indicación de qué otros lotes pueden estar afectados.\n\nPersona de contacto: Sra. Erica Muestra, calidad de proveedores (ficticia)"
+    },
+    "measurements": {
+      "name": "Mediciones_pestanas",
+      "description": "Fuerzas de extracción inventadas de las pestañas por lote, con tiempo de secado, en un archivo de Excel.",
+      "content": {
+        "Fuerza de extracción": [
+          [
+            "Muestra",
+            "Lote",
+            "Tiempo de secado (h)",
+            "Fuerza de extracción (N)",
+            "Mínimo (N)"
+          ],
+          [
+            1,
+            "24-117",
+            2.5,
+            38,
+            45
+          ],
+          [
+            2,
+            "24-117",
+            2.5,
+            41,
+            45
+          ],
+          [
+            3,
+            "24-117",
+            2.5,
+            47,
+            45
+          ],
+          [
+            4,
+            "24-117",
+            2.5,
+            36,
+            45
+          ],
+          [
+            5,
+            "24-117",
+            2.5,
+            44,
+            45
+          ],
+          [
+            6,
+            "24-121",
+            4,
+            58,
+            45
+          ],
+          [
+            7,
+            "24-121",
+            4,
+            61,
+            45
+          ],
+          [
+            8,
+            "24-121",
+            4,
+            57,
+            45
+          ],
+          [
+            9,
+            "24-121",
+            4,
+            60,
+            45
+          ],
+          [
+            10,
+            "24-121",
+            4,
+            59,
+            45
+          ]
+        ],
+        "Notas": [
+          [
+            "Nota"
+          ],
+          [
+            "Medición en laboratorio el 19/03/2026, cinco piezas del almacén por lote."
+          ],
+          [
+            "La humedad residual del granulado no se documentó para el lote 24-117."
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "complaint_text": {
+      "name": "Reclamación en el texto"
+    },
+    "complaint_files": {
+      "name": "Carta de reclamación y mediciones como archivos",
+      "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nReclamación de Ejemplo Automoción S.A. sobre la carcasa G-220; la carta de reclamación y las mediciones se adjuntan como archivos.\n\nInformación interna:\n- El lote 24-117 se fabricó en la máquina SG-4 con un molde recién reparado (mantenimiento el 05/03).\n- El material procedía de una entrega nueva; por presión de plazos, el secado se redujo de 4 a 2,5 horas.\n- La inspección final revisa medidas y aspecto según un plan de muestreo, pero no la carga mecánica de las pestañas.\n- Existencias: 1.200 piezas del lote 24-117 y 3.000 piezas del lote 24-121 (mismo molde, secado normal)."
+    }
+  }
+}

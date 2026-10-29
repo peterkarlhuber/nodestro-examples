@@ -1,0 +1,63 @@
+{
+  "name": "Responder a uma solicitação de cidadão",
+  "field": "Instituições públicas",
+  "description": "Analisar a solicitação de um cidadão, buscar as regras aplicáveis e preparar um rascunho de resposta objetivo.",
+  "start": "Solicitação do cidadão",
+  "output": "Rascunho de resposta",
+  "file_name": "Rascunho de resposta",
+  "input": "DADOS DE EXEMPLO SINTÉTICOS – um município e regras totalmente fictícios, apenas para testar.\n\nE-mail à prefeitura de Cidade Exemplo em 2026-04-14, remetente: Sr. Paulo Exemplo, Rua das Tílias, 12:\n\"Prezados, gostaria de instalar no meu jardim um depósito de jardim de cerca de 4 x 3 metros, altura\n2,60 metros, a cerca de 1 metro da cerca do meu vizinho. Preciso de licença para isso? Além disso, o poste de\nluz em frente ao número 14 está quebrado há semanas e à noite fica totalmente escuro. Quando ele será\nconsertado? Já informei por telefone em março.\"\n\nTrecho das informações internas do município (fictício):\n- Código de obras (trecho): construções sem cômodos de permanência prolongada de até 30 m³ de volume bruto não\n  precisam de licença. Obras sem licença precisam ainda assim respeitar os recuos; na divisa do terreno, anexos\n  de até 3 m de altura de parede e 9 m de comprimento total são permitidos. Planos de zoneamento podem prever\n  outra coisa.\n- O plano de zoneamento nº 17 \"Am Lindenhain\" se aplica à Rua das Tílias; é necessária análise pelo departamento\n  de obras.\n- Iluminação pública: a responsabilidade é da secretaria de serviços urbanos; avisos pelo formulário online ou\n  pelo telefone 0000-123, normalmente atendidos em até 10 dias úteis. Nenhum aviso sobre a Rua das Tílias está\n  registrado no sistema em março.",
+  "guide": {
+    "problem": "Solicitações de cidadãos muitas vezes contêm vários assuntos e precisam ser respondidas de forma correta, clara e sem compromissos precipitados. O workflow decompõe a solicitação, encontra as regras relevantes nas informações fornecidas e prepara uma resposta.",
+    "flow": "Uma cadeia de três agentes: a análise de assuntos separa os assuntos e atribui responsabilidades, a preparação das informações busca as regras relevantes apenas no trecho fornecido e o rascunho de resposta redige uma resposta acessível ao cidadão. Uma verificação de qualidade garante que apenas regras documentadas sejam citadas e que nenhum compromisso vinculante seja assumido.",
+    "input": "A solicitação da cidadã ou do cidadão e as informações internas, regras e responsabilidades relevantes, como trecho no texto ou como arquivos. Você também pode anexar fotos da solicitação. O arquivo de exemplo é um folheto informativo fictício da prefeitura.",
+    "result": "Um rascunho de resposta em linguagem simples com responsabilidades, próximos passos e observações para quem vai tratar o caso, também como arquivo Word para o seu papel timbrado. A preparação das informações propõe as regras encontradas, com a referência, para o conhecimento, para que solicitações futuras possam usá-las; só é salvo o que você confirmar. O rascunho precisa ser verificado e aprovado tecnicamente antes do envio.",
+    "adapt": "Anexe os seus regulamentos e folhetos ou carregue-os de forma permanente como conhecimento (modo \"Pesquisa\" com citações) e atribua-os à preparação das informações. Papel timbrado e despedida vão no prompt de sistema do rascunho de resposta. Para muitas solicitações de uma vez, use o processamento em lote."
+  },
+  "agents": {
+    "triage": {
+      "name": "Análise de assuntos",
+      "description": "Separa os assuntos e atribui responsabilidades e urgência.",
+      "system": "Você trabalha no atendimento ao cidadão de uma administração pública. Decomponha a solicitação em assuntos individuais e indique para cada um: tipo (informação, reclamação, aviso, requerimento), órgão provavelmente responsável, urgência e as perguntas que precisam ser respondidas. Seja breve e escreva uma lista.",
+      "task": "{{input}}"
+    },
+    "rules": {
+      "name": "Preparação das informações",
+      "description": "Busca as regras relevantes apenas nas informações fornecidas.",
+      "system": "Você é servidor responsável em uma administração pública. Atribua a cada assunto as regras e responsabilidades relevantes e cite o trecho correspondente das informações fornecidas. Use apenas as informações fornecidas e não invente regulamentos, prazos ou telefones. Indique o que não pode ser respondido sem análise adicional e quais informações faltam por parte do cidadão.",
+      "task": "Prepare as informações.\n\nSolicitação e informações internas:\n{{run.input}}\n\nAssuntos:\n{{node:triage}}"
+    },
+    "reply": {
+      "name": "Rascunho de resposta",
+      "description": "Redige uma resposta objetiva e acessível para aprovação.",
+      "system": "Você redige respostas de uma administração pública a cidadãos: educadas, objetivas, em linguagem simples e sem jargão burocrático. Responda a cada assunto, indique o órgão responsável e o próximo passo e explique o que ainda está em análise. Não assuma compromissos vinculantes nem conceda autorizações. Comece com a observação \"RASCUNHO – verificar antes do envio\" e termine com observações para o servidor responsável.",
+      "task": "Redija o rascunho de resposta.\n\nAssuntos:\n{{node:triage}}\n\nInformações preparadas:\n{{node:rules}}",
+      "criteria": {
+        "only_given_rules": "A resposta cita apenas regras, prazos e contatos das informações fornecidas.",
+        "plain_language": "A resposta é educada e escrita em linguagem simples e compreensível.",
+        "no_binding_commitment": "A resposta não contém compromissos vinculantes nem autorizações e está marcada como rascunho."
+      }
+    }
+  },
+  "form": {
+    "documents": {
+      "label": "Documentos",
+      "description": "Opcional: regulamentos, folhetos informativos ou listas de responsabilidades (PDF, Word, Markdown, texto) e fotos da solicitação (PNG, JPEG, WebP), até 5 arquivos. Sem arquivos vale o trecho do texto."
+    }
+  },
+  "samples": {
+    "guidance": {
+      "name": "Folheto_anexos_e_iluminacao",
+      "description": "Um folheto informativo fictício da prefeitura com regras sobre depósitos de jardim e a responsabilidade pelos postes de luz, em PDF.",
+      "content": "# Folheto informativo da prefeitura de Cidade Exemplo (fictício)\n\nDADOS DE EXEMPLO SINTÉTICOS – regras totalmente fictícias, apenas para testar.\n\n## Depósitos de jardim e outros anexos\n\n1. Construções sem cômodos de permanência prolongada de até 30 m³ de volume bruto não precisam de licença (art. 12, § 1º do código de obras modelo, fictício).\n2. Obras sem licença precisam ainda assim respeitar os recuos. Na divisa do terreno, anexos de até 3 m de altura de parede e 9 m de comprimento total são permitidos (art. 6, § 7º).\n3. Planos de zoneamento podem prever outra coisa. O plano nº 17 \"Am Lindenhain\" se aplica à Rua das Tílias; ali é necessária análise pelo departamento de obras.\n4. Informações: departamento de obras, sala 2.14, atendimento terças e quintas das 9h às 12h.\n\n## Iluminação pública\n\n- A responsabilidade é da secretaria de serviços urbanos.\n- Avisos pelo formulário online \"Comunicar problema\" ou pelo telefone 0000-123.\n- Atendimento normalmente em até 10 dias úteis após o recebimento do aviso.\n- Avisos por telefone são registrados no sistema; se não houver registro, comunique novamente."
+    }
+  },
+  "tests": {
+    "two_concerns": {
+      "name": "Depósito de jardim e poste de luz"
+    },
+    "guidance_file": {
+      "name": "Regras como arquivo de folheto",
+      "input": "DADOS DE EXEMPLO SINTÉTICOS – um município e regras totalmente fictícios, apenas para testar.\n\nE-mail à prefeitura de Cidade Exemplo em 2026-04-14, remetente: Sr. Paulo Exemplo, Rua das Tílias, 12:\n\"Prezados, gostaria de instalar no meu jardim um depósito de jardim de cerca de 4 x 3 metros, altura\n2,60 metros, a cerca de 1 metro da cerca do meu vizinho. Preciso de licença para isso? Além disso, o poste de\nluz em frente ao número 14 está quebrado há semanas e à noite fica totalmente escuro. Quando ele será\nconsertado? Já informei por telefone em março.\"\n\nAs regras aplicáveis estão no folheto anexado."
+    }
+  }
+}

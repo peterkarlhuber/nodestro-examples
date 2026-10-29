@@ -1,0 +1,95 @@
+{
+  "name": "Answer customer enquiries",
+  "field": "Customer service",
+  "description": "Classify enquiries, check policies and deadlines and draft replies.",
+  "start": "Enquiries",
+  "output": "Draft replies",
+  "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nToday's date: 2026-03-20\n\nExtract from our service policy (sample online shop \"Sample Kitchen\"):\n- Returns: 30 days from delivery, goods unused in original packaging; returns are free of charge.\n- Warranty: 2 years; for defects, repair or replacement after inspection, a photo of the defect helps.\n- Delivery time: 2–4 working days; if delayed by more than 7 working days we offer free cancellation.\n- Vouchers and goodwill gestures above EUR 20 only after approval by the team lead.\n\nEnquiry 1 – Jonas Example, order 10442, delivered on 2026-02-27:\n\"The pan doesn't work on my induction hob. Can I return it? It's still in its original packaging.\"\n\nEnquiry 2 – Maria Sample, order 10518, delivered on 2026-01-15:\n\"The handle of my pot has come loose, after two months! That's really annoying. I want my money back.\"\n\nEnquiry 3 – Ali Instance, order 10603, ordered on 2026-03-09, not delivered yet:\n\"Where is my order? I need the knife set as a present at the weekend.\"\n\nEnquiry 4 – Sophie Test:\n\"Do you also have silicone baking moulds without plasticisers?\"",
+  "guide": {
+    "problem": "In customer service many enquiries arrive at once, and each needs the right rule and the right tone. The workflow sorts the enquiries, checks policies and deadlines and prepares replies for approval.",
+    "flow": "A fast classifier sorts each enquiry by topic, urgency and mood. The policy checker applies the service policy and recalculates deadlines with the date tool. The reply writer drafts the replies; a quality check makes sure nothing is promised beyond the policy. A decision node sends escalations to a de-escalation agent first. Every draft waits for approval; a rejection with feedback leads to a revised version.",
+    "input": "Several customer enquiries with order and delivery data, today's date and your service policy, as an extract in the text or as a file (PDF, Word, Markdown); the sample file contains a more detailed policy.",
+    "result": "For each enquiry a classification, the applicable rule with a deadline check and a draft reply that a person approves before sending.",
+    "adapt": "Attach your complete policy and FAQ as a file, or upload them as knowledge and assign them to the policy checker if they apply permanently. Set your brand's tone (formal or informal, sign-off) in the system prompt of the reply writer. Use batch processing to handle many enquiries at once."
+  },
+  "agents": {
+    "triage": {
+      "name": "Classifier",
+      "description": "Sorts each enquiry by topic, urgency and mood.",
+      "system": "You sort customer enquiries. Classify each enquiry: topic (return, complaint, delivery, product question, other), urgency (high, medium, low), mood (positive, neutral, annoyed), relevant data such as order number and date, and missing details. Answer as a compact table with one row per enquiry.",
+      "task": "{{input}}",
+      "fields": {
+        "overview": "Table with one row per request: topic, urgency, mood, relevant data and missing information",
+        "escalation": "true if at least one customer is upset or asks for more than the guidelines allow"
+      }
+    },
+    "policy": {
+      "name": "Policy checker",
+      "description": "Applies the service policy and checks deadlines with the date tool.",
+      "system": "You are a team lead in customer service. Determine for each enquiry which rule of the service policy applies. Calculate deadlines with the days_between tool instead of estimating them. Decide what may be promised, what needs approval and which information is missing from the customer. If the policy does not cover an answer, say so clearly.",
+      "task": "Check the policy for these enquiries.\n\nEnquiries and policy:\n{{run.input}}\n\nClassification:\n{{node:triage}}"
+    },
+    "reply": {
+      "name": "Reply writer",
+      "description": "Writes friendly draft replies for approval.",
+      "system": "You write customer service replies: friendly, clear, solution-oriented and polite. Respond to the concern and the mood, name the next step and ask specifically for missing information. Promise only what the policy check allows. Mark every reply as a draft and note when approval by the team lead is needed.",
+      "task": "Write a draft reply for each enquiry.\n\nClassification:\n{{node:triage}}\n\nPolicy check:\n{{node:policy}}\n\nDe-escalation (escalations only):\n{{node:deescalation}}",
+      "criteria": {
+        "policy_compliant": "Every reply complies with the service policy and the results of the deadline check.",
+        "tone": "The replies are friendly, clear and respond to the customer's mood.",
+        "no_promises": "Nothing is promised that needs approval or is not covered by the policy."
+      }
+    },
+    "deescalation": {
+      "name": "De-escalation",
+      "description": "Prepares how to handle upset customers and what needs approval.",
+      "system": "You are an experienced complaint manager. For every upset customer and every demand beyond the guidelines, propose how to defuse the situation: acknowledge the problem, the solution within the guidelines, possible goodwill gestures and which of them need approval by the team lead. Do not promise anything yourself.",
+      "task": "Prepare the de-escalation.\n\nRequests and guidelines:\n{{run.input}}\n\nTriage:\n{{node:triage}}"
+    },
+    "revise": {
+      "name": "Revision",
+      "description": "Revises the drafts according to the reviewer's feedback.",
+      "system": "You revise customer service replies. Apply the reviewer's feedback exactly, leave everything else unchanged and keep to the service guidelines. Mark every reply as a revised draft.",
+      "task": "Revise the reply drafts.\n\nDrafts:\n{{node:reply}}\n\nFeedback:\n{{node:approve}}"
+    }
+  },
+  "steps": {
+    "route": {
+      "name": "Escalation?",
+      "branches": {
+        "escalate": "Escalate"
+      },
+      "default": "Standard"
+    },
+    "approve": {
+      "name": "Approve replies",
+      "instructions": "Read every draft before it is sent: tone, facts and promises. If you reject, say what has to change; the drafts are then revised."
+    }
+  },
+  "form": {
+    "policies": {
+      "label": "Service policy as a file",
+      "description": "Optional: your policies or FAQ as PDF, Word, Markdown or text, up to 5 files. Without a file, the extract in the text applies."
+    }
+  },
+  "samples": {
+    "policies": {
+      "name": "Service_policy_Sample_Kitchen",
+      "description": "A more complete, fictional service policy as a PDF.",
+      "content": "# Service policy of the online shop “Sample Kitchen” (fictional)\n\nAs of: 1 January 2026\n\n## 1. Returns\n\n- 30 days from delivery, goods unused in original packaging.\n- Returns are free of charge; we send the return label by email.\n- Refund within 5 working days after the goods arrive.\n\n## 2. Warranty\n\n- 2 years from delivery.\n- For defects, repair or replacement first, after inspection; a photo of the defect speeds up the inspection.\n- A refund of the purchase price is only possible if repair or replacement fails.\n\n## 3. Delivery\n\n- Delivery time 2–4 working days.\n- If delayed by more than 7 working days, we offer free cancellation.\n- Express shipping is available for orders placed by 2 pm for EUR 9.90.\n\n## 4. Goodwill\n\n- The service team may grant vouchers and goodwill gestures up to EUR 20 on its own.\n- Anything above EUR 20 only after approval by the team lead.\n\n## 5. Product questions\n\n- Information on materials only from the product data sheets; if in doubt, ask instead of guessing."
+    }
+  },
+  "tests": {
+    "four_requests": {
+      "name": "Four enquiries, one of them angry"
+    },
+    "calm_request": {
+      "name": "One friendly product question",
+      "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nToday's date: 2026-03-20\n\nExtract from our service policy (sample online shop \"Sample Kitchen\"):\n- Returns: 30 days from delivery, goods unused in original packaging; returns are free of charge.\n- Product questions: information on materials only from the product data sheets.\n\nEnquiry 1 – Lea Example:\n\"Hi, is the cast-iron pan from your shop suitable for induction? Thanks and best wishes!\""
+    },
+    "policies_file": {
+      "name": "Policy as a PDF file",
+      "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nToday's date: 2026-03-20\nOur service policy is attached as a file.\n\nEnquiry 1 – Jonas Example, order 10442, delivered on 2026-02-27:\n\"The pan doesn't work on my induction hob. Can I return it? It's still in its original packaging.\"\n\nEnquiry 2 – Maria Sample, order 10518, delivered on 2026-01-15:\n\"The handle of my pot has come loose, after two months! That's really annoying. I want my money back.\""
+    }
+  }
+}

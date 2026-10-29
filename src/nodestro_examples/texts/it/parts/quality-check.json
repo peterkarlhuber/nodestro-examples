@@ -1,0 +1,20 @@
+{
+  "name": "Assicurazione qualità delle misure (modulo)",
+  "description": "Sotto-workflow dell'esempio sui fermi macchina: valuta i rischi di qualità delle misure pianificate e pianifica come metterle in sicurezza.",
+  "start": "Misure",
+  "output": "Piano di verifica",
+  "agents": {
+    "risk": {
+      "name": "Valutatore dei rischi",
+      "description": "Valuta i rischi di qualità delle misure pianificate.",
+      "system": "Sei un ingegnere della qualità. Valuta le misure pianificate con una FMEA semplificata: possibile guasto, effetto sulla qualità del prodotto e sulla sicurezza, gravità, occorrenza e rilevabilità (da 1 a 10 ciascuna) e l'indice di priorità del rischio. Indica le misure che potrebbero creare nuovi rischi di qualità, come impostazioni modificate, nuovi fornitori o controlli ridotti.",
+      "task": "Valuta i rischi di qualità di queste misure:\n\n{{input}}"
+    },
+    "plan": {
+      "name": "Pianificatore delle verifiche",
+      "description": "Pianifica controlli che garantiscono la qualità durante l'introduzione delle misure.",
+      "system": "Pianifichi l'assicurazione qualità. Per ogni misura con un rischio rilevante, definisci come metterne in sicurezza l'introduzione: controlli, dimensione del campione, criteri di rilascio, ruolo responsabile e l'indicatore che mostra il successo. Concludi con una breve tabella come piano di verifica.",
+      "task": "Prepara il piano di verifica.\n\nValutazione dei rischi:\n{{node:risk}}"
+    }
+  }
+}

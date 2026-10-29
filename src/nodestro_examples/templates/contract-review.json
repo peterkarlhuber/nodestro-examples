@@ -1,0 +1,235 @@
+{
+  "id": "contract-review",
+  "number": 12,
+  "category": "administration",
+  "level": "advanced",
+  "sensitive": true,
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 180,
+      "form": [
+        {
+          "name": "contract_file",
+          "type": "file",
+          "accept": [
+            "pdf",
+            "docx",
+            "txt",
+            "md"
+          ],
+          "multiple": false,
+          "max_size_mb": 20
+        }
+      ]
+    },
+    {
+      "id": "structure",
+      "type": "agent",
+      "x": 340,
+      "y": 180,
+      "role": "analysis",
+      "icon": "file",
+      "proposals": "extracted"
+    },
+    {
+      "id": "explain",
+      "type": "agent",
+      "x": 680,
+      "y": 40,
+      "role": "writing",
+      "icon": "book"
+    },
+    {
+      "id": "checkpoints",
+      "type": "agent",
+      "x": 680,
+      "y": 320,
+      "role": "review",
+      "icon": "scale",
+      "output_name": "CheckPoints",
+      "output_fields": [
+        {
+          "name": "points",
+          "type": "string"
+        },
+        {
+          "name": "critical_count",
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "id": "report",
+      "type": "agent",
+      "x": 1700,
+      "y": 180,
+      "role": "writing",
+      "icon": "list",
+      "output_name": "ContractReport",
+      "output_fields": [
+        {
+          "name": "overview",
+          "type": "string"
+        },
+        {
+          "name": "key_terms",
+          "type": "string_list"
+        },
+        {
+          "name": "clauses_explained",
+          "type": "string_list"
+        },
+        {
+          "name": "check_points",
+          "type": "string_list"
+        },
+        {
+          "name": "questions_for_expert",
+          "type": "string_list"
+        }
+      ]
+    },
+    {
+      "id": "gate",
+      "type": "condition",
+      "x": 1020,
+      "y": 460,
+      "condition": {
+        "source": "checkpoints",
+        "rules": [
+          {
+            "id": "critical",
+            "field": "critical_count",
+            "operator": "gt",
+            "value": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "critical",
+      "type": "agent",
+      "x": 1360,
+      "y": 460,
+      "role": "review",
+      "icon": "scale"
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 2040,
+      "y": 180,
+      "files": [
+        "pdf",
+        "docx"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "structure"
+    ],
+    [
+      "structure",
+      "explain"
+    ],
+    [
+      "structure",
+      "checkpoints"
+    ],
+    [
+      "checkpoints",
+      "gate"
+    ],
+    [
+      "gate",
+      "critical",
+      "critical"
+    ],
+    [
+      "explain",
+      "report"
+    ],
+    [
+      "checkpoints",
+      "report"
+    ],
+    [
+      "critical",
+      "report"
+    ],
+    [
+      "report",
+      "output"
+    ],
+    [
+      "start",
+      "explain"
+    ],
+    [
+      "start",
+      "checkpoints"
+    ]
+  ],
+  "samples": [
+    {
+      "id": "contract",
+      "format": "docx",
+      "field": "contract_file"
+    }
+  ],
+  "tests": [
+    {
+      "id": "contract_text",
+      "checks": [
+        {
+          "field": "check_points",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "questions_for_expert",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "key_terms",
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "contract_file",
+      "input": "none",
+      "samples": [
+        "contract"
+      ],
+      "checks": [
+        {
+          "field": "overview",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "check_points",
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "balanced_contract",
+      "input": "own",
+      "checks": [
+        {
+          "field": "overview",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "clauses_explained",
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,63 @@
+{
+  "name": "Répondre à une demande d'un administré",
+  "field": "Institutions publiques",
+  "description": "Analyser la demande d'un administré, rechercher les règles applicables et préparer un projet de réponse factuel.",
+  "start": "Demande de l'administré",
+  "output": "Projet de réponse",
+  "file_name": "Projet de réponse",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – une commune et des règles entièrement fictives, uniquement pour essayer.\n\nCourriel à la commune de Villexemple du 2026-04-14, expéditeur : M. Paul Exemple, 12 allée des Tilleuls :\n« Madame, Monsieur, je souhaiterais installer dans mon jardin un abri d'environ 4 x 3 mètres, hauteur\n2,60 mètres, à environ 1 mètre de la clôture de mon voisin. Ai-je besoin d'une autorisation ? Par ailleurs, le\nlampadaire devant le numéro 14 est en panne depuis des semaines et il fait nuit noire le soir. Quand sera-t-il\nréparé ? Je l'avais déjà signalé par téléphone en mars. »\n\nExtrait des informations internes de la commune (fictif) :\n- Règlement de construction (extrait) : les constructions sans pièce habitable jusqu'à 30 m³ de volume brut ne\n  nécessitent pas d'autorisation. Les projets sans autorisation doivent toutefois respecter les distances ; en\n  limite de propriété, les annexes jusqu'à 3 m de hauteur de mur et 9 m de longueur totale sont admises. Les plans\n  locaux d'urbanisme peuvent prévoir autre chose.\n- Le plan local d'urbanisme n° 17 « Am Lindenhain » s'applique à l'allée des Tilleuls ; un examen par le service\n  de l'urbanisme est nécessaire.\n- Éclairage public : le centre technique municipal est responsable ; signalements via le formulaire en ligne ou\n  au téléphone 0000-123, traités en général sous 10 jours ouvrés. Aucun signalement concernant l'allée des\n  Tilleuls n'est enregistré dans le système pour mars.",
+  "guide": {
+    "problem": "Les demandes des administrés contiennent souvent plusieurs sujets et doivent recevoir une réponse exacte, claire et sans engagement hâtif. Le workflow décompose la demande, trouve les règles pertinentes dans les informations fournies et prépare une réponse.",
+    "flow": "Une chaîne de trois agents : l'analyse des demandes sépare les sujets et attribuez les compétences, la préparation des informations recherche les règles pertinentes uniquement dans l'extrait fourni, et le projet de réponse rédige une réponse accessible. Une vérification qualité s'assure que seules des règles documentées sont citées et qu'aucun engagement contraignant n'est pris.",
+    "input": "La demande de l'administré et les informations internes, règles et compétences pertinentes, en extrait dans le texte ou en fichiers. Vous pouvez aussi joindre des photos de la demande. Le fichier d'exemple est une fiche pratique fictive de la commune.",
+    "result": "Un projet de réponse en langage simple avec compétences, prochaines étapes et remarques pour l'agent instructeur, aussi en fichier Word pour votre en-tête. La préparation des informations propose les règles trouvées, avec leur référence, pour la connaissance afin que les demandes ultérieures puissent s'en servir ; seul ce que vous confirmez est enregistré. Le projet doit être vérifié et validé avant envoi.",
+    "adapt": "Joignez vos règlements et fiches pratiques ou chargez-les durablement comme connaissance (mode « Recherche » avec citations) et attribuez-les à la préparation des informations. Ajoutez en-tête et formule de politesse dans le prompt système du projet de réponse. Pour traiter de nombreuses demandes à la fois, utilisez le traitement par lots."
+  },
+  "agents": {
+    "triage": {
+      "name": "Analyse des demandes",
+      "description": "Sépare les sujets et attribue compétences et urgence.",
+      "system": "Tu travailles à la relation avec les administrés dans une administration publique. Décompose la demande en sujets distincts et indique pour chacun : type (information, réclamation, signalement, demande), service probablement compétent, urgence et questions auxquelles il faut répondre. Sois bref et écris une liste.",
+      "task": "{{input}}"
+    },
+    "rules": {
+      "name": "Préparation des informations",
+      "description": "Recherche les règles pertinentes uniquement dans les informations fournies.",
+      "system": "Tu es agent instructeur dans une administration publique. Attribue à chaque sujet les règles et compétences pertinentes et cite le passage de l'extrait fourni. N'utilise que les informations fournies et n'invente ni règlements, ni délais, ni numéros de téléphone. Indique ce qui ne peut pas être répondu sans examen complémentaire et quelles informations manquent de la part de l'administré.",
+      "task": "Prépare les informations.\n\nDemande et informations internes :\n{{run.input}}\n\nSujets :\n{{node:triage}}"
+    },
+    "reply": {
+      "name": "Projet de réponse",
+      "description": "Rédige une réponse factuelle et accessible pour validation.",
+      "system": "Tu rédiges les réponses d'une administration publique aux administrés : polies, factuelles, en langage simple et sans jargon administratif. Réponds à chaque sujet, nomme le service compétent et la prochaine étape, et explique ce qui est encore en cours d'examen. Ne prends aucun engagement contraignant et n'accorde aucune autorisation. Commence par la mention « PROJET – à vérifier avant envoi » et termine par des remarques pour l'agent instructeur.",
+      "task": "Rédige le projet de réponse.\n\nSujets :\n{{node:triage}}\n\nInformations préparées :\n{{node:rules}}",
+      "criteria": {
+        "only_given_rules": "La réponse ne cite que des règles, délais et contacts issus des informations fournies.",
+        "plain_language": "La réponse est polie et rédigée dans un langage simple et compréhensible.",
+        "no_binding_commitment": "La réponse ne contient aucun engagement contraignant ni autorisation et est signalée comme projet."
+      }
+    }
+  },
+  "form": {
+    "documents": {
+      "label": "Documents",
+      "description": "Facultatif : règlements, fiches pratiques ou listes de compétences (PDF, Word, Markdown, texte) et photos jointes à la demande (PNG, JPEG, WebP), jusqu'à 5 fichiers. Sans fichier, l'extrait du texte fait foi."
+    }
+  },
+  "samples": {
+    "guidance": {
+      "name": "Fiche_annexes_et_eclairage",
+      "description": "Une fiche pratique fictive de la commune avec les règles sur les abris de jardin et la compétence pour les lampadaires, en PDF.",
+      "content": "# Fiche pratique de la commune de Villexemple (fictive)\n\nDONNÉES D'EXEMPLE SYNTHÉTIQUES – règles entièrement fictives, uniquement pour essayer.\n\n## Abris de jardin et autres annexes\n\n1. Les constructions sans pièce habitable jusqu'à 30 m³ de volume brut ne nécessitent pas d'autorisation (art. 12 al. 1 du règlement de construction type, fictif).\n2. Les projets sans autorisation doivent tout de même respecter les distances. En limite de propriété, les annexes jusqu'à 3 m de hauteur de mur et 9 m de longueur totale sont admises (art. 6 al. 7).\n3. Les plans locaux d'urbanisme peuvent prévoir autre chose. Le plan n° 17 « Am Lindenhain » s'applique à l'allée des Tilleuls ; un examen par le service de l'urbanisme y est nécessaire.\n4. Renseignements : service de l'urbanisme, bureau 2.14, permanences mardi et jeudi de 9 h à 12 h.\n\n## Éclairage public\n\n- Le centre technique municipal est responsable.\n- Signalements via le formulaire en ligne « Signaler un problème » ou au 0000-123.\n- Traitement en général sous 10 jours ouvrés après réception du signalement.\n- Les signalements téléphoniques sont saisis dans le système ; en l'absence d'enregistrement, merci de signaler à nouveau."
+    }
+  },
+  "tests": {
+    "two_concerns": {
+      "name": "Abri de jardin et lampadaire"
+    },
+    "guidance_file": {
+      "name": "Règles en fichier de fiche pratique",
+      "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – une commune et des règles entièrement fictives, uniquement pour essayer.\n\nCourriel à la commune de Villexemple du 2026-04-14, expéditeur : M. Paul Exemple, 12 allée des Tilleuls :\n« Madame, Monsieur, je souhaiterais installer dans mon jardin un abri d'environ 4 x 3 mètres, hauteur\n2,60 mètres, à environ 1 mètre de la clôture de mon voisin. Ai-je besoin d'une autorisation ? Par ailleurs, le\nlampadaire devant le numéro 14 est en panne depuis des semaines et il fait nuit noire le soir. Quand sera-t-il\nréparé ? Je l'avais déjà signalé par téléphone en mars. »\n\nLes règles applicables figurent dans la fiche pratique jointe."
+    }
+  }
+}

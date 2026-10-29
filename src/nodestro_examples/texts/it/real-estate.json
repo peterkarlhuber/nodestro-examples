@@ -1,0 +1,68 @@
+{
+  "name": "Confrontare offerte immobiliari",
+  "field": "Immobiliare",
+  "description": "Confrontare due offerte di acquisto per rendimento, posizione e stato e valutare opportunità e rischi.",
+  "start": "Offerte",
+  "output": "Valutazione",
+  "file_name": "Confronto immobiliare",
+  "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nObiettivo: acquistare un appartamento da affittare. Capitale proprio 80.000 EUR, il resto con un mutuo\nal 3,8 % di interesse e 2 % di ammortamento annuo. Costi accessori di acquisto circa il 10 % del prezzo.\n\nOfferta 1 – periferia, costruito nel 1994\n- 3 locali, 74 m², prezzo di acquisto 245.000 EUR, posto auto incluso\n- Affitto netto ottenibile secondo l'agente 11,50 EUR/m²; attualmente affittato a 9,20 EUR/m²\n- Spese condominiali 310 EUR/mese, di cui 95 EUR non ripartibili sull'inquilino\n- Fondo di manutenzione del condominio 38.000 EUR per 24 appartamenti; rifacimento del tetto previsto tra 3 anni\n- Treno suburbano a 8 minuti a piedi, nuovo polo produttivo annunciato nelle vicinanze\n\nOfferta 2 – centro città, palazzo d'epoca del 1910, ristrutturato nel 2015\n- 2 locali, 58 m², prezzo di acquisto 289.000 EUR, senza posto auto\n- Libero; appartamenti simili sono affittati a 15,00 EUR/m²\n- Spese condominiali 280 EUR/mese, di cui 80 EUR non ripartibili sull'inquilino\n- Fondo di manutenzione 112.000 EUR per 10 appartamenti; nessun intervento importante noto\n- Posizione ricercata, in città vige un tetto agli affitti",
+  "guide": {
+    "problem": "Negli immobili numeri e posizione decidono insieme. Il workflow ricalcola rendimento e flusso di cassa, analizza l'immobile e la sua posizione e mette a confronto opportunità e rischi.",
+    "flow": "Il calcolatore del rendimento determina il rendimento lordo e netto da locazione e il flusso di cassa mensile con la calcolatrice, mentre l'analista di immobile e posizione valuta in parallelo stato, riserve e contesto. La valutazione unisce entrambi in un confronto strutturato.",
+    "input": "Almeno due offerte con prezzo di acquisto, superficie, affitto, spese condominiali, fondo di manutenzione e posizione, più le tue ipotesi di finanziamento. Annunci, verbali e planimetrie si allegano in PDF, Word o come immagine; i file di esempio contengono un annuncio con estratto del verbale e una planimetria dell'offerta 2.",
+    "result": "Un confronto strutturato con indicatori, offerta preferita, opportunità, rischi e punti da verificare prima di una decisione, anche in PDF. Non sostituisce una consulenza finanziaria, fiscale o legale né un sopralluogo.",
+    "adapt": "Inserisci le tue offerte e i dati di finanziamento e allega direttamente annunci, verbali dell'assemblea condominiale o planimetrie. Un osservatorio degli affitti che ti serve spesso puoi salvarlo come conoscenza e assegnarlo all'analista di immobile e posizione."
+  },
+  "agents": {
+    "returns": {
+      "name": "Calcolatore del rendimento",
+      "description": "Calcola rendimento, finanziamento e flusso di cassa con la calcolatrice.",
+      "system": "Sei un analista immobiliare. Per ogni offerta usa la calcolatrice per calcolare: investimento totale costi accessori inclusi, importo del mutuo, affitto netto annuo (attuale e ottenibile), rendimento lordo da locazione, rendimento netto dopo le spese non ripartibili, rata mensile e flusso di cassa mensile prima delle imposte. Mostra i calcoli e quanto cambia il risultato con un affitto inferiore del 10 %.",
+      "task": "Fai i calcoli per queste offerte:\n\n{{input}}"
+    },
+    "property": {
+      "name": "Analista di immobile e posizione",
+      "description": "Valuta stato, riserve, locabilità e posizione.",
+      "system": "Sei un perito di immobili residenziali. Per ogni offerta valuta stato e anno di costruzione, fondo di manutenzione per appartamento, interventi previsti, situazione locativa e condizioni giuridiche come il tetto agli affitti, oltre alla posizione e all'evoluzione della zona. Indica i documenti da esaminare prima dell'acquisto.",
+      "task": "Valuta immobile e posizione di queste offerte:\n\n{{input}}"
+    },
+    "assessment": {
+      "name": "Valutazione di opportunità e rischi",
+      "description": "Mette a confronto i numeri con la valutazione dell'immobile e confronta in modo strutturato.",
+      "system": "Fornisci consulenza a investitori privati. Metti a confronto il rendimento con la valutazione dell'immobile, indica opportunità e rischi di ogni offerta e spiega quale offerta è più adatta secondo le ipotesi indicate. Formula la preferenza con prudenza ed elenca cosa va verificato prima di una decisione, come sopralluogo, verbali, finanziamento e fiscalità.",
+      "task": "Confronta le offerte.\n\nCalcolo del rendimento:\n{{node:returns}}\n\nValutazione di immobile e posizione:\n{{node:property}}",
+      "fields": {
+        "comparison": "Confronto degli indicatori delle due offerte",
+        "preferred_offer": "Offerta più adatta secondo le ipotesi, con motivazione",
+        "opportunities": "Opportunità",
+        "risks": "Rischi",
+        "checks_before_decision": "Verifiche prima di una decisione"
+      }
+    }
+  },
+  "form": {
+    "documents": {
+      "label": "Documenti dell'immobile",
+      "description": "Facoltativo: annunci, verbali dell'assemblea condominiale, attestati energetici (PDF, Word) o planimetrie e foto (PNG, JPEG, WebP), fino a 8 file."
+    }
+  },
+  "samples": {
+    "expose": {
+      "name": "Annuncio_offerta_2_palazzo_epoca",
+      "description": "Un annuncio fittizio dell'offerta 2 con estratto del verbale dell'assemblea condominiale, in PDF.",
+      "content": "# Annuncio: bilocale in palazzo d'epoca in centro\n\nDATI DI ESEMPIO SINTETICI – completamente fittizi.\n\n| Dato | Valore |\n|---|---|\n| Anno di costruzione | 1910, ristrutturazione completa nel 2015 |\n| Superficie | 58 m² (vedi planimetria) |\n| Prezzo di acquisto | 289.000 EUR |\n| Spese condominiali | 280 EUR/mese, di cui 80 EUR non ripartibili |\n| Attestato energetico | sui consumi, 128 kWh/(m²·a), riscaldamento centralizzato a gas del 2015 |\n| Stato | libero, disponibile subito |\n\n## Posizione\n\nVia laterale tranquilla, a 5 minuti dalla metropolitana, negozi e medici a piedi. In città vige un tetto agli affitti.\n\n## Estratto del verbale dell'assemblea condominiale del 12/11/2025\n\n- Punto 4: Il condominio farà redigere entro metà 2026 una perizia sulla facciata. Si prevede un risanamento nel 2027–2028; resta da chiarire se servirà una spesa straordinaria.\n- Punto 5: Il fondo di manutenzione ammonta a 112.000 EUR per 10 appartamenti.\n- Punto 6: Il contratto con l'amministratore scade a fine 2026."
+    },
+    "floor_plan": {
+      "name": "Planimetria_offerta_2",
+      "description": "Una planimetria semplificata e fittizia dell'appartamento di 58 m² dell'offerta 2 come immagine (PNG)."
+    }
+  },
+  "tests": {
+    "two_offers": {
+      "name": "Due offerte nel testo"
+    },
+    "with_documents": {
+      "name": "Con annuncio e planimetria"
+    }
+  }
+}

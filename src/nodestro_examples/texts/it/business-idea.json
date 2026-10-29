@@ -1,0 +1,55 @@
+{
+  "name": "Valutare un'idea imprenditoriale",
+  "field": "Lavoratori autonomi e fondatori",
+  "description": "Valutare in parallelo potenziale di mercato, redditività e rischi di un'idea imprenditoriale ed emettere un giudizio.",
+  "start": "Idea imprenditoriale",
+  "output": "Valutazione",
+  "file_name": "Valutazione_idea_imprenditoriale",
+  "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nIdea: servizio mobile di riparazione biciclette \"Bici Soccorso\" in una città di 180.000 abitanti.\nUna cargo bike con attrezzi raggiunge i clienti a casa o in ufficio; prenotazione tramite un sito web semplice.\n\nIpotesi del fondatore:\n- Intervento medio 65 EUR netti, quota materiale 30 %\n- Capacità 6 interventi al giorno, 20 giorni lavorativi al mese; nel primo anno in media 50 % di utilizzo\n- Investimento iniziale 18.000 EUR (cargo bike, attrezzi, sito web), finanziato con risparmi propri\n- Costi correnti 1.400 EUR al mese (assicurazione, magazzino, telefono, software, marketing)\n- Compenso desiderato del titolare 2.500 EUR al mese\n- Target: pendolari, famiglie con cargo bike, aziende con leasing di biciclette per i dipendenti\n- Noto: tre negozi di biciclette in città con tempi di attesa di due-tre settimane in primavera",
+  "guide": {
+    "problem": "Prima di avviare un'impresa vale la pena guardare con lucidità mercato, numeri e rischi. Il workflow fa esaminare l'idea contemporaneamente da tre esperti e una giuria emette un giudizio motivato.",
+    "flow": "Tre agenti lavorano in parallelo: l'analista di mercato stima target e concorrenza, il calcolatore della redditività determina punto di pareggio e scenari con la calcolatrice, l'analista dei rischi cerca i punti deboli. La giuria di investitori soppesa tutto e fornisce un giudizio strutturato con un punteggio.",
+    "input": "Una descrizione dell'idea con offerta, target, prezzi, costi, capacità e concorrenti noti.",
+    "result": "Un giudizio strutturato (proseguire, adattare o abbandonare) con punteggio, punti di forza, rischi, ipotesi da verificare e prossimi passi concreti per la validazione, anche come rapporto PDF.",
+    "adapt": "Descrivi la tua idea con i tuoi numeri. Più oneste sono le ipotesi, più utile è il giudizio. Carica i tuoi dati di mercato o risultati di sondaggi come conoscenza e assegnali all'analista di mercato."
+  },
+  "agents": {
+    "market": {
+      "name": "Analista di mercato",
+      "description": "Stima target, domanda e concorrenza.",
+      "system": "Sei un analista di mercato per startup. Descrivi i target, i loro bisogni e la disponibilità a pagare, stima il potenziale di mercato con un calcolo approssimativo trasparente e prudente e analizza la concorrenza. Indica quali informazioni provengono dalla descrizione e quali si basano su conoscenze generali e vanno verificate sul posto.",
+      "task": "Analizza il mercato per questa idea:\n\n{{input}}"
+    },
+    "economics": {
+      "name": "Calcolatore della redditività",
+      "description": "Calcola margine di contribuzione, punto di pareggio e scenari con la calcolatrice.",
+      "system": "Sei un consulente per startup specializzato in finanza. Usa la calcolatrice per calcolare il margine di contribuzione per intervento, ricavi e utile mensili, il punto di pareggio in interventi al mese (compenso del titolare incluso) e il rientro dell'investimento iniziale. Calcola tre scenari (prudente, atteso, ottimistico) e mostra quanto il risultato è sensibile all'utilizzo e al prezzo.",
+      "task": "Calcola la redditività di questa idea:\n\n{{input}}"
+    },
+    "risks": {
+      "name": "Analista dei rischi",
+      "description": "Cerca punti deboli e rischi dell'idea.",
+      "system": "Sei un coach per startup esperto e fai deliberatamente l'avvocato del diavolo. Cerca i rischi maggiori: domanda, stagionalità, dipendenza da una sola persona, concorrenza, requisiti di legge, scalabilità e finanziamento. Valuta ogni rischio per probabilità e impatto e proponi un modo economico per verificarlo prima di avviare l'impresa.",
+      "task": "Analizza i rischi di questa idea:\n\n{{input}}"
+    },
+    "jury": {
+      "name": "Giuria di investitori",
+      "description": "Soppesa mercato, numeri e rischi ed emette un giudizio.",
+      "system": "Sei una giuria di fondatori e investitori esperti. Soppesa mercato, redditività e rischi tra loro ed emetti un giudizio: proseguire, adattare o abbandonare. Assegna un punteggio da 1 a 10 e motivalo. Indica le ipotesi da verificare per prime e prossimi passi concreti ed economici. Sii onesto ma equo.",
+      "task": "Valuta l'idea.\n\nAnalisi di mercato:\n{{node:market}}\n\nRedditività:\n{{node:economics}}\n\nRischi:\n{{node:risks}}",
+      "fields": {
+        "verdict": "Giudizio (proseguire, adattare o abbandonare) con motivazione",
+        "score": "Punteggio da 1 a 10",
+        "strengths": "Punti di forza dell'idea",
+        "risks": "Rischi principali",
+        "assumptions_to_test": "Ipotesi da verificare per prime",
+        "next_steps": "Prossimi passi concreti"
+      }
+    }
+  },
+  "tests": {
+    "idea": {
+      "name": "Servizio mobile di riparazione biciclette"
+    }
+  }
+}

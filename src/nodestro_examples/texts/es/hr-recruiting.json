@@ -1,0 +1,68 @@
+{
+  "name": "Publicar una vacante y preparar entrevistas",
+  "field": "Recursos humanos",
+  "description": "Desarrollar un perfil del puesto, redactar la oferta de empleo, preparar preguntas de entrevista estructuradas y revisarlas en cuanto a equidad.",
+  "start": "Necesidad de contratación",
+  "output": "Documentos del puesto",
+  "file_name": "Oferta de empleo",
+  "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nEmpresa: Ejemplo Logística S.L., 220 empleados, sede en Villamuestra, trabajo híbrido posible (2 días/semana)\nPuesto: Junior Data Analyst (cualquier género), jornada completa, indefinido, equipo de controlling (5 personas)\nNotas de la responsable del equipo:\n- Debe crear y mantener informes sobre plazos de entrega y costes (Excel, Power BI) y preparar datos del ERP\n- Importante: meticuloso, sabe explicar las cifras con claridad, le gusta colaborar con almacén y ventas\n- Estudios de economía, estadística o similares, o formación profesional comparable con experiencia\n- Conocimientos básicos de SQL serían deseables, Python es un plus\n- «Preferiblemente alguien joven que encaje en el equipo y con alemán como lengua materna»\n- Banda salarial 48.000–54.000 EUR, 30 días de vacaciones, presupuesto de formación de 1.500 EUR al año",
+  "guide": {
+    "problem": "Una buena contratación empieza con un perfil claro y entrevistas justas y comparables. El flujo convierte unas notas sueltas en un perfil del puesto, una oferta de empleo y una guía de entrevista y lo revisa todo en cuanto a equidad.",
+    "flow": "El agente del perfil ordena tareas y requisitos. A partir de ahí se crean en paralelo la oferta de empleo y la guía de entrevista. El revisor de equidad comprueba ambas en busca de formulaciones discriminatorias o no admisibles, por ejemplo sobre la edad o la lengua materna, e indica qué debe revisar una persona. Si hay objeciones, un nodo de decisión envía la documentación a una revisión que aplica sus propuestas; si no, se mantienen las primeras versiones.",
+    "input": "Notas sobre el puesto: tareas, cualificaciones deseadas, equipo, condiciones y retribución.",
+    "result": "Perfil del puesto, oferta de empleo y guía de entrevista con anclas de valoración, una revisión de equidad estructurada y, si hubo objeciones, una versión revisada con la lista de cambios, además como archivo de Word. La documentación debe ser aprobada por RR. HH. o por una persona experta antes de publicarse.",
+    "adapt": "Sustituye las notas por tu necesidad de contratación. Puedes guardar vuestro perfil como empleador y vuestros beneficios como conocimiento y asignarlos al agente de la oferta. Los requisitos legales de tu país se añaden en el prompt de sistema del revisor de equidad."
+  },
+  "agents": {
+    "profile": {
+      "name": "Perfil del puesto",
+      "description": "Ordena tareas, requisitos imprescindibles y deseables y competencias.",
+      "system": "Eres HR business partner. Desarrolla un perfil del puesto a partir de las notas: finalidad del puesto, tareas principales, requisitos imprescindibles y deseables, competencias técnicas y personales y condiciones. Formula los requisitos de forma relacionada con el puesto y verificable. No adoptes deseos que se refieran a características protegidas como edad, origen, sexo o lengua materna; anótalos como punto a aclarar.",
+      "task": "Desarrolla el perfil del puesto a partir de estas notas:\n\n{{input}}"
+    },
+    "job_ad": {
+      "name": "Oferta de empleo",
+      "description": "Redacta una oferta de empleo atractiva e inclusiva.",
+      "system": "Redactas ofertas de empleo que atraen a las personas y no excluyen a nadie. Escribe una oferta con una introducción sobre la empresa, tareas, perfil (imprescindible y deseable claramente separados), lo que se ofrece y cómo presentar la candidatura. Usa un lenguaje claro e inclusivo y evita obstáculos innecesarios. Usa solo datos del perfil del puesto.",
+      "task": "Redacta la oferta de empleo para este perfil:\n\n{{node:profile}}"
+    },
+    "interview": {
+      "name": "Guía de entrevista",
+      "description": "Prepara preguntas de entrevista estructuradas con anclas de valoración.",
+      "system": "Eres experto en selección estructurada. Crea una guía de entrevista de 60 minutos: desarrollo, entre ocho y diez preguntas sobre los requisitos más importantes (preguntas conductuales y situacionales) y, para cada pregunta, el criterio evaluado y anclas de valoración para débil, medio y fuerte. Todas las candidaturas reciben las mismas preguntas. No preguntes por vida privada, planificación familiar, salud, origen ni religión.",
+      "task": "Crea la guía de entrevista para este perfil:\n\n{{node:profile}}"
+    },
+    "fairness": {
+      "name": "Revisor de equidad",
+      "description": "Revisa la oferta y la guía en busca de discriminación y preguntas inadmisibles.",
+      "system": "Revisas documentos de personal en cuanto a equidad e igualdad de trato. Busca en la oferta y en la guía formulaciones que perjudiquen directa o indirectamente por edad, sexo, origen, idioma, religión, discapacidad u otras características protegidas, preguntas de entrevista inadmisibles y requisitos sin relación con el puesto. Propone cambios concretos. Indica expresamente que una persona cualificada debe aprobar los documentos antes de usarlos.",
+      "task": "Revisa estos documentos en cuanto a equidad.\n\nOferta de empleo:\n{{node:job_ad}}\n\nGuía de entrevista:\n{{node:interview}}",
+      "fields": {
+        "approved": "¿Se puede usar sin cambios?",
+        "issues": "Problemas encontrados con su ubicación",
+        "suggested_changes": "Propuestas de cambio concretas",
+        "human_checks": "Puntos que debe revisar RR. HH. o una persona cualificada"
+      }
+    },
+    "revise": {
+      "name": "Revisión",
+      "description": "Aplica a la oferta y a la guía los cambios propuestos por la revisión de equidad.",
+      "system": "Revisas documentación de recursos humanos tras una revisión de equidad. Aplica cada propuesta de cambio, elimina las formulaciones señaladas y las preguntas no admisibles y deja todo lo demás sin cambios. Entrega la oferta de empleo revisada completa y la guía de entrevista revisada completa y, al final, enumera cada cambio con una breve justificación. Marca los puntos que no hayas podido resolver para que los revise RR. HH.",
+      "task": "Revisa la documentación.\n\nOferta de empleo:\n{{node:job_ad}}\n\nGuía de entrevista:\n{{node:interview}}\n\nRevisión de equidad:\n{{node:fairness}}"
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "¿Hace falta revisar?",
+      "branches": {
+        "revise": "Revisar"
+      },
+      "default": "Sin incidencias"
+    }
+  },
+  "tests": {
+    "notes": {
+      "name": "Notas con deseos problemáticos"
+    }
+  }
+}

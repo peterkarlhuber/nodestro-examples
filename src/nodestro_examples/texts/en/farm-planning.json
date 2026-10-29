@@ -1,0 +1,141 @@
+{
+  "name": "Crop planning for a farm",
+  "field": "Agriculture",
+  "description": "Plan the crop rotation for a farm's fields, calculate gross margins and check the plan.",
+  "start": "Farm data",
+  "output": "Crop plan",
+  "file_name": "Cropping plan",
+  "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only. Prices and costs are assumptions.\n\nFarm: arable farm Example Farm, 60 ha in five fields, conventional, no livestock\n| Field | Size | Soil | Previous crop 2026 |\n|---|---|---|---|\n| F1 | 15 ha | loam, good | winter wheat |\n| F2 | 12 ha | loam, good | winter oilseed rape |\n| F3 | 10 ha | sandy loam | winter barley |\n| F4 | 13 ha | loam, good | sugar beet |\n| F5 | 10 ha | sandy, dry | winter rye |\n\nPlanning rules: no wheat after wheat; oilseed rape at most every 4 years on the same field (F2 had rape in 2026);\nsugar beet only on good loam, supply contract for 13 ha; cereal share at most 66 %.\n\nAssumptions per ha (revenue / variable costs):\n- Winter wheat EUR 1,900 / EUR 1,050; winter barley EUR 1,550 / EUR 950; winter rye EUR 1,250 / EUR 780\n- Winter oilseed rape EUR 1,800 / EUR 1,100; sugar beet EUR 3,300 / EUR 1,900; field beans EUR 1,150 / EUR 650",
+  "guide": {
+    "problem": "Crop planning has to take rotation, soils, contracts and profitability into account at the same time. The workflow proposes a crop rotation, calculates gross margins and checks the plan against your own rules.",
+    "flow": "A chain of three agents: the rotation planner assigns a crop to each field, the gross margin calculation works out each field and the total with the calculator tool, and the plausibility check verifies rules and risks and delivers a structured result.",
+    "input": "Fields with size, soil and previous crop, your planning rules and assumptions on revenue and costs per hectare. You can attach fields and assumptions as an Excel or CSV file; the sample file contains both tables of the test task.",
+    "result": "A cropping plan per field with gross margin, a rule check, risks and open questions, also as an Excel file. Legal requirements, for example on fertilisation or subsidy conditions, must be checked against the current local rules.",
+    "adapt": "Attach your field records and costing data as Excel and enter your planning rules. Soil samples you need every year can be uploaded as knowledge and assigned to the rotation planner."
+  },
+  "agents": {
+    "rotation": {
+      "name": "Rotation planner",
+      "description": "Assigns a crop to each field according to rules and soil.",
+      "system": "You are a crop production adviser. Assign a crop to each field for the planning year, taking into account the previous crop, soil, supply and planning rules and a healthy rotation. Justify each assignment in one sentence and name alternatives where a rule is only just met. Follow the stated rules even if they have economic disadvantages.",
+      "task": "Plan the crop rotation for this farm:\n\n{{input}}"
+    },
+    "margins": {
+      "name": "Gross margin calculation",
+      "description": "Calculates gross margins per field and in total with the calculator tool.",
+      "system": "You are an agricultural economist. Use the calculator tool to calculate the gross margin of each field (revenue minus variable costs, times area) and the total for the farm. Use only the stated assumptions. Also show how the total gross margin changes with 15 % lower revenue.",
+      "task": "Calculate the gross margins.\n\nFarm data and assumptions:\n{{run.input}}\n\nCrop rotation:\n{{node:rotation}}"
+    },
+    "review": {
+      "name": "Plausibility check",
+      "description": "Checks the plan against rules and risks and summarises it.",
+      "system": "You check crop plans. Check each planning rule individually and state whether it is met, check the calculation for plausibility and name risks such as weather, prices and workload peaks. Point out that legal requirements and subsidy conditions must be checked against the current rules.",
+      "task": "Check this crop plan.\n\nCrop rotation:\n{{node:rotation}}\n\nGross margins:\n{{node:margins}}",
+      "fields": {
+        "plan_summary": "Crop plan per field in brief",
+        "total_margin_eur": "Total gross margin in euros",
+        "rule_checks": "Check of each planning rule",
+        "risks": "Risks of the plan",
+        "open_questions": "Open questions before implementation"
+      }
+    }
+  },
+  "form": {
+    "field_data": {
+      "label": "Field records and costing data",
+      "description": "Optional: fields and assumptions as Excel or CSV, up to 3 files of 10 MB each. Without a file, the tables in the text apply."
+    }
+  },
+  "samples": {
+    "fields": {
+      "name": "Field_records_Example_Farm",
+      "description": "The fictional fields and costing assumptions of the test task as an Excel file with two sheets.",
+      "content": {
+        "Fields": [
+          [
+            "Field",
+            "Size (ha)",
+            "Soil",
+            "Previous crop 2026"
+          ],
+          [
+            "F1",
+            15,
+            "loam, good",
+            "winter wheat"
+          ],
+          [
+            "F2",
+            12,
+            "loam, good",
+            "winter oilseed rape"
+          ],
+          [
+            "F3",
+            10,
+            "sandy loam",
+            "winter barley"
+          ],
+          [
+            "F4",
+            13,
+            "loam, good",
+            "sugar beet"
+          ],
+          [
+            "F5",
+            10,
+            "sandy, dry",
+            "winter rye"
+          ]
+        ],
+        "Assumptions": [
+          [
+            "Crop",
+            "Revenue (EUR/ha)",
+            "Variable costs (EUR/ha)"
+          ],
+          [
+            "Winter wheat",
+            1900,
+            1050
+          ],
+          [
+            "Winter barley",
+            1550,
+            950
+          ],
+          [
+            "Winter rye",
+            1250,
+            780
+          ],
+          [
+            "Winter oilseed rape",
+            1800,
+            1100
+          ],
+          [
+            "Sugar beet",
+            3300,
+            1900
+          ],
+          [
+            "Field beans",
+            1150,
+            650
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "farm_text": {
+      "name": "Farm in the text"
+    },
+    "field_file": {
+      "name": "Field records as an Excel file",
+      "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only. Prices and costs are assumptions.\n\nFarm: arable farm Example Farm, 60 ha in five fields, conventional, no livestock. Fields and costing assumptions are in the attached Excel file.\n\nPlanning rules: no wheat after wheat; oilseed rape at most every 4 years on the same field (F2 had rape in 2026);\nsugar beet only on good loam, supply contract for 13 ha; cereal share at most 66 %."
+    }
+  }
+}

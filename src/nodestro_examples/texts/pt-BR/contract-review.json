@@ -1,0 +1,93 @@
+{
+  "name": "Estruturar um contrato e encontrar pontos de verificação",
+  "field": "Direito e administração",
+  "description": "Estruturar um contrato, explicar suas cláusulas em linguagem simples e reunir pontos para uma análise profissional.",
+  "start": "Texto do contrato",
+  "output": "Visão geral do contrato",
+  "file_name": "Visão geral do contrato",
+  "input": "DADOS DE EXEMPLO SINTÉTICOS – um contrato totalmente fictício, apenas para testar.\n\nContrato de serviço de software entre Exemplo Cloud Ltda. (fornecedor) e Comércio Amostra Ltda. (cliente)\n\n§ 1 Objeto: o fornecedor disponibiliza ao cliente o software \"ShopPilot\" como serviço em nuvem e o opera.\n§ 2 Vigência: o contrato começa em 1º de abril de 2026 e tem duração de 24 meses. Ele é renovado automaticamente\npor 12 meses a cada vez, se não for rescindido por escrito 6 meses antes do término.\n§ 3 Preço: 1.200 EUR líquidos por mês, pagáveis anualmente de forma antecipada. O fornecedor pode ajustar os\npreços uma vez por ano a seu critério razoável.\n§ 4 Disponibilidade: o fornecedor busca uma disponibilidade de 99 % na média mensal. Janelas de manutenção não contam.\n§ 5 Responsabilidade: a responsabilidade do fornecedor é limitada a três mensalidades, exceto em caso de dolo.\n§ 6 Dados: o fornecedor trata os dados do cliente em nome deste. Subcontratados podem ser usados sem aviso\nprévio. Após o término do contrato, os dados são excluídos após 30 dias.\n§ 7 Rescisão extraordinária: em caso de atraso de pagamento superior a 14 dias, o fornecedor pode bloquear o acesso.\n§ 8 Foro: sede do fornecedor.",
+  "guide": {
+    "problem": "Contratos são longos, e cláusulas importantes se escondem nos detalhes. O workflow estrutura um contrato, explica-o em linguagem simples e reúne pontos que uma pessoa qualificada deveria verificar. Ele não substitui aconselhamento jurídico.",
+    "flow": "O estruturador levanta partes, vigência, serviços e prazos. Com base nisso, o explicador de cláusulas (linguagem simples) e o analista de pontos de verificação (regras incomuns ou unilaterais) trabalham em paralelo; os dois leem o contrato por conta própria, como texto ou como arquivo enviado. Se o analista encontrar cláusulas críticas, um nó de decisão acrescenta uma análise aprofundada dessas cláusulas. O agente de relatório reúne tudo em uma visão geral estruturada com perguntas para a assessoria jurídica.",
+    "input": "O contrato como arquivo (PDF, Word, Markdown ou texto) no campo \"Contrato como arquivo\" ou como texto, de preferência com a numeração das cláusulas. Você envia o arquivo diretamente ao iniciar; não precisa de uma coleção de conhecimento para isso. O arquivo de exemplo contém o contrato fictício da tarefa de teste.",
+    "result": "Uma visão geral estruturada com resumo, dados principais, cláusulas explicadas, pontos de verificação e perguntas para um advogado ou uma advogada, também em PDF e como arquivo Word editável. O estruturador propõe os dados principais do contrato para o conhecimento, por exemplo para um cadastro de contratos; só é salvo o que você confirmar.",
+    "adapt": "Envie o seu contrato como arquivo ao iniciar ou cole-o. Os seus próprios critérios, como requisitos mínimos de responsabilidade ou proteção de dados, são acrescentados no prompt de sistema do analista de pontos de verificação. Contratos-modelo para comparação podem ser salvos como conhecimento e atribuídos a esse analista."
+  },
+  "agents": {
+    "structure": {
+      "name": "Estruturador do contrato",
+      "description": "Registra partes, objeto, vigência, preços e prazos.",
+      "system": "Você estrutura contratos. Registre as partes, o objeto, a vigência e a renovação, os prazos de rescisão, os preços e condições de pagamento, os compromissos de serviço, a responsabilidade, a proteção de dados e o foro. Indique para cada item sua localização no contrato e anote o que o contrato não regula.",
+      "task": "Estruture este contrato:\n\n{{input}}"
+    },
+    "explain": {
+      "name": "Explicador de cláusulas",
+      "description": "Explica cada cláusula em linguagem simples.",
+      "system": "Você explica contratos para pessoas sem formação jurídica. Explique cada cláusula em uma a três frases simples: o que ela regula e o que significa na prática para o cliente, com um exemplo curto quando ajudar. Não julgue se uma cláusula é válida.",
+      "task": "Explique as cláusulas deste contrato.\n\nContrato:\n{{run.input}}\n\nEstrutura:\n{{node:structure}}"
+    },
+    "checkpoints": {
+      "name": "Analista de pontos de verificação",
+      "description": "Encontra disposições incomuns, desequilibradas ou ausentes.",
+      "system": "Você prepara contratos para análise jurídica. Marque disposições incomuns, desequilibradas, pouco claras ou ausentes, por exemplo renovação automática, alterações unilaterais de preço, compromissos de serviço fracos, limites de responsabilidade, subcontratados ou devolução de dados. Explique para cada ponto por que ele deve ser verificado e formule uma pergunta sobre ele. Não faça uma avaliação jurídica definitiva. Em cada ponto de verificação, reproduza o texto literal da cláusula em questão com a sua referência, para que as etapas seguintes possam trabalhar sem o documento original.",
+      "task": "Reúna os pontos de verificação deste contrato.\n\nContrato:\n{{run.input}}\n\nEstrutura:\n{{node:structure}}",
+      "fields": {
+        "points": "Pontos de verificação com motivo e pergunta",
+        "critical_count": "Número de cláusulas críticas (por exemplo, responsabilidade ilimitada ou muito baixa, renovação automática, reajustes unilaterais de preço, tratamento de dados sem acordo)"
+      }
+    },
+    "report": {
+      "name": "Visão geral do contrato",
+      "description": "Reúne explicações e pontos de verificação em uma visão geral estruturada.",
+      "system": "Você resume análises de contratos para tomadores de decisão. Crie uma visão geral estruturada a partir das explicações e dos pontos de verificação, sem acrescentar novas avaliações jurídicas. Formule as perguntas de modo que um advogado possa respondê-las diretamente.",
+      "task": "Crie a visão geral do contrato.\n\nCláusulas explicadas:\n{{node:explain}}\n\nPontos de verificação:\n{{node:checkpoints}}\n\nCláusulas críticas em detalhe:\n{{node:critical}}",
+      "fields": {
+        "overview": "Resumo do contrato em três a cinco frases",
+        "key_terms": "Condições principais com localização (vigência, prazos, preços)",
+        "clauses_explained": "Cláusulas em linguagem simples",
+        "check_points": "Pontos de verificação com justificativa",
+        "questions_for_expert": "Perguntas para a assessoria jurídica"
+      }
+    },
+    "critical": {
+      "name": "Cláusulas críticas",
+      "description": "Examina a fundo as cláusulas críticas e prepara perguntas para a negociação.",
+      "system": "Você prepara negociações de contratos. Examine a fundo cada cláusula crítica: o que ela significa na prática, o pior caso realista, como cláusulas assim costumam ser redigidas em contratos comparáveis e que redação alternativa poderia ser proposta. Formule perguntas para a assessoria jurídica. Não faça uma avaliação jurídica definitiva.",
+      "task": "Examine a fundo as cláusulas críticas.\n\nContrato:\n{{run.input}}\n\nPontos de verificação:\n{{node:checkpoints}}"
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "Cláusulas críticas?",
+      "branches": {
+        "critical": "Cláusulas críticas"
+      },
+      "default": "Nenhuma"
+    }
+  },
+  "form": {
+    "contract_file": {
+      "label": "Contrato como arquivo",
+      "description": "Opcional: o contrato em PDF, Word (DOCX), Markdown ou texto, no máximo 20 MB. Basta enviar o arquivo aqui; não é preciso uma coleção de conhecimento. Sem arquivo vale o texto do contrato abaixo."
+    }
+  },
+  "samples": {
+    "contract": {
+      "name": "Contrato_servico_software_exemplo",
+      "description": "O contrato fictício da tarefa de teste como documento Word.",
+      "content": "# Contrato de serviço de software\n\nDADOS DE EXEMPLO SINTÉTICOS – um contrato totalmente fictício, apenas para testar.\n\nentre **Exemplo Cloud Ltda.** (fornecedor) e **Comércio Amostra Ltda.** (cliente)\n\n## § 1 Objeto\n\nO fornecedor disponibiliza ao cliente o software \"ShopPilot\" como serviço em nuvem e o opera.\n\n## § 2 Vigência\n\nO contrato começa em 1º de abril de 2026 e tem duração de 24 meses. Ele é renovado automaticamente por 12 meses a cada vez, se não for rescindido por escrito 6 meses antes do término.\n\n## § 3 Preço\n\n1.200 EUR líquidos por mês, pagáveis anualmente de forma antecipada. O fornecedor pode ajustar os preços uma vez por ano a seu critério razoável.\n\n## § 4 Disponibilidade\n\nO fornecedor busca uma disponibilidade de 99 % na média mensal. Janelas de manutenção não contam.\n\n## § 5 Responsabilidade\n\nA responsabilidade do fornecedor é limitada a três mensalidades, exceto em caso de dolo.\n\n## § 6 Dados\n\nO fornecedor trata os dados do cliente em nome deste. Subcontratados podem ser usados sem aviso prévio. Após o término do contrato, os dados são excluídos após 30 dias.\n\n## § 7 Rescisão extraordinária\n\nEm caso de atraso de pagamento superior a 14 dias, o fornecedor pode bloquear o acesso.\n\n## § 8 Foro\n\nSede do fornecedor."
+    }
+  },
+  "tests": {
+    "contract_text": {
+      "name": "Contrato no texto, com cláusulas críticas"
+    },
+    "contract_file": {
+      "name": "Contrato como arquivo Word, sem texto"
+    },
+    "balanced_contract": {
+      "name": "Contrato de manutenção equilibrado",
+      "input": "DADOS DE EXEMPLO SINTÉTICOS – um contrato totalmente fictício, apenas para testar.\n\nContrato de manutenção entre Exemplo Técnica Ltda. (contratada) e Clínica Amostra Ltda. (contratante)\n\n§ 1 Objeto: manutenção semestral de dois aparelhos de ar-condicionado no prédio da clínica.\n§ 2 Vigência: 12 meses a partir de 1º de maio de 2026; depois, rescindível a qualquer momento com aviso prévio de um mês para o fim do mês.\n§ 3 Preço: 380 EUR líquidos por manutenção, com vencimento 14 dias após a fatura. Reajustes somente com o acordo de ambas as partes.\n§ 4 Falhas: atendimento em até 2 dias úteis; peças de reposição somente após aprovação prévia da contratante.\n§ 5 Responsabilidade: conforme as disposições legais.\n§ 6 Proteção de dados: não são tratados dados pessoais."
+    }
+  }
+}

@@ -1,0 +1,246 @@
+{
+  "name": "Check a household budget and save",
+  "field": "Private individuals – finances",
+  "description": "Evaluate a household's income and spending and find realistic ways to save.",
+  "start": "Household budget",
+  "output": "Budget check",
+  "file_name": "Household budget",
+  "input": "SYNTHETIC SAMPLE DATA – an entirely fictional household, for trying things out only.\n\nHousehold: two adults, one child (7 years), rented flat\nNet income per month: EUR 2,900 + EUR 1,450 (part-time) + EUR 255 child benefit\nGoal: save EUR 400 per month to build an emergency fund of three months' net income within two years.\n\nFixed costs per month:\n- Rent including heating EUR 1,380, electricity EUR 95, internet and mobile (3 contracts) EUR 112\n- Car: loan instalment EUR 289, insurance EUR 74, tax EUR 18\n- Insurance: liability EUR 7, contents EUR 14, disability EUR 68\n- Day care/after-school club EUR 210, child's sports club EUR 25\n- Streaming and subscriptions: 4 services, EUR 52 in total; gym 2 × EUR 39 (one unused for 5 months)\n\nVariable spending, average of the last 3 months:\n- Groceries EUR 780, eating out and delivery EUR 240, fuel EUR 160\n- Clothing EUR 130, leisure EUR 150, miscellaneous EUR 260\nCurrent savings account balance: EUR 1,800",
+  "guide": {
+    "problem": "At the end of the month there is often less left than expected. The workflow recalculates a household budget, finds savings potential and checks whether the suggestions are realistic in everyday life.",
+    "flow": "The budget analyst calculates totals, surplus and shares per category with the calculator tool. The savings adviser estimates concrete savings, also recalculated. The reality check receives both results, checks feasibility and delivers a structured result.",
+    "input": "A household's income, fixed and variable expenses and a savings goal. Instead of typing everything in, you can attach bank transactions or a household book as a CSV or Excel file; the sample file contains a fictional month.",
+    "result": "A structured budget check with the current monthly surplus, savings potential, measures, quick first steps and notes, also as an Excel file. It does not replace financial or debt advice.",
+    "adapt": "Attach your own bank transactions or enter your figures; add personal priorities, such as “the car stays”, in the text. Bank statements contain personal data: they stay with you and are only passed to the model for this run."
+  },
+  "agents": {
+    "budget": {
+      "name": "Budget analyst",
+      "description": "Calculates income, spending, surplus and shares with the calculator tool.",
+      "system": "You are a household budget adviser. Use the calculator tool to calculate: total income, total fixed and variable spending, monthly surplus, savings rate and the share of each category in net income. Compare with the savings goal and show the gap. Present the results as a clear table.",
+      "task": "Evaluate this household budget:\n\n{{input}}"
+    },
+    "savings": {
+      "name": "Savings adviser",
+      "description": "Finds concrete ways to save and estimates their effect.",
+      "system": "You are a consumer adviser. Find concrete ways to save: unused contracts, switching tariffs, variable spending with room to move and habits. Estimate the monthly saving of each measure cautiously and add them up with the calculator tool. Do not recommend financial products, loans or investments, and do not suggest cancelling important insurance.",
+      "task": "Find ways to save based on this evaluation:\n\n{{node:budget}}"
+    },
+    "check": {
+      "name": "Reality check",
+      "description": "Checks the suggestions for feasibility and summarises them.",
+      "system": "You check savings plans for everyday practicality. Check the figures, drop unrealistic suggestions and order the rest by effort. State the current monthly surplus and the realistic savings potential as amounts in euros. Name the limits of the analysis and when independent financial or debt counselling makes sense.",
+      "task": "Check the savings plan.\n\nBudget evaluation:\n{{node:budget}}\n\nSavings suggestions:\n{{node:savings}}",
+      "fields": {
+        "monthly_surplus": "Current surplus per month in euros",
+        "savings_potential": "Realistic additional savings potential per month in euros",
+        "measures": "Measures with estimated saving",
+        "quick_wins": "Steps that can be taken this week",
+        "caveats": "Limits of the analysis and notes"
+      }
+    }
+  },
+  "form": {
+    "transactions": {
+      "label": "Bank transactions or household book",
+      "description": "Optional: an export from online banking or your household book as CSV or Excel, up to 6 files of 10 MB each. Without a file, the details in the text apply."
+    }
+  },
+  "samples": {
+    "transactions": {
+      "name": "Bank_transactions_March_2026",
+      "description": "Fictional bank transactions for one month with categories as CSV, matching the household of the test task.",
+      "content": [
+        [
+          "Date",
+          "Description",
+          "Category",
+          "Amount (EUR)"
+        ],
+        [
+          "2026-03-01",
+          "Salary employer A",
+          "Income",
+          2900.0
+        ],
+        [
+          "2026-03-01",
+          "Salary employer B (part-time)",
+          "Income",
+          1450.0
+        ],
+        [
+          "2026-03-02",
+          "Child benefit",
+          "Income",
+          255.0
+        ],
+        [
+          "2026-03-01",
+          "Rent including heating",
+          "Housing",
+          -1380.0
+        ],
+        [
+          "2026-03-02",
+          "Electricity instalment",
+          "Housing",
+          -95.0
+        ],
+        [
+          "2026-03-03",
+          "Mobile and internet (3 contracts)",
+          "Contracts",
+          -112.0
+        ],
+        [
+          "2026-03-03",
+          "Car loan instalment",
+          "Car",
+          -289.0
+        ],
+        [
+          "2026-03-03",
+          "Car insurance",
+          "Car",
+          -74.0
+        ],
+        [
+          "2026-03-05",
+          "Day care and after-school club",
+          "Children",
+          -210.0
+        ],
+        [
+          "2026-03-05",
+          "Child's sports club",
+          "Children",
+          -25.0
+        ],
+        [
+          "2026-03-06",
+          "Streaming service 1",
+          "Subscriptions",
+          -17.99
+        ],
+        [
+          "2026-03-06",
+          "Streaming service 2",
+          "Subscriptions",
+          -13.99
+        ],
+        [
+          "2026-03-07",
+          "Music subscription",
+          "Subscriptions",
+          -10.99
+        ],
+        [
+          "2026-03-07",
+          "Magazine app",
+          "Subscriptions",
+          -9.03
+        ],
+        [
+          "2026-03-08",
+          "Gym person 1",
+          "Leisure",
+          -39.0
+        ],
+        [
+          "2026-03-08",
+          "Gym person 2 (unused for 5 months)",
+          "Leisure",
+          -39.0
+        ],
+        [
+          "2026-03-04",
+          "Supermarket",
+          "Groceries",
+          -186.4
+        ],
+        [
+          "2026-03-11",
+          "Supermarket",
+          "Groceries",
+          -201.15
+        ],
+        [
+          "2026-03-18",
+          "Supermarket",
+          "Groceries",
+          -174.8
+        ],
+        [
+          "2026-03-25",
+          "Supermarket",
+          "Groceries",
+          -219.65
+        ],
+        [
+          "2026-03-09",
+          "Pizza delivery",
+          "Eating out",
+          -38.5
+        ],
+        [
+          "2026-03-14",
+          "Restaurant",
+          "Eating out",
+          -86.0
+        ],
+        [
+          "2026-03-21",
+          "Sushi delivery",
+          "Eating out",
+          -54.2
+        ],
+        [
+          "2026-03-28",
+          "Café and bakery",
+          "Eating out",
+          -61.3
+        ],
+        [
+          "2026-03-10",
+          "Petrol station",
+          "Car",
+          -78.4
+        ],
+        [
+          "2026-03-24",
+          "Petrol station",
+          "Car",
+          -81.6
+        ],
+        [
+          "2026-03-15",
+          "Clothing online",
+          "Clothing",
+          -129.9
+        ],
+        [
+          "2026-03-19",
+          "Cinema and theme park",
+          "Leisure",
+          -148.0
+        ],
+        [
+          "2026-03-27",
+          "Chemist and miscellaneous",
+          "Miscellaneous",
+          -263.1
+        ]
+      ]
+    }
+  },
+  "tests": {
+    "budget_text": {
+      "name": "Budget in the text"
+    },
+    "transactions_file": {
+      "name": "Bank transactions as CSV",
+      "input": "SYNTHETIC SAMPLE DATA – an entirely fictional household, for trying things out only.\n\nHousehold: two adults, one child (7 years), rented flat\nGoal: save EUR 400 per month to build an emergency fund of three months' net income within two years.\nLast month's bank transactions are attached as a CSV file. Tax and insurance paid annually: car tax EUR 216, liability EUR 84, contents EUR 168, disability EUR 816."
+    }
+  }
+}

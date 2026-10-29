@@ -1,0 +1,68 @@
+{
+  "name": "Publier une offre d'emploi et préparer les entretiens",
+  "field": "Ressources humaines",
+  "description": "Élaborer un profil de poste, rédiger une offre d'emploi, préparer des questions d'entretien structurées et vérifier leur équité.",
+  "start": "Besoin de recrutement",
+  "output": "Documents de recrutement",
+  "file_name": "Offre d'emploi",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nEntreprise : Exemple Logistique SARL, 220 salariés, implantée à Villexemple, télétravail possible (2 jours/semaine)\nPoste : Data analyst junior (H/F/X), temps plein, CDI, équipe contrôle de gestion (5 personnes)\nNotes du responsable d'équipe :\n- Doit créer et maintenir des rapports sur les délais et les coûts de livraison (Excel, Power BI), préparer les données de l'ERP\n- Important : rigoureux, sait expliquer les chiffres clairement, aime travailler avec l'entrepôt et les ventes\n- Diplôme en gestion, statistique ou équivalent, ou formation professionnelle comparable avec expérience\n- Des bases en SQL seraient bien, Python est un plus\n- « Idéalement quelqu'un de jeune qui s'intègre à l'équipe, de langue maternelle française »\n- Fourchette de salaire 48 000–54 000 EUR, 30 jours de congés, budget formation 1 500 EUR par an",
+  "guide": {
+    "problem": "Un bon recrutement commence par un profil clair et des entretiens équitables et comparables. Le workflow transforme des notes éparses en profil de poste, offre d'emploi et guide d'entretien, et vérifie l'équité de l'ensemble.",
+    "flow": "L'agent de profil organise les missions et les exigences. À partir de là, l'offre d'emploi et le guide d'entretien sont créés en parallèle. Le contrôleur d'équité vérifie les deux à la recherche de formulations discriminatoires ou non admises, par exemple sur l'âge ou la langue maternelle, et indique ce qu'une personne doit vérifier. S'il émet des objections, un nœud de décision transmet les documents à une révision qui applique ses propositions ; sinon, les premières versions sont conservées.",
+    "input": "Des notes sur le poste : missions, qualifications souhaitées, équipe, conditions et rémunération.",
+    "result": "Profil de poste, offre d'emploi et guide d'entretien avec repères d'évaluation, un contrôle d'équité structuré et, en cas d'objections, une version révisée avec la liste des modifications, aussi en fichier Word. Les documents doivent être validés par les RH ou une personne compétente avant publication.",
+    "adapt": "Remplacez les notes par votre besoin de recrutement. Vous pouvez enregistrer votre marque employeur et vos avantages comme connaissance et les attribuer à l'agent de l'offre. Ajoutez les exigences légales de votre pays au prompt système du contrôleur d'équité."
+  },
+  "agents": {
+    "profile": {
+      "name": "Profil de poste",
+      "description": "Organise les missions, les exigences indispensables et souhaitées et les compétences.",
+      "system": "Tu es HR business partner. Élabore un profil de poste à partir des notes : finalité du poste, missions principales, exigences indispensables et souhaitées, compétences professionnelles et personnelles et conditions. Formule les exigences de façon à ce qu'elles se rapportent au poste et soient vérifiables. N'adopte pas les souhaits qui renvoient à des caractéristiques protégées comme l'âge, l'origine, le genre ou la langue maternelle ; note-les plutôt comme point à clarifier.",
+      "task": "Élabore le profil de poste à partir de ces notes :\n\n{{input}}"
+    },
+    "job_ad": {
+      "name": "Offre d'emploi",
+      "description": "Rédige une offre d'emploi attrayante et inclusive.",
+      "system": "Tu rédiges des offres d'emploi qui donnent envie et n'excluent personne. Rédige une offre avec une présentation de l'entreprise, les missions, le profil (indispensable et souhaité clairement séparés), ce qui est proposé et comment postuler. Utilise un langage clair et inclusif et évite les obstacles inutiles. N'utilise que des informations du profil de poste.",
+      "task": "Rédige l'offre d'emploi pour ce profil :\n\n{{node:profile}}"
+    },
+    "interview": {
+      "name": "Guide d'entretien",
+      "description": "Prépare des questions d'entretien structurées avec grilles d'évaluation.",
+      "system": "Tu es expert en sélection structurée. Crée un guide d'entretien de 60 minutes : déroulé, huit à dix questions sur les exigences les plus importantes (questions comportementales et situationnelles) et, pour chaque question, le critère évalué et des repères d'évaluation pour faible, moyen et fort. Tous les candidats reçoivent les mêmes questions. Ne pose aucune question sur la vie privée, les projets familiaux, la santé, l'origine ou la religion.",
+      "task": "Crée le guide d'entretien pour ce profil :\n\n{{node:profile}}"
+    },
+    "fairness": {
+      "name": "Contrôleur d'équité",
+      "description": "Vérifie l'offre et le guide à la recherche de discriminations et de questions non admises.",
+      "system": "Tu vérifies l'équité et l'égalité de traitement des documents RH. Cherche dans l'offre et le guide des formulations qui désavantagent directement ou indirectement des personnes en raison de l'âge, du genre, de l'origine, de la langue, de la religion, d'un handicap ou d'autres caractéristiques protégées, des questions d'entretien non admises et des exigences sans lien avec le poste. Propose des modifications concrètes. Indique explicitement que les documents doivent être validés par une personne qualifiée avant utilisation.",
+      "task": "Vérifie l'équité de ces documents.\n\nOffre d'emploi :\n{{node:job_ad}}\n\nGuide d'entretien :\n{{node:interview}}",
+      "fields": {
+        "approved": "Utilisable sans modification ?",
+        "issues": "Problèmes constatés, avec leur emplacement",
+        "suggested_changes": "Propositions de modification concrètes",
+        "human_checks": "Points que les RH ou une personne qualifiée doivent vérifier"
+      }
+    },
+    "revise": {
+      "name": "Révision",
+      "description": "Applique à l'offre et au guide les modifications proposées par le contrôle d'équité.",
+      "system": "Tu révises des documents RH après un contrôle d'équité. Applique chaque proposition de modification, supprime les formulations signalées et les questions non admises et laisse tout le reste inchangé. Fournis l'offre d'emploi révisée complète et le guide d'entretien révisé complet, puis liste à la fin chaque modification avec une courte justification. Signale les points que tu n'as pas pu résoudre pour qu'ils soient vérifiés par les RH.",
+      "task": "Révise les documents.\n\nOffre d'emploi :\n{{node:job_ad}}\n\nGuide d'entretien :\n{{node:interview}}\n\nContrôle d'équité :\n{{node:fairness}}"
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "Révision nécessaire ?",
+      "branches": {
+        "revise": "Réviser"
+      },
+      "default": "Sans remarque"
+    }
+  },
+  "tests": {
+    "notes": {
+      "name": "Notes avec des souhaits problématiques"
+    }
+  }
+}

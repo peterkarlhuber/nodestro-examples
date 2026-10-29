@@ -1,0 +1,151 @@
+{
+  "name": "Développer une stratégie réseaux sociaux",
+  "field": "Influenceurs et créateurs de contenu",
+  "description": "Définir le positionnement et les piliers de contenu, développer des idées et créer un plan de publication.",
+  "start": "Profil du créateur",
+  "output": "Plan de contenu",
+  "file_name": "Calendrier éditorial",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nCréatrice : « Cuisiner avec Kim » (fictif), Instagram 8 400 abonnés, TikTok 3 100 abonnés, pas de chaîne YouTube\nContenus jusqu'ici : recettes rapides après le travail, irrégulièrement 1–2 publications par semaine\nMeilleures publications : pâtes en 15 minutes (reel, 92 000 vues), meal prep pour la semaine (carrousel, 1 400 enregistrements)\nAudience selon les statistiques : 25–40 ans, majoritairement actifs, 70 % de femmes\nObjectif dans trois mois : 15 000 abonnés sur Instagram et une première collaboration avec une marque régionale\nTemps : environ 6 heures par semaine pour planifier, filmer et monter\nDate de début du plan : lundi 2026-05-04",
+  "guide": {
+    "problem": "Publier régulièrement demande une direction claire et un plan adapté à son propre budget temps. Le workflow déduit une stratégie des statistiques, rassemble des idées adaptées et planifie la publication.",
+    "flow": "Une chaîne de trois agents : l'agent de stratégie définit le positionnement, les piliers de contenu et les objectifs et analyse pour cela les statistiques jointes, le développeur d'idées formule des idées de publication concrètes avec une accroche, et le planificateur de contenu les répartit sur quatre semaines. Le développeur d'idées garde ses propositions en mémoire pour que les exécutions suivantes ne répètent pas les idées. Un contrôle qualité vérifie que la fréquence et le mix sont réalistes.",
+    "input": "Profil avec plateformes, chiffres, publications à succès, audience, objectifs, temps disponible et date de début. Vous pouvez aussi joindre des statistiques en captures d'écran ou en export CSV/Excel ; le fichier d'exemple est un tel export.",
+    "result": "Un calendrier éditorial sur quatre semaines avec date, plateforme, format, idée, accroche et appel à l'action, précédé d'un court résumé de la stratégie, aussi en fichier Excel pour continuer la planification.",
+    "adapt": "Saisissez votre profil et vos chiffres ou joignez des captures de vos statistiques. Ajoutez votre style de marque et vos sujets tabous dans le prompt système du développeur d'idées. La mémoire « creator-ideas » se trouve sous Mémoire ; videz-la si vous voulez repartir de zéro. Pour un plan mensuel, vous pouvez planifier la copie."
+  },
+  "agents": {
+    "strategy": {
+      "name": "Agent de stratégie",
+      "description": "Définit le positionnement, les piliers de contenu et des objectifs mesurables.",
+      "system": "Tu es stratège réseaux sociaux pour créateurs. À partir des statistiques et des objectifs, déduis un positionnement en une phrase, trois à quatre piliers de contenu avec leur part, des formats adaptés par plateforme et des objectifs mesurables sur trois mois. Justifie chaque décision par les données disponibles et tiens compte du budget temps.",
+      "task": "Développe la stratégie pour ce profil :\n\n{{input}}"
+    },
+    "ideas": {
+      "name": "Développeur d'idées",
+      "description": "Développe des idées de publications concrètes avec accroche et format.",
+      "system": "Tu es un développeur de contenu créatif. Pour chaque pilier de contenu, développe quatre idées de publications concrètes avec un titre de travail, un format, une accroche pour les trois premières secondes et un appel à l'action. Vise la variété et des idées réalisables avec peu d'effort. Signale les idées qui conviennent à une collaboration avec une marque. Utilise ta mémoire : avant de développer des idées, lis celles déjà proposées lors des exécutions précédentes et évite les répétitions. À la fin, enregistre les titres provisoires des nouvelles idées avec la date. Si la mémoire est vide, commence simplement à zéro.",
+      "task": "Développe des idées de publications pour cette stratégie :\n\n{{node:strategy}}"
+    },
+    "calendar": {
+      "name": "Planificateur de contenu",
+      "description": "Répartit les idées dans un plan réaliste sur quatre semaines.",
+      "system": "Tu planifies des calendriers éditoriaux. Commence par un résumé de la stratégie en trois phrases. Crée ensuite un plan sur quatre semaines à partir de la date de début, sous forme de tableau avec date, jour de la semaine, plateforme, format, idée, accroche et appel à l'action. Planifie la production pour qu'elle tienne dans le budget temps, par exemple avec des journées de tournage pour plusieurs publications.",
+      "task": "Crée le calendrier éditorial.\n\nStratégie :\n{{node:strategy}}\n\nIdées :\n{{node:ideas}}",
+      "criteria": {
+        "realistic_frequency": "La fréquence de publication correspond au budget temps indiqué.",
+        "pillars_balanced": "Les piliers de contenu sont répartis conformément à la stratégie.",
+        "matches_goals": "Le plan soutient visiblement les objectifs indiqués."
+      }
+    }
+  },
+  "form": {
+    "insights": {
+      "label": "Statistiques",
+      "description": "Facultatif : captures d'écran de vos statistiques (PNG, JPEG, WebP) ou un export en CSV ou Excel, jusqu'à 6 fichiers. Sans fichier, les chiffres du texte font foi."
+    }
+  },
+  "samples": {
+    "insights": {
+      "name": "Statistiques_publications_mars",
+      "description": "Un export de statistiques fictif avec sept publications en CSV.",
+      "content": [
+        [
+          "Date",
+          "Plateforme",
+          "Format",
+          "Sujet",
+          "Vues",
+          "J'aime",
+          "Enregistrements",
+          "Commentaires",
+          "Nouveaux abonnés"
+        ],
+        [
+          "2026-03-02",
+          "Instagram",
+          "Reel",
+          "Pâtes en 15 minutes",
+          92000,
+          4100,
+          2300,
+          160,
+          610
+        ],
+        [
+          "2026-03-05",
+          "Instagram",
+          "Carrousel",
+          "Meal prep pour la semaine",
+          18500,
+          1200,
+          1400,
+          75,
+          140
+        ],
+        [
+          "2026-03-09",
+          "TikTok",
+          "Vidéo",
+          "Légumes au four sans découpe",
+          7400,
+          380,
+          90,
+          22,
+          35
+        ],
+        [
+          "2026-03-14",
+          "Instagram",
+          "Reel",
+          "Petit-déjeuner à emporter",
+          6100,
+          290,
+          160,
+          18,
+          20
+        ],
+        [
+          "2026-03-19",
+          "Instagram",
+          "Story",
+          "Courses au marché",
+          2100,
+          0,
+          0,
+          12,
+          4
+        ],
+        [
+          "2026-03-23",
+          "TikTok",
+          "Vidéo",
+          "Trois sauces à tremper",
+          11800,
+          640,
+          210,
+          41,
+          66
+        ],
+        [
+          "2026-03-28",
+          "Instagram",
+          "Carrousel",
+          "Idées anti-gaspi",
+          9900,
+          720,
+          980,
+          54,
+          85
+        ]
+      ]
+    }
+  },
+  "tests": {
+    "profile": {
+      "name": "Profil dans le texte"
+    },
+    "insights_export": {
+      "name": "Profil avec export de statistiques"
+    }
+  }
+}

@@ -1,0 +1,70 @@
+{
+  "name": "Revisão de código com testes",
+  "field": "Desenvolvimento de software",
+  "description": "Verificar código-fonte quanto a bugs e problemas de segurança e propor uma versão melhorada com testes.",
+  "start": "Código-fonte",
+  "output": "Revisão e testes",
+  "file_name": "Revisão de código",
+  "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nContexto: funções de uma ferramenta interna que calcula descontos para pedidos e busca pedidos.\nPython 3.12, banco de dados SQLite.\n\n```python\nimport sqlite3\n\ndef apply_discount(total, customer_type, coupon=None):\n    \"\"\"Return the price after discounts. Regular customers get 5 %, premium 10 %.\n    A coupon like \"SAVE20\" takes a further 20 % off, but the price must never drop below 0.\"\"\"\n    if customer_type == \"premium\":\n        total = total * 0.9\n    elif customer_type == \"regular\":\n        total = total * 0.95\n    if coupon:\n        percent = int(coupon[4:])\n        total = total - total * percent / 100\n    return round(total, 1)\n\ndef average_order_value(orders):\n    return sum(o[\"total\"] for o in orders) / len(orders)\n\ndef find_orders(db_path, customer_name):\n    conn = sqlite3.connect(db_path)\n    query = f\"SELECT id, total FROM orders WHERE customer = '{customer_name}'\"\n    rows = conn.execute(query).fetchall()\n    return rows\n```",
+  "guide": {
+    "problem": "Um segundo olhar encontra bugs antes que cheguem à produção. O workflow verifica o código ao mesmo tempo quanto a erros de lógica e problemas de segurança e entrega uma versão melhorada com testes.",
+    "flow": "O analista de bugs e o revisor de segurança trabalham em paralelo no mesmo código. O agente de melhoria reúne as constatações e escreve código corrigido e testes pytest; uma verificação de qualidade integrada garante que cada constatação seja tratada e coberta por testes.",
+    "input": "Um trecho de código com um breve contexto: linguagem, finalidade e ambiente, ou um projeto inteiro como arquivo ZIP ou arquivos avulsos no campo de arquivo. Arquivos compactados são apenas lidos, nunca executados. O código permanece inalterado na sua linguagem; as explicações aparecem no idioma da interface. O arquivo de exemplo é um pequeno projeto Python com erros embutidos.",
+    "result": "Uma lista de achados ordenada por gravidade, o código corrigido e testes pytest que cobrem cada achado, também como arquivo Markdown. Os testes não são executados automaticamente; rode-os localmente.",
+    "adapt": "Anexe o seu projeto como ZIP ou cole o código e informe a linguagem e o framework. Para outras linguagens, ajuste o framework de testes no agente de correção, por exemplo Jest ou JUnit. As suas diretrizes de código podem ser salvas como conhecimento. Pela API do workflow, a revisão também pode ser disparada a partir de um pipeline de CI."
+  },
+  "agents": {
+    "bugs": {
+      "name": "Analista de bugs",
+      "description": "Procura erros de lógica, casos-limite e desvios da descrição.",
+      "system": "Você é um desenvolvedor sênior que faz revisões de código. Procure erros de lógica, casos-limite não tratados, desvios entre documentação e comportamento, tratamento de erros e vazamentos de recursos. Para cada constatação, indique a linha ou função, uma entrada concreta que mostre o bug, a gravidade (crítica, alta, média, baixa) e uma correção proposta.",
+      "task": "Verifique este código quanto a bugs:\n\n{{input}}"
+    },
+    "security": {
+      "name": "Revisor de segurança",
+      "description": "Verifica o código quanto a vulnerabilidades e padrões inseguros.",
+      "system": "Você é especialista em segurança de aplicações. Verifique o código quanto a problemas de segurança, por exemplo injeção, tratamento inseguro de entradas, validação ausente, segredos no código ou uso inseguro de recursos. Ordene as constatações por gravidade, descreva em uma frase um possível cenário de ataque e indique a alternativa segura. Não relate nada sem relação com o código mostrado.",
+      "task": "Verifique este código quanto a problemas de segurança:\n\n{{input}}"
+    },
+    "fix": {
+      "name": "Correção e testes",
+      "description": "Escreve código corrigido e testes pytest para todas as constatações.",
+      "system": "Você é um desenvolvedor focado em qualidade de testes. Reúna as constatações e remova duplicatas. Saída: primeiro uma tabela das constatações por gravidade, depois o código corrigido completo e por fim testes pytest que cubram cada constatação, incluindo casos-limite. Código, identificadores e comentários no código permanecem em inglês. Indique que os testes precisam ser executados localmente. Se a entrada for um projeto com vários arquivos, informe para cada arquivo alterado o caminho e a nova versão completa e omita os arquivos sem alteração.",
+      "task": "Crie a versão melhorada com testes.\n\nCódigo original:\n{{run.input}}\n\nAnálise de bugs:\n{{node:bugs}}\n\nRevisão de segurança:\n{{node:security}}",
+      "criteria": {
+        "every_finding_addressed": "Cada constatação da análise de bugs e da revisão de segurança está corrigida no código ou adiada com justificativa.",
+        "tests_cover_findings": "Há pelo menos um teste para cada constatação corrigida.",
+        "runnable": "Código e testes estão completos e executáveis, sem marcadores provisórios."
+      }
+    }
+  },
+  "form": {
+    "code_files": {
+      "label": "Código como arquivos",
+      "description": "Opcional: um projeto como arquivo ZIP ou arquivos de código avulsos, até 20 arquivos. Arquivos compactados são apenas lidos, nunca executados; os agentes veem primeiro a estrutura e leem os arquivos necessários."
+    }
+  },
+  "samples": {
+    "project": {
+      "name": "calculadora-descontos",
+      "description": "Um pequeno projeto Python inofensivo em ZIP com erros embutidos: cálculo de desconto, consulta SQL e um teste.",
+      "content": {
+        "calculadora-descontos/README.md": "# Calculadora de descontos (projeto de exemplo)\n\nDADOS DE EXEMPLO SINTÉTICOS – projeto totalmente fictício, apenas para testar.\n\nUma pequena ferramenta interna: calcula descontos para pedidos e busca pedidos em um banco de dados SQLite.\n\n- Python 3.12, sem outras dependências\n- Testes com pytest: `pytest`\n",
+        "calculadora-descontos/shop/__init__.py": "",
+        "calculadora-descontos/shop/discounts.py": "def apply_discount(total, customer_type, coupon=None):\n    \"\"\"Return the price after discounts. Regular customers get 5 %, premium 10 %.\n    A coupon like \"SAVE20\" takes a further 20 % off, but the price must never drop below 0.\"\"\"\n    if customer_type == \"premium\":\n        total = total * 0.9\n    elif customer_type == \"regular\":\n        total = total * 0.95\n    if coupon:\n        percent = int(coupon[4:])\n        total = total - total * percent / 100\n    return round(total, 1)\n\n\ndef average_order_value(orders):\n    return sum(o[\"total\"] for o in orders) / len(orders)\n",
+        "calculadora-descontos/shop/orders.py": "import sqlite3\n\nADMIN_PASSWORD = \"admin123\"\n\n\ndef find_orders(db_path, customer_name):\n    conn = sqlite3.connect(db_path)\n    query = f\"SELECT id, total FROM orders WHERE customer = '{customer_name}'\"\n    rows = conn.execute(query).fetchall()\n    return rows\n",
+        "calculadora-descontos/tests/test_discounts.py": "from shop.discounts import apply_discount\n\n\ndef test_premium():\n    assert apply_discount(100, \"premium\") == 90\n",
+        "calculadora-descontos/requirements.txt": "pytest>=8\n"
+      }
+    }
+  },
+  "tests": {
+    "snippet": {
+      "name": "Trecho de código no texto"
+    },
+    "project_zip": {
+      "name": "Projeto como arquivo ZIP",
+      "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nRevise o projeto do arquivo ZIP: uma ferramenta interna que calcula descontos e busca pedidos. Python 3.12, banco de dados SQLite."
+    }
+  }
+}

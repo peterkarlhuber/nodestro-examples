@@ -1,0 +1,48 @@
+{
+  "name": "Spendenkampagne entwickeln",
+  "field": "Gemeinnützige Organisationen",
+  "description": "Eine Spendenkampagne konzipieren, die mögliche Wirkung des Projekts bewerten und Glaubwürdigkeit prüfen.",
+  "start": "Projektbeschreibung",
+  "output": "Kampagnenkonzept",
+  "file_name": "Spendenkampagne",
+  "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nOrganisation: Lesefreunde Beispielstadt e. V. (fiktiv), 60 Ehrenamtliche, eine Teilzeitkraft\nProjekt: „Lesepaten an Grundschulen“ – Ehrenamtliche lesen ein Schuljahr lang wöchentlich mit Kindern, die\nbeim Lesen Unterstützung brauchen.\nBisher: 2025/26 an 4 Schulen mit 48 Kindern. Rückmeldung der Lehrkräfte: 31 von 48 Kindern lesen flüssiger\n(Einschätzung, keine standardisierte Messung).\nZiel: Ausweitung auf 8 Schulen und 100 Kinder im Schuljahr 2026/27\nFinanzbedarf: 25.000 EUR (Koordination 15.000 EUR, Bücher und Material 6.000 EUR, Schulungen 4.000 EUR)\nZeitraum der Kampagne: 2026-09-01 bis 2026-11-30\nVorhandene Kanäle: Newsletter (1.200 Empfänger), Instagram (900 Follower), gute Kontakte zur Lokalzeitung",
+  "guide": {
+    "problem": "Spendenkampagnen brauchen eine bewegende Geschichte, aber auch ehrliche Aussagen zur Wirkung. Der Workflow entwickelt eine Kampagne, bewertet die mögliche Wirkung und prüft, ob Versprechen glaubwürdig und ethisch vertretbar sind.",
+    "flow": "Kampagnenentwickler und Wirkungsanalyst arbeiten parallel: Der eine entwirft Botschaft, Zielgruppen und Maßnahmen, der andere erstellt ein Wirkungsmodell mit Indikatoren und rechnet Kosten pro Kind mit dem Rechner-Tool. Der Glaubwürdigkeitsprüfer kontrolliert beides; das Ergebnis enthält alle drei Teile.",
+    "input": "Organisation, Projekt, bisherige Ergebnisse, Ziel, Finanzbedarf, Kampagnenzeitraum und vorhandene Kanäle.",
+    "result": "Ein Kampagnenkonzept mit Zeitplan und Textentwürfen, ein Wirkungsmodell mit Indikatoren und eine strukturierte Prüfung auf übertriebene Aussagen, ethische Hinweise und einen Plan zur Wirkungsmessung, zusätzlich als Word-Datei. Der Wirkungsanalyst schlägt sein Wirkungsmodell für das Wissen vor, etwa für spätere Förderanträge; gespeichert wird nur, was du bestätigst.",
+    "adapt": "Beschreibe dein Projekt und deine bisherigen Ergebnisse so ehrlich wie möglich. Jahresberichte oder Evaluationen lädst du als Wissen hoch und weist sie dem Wirkungsanalysten zu."
+  },
+  "agents": {
+    "campaign": {
+      "name": "Kampagnenentwickler",
+      "description": "Entwirft Botschaft, Zielgruppen, Kanäle und Zeitplan der Kampagne.",
+      "system": "Du bist Fundraising-Expertin für gemeinnützige Organisationen. Entwickle eine Spendenkampagne: Kernbotschaft, Zielgruppen, Spendenanreize wie „Mit 50 Euro …“, Kanäle, Zeitplan über den Kampagnenzeitraum und drei Textentwürfe (Newsletter, Social Media, Pressemitteilung). Erzähle respektvoll und ohne Mitleidsbilder, und verwende nur Ergebnisse, die in der Beschreibung stehen.",
+      "task": "Entwickle die Kampagne für dieses Projekt:\n\n{{input}}"
+    },
+    "impact": {
+      "name": "Wirkungsanalyst",
+      "description": "Erstellt ein Wirkungsmodell mit Indikatoren und Kosten pro Kind.",
+      "system": "Du bist Wirkungsanalyst für soziale Projekte. Erstelle ein Wirkungsmodell (Input, Aktivitäten, Output, Outcome, Impact), schlage messbare Indikatoren mit Erhebungsmethode vor und berechne mit dem Rechner-Tool die Kosten pro Kind und je Kostenblock. Bewerte ehrlich, was die bisherigen Ergebnisse belegen und was nicht.",
+      "task": "Erstelle das Wirkungsmodell für dieses Projekt:\n\n{{input}}"
+    },
+    "integrity": {
+      "name": "Glaubwürdigkeitsprüfer",
+      "description": "Prüft Aussagen auf Übertreibung, Ethik und Belegbarkeit.",
+      "system": "Du prüfst Fundraising-Material auf Glaubwürdigkeit und Ethik. Vergleiche die Aussagen der Kampagne mit dem Wirkungsmodell: Was ist belegt, was übertrieben, was müsste vorsichtiger formuliert werden? Achte auf die Würde der dargestellten Menschen, Datenschutz bei Fotos von Kindern und Transparenz über die Mittelverwendung. Schlage einen einfachen Plan zur Wirkungsmessung vor.",
+      "task": "Prüfe Kampagne und Wirkungsmodell.\n\nKampagne:\n{{node:campaign}}\n\nWirkungsmodell:\n{{node:impact}}",
+      "fields": {
+        "credible": "Ist die Kampagne in ihrer jetzigen Form glaubwürdig?",
+        "overstated_claims": "Übertriebene oder nicht belegte Aussagen mit besserer Formulierung",
+        "ethical_notes": "Ethische Hinweise und Datenschutz",
+        "suggested_changes": "Weitere Verbesserungsvorschläge",
+        "measurement_plan": "Einfacher Plan zur Wirkungsmessung"
+      }
+    }
+  },
+  "tests": {
+    "reading_mentors": {
+      "name": "Lesepaten an Grundschulen"
+    }
+  }
+}

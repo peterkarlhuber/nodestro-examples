@@ -1,0 +1,95 @@
+{
+  "name": "Planifier un voyage personnel",
+  "field": "Particuliers – voyages",
+  "description": "Planifier un itinéraire selon les centres d'intérêt, recalculer le budget et créer une checklist d'organisation.",
+  "start": "Souhaits de voyage",
+  "output": "Plan de voyage",
+  "file_name": "Plan de voyage",
+  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nVoyageurs : deux adultes et un enfant (9 ans)\nDestination : Lisbonne, arrivée le 2026-07-06, départ le 2026-07-11\nBudget : 2 200 EUR au total hors vols (les vols sont déjà réservés)\nCentres d'intérêt : aquarium, plage, vieille ville, bonne cuisine sans chichis ; l'enfant adore les tramways\nContraintes : un adulte a des problèmes de genou, éviter les longues marches en pente ; au maximum deux\nactivités par jour ; hébergement pas encore réservé, un appartement de vacances avec cuisine est préféré.",
+  "guide": {
+    "problem": "Un bon voyage correspond aux intérêts, au budget et aux contraintes de tous les voyageurs. Le workflow planifie un itinéraire, recalcule le budget et crée une checklist pour l'organisation.",
+    "flow": "Le planificateur d'itinéraire conçoit un programme jour par jour selon les intérêts et les contraintes. Le planificateur budgétaire calcule les nuits et les coûts avec la calculatrice et l'outil de dates. Le planificateur d'organisation réunit tout en un plan de voyage avec checklist ; une vérification qualité contrôle le budget et les contraintes. Un formulaire de saisie reprend destination, dates, voyageurs et budget. Pour les voyages à l'étranger, un nœud de décision ajoute une liste des documents et des règles d'entrée.",
+    "input": "Qui voyage, destination et dates, budget, centres d'intérêt et contraintes.",
+    "result": "Un plan de voyage avec programme journalier, tableau budgétaire et check-list, aussi en PDF à emporter. Les prix et horaires sont des estimations issues de connaissances générales et doivent être vérifiés avant de réserver, car le workflow n'utilise pas de données en temps réel.",
+    "adapt": "Saisissez vos souhaits de voyage. Si vous voulez des prix et horaires actuels, vous pouvez ajouter l'outil serveur « recherche web » au planificateur d'itinéraire ; il coûte un supplément par recherche."
+  },
+  "agents": {
+    "itinerary": {
+      "name": "Planificateur d'itinéraire",
+      "description": "Conçoit un programme quotidien selon les intérêts et les contraintes.",
+      "system": "Tu es un planificateur de voyages expérimenté. Conçois un programme quotidien avec au maximum le nombre d'activités souhaité par jour, des trajets courts et des pauses. Tiens compte des intérêts et des contraintes de tous les voyageurs, propose des quartiers adaptés pour l'hébergement et indique pour chaque jour une alternative en cas de mauvais temps. Signale les indications de prix et d'horaires comme non vérifiées.",
+      "task": "Planifie l'itinéraire pour ces souhaits de voyage :\n\n{{input}}"
+    },
+    "budget": {
+      "name": "Planificateur budgétaire",
+      "description": "Calcule les nuits et les coûts avec la calculatrice et l'outil de dates.",
+      "system": "Tu planifies des budgets de voyage. Détermine le nombre de nuits avec l'outil days_between et estime les coûts d'hébergement, de repas, de transports locaux, d'entrées et une réserve à partir des niveaux de prix généraux. Calcule tous les totaux avec la calculatrice. Compare avec le budget et propose des ajustements s'il ne suffit pas. Signale tous les prix comme des estimations.",
+      "task": "Établis le budget.\n\nSouhaits de voyage :\n{{run.input}}\n\nItinéraire :\n{{node:itinerary}}"
+    },
+    "organizer": {
+      "name": "Planificateur d'organisation",
+      "description": "Réunit itinéraire et budget en un plan de voyage avec checklist.",
+      "system": "Tu assembles des documents de voyage. Crée un plan de voyage clair : programme quotidien, tableau budgétaire, liste de réservations et de bagages avec échéances et liste des informations à vérifier avant réservation, comme les horaires, les prix et l'accessibilité. Respecte le budget et toutes les contraintes.",
+      "task": "Crée le plan de voyage.\n\nItinéraire :\n{{node:itinerary}}\n\nBudget :\n{{node:budget}}\n\nDocuments de voyage (voyages à l'étranger uniquement) :\n{{node:documents}}",
+      "criteria": {
+        "within_budget": "Le plan respecte le budget indiqué ou indique clairement où et pourquoi il le dépasse.",
+        "constraints": "Le plan respecte toutes les contraintes indiquées des voyageurs.",
+        "verify_notes": "Les informations non vérifiées comme les prix et les horaires sont signalées comme à vérifier."
+      }
+    },
+    "documents": {
+      "name": "Documents de voyage",
+      "description": "Liste documents, assurance et règles d'entrée pour les voyages à l'étranger.",
+      "system": "Tu prépares des voyages à l'étranger. Liste ce dont les voyageurs ont besoin : pièces d'identité (aussi pour les enfants), règles d'entrée, assurance santé à l'étranger, numéros d'urgence, moyens de paiement et prises électriques. Indique les sources officielles où vérifier les informations, car les règles changent, et marque chaque point comme à vérifier.",
+      "task": "Établis la liste des documents de voyage pour ce séjour :\n\n{{input}}"
+    }
+  },
+  "steps": {
+    "gate": {
+      "name": "Étranger ?",
+      "branches": {
+        "abroad": "Étranger"
+      },
+      "default": "National"
+    }
+  },
+  "form": {
+    "destination": {
+      "label": "Destination",
+      "default": "Lisbonne"
+    },
+    "arrival": {
+      "label": "Arrivée",
+      "default": "2026-07-06"
+    },
+    "departure": {
+      "label": "Départ",
+      "default": "2026-07-11"
+    },
+    "travellers": {
+      "label": "Voyageurs",
+      "default": "3"
+    },
+    "budget": {
+      "label": "Budget hors vols (EUR)",
+      "default": "2200"
+    },
+    "abroad": {
+      "label": "Voyage à l'étranger",
+      "description": "Ajoute une liste des documents de voyage, de l'assurance et des règles d'entrée",
+      "default": "true"
+    }
+  },
+  "tests": {
+    "abroad": {
+      "name": "Voyage en famille à Lisbonne (étranger)"
+    },
+    "domestic": {
+      "name": "Week-end dans son propre pays",
+      "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nDeux adultes, un week-end à Lyon. Centres d'intérêt : vieille ville, musées, bonne cuisine. Aucune contrainte, voyage en train.",
+      "values": {
+        "destination": "Lyon"
+      }
+    }
+  }
+}

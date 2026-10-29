@@ -1,0 +1,160 @@
+{
+  "name": "Preparar uma proposta sob medida",
+  "field": "Vendas",
+  "description": "Analisar a solicitação de um cliente, calcular uma solução adequada e redigir uma proposta.",
+  "start": "Solicitação do cliente",
+  "output": "Rascunho da proposta",
+  "file_name": "Proposta",
+  "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nE-mail da Sra. Lena Exemplo, gerente administrativa do escritório Contabilidade Amostra (35 estações de trabalho, mudança em junho):\n\"Olá, vamos nos mudar para um novo escritório em 15 de junho e precisamos de móveis novos para 35 estações de trabalho.\nMesas com regulagem de altura são importantes para nós porque vários colegas têm problemas de coluna, e precisamos\nde uma acústica melhor na área aberta (12 mesas). Também precisamos de duas salas de reunião para 8 pessoas cada.\nNosso orçamento é de cerca de 60.000 EUR sem impostos. Vocês poderiam nos enviar uma proposta até o fim do mês?\nA montagem deveria ser no fim de semana, para que o trabalho continue.\"\n\nNossa tabela de preços (sem impostos):\n- Mesa com regulagem elétrica de altura, 160 x 80 cm: 690 EUR\n- Mesa de altura fixa, 160 x 80 cm: 320 EUR\n- Cadeira ergonômica premium: 540 EUR; padrão: 290 EUR\n- Divisória acústica de mesa: 210 EUR; painel acústico de parede 120 x 60 cm: 140 EUR\n- Mesa de reunião para 8 pessoas: 1.450 EUR; cadeira de reunião: 180 EUR\n- Entrega e montagem: 45 EUR por estação de trabalho, adicional de fim de semana de 20 % sobre a montagem\n- Desconto por volume: 5 % a partir de 25.000 EUR em mercadorias, 8 % a partir de 50.000 EUR",
+  "guide": {
+    "problem": "Uma boa proposta responde à necessidade real do cliente, não só às palavras-chave dele. O workflow esclarece a necessidade, calcula uma solução adequada e redige uma proposta completa.",
+    "flow": "O analista de necessidades separa requisitos explícitos e implícitos e reúne perguntas em aberto. O consultor de soluções monta itens da tabela de preços e calcula com a calculadora, incluindo uma variante dentro do orçamento. O redator da proposta redige a proposta; uma verificação de qualidade integrada confere completude e preços. Um formulário de entrada recebe os dados principais (cliente, prazo, orçamento, montagem no fim de semana); antes do envio, uma pessoa aprova a proposta.",
+    "input": "A solicitação do cliente e a sua tabela de preços com descontos e condições. O formulário recebe os dados principais; a tabela de preços você pode escrever no texto ou anexar como arquivo Excel, CSV ou PDF, como mostra o arquivo de exemplo.",
+    "result": "Um rascunho de proposta com carta de apresentação, tabela de itens, totais, variantes, premissas e perguntas em aberto. Só depois da sua aprovação a execução salva a proposta em PDF e como arquivo Word editável.",
+    "adapt": "Anexe a sua tabela de preços atual como arquivo; assim basta a solicitação do cliente como texto. Condições de pagamento e textos padrão são acrescentados no prompt de sistema do redator da proposta."
+  },
+  "agents": {
+    "needs": {
+      "name": "Analista de necessidades",
+      "description": "Identifica requisitos explícitos e implícitos.",
+      "system": "Você é um consultor de vendas experiente. Analise a solicitação do cliente: requisitos explícitos, necessidades implícitas, restrições como orçamento, prazo e montagem, e critérios de decisão. Liste as perguntas em aberto que devem ser esclarecidas antes de uma proposta vinculante e as premissas que podem ser usadas até lá.",
+      "task": "Analise as necessidades nesta solicitação:\n\n{{input}}"
+    },
+    "solution": {
+      "name": "Consultor de soluções",
+      "description": "Monta itens adequados e calcula com a calculadora.",
+      "system": "Você é consultor de soluções. Monte com a tabela de preços uma solução que atenda à necessidade e calcule quantidades, subtotais, adicionais e descontos com a calculadora. Se o orçamento não for suficiente, monte uma segunda variante que fique dentro do orçamento e explique as diferenças. Use apenas itens e preços da tabela.",
+      "task": "Monte uma solução com cálculo.\n\nSolicitação e tabela de preços:\n{{run.input}}\n\nAnálise de necessidades:\n{{node:needs}}"
+    },
+    "offer": {
+      "name": "Redator da proposta",
+      "description": "Redige o rascunho da proposta para o cliente.",
+      "system": "Você redige propostas em vendas B2B. Escreva uma proposta cordial e precisa: uma carta de apresentação curta que retome as preocupações do cliente, uma tabela de itens com quantidades e preços, totais, variantes, serviços como entrega e montagem, validade e as perguntas em aberto. Marque o documento como rascunho para aprovação interna. Use preços apenas do cálculo.",
+      "task": "Redija o rascunho da proposta.\n\nAnálise de necessidades:\n{{node:needs}}\n\nSolução e cálculo:\n{{node:solution}}",
+      "criteria": {
+        "all_requirements": "A proposta trata de todos os requisitos da análise de necessidades.",
+        "prices_consistent": "Todos os preços e totais correspondem ao cálculo.",
+        "open_points": "Perguntas em aberto e premissas estão claramente indicadas."
+      }
+    }
+  },
+  "steps": {
+    "approve": {
+      "name": "Aprovar proposta",
+      "instructions": "Verifique preços, descontos, prazos de entrega e as perguntas em aberto antes de enviar a proposta. Uma rejeição encerra a execução; ajuste a entrada e comece de novo."
+    }
+  },
+  "form": {
+    "customer": {
+      "label": "Cliente",
+      "description": "Empresa e pessoa de contato",
+      "default": "Contabilidade Amostra, Lena Exemplo"
+    },
+    "deadline": {
+      "label": "Proposta até",
+      "description": "Quando o cliente precisa da proposta",
+      "default": "2026-05-29"
+    },
+    "budget": {
+      "label": "Orçamento (EUR líquidos)",
+      "description": "O valor que o cliente informou",
+      "default": "60000"
+    },
+    "weekend": {
+      "label": "Montagem no fim de semana",
+      "description": "As atividades do cliente não podem ser interrompidas",
+      "default": "true"
+    },
+    "price_list": {
+      "label": "Tabela de preços como arquivo",
+      "description": "Opcional: a sua tabela de preços em Excel, CSV ou PDF. Sem arquivo vale a tabela de preços do texto."
+    }
+  },
+  "samples": {
+    "price_list": {
+      "name": "Tabela_precos_moveis_escritorio",
+      "description": "A tabela de preços fictícia da tarefa de teste como arquivo Excel com itens e condições.",
+      "content": {
+        "Tabela de preços": [
+          [
+            "Item",
+            "Unidade",
+            "Preço sem impostos (EUR)"
+          ],
+          [
+            "Mesa com regulagem elétrica de altura, 160 x 80 cm",
+            "unidade",
+            690
+          ],
+          [
+            "Mesa de altura fixa, 160 x 80 cm",
+            "unidade",
+            320
+          ],
+          [
+            "Cadeira ergonômica premium",
+            "unidade",
+            540
+          ],
+          [
+            "Cadeira de escritório padrão",
+            "unidade",
+            290
+          ],
+          [
+            "Divisória acústica de mesa",
+            "unidade",
+            210
+          ],
+          [
+            "Painel acústico de parede 120 x 60 cm",
+            "unidade",
+            140
+          ],
+          [
+            "Mesa de reunião para 8 pessoas",
+            "unidade",
+            1450
+          ],
+          [
+            "Cadeira de reunião",
+            "unidade",
+            180
+          ],
+          [
+            "Entrega e montagem",
+            "estação de trabalho",
+            45
+          ]
+        ],
+        "Condições": [
+          [
+            "Condição",
+            "Regra"
+          ],
+          [
+            "Adicional de fim de semana",
+            "20 % sobre a montagem"
+          ],
+          [
+            "Desconto por volume",
+            "5 % a partir de 25.000 EUR em mercadorias, 8 % a partir de 50.000 EUR"
+          ],
+          [
+            "Validade das propostas",
+            "30 dias"
+          ]
+        ]
+      }
+    }
+  },
+  "tests": {
+    "request_text": {
+      "name": "Solicitação e tabela de preços no texto"
+    },
+    "price_list_file": {
+      "name": "Tabela de preços como arquivo Excel",
+      "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nE-mail da Sra. Lena Exemplo, gerente administrativa do escritório Contabilidade Amostra (35 estações de trabalho, mudança em junho):\n\"Olá, vamos nos mudar para um novo escritório em 15 de junho e precisamos de móveis novos para 35 estações de trabalho.\nMesas com regulagem de altura são importantes para nós porque vários colegas têm problemas de coluna, e precisamos\nde uma acústica melhor na área aberta (12 mesas). Também precisamos de duas salas de reunião para 8 pessoas cada.\nNosso orçamento é de cerca de 60.000 EUR sem impostos. Vocês poderiam nos enviar uma proposta até o fim do mês?\nA montagem deveria ser no fim de semana, para que o trabalho continue.\"\n\nNossa tabela de preços está anexada como arquivo Excel."
+    }
+  }
+}
