@@ -13,7 +13,7 @@ requires-python = ">=3.10"
 authors = [{ name = "Peter Karlhuber" }]
 dependencies = [
     # The public workflow schemas and the writers of the sample files.
-    "nodestro-runtime @ git+https://github.com/peterkarlhuber/nodestro-runtime.git@b5aa1b3ca82bc3986625ec93581fac41d176df1a",
+    "nodestro-runtime @ git+https://github.com/peterkarlhuber/nodestro-runtime.git@73767fc0f5ba257af93d4ceabffe5777599528bb",
     "pydantic>=2.6,<3",
 ]
 

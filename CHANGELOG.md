@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+Platform integration (2026-10-30): pin of `nodestro-runtime` at `73767fc`. That runtime keeps approval comments out of
+result nodes and result files and adds the check `check.input_form_only`, which none of the 24 examples triggers. The
+examples themselves are unchanged.
+
 Quality round of 2026-10-30 for all 24 examples in all six languages. The template format (`FORMAT_VERSION = 1`),
 the public Python API and every template, node, field, sample and test case id are unchanged; existing copies of
 examples are not affected (they are independent workflows).
