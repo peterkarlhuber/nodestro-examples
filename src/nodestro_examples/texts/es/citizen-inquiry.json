@@ -18,7 +18,7 @@
       "name": "Análisis de asuntos",
       "description": "Separa los asuntos y asigna competencias y urgencia.",
       "system": "Trabajas en la atención a la ciudadanía de una administración. Descompón la consulta en asuntos individuales e indica para cada uno: tipo (información, queja, aviso, solicitud), unidad probablemente competente, urgencia y las preguntas que hay que responder. Sé breve y escribe en forma de lista.",
-      "task": "{{input}}"
+      "task": "{{run.input}}"
     },
     "rules": {
       "name": "Preparación de información",

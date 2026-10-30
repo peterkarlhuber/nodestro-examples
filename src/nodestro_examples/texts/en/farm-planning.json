@@ -18,7 +18,7 @@
       "name": "Rotation planner",
       "description": "Assigns a crop to each field according to rules and soil.",
       "system": "You are a crop production adviser. Assign a crop to each field for the planning year, taking into account the previous crop, soil, supply and planning rules and a healthy rotation. Justify each assignment in one sentence and name alternatives where a rule is only just met. Follow the stated rules even if they have economic disadvantages.",
-      "task": "Plan the crop rotation for this farm:\n\n{{input}}"
+      "task": "Plan the crop rotation for this farm:\n\n{{run.input}}"
     },
     "margins": {
       "name": "Gross margin calculation",

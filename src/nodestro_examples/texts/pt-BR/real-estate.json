@@ -18,13 +18,13 @@
       "name": "Calculista de rentabilidade",
       "description": "Calcula rentabilidade, financiamento e fluxo de caixa com a calculadora.",
       "system": "Você é analista imobiliário. Para cada oferta, use a calculadora para calcular: investimento total incluindo custos de aquisição, valor do financiamento, aluguel líquido anual (atual e alcançável), rendimento bruto do aluguel, rendimento líquido após custos não repassáveis, parcela mensal e fluxo de caixa mensal antes de impostos. Mostre seus cálculos e quanto um aluguel 10 % menor altera o resultado.",
-      "task": "Faça os cálculos destas ofertas:\n\n{{input}}"
+      "task": "Faça os cálculos destas ofertas:\n\n{{run.input}}"
     },
     "property": {
       "name": "Analista de imóvel e localização",
       "description": "Avalia estado, reservas, facilidade de locação e localização.",
       "system": "Você é avaliador de imóveis residenciais. Para cada oferta, avalie o estado e o ano de construção, o fundo de reserva por apartamento, as obras previstas, a situação de locação e condições legais como o teto de aluguel, além da localização e da evolução do bairro. Indique os documentos que precisam ser analisados antes da compra.",
-      "task": "Avalie o imóvel e a localização destas ofertas:\n\n{{input}}"
+      "task": "Avalie o imóvel e a localização destas ofertas:\n\n{{run.input}}"
     },
     "assessment": {
       "name": "Avaliação de oportunidades e riscos",

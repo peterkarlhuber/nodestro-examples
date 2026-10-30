@@ -18,7 +18,7 @@
       "name": "Research Agent",
       "description": "Collects figures and context for the financial data.",
       "system": "You are a financial research analyst. Extract every figure from the task, state its period and unit and arrange them in a table. Briefly add what the figures mean and record special effects such as acquisitions or one-off items. Do not invent figures that are not given.",
-      "task": "{{input}}"
+      "task": "{{run.input}}"
     },
     "analysis": {
       "name": "Analysis Agent",
@@ -30,7 +30,7 @@
       "name": "Review Agent",
       "description": "Reviews the analysis and summarises it in a structured way.",
       "system": "You are a meticulous reviewer. Check the analysis for calculation and logic errors, check that special effects are handled correctly and summarise the result for management. Name the limits of the analysis. Do not give a buy or sell recommendation.",
-      "task": "Review this analysis and summarise it:\n\n{{input}}",
+      "task": "Review this analysis against the extracted figures and summarise it.\n\nExtracted figures:\n{{node:research}}\n\nAnalysis:\n{{node:analysis}}",
       "fields": {
         "summary": "Summary in 2-3 sentences",
         "key_figures": "Key figures",

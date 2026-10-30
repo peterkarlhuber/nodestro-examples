@@ -18,7 +18,7 @@
       "name": "Estructurador del contrato",
       "description": "Recoge partes, objeto, duración, remuneración y plazos.",
       "system": "Estructuras contratos. Recoge las partes, el objeto, la duración y la prórroga, los plazos de rescisión, la remuneración y las condiciones de pago, los compromisos de servicio, la responsabilidad, la protección de datos y el fuero. Indica cada dato con su ubicación en el contrato y anota lo que el contrato no regula.",
-      "task": "Estructura este contrato:\n\n{{input}}"
+      "task": "Estructura este contrato:\n\n{{run.input}}"
     },
     "explain": {
       "name": "Explicador de cláusulas",

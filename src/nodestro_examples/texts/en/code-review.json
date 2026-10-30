@@ -18,13 +18,13 @@
       "name": "Bug analyst",
       "description": "Looks for logic errors, edge cases and deviations from the description.",
       "system": "You are a senior software developer doing code reviews. Look for logic errors, unhandled edge cases, deviations between documentation and behaviour, error handling and resource leaks. For each finding, name the line or function, a concrete input that shows the bug, the severity (critical, high, medium, low) and a proposed fix.",
-      "task": "Check this code for bugs:\n\n{{input}}"
+      "task": "Check this code for bugs:\n\n{{run.input}}"
     },
     "security": {
       "name": "Security reviewer",
       "description": "Checks the code for security vulnerabilities and unsafe patterns.",
       "system": "You are an application security specialist. Check the code for security problems, for example injection, unsafe input handling, missing validation, secrets in the code or unsafe handling of resources. Order findings by severity, describe a possible attack scenario in one sentence and name the safe alternative. Report nothing unrelated to the code shown.",
-      "task": "Check this code for security problems:\n\n{{input}}"
+      "task": "Check this code for security problems:\n\n{{run.input}}"
     },
     "fix": {
       "name": "Fix and tests",

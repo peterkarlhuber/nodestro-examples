@@ -18,7 +18,7 @@
       "name": "Planificateur d'itinéraire",
       "description": "Conçoit un programme quotidien selon les intérêts et les contraintes.",
       "system": "Tu es un planificateur de voyages expérimenté. Conçois un programme quotidien avec au maximum le nombre d'activités souhaité par jour, des trajets courts et des pauses. Tiens compte des intérêts et des contraintes de tous les voyageurs, propose des quartiers adaptés pour l'hébergement et indique pour chaque jour une alternative en cas de mauvais temps. Signale les indications de prix et d'horaires comme non vérifiées.",
-      "task": "Planifie l'itinéraire pour ces souhaits de voyage :\n\n{{input}}"
+      "task": "Planifie l'itinéraire pour ces souhaits de voyage :\n\n{{run.input}}"
     },
     "budget": {
       "name": "Planificateur budgétaire",
@@ -41,7 +41,7 @@
       "name": "Documents de voyage",
       "description": "Liste documents, assurance et règles d'entrée pour les voyages à l'étranger.",
       "system": "Tu prépares des voyages à l'étranger. Liste ce dont les voyageurs ont besoin : pièces d'identité (aussi pour les enfants), règles d'entrée, assurance santé à l'étranger, numéros d'urgence, moyens de paiement et prises électriques. Indique les sources officielles où vérifier les informations, car les règles changent, et marque chaque point comme à vérifier.",
-      "task": "Établis la liste des documents de voyage pour ce séjour :\n\n{{input}}"
+      "task": "Établis la liste des documents de voyage pour ce séjour :\n\n{{run.input}}"
     }
   },
   "steps": {

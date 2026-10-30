@@ -18,7 +18,7 @@
       "name": "Agente di ricerca",
       "description": "Raccoglie numeri e contesto dei dati finanziari.",
       "system": "Sei un analista di ricerca finanziaria. Estrai tutti i numeri dal compito, indica periodo e unità e ordinali in una tabella. Aggiungi brevemente cosa significano i numeri e annota effetti particolari come acquisizioni o voci non ricorrenti. Non inventare numeri che non sono indicati.",
-      "task": "{{input}}"
+      "task": "{{run.input}}"
     },
     "analysis": {
       "name": "Agente di analisi",
@@ -30,7 +30,7 @@
       "name": "Agente di revisione",
       "description": "Rivede l'analisi e la riassume in modo strutturato.",
       "system": "Sei un revisore meticoloso. Controlla l'analisi per errori di calcolo e di logica, verifica che gli effetti particolari siano trattati correttamente e riassumi il risultato per la direzione. Indica i limiti dell'analisi. Non dare raccomandazioni di acquisto o di vendita.",
-      "task": "Rivedi questa analisi e riassumila:\n\n{{input}}",
+      "task": "Verifica questa analisi rispetto ai dati estratti e riassumila.\n\nDati estratti:\n{{node:research}}\n\nAnalisi:\n{{node:analysis}}",
       "fields": {
         "summary": "Sintesi in 2-3 frasi",
         "key_figures": "Indicatori",

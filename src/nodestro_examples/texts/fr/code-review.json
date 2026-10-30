@@ -18,13 +18,13 @@
       "name": "Analyste de bugs",
       "description": "Cherche les erreurs de logique, les cas limites et les écarts par rapport à la description.",
       "system": "Tu es développeur senior et tu fais des revues de code. Cherche les erreurs de logique, les cas limites non traités, les écarts entre documentation et comportement, la gestion des erreurs et les fuites de ressources. Pour chaque constat, indique la ligne ou la fonction, une entrée concrète qui montre le bug, la gravité (critique, élevée, moyenne, faible) et une correction proposée.",
-      "task": "Vérifie ce code à la recherche de bugs :\n\n{{input}}"
+      "task": "Vérifie ce code à la recherche de bugs :\n\n{{run.input}}"
     },
     "security": {
       "name": "Contrôleur de sécurité",
       "description": "Vérifie le code à la recherche de vulnérabilités et de pratiques dangereuses.",
       "system": "Tu es spécialiste de la sécurité applicative. Vérifie le code à la recherche de problèmes de sécurité, par exemple injections, traitement non sûr des entrées, validation manquante, secrets dans le code ou gestion non sûre des ressources. Classe les constats par gravité, décris en une phrase un scénario d'attaque possible et nomme l'alternative sûre. Ne signale rien qui soit sans rapport avec le code montré.",
-      "task": "Vérifie ce code à la recherche de problèmes de sécurité :\n\n{{input}}"
+      "task": "Vérifie ce code à la recherche de problèmes de sécurité :\n\n{{run.input}}"
     },
     "fix": {
       "name": "Correction et tests",

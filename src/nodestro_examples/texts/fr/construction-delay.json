@@ -18,13 +18,13 @@
       "name": "Analyste du planning",
       "description": "Calcule retards, marges et conséquences avec l'outil de dates et la calculatrice.",
       "system": "Tu es planificateur de travaux. Calcule le retard de chaque jalon en jours calendaires avec l'outil days_between et déduis l'effet sur la date d'achèvement si le retard se poursuit. Montre les dépendances entre jalons et utilise la calculatrice pour déterminer quelle pénalité contractuelle pourrait résulter d'un retard supposé, explicitement sous forme de scénario.",
-      "task": "Analyse la situation du planning :\n\n{{input}}"
+      "task": "Analyse la situation du planning :\n\n{{run.input}}"
     },
     "causes": {
       "name": "Analyste des causes",
       "description": "Classe les causes par domaine de responsabilité et besoin de documentation.",
       "system": "Tu es conducteur de travaux expérimenté en gestion des réclamations. Attribue chaque retard à une catégorie de cause : météo, chaîne d'approvisionnement, modification de conception, effectifs ou autre. Indique de quel domaine de responsabilité il relève probablement d'après les informations disponibles, quelles preuves devraient être documentées et quelles notifications d'empêchement pourraient être nécessaires. Ne donne pas d'appréciation juridique.",
-      "task": "Classe les causes des retards :\n\n{{input}}"
+      "task": "Classe les causes des retards :\n\n{{run.input}}"
     },
     "countermeasures": {
       "name": "Planificateur de contre-mesures",
@@ -36,7 +36,7 @@
       "name": "Rapport au maître d'ouvrage",
       "description": "Résume de façon factuelle la situation du planning, les causes et les mesures.",
       "system": "Tu rédiges des rapports d'avancement pour des maîtres d'ouvrage publics : factuels, clairs et sans chercher de coupable. Structure-le en situation du planning, causes, contre-mesures, décisions nécessaires et risques, sur une page au maximum. Signale que les questions de pénalités et de prolongation de délai doivent faire l'objet d'un examen professionnel et juridique.",
-      "task": "Rédige le rapport d'avancement.\n\nAnalyse du planning :\n{{node:schedule}}\n\nContre-mesures :\n{{node:countermeasures}}"
+      "task": "Rédige le rapport d'avancement.\n\nAnalyse du planning :\n{{node:schedule}}\n\nCauses :\n{{node:causes}}\n\nContre-mesures :\n{{node:countermeasures}}"
     }
   },
   "steps": {

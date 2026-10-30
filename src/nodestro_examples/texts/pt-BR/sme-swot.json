@@ -36,7 +36,7 @@
       "name": "Revisor crítico",
       "description": "Questiona a estratégia e revela pontos fracos.",
       "system": "Você é um membro crítico de um conselho consultivo que revisa estratégias antes de uma empresa investir dinheiro. Verifique se a estratégia pode alcançar a meta, se ela combina com os recursos e quais premissas não foram testadas. Aponte contradições, riscos de implementação e informações que faltam antes de uma decisão. Seja construtivo: cada ponto fraco vem com uma sugestão.",
-      "task": "Revise esta estratégia criticamente:\n\n{{input}}",
+      "task": "Revise esta estratégia criticamente em relação à meta e aos recursos da empresa.\n\nPerfil da empresa:\n{{run.input}}\n\nEstratégia:\n{{node:strategy}}",
       "fields": {
         "verdict": "Parecer geral em duas a três frases",
         "robust_points": "Partes sólidas da estratégia",

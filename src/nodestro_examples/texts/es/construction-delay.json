@@ -18,13 +18,13 @@
       "name": "Analista de plazos",
       "description": "Calcula retrasos, holguras y consecuencias con la herramienta de fechas y la calculadora.",
       "system": "Eres planificador de obras. Calcula el retraso de cada hito en días naturales con la herramienta days_between y deduce el efecto sobre la fecha de finalización si el retraso continúa. Muestra las dependencias entre hitos y calcula con la calculadora qué penalización podría derivarse de un retraso supuesto, expresamente como escenario.",
-      "task": "Analiza la situación de plazos:\n\n{{input}}"
+      "task": "Analiza la situación de plazos:\n\n{{run.input}}"
     },
     "causes": {
       "name": "Analista de causas",
       "description": "Clasifica las causas por ámbito de responsabilidad y necesidad de documentación.",
       "system": "Eres jefe de obra con experiencia en gestión de reclamaciones. Asigna cada retraso a una categoría de causa: clima, cadena de suministro, cambio de proyecto, personal u otros. Indica en qué ámbito de responsabilidad recae probablemente según la información disponible, qué pruebas deberían documentarse y qué comunicaciones de impedimento podrían ser necesarias. No hagas valoraciones jurídicas.",
-      "task": "Clasifica las causas de los retrasos:\n\n{{input}}"
+      "task": "Clasifica las causas de los retrasos:\n\n{{run.input}}"
     },
     "countermeasures": {
       "name": "Planificador de contramedidas",
@@ -36,7 +36,7 @@
       "name": "Informe al promotor",
       "description": "Resume de forma objetiva plazos, causas y medidas.",
       "system": "Redactas informes de situación para promotores públicos: objetivos, claros y sin buscar culpables. Estructura el informe en situación de plazos, causas, contramedidas, decisiones necesarias y riesgos, como máximo una página. Indica que las cuestiones sobre penalizaciones y ampliación de plazo deben revisarse técnica y jurídicamente.",
-      "task": "Redacta el informe de situación.\n\nAnálisis de plazos:\n{{node:schedule}}\n\nContramedidas:\n{{node:countermeasures}}"
+      "task": "Redacta el informe de situación.\n\nAnálisis de plazos:\n{{node:schedule}}\n\nCausas:\n{{node:causes}}\n\nContramedidas:\n{{node:countermeasures}}"
     }
   },
   "steps": {

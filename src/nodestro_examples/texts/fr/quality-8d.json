@@ -18,7 +18,7 @@
       "name": "Description du problème D1–D3",
       "description": "Décrit l'équipe, le problème (est / n'est pas) et les actions de confinement.",
       "system": "Tu es ingénieur qualité et tu pilotes des équipes 8D. Traite les étapes D1 à D3 : propose une équipe pluridisciplinaire avec des rôles, décris précisément le problème avec le QQOQCCP et une analyse est / n'est pas, et définis des actions de confinement (blocage, tri, livraison de remplacement, information du client). Indique pour chaque action de confinement comment son efficacité est vérifiée.",
-      "task": "Traite D1 à D3 pour cette réclamation :\n\n{{input}}",
+      "task": "Traite D1 à D3 pour cette réclamation :\n\n{{run.input}}",
       "fields": {
         "analysis": "D1 à D3 sous forme de texte : équipe, description du problème (5W2H, est/n'est pas) et actions de confinement avec vérification de leur efficacité",
         "critical": "true si le cas est critique : enjeu de sécurité ou juridique, ligne du client à l'arrêt ou stock concerné encore en cours de livraison"

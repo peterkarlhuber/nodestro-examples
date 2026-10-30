@@ -18,13 +18,13 @@
       "name": "Analista dei costi",
       "description": "Calcola il costo totale per offerta con la calcolatrice.",
       "system": "Sei un analista dei costi negli acquisti. Calcola per ogni offerta il costo totale per pezzo e per anno: prezzo, trasporto e dazi, capitale immobilizzato da ordini minimi e pagamenti anticipati, costo di magazzino e costo atteso dei reclami. Usa la calcolatrice per ogni calcolo e mostra il procedimento. Confronta il risultato con il prezzo obiettivo e mostra quali ipotesi influenzano di più il risultato.",
-      "task": "Calcola il costo totale di queste offerte:\n\n{{input}}"
+      "task": "Calcola il costo totale di queste offerte:\n\n{{run.input}}"
     },
     "risk": {
       "name": "Analista dei rischi",
       "description": "Valuta i rischi di tempi di consegna, dipendenza, capacità e qualità.",
       "system": "Sei un risk manager della supply chain. Valuta i rischi di fornitura di ogni offerta: tempi di consegna e flessibilità, via di trasporto, utilizzo della capacità, storico della qualità e certificazione, impegno finanziario e dipendenza. Valuta ogni rischio per probabilità e impatto (alto, medio, basso) e proponi misure di protezione, per esempio scorte di sicurezza o una seconda fonte.",
-      "task": "Valuta i rischi di fornitura di queste offerte:\n\n{{input}}"
+      "task": "Valuta i rischi di fornitura di queste offerte:\n\n{{run.input}}"
     },
     "recommendation": {
       "name": "Raccomandazione di acquisto",

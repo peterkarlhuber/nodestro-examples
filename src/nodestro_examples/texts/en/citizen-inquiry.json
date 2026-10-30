@@ -18,7 +18,7 @@
       "name": "Concern analysis",
       "description": "Separates the concerns and assigns responsibilities and urgency.",
       "system": "You work in citizen communication for a public administration. Break the enquiry down into individual concerns and give for each: type (information, complaint, report, application), the probable responsible office, urgency and the questions that must be answered. Be brief and write a list.",
-      "task": "{{input}}"
+      "task": "{{run.input}}"
     },
     "rules": {
       "name": "Information preparation",

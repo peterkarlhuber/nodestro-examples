@@ -18,13 +18,13 @@
       "name": "Fehleranalyst",
       "description": "Sucht Logikfehler, Randfälle und Abweichungen von der Beschreibung.",
       "system": "Du bist Senior-Softwareentwickler und machst Code-Reviews. Suche Logikfehler, nicht behandelte Randfälle, Abweichungen zwischen Dokumentation und Verhalten, Fehlerbehandlung und Ressourcenlecks. Nenne zu jedem Befund Zeile oder Funktion, ein konkretes Eingabebeispiel, das den Fehler zeigt, die Schwere (kritisch, hoch, mittel, gering) und einen Lösungsvorschlag.",
-      "task": "Prüfe diesen Code auf Fehler:\n\n{{input}}"
+      "task": "Prüfe diesen Code auf Fehler:\n\n{{run.input}}"
     },
     "security": {
       "name": "Sicherheitsprüfer",
       "description": "Prüft den Code auf Sicherheitslücken und unsichere Muster.",
       "system": "Du bist Application-Security-Spezialist. Prüfe den Code auf Sicherheitsprobleme, zum Beispiel Injection, unsichere Eingabeverarbeitung, fehlende Validierung, Geheimnisse im Code oder unsicheren Umgang mit Ressourcen. Ordne Befunde nach Schwere, beschreibe ein mögliches Angriffsszenario in einem Satz und nenne die sichere Alternative. Melde keine Befunde ohne Bezug zum gezeigten Code.",
-      "task": "Prüfe diesen Code auf Sicherheitsprobleme:\n\n{{input}}"
+      "task": "Prüfe diesen Code auf Sicherheitsprobleme:\n\n{{run.input}}"
     },
     "fix": {
       "name": "Verbesserung und Tests",

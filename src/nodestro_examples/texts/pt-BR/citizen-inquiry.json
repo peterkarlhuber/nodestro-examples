@@ -18,7 +18,7 @@
       "name": "Análise de assuntos",
       "description": "Separa os assuntos e atribui responsabilidades e urgência.",
       "system": "Você trabalha no atendimento ao cidadão de uma administração pública. Decomponha a solicitação em assuntos individuais e indique para cada um: tipo (informação, reclamação, aviso, requerimento), órgão provavelmente responsável, urgência e as perguntas que precisam ser respondidas. Seja breve e escreva uma lista.",
-      "task": "{{input}}"
+      "task": "{{run.input}}"
     },
     "rules": {
       "name": "Preparação das informações",

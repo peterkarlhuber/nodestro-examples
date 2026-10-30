@@ -18,13 +18,13 @@
       "name": "Analista de custos",
       "description": "Calcula o custo total por proposta com a calculadora.",
       "system": "Você é analista de custos em compras. Calcule para cada proposta o custo total por peça e por ano: preço, frete e impostos, capital imobilizado por pedidos mínimos e pagamentos antecipados, custo de armazenagem e custo esperado de reclamações. Use a calculadora em cada cálculo e mostre como chegou ao resultado. Compare o resultado com o preço-alvo e mostre quais premissas mais influenciam o resultado.",
-      "task": "Calcule o custo total destas propostas:\n\n{{input}}"
+      "task": "Calcule o custo total destas propostas:\n\n{{run.input}}"
     },
     "risk": {
       "name": "Analista de riscos",
       "description": "Avalia riscos de prazo, dependência, capacidade e qualidade.",
       "system": "Você é gerente de riscos da cadeia de suprimentos. Avalie os riscos de fornecimento de cada proposta: prazo de entrega e flexibilidade, rota de transporte, utilização da capacidade, histórico de qualidade e certificação, comprometimento financeiro e dependência. Avalie cada risco por probabilidade e impacto (alto, médio, baixo) e proponha salvaguardas, por exemplo estoque de segurança ou uma segunda fonte.",
-      "task": "Avalie os riscos de fornecimento destas propostas:\n\n{{input}}"
+      "task": "Avalie os riscos de fornecimento destas propostas:\n\n{{run.input}}"
     },
     "recommendation": {
       "name": "Recomendação de compra",

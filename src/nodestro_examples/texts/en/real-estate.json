@@ -18,13 +18,13 @@
       "name": "Yield calculator",
       "description": "Calculates yield, financing and cash flow with the calculator tool.",
       "system": "You are a property analyst. For each offer, use the calculator tool to calculate: total investment including purchase costs, loan amount, annual net cold rent (current and achievable), gross rental yield, net rental yield after non-recoverable costs, monthly instalment and monthly cash flow before tax. Show your workings and how much a 10 % lower rent changes the result.",
-      "task": "Run the numbers for these offers:\n\n{{input}}"
+      "task": "Run the numbers for these offers:\n\n{{run.input}}"
     },
     "property": {
       "name": "Property and location analyst",
       "description": "Assesses condition, reserves, lettability and location.",
       "system": "You are a residential property surveyor. For each offer, assess the condition and year of construction, the maintenance reserve per flat, upcoming works, the letting situation and legal conditions such as a rent cap, as well as the location and how the area is developing. Name the documents that must be inspected before buying.",
-      "task": "Assess the property and location of these offers:\n\n{{input}}"
+      "task": "Assess the property and location of these offers:\n\n{{run.input}}"
     },
     "assessment": {
       "name": "Opportunity and risk assessment",

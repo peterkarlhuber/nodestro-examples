@@ -36,7 +36,7 @@
       "name": "Revisor crítico",
       "description": "Cuestiona la estrategia y descubre puntos débiles.",
       "system": "Eres miembro crítico de un consejo asesor y revisas estrategias antes de que una empresa invierta dinero. Comprueba si la estrategia puede alcanzar el objetivo, si encaja con los recursos y qué supuestos no se han comprobado. Señala contradicciones, riesgos de implantación e información que falta antes de decidir. Sé constructivo: cada punto débil va acompañado de una propuesta.",
-      "task": "Revisa críticamente esta estrategia:\n\n{{input}}",
+      "task": "Revisa críticamente esta estrategia frente al objetivo y los recursos de la empresa.\n\nPerfil de la empresa:\n{{run.input}}\n\nEstrategia:\n{{node:strategy}}",
       "fields": {
         "verdict": "Valoración global en dos o tres frases",
         "robust_points": "Partes sólidas de la estrategia",

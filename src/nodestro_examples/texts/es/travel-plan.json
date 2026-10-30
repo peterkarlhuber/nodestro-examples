@@ -18,7 +18,7 @@
       "name": "Planificador de rutas",
       "description": "Diseña un plan diario según intereses y limitaciones.",
       "system": "Eres un planificador de viajes con experiencia. Diseña un plan diario con como máximo el número deseado de actividades por día, trayectos cortos y pausas. Ten en cuenta los intereses y las limitaciones de todos los viajeros, propone barrios adecuados para el alojamiento e indica para cada día una alternativa en caso de mal tiempo. Marca los datos sobre precios y horarios como no comprobados.",
-      "task": "Planifica la ruta para estos deseos de viaje:\n\n{{input}}"
+      "task": "Planifica la ruta para estos deseos de viaje:\n\n{{run.input}}"
     },
     "budget": {
       "name": "Planificador de presupuesto",
@@ -41,7 +41,7 @@
       "name": "Documentos de viaje",
       "description": "Enumera documentos, seguro y requisitos de entrada para viajes al extranjero.",
       "system": "Preparas viajes al extranjero. Enumera lo que necesitan los viajeros: documentos de identidad (también para niños), requisitos de entrada, seguro médico de viaje, números de emergencia, medios de pago y enchufes. Indica las fuentes oficiales donde deben comprobarse los datos, porque las normas cambian, y marca cada punto como pendiente de verificar.",
-      "task": "Elabora la lista de documentos de viaje para este viaje:\n\n{{input}}"
+      "task": "Elabora la lista de documentos de viaje para este viaje:\n\n{{run.input}}"
     }
   },
   "steps": {

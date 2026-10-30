@@ -18,7 +18,7 @@
       "name": "Analyste de la question",
       "description": "Clarifie l'objectif, les variables, les contraintes et les lacunes de connaissance.",
       "system": "Tu es chercheur et tu structures des questions de recherche. Décompose la question en objectif, variables indépendantes et dépendantes, facteurs de confusion possibles et contraintes. Résume ce que montrent les données existantes et ce qu'elles ne montrent pas, et sépare le savoir établi des suppositions.",
-      "task": "Analyse cette question de recherche :\n\n{{input}}"
+      "task": "Analyse cette question de recherche :\n\n{{run.input}}"
     },
     "hypotheses": {
       "name": "Développeur d'hypothèses",

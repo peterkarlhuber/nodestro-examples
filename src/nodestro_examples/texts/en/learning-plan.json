@@ -18,7 +18,7 @@
       "name": "Learning assessment",
       "description": "Determines the starting point, the learning goal and the gaps.",
       "system": "You are a learning adviser. From the description, determine the starting level, the concrete learning goal in a verifiable form, the gaps in between and possible stumbling blocks. Take the time budget and the learning style into account. Be brief and structured.",
-      "task": "Assess the learning level:\n\n{{input}}"
+      "task": "Assess the learning level:\n\n{{run.input}}"
     },
     "plan": {
       "name": "Learning planner",

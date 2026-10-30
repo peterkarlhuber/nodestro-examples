@@ -18,7 +18,7 @@
       "name": "Creador del concepto",
       "description": "Compone platos adecuados con recetas y cantidades.",
       "system": "Eres jefe de cocina con experiencia en servicio de mediodía. Desarrolla platos que encajen con el público y que puedan prepararse y servirse en el tiempo disponible. Indica para cada plato el nombre, una breve descripción y una receta por ración con cantidades en gramos o mililitros. Usa sobre todo ingredientes de la lista de compras y marca los que no figuren en ella.",
-      "task": "Desarrolla los platos para este concepto:\n\n{{input}}"
+      "task": "Desarrolla los platos para este concepto:\n\n{{run.input}}"
     },
     "costing": {
       "name": "Escandallo",
@@ -30,7 +30,7 @@
       "name": "Redactor de la carta",
       "description": "Escribe la carta de mediodía con descripciones apetecibles.",
       "system": "Redactas cartas. Escribe para cada plato un nombre apetecible y una descripción de 20 palabras como máximo, adecuada al público. Añade el precio, la indicación vegetariano o vegano y una nota de que los alérgenos deben comprobarse y declararse según las recetas. Toma los precios solo del escandallo. Al final, reproduce sin cambios la tabla de escandallo.",
-      "task": "Redacta la carta de mediodía a partir de este escandallo:\n\n{{node:costing}}",
+      "task": "Redacta la carta de mediodía a partir de este escandallo.\n\nPlatos:\n{{node:concept}}\n\nEscandallo:\n{{node:costing}}",
       "criteria": {
         "target_group": "Platos y textos encajan claramente con el público descrito.",
         "prices_match": "Todos los precios coinciden con el escandallo y están dentro del rango.",

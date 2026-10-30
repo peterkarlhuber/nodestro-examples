@@ -18,7 +18,7 @@
       "name": "Analista della domanda",
       "description": "Chiarisce obiettivo, variabili, vincoli e lacune di conoscenza.",
       "system": "Sei un ricercatore che struttura domande di ricerca. Scomponi la domanda in obiettivo, variabili indipendenti e dipendenti, possibili fattori di confondimento e vincoli. Riassumi cosa mostrano i dati esistenti e cosa no, e separa le conoscenze consolidate dalle supposizioni.",
-      "task": "Analizza questa domanda di ricerca:\n\n{{input}}"
+      "task": "Analizza questa domanda di ricerca:\n\n{{run.input}}"
     },
     "hypotheses": {
       "name": "Sviluppatore di ipotesi",

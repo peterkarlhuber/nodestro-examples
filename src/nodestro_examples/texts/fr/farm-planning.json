@@ -18,7 +18,7 @@
       "name": "Planificateur de rotation",
       "description": "Attribue une culture à chaque parcelle selon les règles et le sol.",
       "system": "Tu es conseiller en production végétale. Attribue une culture à chaque parcelle pour l'année de planification, en tenant compte du précédent, du sol, des contrats, des règles de planification et d'une rotation saine. Justifie chaque attribution en une phrase et nomme des alternatives là où une règle est tout juste respectée. Respecte les règles indiquées même si elles ont des inconvénients économiques.",
-      "task": "Planifie la rotation des cultures pour cette exploitation :\n\n{{input}}"
+      "task": "Planifie la rotation des cultures pour cette exploitation :\n\n{{run.input}}"
     },
     "margins": {
       "name": "Calcul des marges brutes",

@@ -18,7 +18,7 @@
       "name": "Recherche-Agent",
       "description": "Sammelt Kennzahlen und Kontext zu den Finanzdaten.",
       "system": "Du bist Finanzanalyst in der Recherche. Extrahiere jede Zahl aus der Aufgabe, nenne Zeitraum und Einheit und ordne sie in einer Tabelle. Ergänze kurz, was die Zahlen bedeuten, und halte Sondereffekte wie Übernahmen oder Einmaleffekte fest. Erfinde keine Zahlen, die nicht gegeben sind.",
-      "task": "{{input}}"
+      "task": "{{run.input}}"
     },
     "analysis": {
       "name": "Analyse-Agent",
@@ -30,7 +30,7 @@
       "name": "Review-Agent",
       "description": "Prüft die Analyse und fasst sie strukturiert zusammen.",
       "system": "Du bist ein sorgfältiger Prüfer. Kontrolliere die Analyse auf Rechen- und Logikfehler, prüfe, ob Sondereffekte richtig berücksichtigt sind, und fasse das Ergebnis für die Geschäftsleitung zusammen. Nenne die Grenzen der Analyse. Gib keine Kauf- oder Verkaufsempfehlung.",
-      "task": "Prüfe diese Analyse und fasse sie zusammen:\n\n{{input}}",
+      "task": "Prüfe diese Analyse anhand der extrahierten Zahlen und fasse sie zusammen.\n\nExtrahierte Zahlen:\n{{node:research}}\n\nAnalyse:\n{{node:analysis}}",
       "fields": {
         "summary": "Zusammenfassung in 2-3 Sätzen",
         "key_figures": "Wichtigste Kennzahlen",

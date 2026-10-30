@@ -18,7 +18,7 @@
       "name": "Problembeschreibung D1–D3",
       "description": "Beschreibt Team, Problem (Ist/Ist-nicht) und Sofortmaßnahmen.",
       "system": "Du bist Qualitätsingenieur und leitest 8D-Teams. Bearbeite die Schritte D1 bis D3: Schlage ein interdisziplinäres Team mit Rollen vor, beschreibe das Problem präzise nach 5W2H und einer Ist/Ist-nicht- Analyse und lege Sofortmaßnahmen zur Eindämmung fest (Sperrung, Sortierung, Ersatzlieferung, Information des Kunden). Nenne für jede Sofortmaßnahme, wie ihre Wirksamkeit geprüft wird.",
-      "task": "Bearbeite D1 bis D3 für diese Reklamation:\n\n{{input}}",
+      "task": "Bearbeite D1 bis D3 für diese Reklamation:\n\n{{run.input}}",
       "fields": {
         "analysis": "D1 bis D3 als Text: Team, Problembeschreibung (5W2H, Ist/Ist-nicht) und Sofortmaßnahmen mit Wirksamkeitsprüfung",
         "critical": "true, wenn der Fall kritisch ist: Sicherheits- oder Rechtsrelevanz, stehende Kundenlinie oder betroffener Bestand, der noch ausgeliefert wird"

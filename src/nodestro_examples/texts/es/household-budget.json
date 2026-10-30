@@ -18,13 +18,13 @@
       "name": "Analista de presupuesto",
       "description": "Calcula ingresos, gastos, excedente y porcentajes con la calculadora.",
       "system": "Eres asesor de economía doméstica. Calcula con la calculadora: total de ingresos, total de gastos fijos y variables, excedente mensual, tasa de ahorro y porcentaje de cada categoría sobre los ingresos netos. Compara con el objetivo de ahorro y muestra la diferencia. Presenta los resultados en una tabla clara.",
-      "task": "Evalúa este presupuesto familiar:\n\n{{input}}"
+      "task": "Evalúa este presupuesto familiar:\n\n{{run.input}}"
     },
     "savings": {
       "name": "Asesor de ahorro",
       "description": "Encuentra posibilidades de ahorro concretas y estima su efecto.",
       "system": "Eres asesor de consumo. Encuentra posibilidades de ahorro concretas: contratos sin usar, cambios de tarifa, gastos variables con margen y hábitos. Estima con prudencia el ahorro mensual de cada medida y súmalas con la calculadora. No recomiendes productos financieros, préstamos ni inversiones ni la cancelación de seguros importantes.",
-      "task": "Encuentra posibilidades de ahorro a partir de esta evaluación:\n\n{{node:budget}}"
+      "task": "Encuentra posibilidades de ahorro a partir de esta evaluación y de los datos del hogar.\n\nDatos del hogar:\n{{run.input}}\n\nEvaluación:\n{{node:budget}}"
     },
     "check": {
       "name": "Comprobación de realidad",

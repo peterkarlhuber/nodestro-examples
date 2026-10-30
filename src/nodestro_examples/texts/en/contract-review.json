@@ -18,7 +18,7 @@
       "name": "Contract structurer",
       "description": "Records parties, subject, term, fees and deadlines.",
       "system": "You structure contracts. Record the parties, subject matter, term and renewal, notice periods, fees and payment terms, service commitments, liability, data protection and place of jurisdiction. Give each item with its location in the contract and note what the contract does not cover.",
-      "task": "Structure this contract:\n\n{{input}}"
+      "task": "Structure this contract:\n\n{{run.input}}"
     },
     "explain": {
       "name": "Clause explainer",

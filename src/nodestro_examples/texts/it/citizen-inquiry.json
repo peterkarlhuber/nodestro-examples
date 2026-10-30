@@ -18,7 +18,7 @@
       "name": "Analisi delle questioni",
       "description": "Separa le questioni e assegna competenze e urgenza.",
       "system": "Lavori alla comunicazione con i cittadini in un'amministrazione pubblica. Scomponi la richiesta in singole questioni e indica per ciascuna: tipo (informazione, reclamo, segnalazione, istanza), ufficio probabilmente competente, urgenza e domande a cui bisogna rispondere. Sii breve e scrivi un elenco.",
-      "task": "{{input}}"
+      "task": "{{run.input}}"
     },
     "rules": {
       "name": "Preparazione delle informazioni",

@@ -18,13 +18,13 @@
       "name": "Terminanalyst",
       "description": "Berechnet Verzüge, Puffer und Folgen mit Datums- und Rechner-Tool.",
       "system": "Du bist Terminplaner im Bauwesen. Berechne für jeden Meilenstein den Verzug in Kalendertagen mit dem Tool days_between und leite die Auswirkung auf den Fertigstellungstermin ab, wenn sich der Verzug fortsetzt. Zeige Abhängigkeiten zwischen Meilensteinen und berechne mit dem Rechner-Tool, welche Vertragsstrafe bei einem angenommenen Verzug drohen könnte, ausdrücklich als Szenario.",
-      "task": "Analysiere die Terminlage:\n\n{{input}}"
+      "task": "Analysiere die Terminlage:\n\n{{run.input}}"
     },
     "causes": {
       "name": "Ursachenanalyst",
       "description": "Ordnet Ursachen nach Verantwortungsbereich und Dokumentationsbedarf ein.",
       "system": "Du bist Bauleiter mit Erfahrung im Nachtragsmanagement. Ordne jede Verzögerung einer Ursachenkategorie zu: Witterung, Lieferkette, Planänderung, Personal oder Sonstiges. Kennzeichne, in wessen Verantwortungsbereich sie nach den vorliegenden Angaben voraussichtlich fällt, welche Nachweise dokumentiert werden sollten und welche Behinderungsanzeigen nötig sein könnten. Triff keine rechtliche Bewertung.",
-      "task": "Ordne die Ursachen der Verzögerungen ein:\n\n{{input}}"
+      "task": "Ordne die Ursachen der Verzögerungen ein:\n\n{{run.input}}"
     },
     "countermeasures": {
       "name": "Maßnahmenplaner",
@@ -36,7 +36,7 @@
       "name": "Bericht an den Bauherrn",
       "description": "Fasst Terminlage, Ursachen und Maßnahmen sachlich zusammen.",
       "system": "Du schreibst Statusberichte für öffentliche Bauherren: sachlich, klar und ohne Schuldzuweisungen. Gliedere in Terminlage, Ursachen, Gegenmaßnahmen, Entscheidungsbedarf und Risiken, höchstens eine Seite. Weise darauf hin, dass Fragen zu Vertragsstrafen und Bauzeitverlängerung fachlich und rechtlich geprüft werden müssen.",
-      "task": "Schreibe den Statusbericht.\n\nTerminanalyse:\n{{node:schedule}}\n\nGegenmaßnahmen:\n{{node:countermeasures}}"
+      "task": "Schreibe den Statusbericht.\n\nTerminanalyse:\n{{node:schedule}}\n\nUrsachen:\n{{node:causes}}\n\nGegenmaßnahmen:\n{{node:countermeasures}}"
     }
   },
   "steps": {

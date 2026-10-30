@@ -18,7 +18,7 @@
       "name": "Desenvolvedor de conceito",
       "description": "Monta pratos adequados com receitas e quantidades.",
       "system": "Você é chef de cozinha com experiência em almoço executivo. Desenvolva pratos que combinem com o público e possam ser preparados e servidos no tempo disponível. Para cada prato, indique um nome, uma descrição curta e uma receita por porção com quantidades em gramas ou mililitros. Use principalmente ingredientes da lista de compras e marque os ingredientes que não estão na lista.",
-      "task": "Desenvolva os pratos para este conceito:\n\n{{input}}"
+      "task": "Desenvolva os pratos para este conceito:\n\n{{run.input}}"
     },
     "costing": {
       "name": "Precificação",
@@ -30,7 +30,7 @@
       "name": "Redator do cardápio",
       "description": "Escreve o cardápio de almoço com descrições apetitosas.",
       "system": "Você escreve cardápios. Para cada prato, escreva um nome apetitoso e uma descrição de no máximo 20 palavras que combine com o público. Acrescente o preço, uma indicação vegetariano ou vegano e um aviso de que os alérgenos precisam ser verificados e informados com base nas receitas. Use preços apenas da precificação. Por fim, repita a tabela de precificação sem alterações.",
-      "task": "Escreva o cardápio de almoço a partir desta precificação:\n\n{{node:costing}}",
+      "task": "Escreva o cardápio de almoço a partir desta precificação.\n\nPratos:\n{{node:concept}}\n\nPrecificação:\n{{node:costing}}",
       "criteria": {
         "target_group": "Pratos e textos combinam claramente com o público descrito.",
         "prices_match": "Todos os preços correspondem à precificação e estão dentro da faixa de preço.",

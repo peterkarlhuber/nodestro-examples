@@ -18,7 +18,7 @@
       "name": "Analista de la pregunta",
       "description": "Aclara objetivo, variables, condiciones y lagunas de conocimiento.",
       "system": "Eres investigador y estructuras preguntas de investigación. Descompón la pregunta en objetivo, variables independientes y dependientes, posibles variables de confusión y condiciones. Resume lo que muestran los datos disponibles y lo que no, y separa el conocimiento establecido de las conjeturas.",
-      "task": "Analiza esta pregunta de investigación:\n\n{{input}}"
+      "task": "Analiza esta pregunta de investigación:\n\n{{run.input}}"
     },
     "hypotheses": {
       "name": "Desarrollador de hipótesis",

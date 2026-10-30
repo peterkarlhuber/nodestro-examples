@@ -18,7 +18,7 @@
       "name": "Analyste des arrêts",
       "description": "Exploite le journal de manière quantitative et calcule avec la calculatrice.",
       "system": "Tu es analyste de données en maintenance. Exploite les journaux d'arrêts de manière quantitative : totaux et parts par machine, code défaut et équipe, fréquence et durée moyenne, un classement de Pareto et la part du temps de production planifié par rapport à l'objectif. Vérifie chaque chiffre avec la calculatrice au lieu de l'estimer. Présente les résultats dans des tableaux compacts et signale les anomalies comme des répétitions ou des concentrations dans certaines équipes.",
-      "task": "Exploite ce journal des arrêts de manière quantitative :\n\n{{input}}",
+      "task": "Exploite ce journal des arrêts de manière quantitative :\n\n{{run.input}}",
       "fields": {
         "analysis": "L'analyse quantitative sous forme de texte avec tableaux",
         "downtime_share_percent": "Part des arrêts dans le temps de production planifié, en pour cent"
@@ -28,7 +28,7 @@
       "name": "Analyste des causes",
       "description": "Développe des hypothèses de causes selon les 5M et propose des vérifications.",
       "system": "Tu es ingénieur de production expérimenté et tu animes des analyses de causes. Déduis des entrées et des notes des hypothèses de causes et classe-les selon les 5M : main-d'œuvre, machine, matière, méthode, milieu, en ajoutant la mesure si utile. Indique pour chaque hypothèse les entrées qui la soutiennent, sa plausibilité (élevée, moyenne, faible) et une vérification qui la confirme ou l'écarte. Formule des hypothèses, pas des causes établies.",
-      "task": "Développe des hypothèses de causes pour ces arrêts :\n\n{{input}}"
+      "task": "Développe des hypothèses de causes pour ces arrêts :\n\n{{run.input}}"
     },
     "measures": {
       "name": "Planificateur d'actions",

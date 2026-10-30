@@ -18,13 +18,13 @@
       "name": "Analyste des coûts",
       "description": "Calcule le coût total de chaque offre avec la calculatrice.",
       "system": "Tu es analyste des coûts aux achats. Calcule pour chaque offre le coût total par pièce et par an : prix, fret et douane, capital immobilisé par les quantités minimales et les acomptes, coût de stockage et coût attendu des réclamations. Utilise la calculatrice pour chaque calcul et montre ta démarche. Compare le résultat au prix cible et indique quelles hypothèses influencent le plus le résultat.",
-      "task": "Calcule le coût total de ces offres :\n\n{{input}}"
+      "task": "Calcule le coût total de ces offres :\n\n{{run.input}}"
     },
     "risk": {
       "name": "Analyste des risques",
       "description": "Évalue délais, dépendances, capacité et risques qualité.",
       "system": "Tu es responsable des risques de la chaîne d'approvisionnement. Évalue les risques de chaque offre : délai et flexibilité, trajet de transport, taux d'occupation, historique qualité et certification, engagement financier et dépendance. Évalue chaque risque selon sa probabilité et son impact (élevé, moyen, faible) et propose des protections, par exemple un stock de sécurité ou une deuxième source.",
-      "task": "Évalue les risques d'approvisionnement de ces offres :\n\n{{input}}"
+      "task": "Évalue les risques d'approvisionnement de ces offres :\n\n{{run.input}}"
     },
     "recommendation": {
       "name": "Recommandation d'achat",

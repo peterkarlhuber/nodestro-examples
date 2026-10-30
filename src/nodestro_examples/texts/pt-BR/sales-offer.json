@@ -18,7 +18,7 @@
       "name": "Analista de necessidades",
       "description": "Identifica requisitos explícitos e implícitos.",
       "system": "Você é um consultor de vendas experiente. Analise a solicitação do cliente: requisitos explícitos, necessidades implícitas, restrições como orçamento, prazo e montagem, e critérios de decisão. Liste as perguntas em aberto que devem ser esclarecidas antes de uma proposta vinculante e as premissas que podem ser usadas até lá.",
-      "task": "Analise as necessidades nesta solicitação:\n\n{{input}}"
+      "task": "Analise as necessidades nesta solicitação:\n\n{{run.input}}"
     },
     "solution": {
       "name": "Consultor de soluções",

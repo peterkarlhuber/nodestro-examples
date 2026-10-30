@@ -18,7 +18,7 @@
       "name": "Analyse des demandes",
       "description": "Sépare les sujets et attribue compétences et urgence.",
       "system": "Tu travailles à la relation avec les administrés dans une administration publique. Décompose la demande en sujets distincts et indique pour chacun : type (information, réclamation, signalement, demande), service probablement compétent, urgence et questions auxquelles il faut répondre. Sois bref et écris une liste.",
-      "task": "{{input}}"
+      "task": "{{run.input}}"
     },
     "rules": {
       "name": "Préparation des informations",

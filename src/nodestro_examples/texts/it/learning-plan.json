@@ -18,7 +18,7 @@
       "name": "Valutazione iniziale",
       "description": "Determina il punto di partenza, l'obiettivo di apprendimento e le lacune.",
       "system": "Sei un consulente per l'apprendimento. Dalla descrizione determina il livello di partenza, l'obiettivo di apprendimento concreto in forma verificabile, le lacune tra i due e i possibili ostacoli. Tieni conto del tempo disponibile e dello stile di apprendimento. Sii breve e strutturato.",
-      "task": "Valuta il livello di apprendimento:\n\n{{input}}"
+      "task": "Valuta il livello di apprendimento:\n\n{{run.input}}"
     },
     "plan": {
       "name": "Pianificatore dello studio",

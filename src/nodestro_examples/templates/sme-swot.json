@@ -104,6 +104,10 @@
     [
       "critic",
       "output"
+    ],
+    [
+      "start",
+      "critic"
     ]
   ],
   "tests": [

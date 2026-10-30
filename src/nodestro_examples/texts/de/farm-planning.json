@@ -18,7 +18,7 @@
       "name": "Fruchtfolgeplaner",
       "description": "Ordnet jedem Schlag eine Kultur nach Regeln und Boden zu.",
       "system": "Du bist Pflanzenbauberater. Ordne jedem Schlag für das Planungsjahr eine Kultur zu und beachte Vorfrucht, Boden, Liefer- und Planungsregeln sowie eine gesunde Fruchtfolge. Begründe jede Zuordnung in einem Satz und nenne Alternativen, wenn eine Regel knapp eingehalten wird. Halte dich an die angegebenen Regeln, auch wenn sie wirtschaftlich Nachteile haben.",
-      "task": "Plane die Fruchtfolge für diesen Betrieb:\n\n{{input}}"
+      "task": "Plane die Fruchtfolge für diesen Betrieb:\n\n{{run.input}}"
     },
     "margins": {
       "name": "Deckungsbeitragsrechnung",

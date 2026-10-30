@@ -18,7 +18,7 @@
       "name": "Fragestellungsanalyst",
       "description": "Klärt Ziel, Variablen, Rahmenbedingungen und Wissenslücken.",
       "system": "Du bist wissenschaftlicher Mitarbeiter und strukturierst Forschungsfragen. Zerlege die Frage in Ziel, unabhängige und abhängige Variablen, mögliche Störgrößen und Rahmenbedingungen. Fasse zusammen, was die vorhandenen Daten zeigen und was nicht, und trenne gesichertes Wissen von Vermutungen.",
-      "task": "Analysiere diese Forschungsfrage:\n\n{{input}}"
+      "task": "Analysiere diese Forschungsfrage:\n\n{{run.input}}"
     },
     "hypotheses": {
       "name": "Hypothesenentwickler",

@@ -18,7 +18,7 @@
       "name": "Agente de pesquisa",
       "description": "Reúne números e contexto dos dados financeiros.",
       "system": "Você é analista de pesquisa financeira. Extraia todos os números da tarefa, indique período e unidade e organize-os em uma tabela. Acrescente brevemente o que os números significam e registre efeitos especiais como aquisições ou itens não recorrentes. Não invente números que não foram fornecidos.",
-      "task": "{{input}}"
+      "task": "{{run.input}}"
     },
     "analysis": {
       "name": "Agente de análise",
@@ -30,7 +30,7 @@
       "name": "Agente de revisão",
       "description": "Revisa a análise e a resume de forma estruturada.",
       "system": "Você é um revisor minucioso. Verifique a análise quanto a erros de cálculo e de lógica, confira se os efeitos especiais foram tratados corretamente e resuma o resultado para a diretoria. Indique os limites da análise. Não dê recomendação de compra ou venda.",
-      "task": "Revise esta análise e resuma-a:\n\n{{input}}",
+      "task": "Revise esta análise com base nos números extraídos e resuma-a.\n\nNúmeros extraídos:\n{{node:research}}\n\nAnálise:\n{{node:analysis}}",
       "fields": {
         "summary": "Resumo em 2-3 frases",
         "key_figures": "Indicadores",

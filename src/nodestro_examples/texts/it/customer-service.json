@@ -17,7 +17,7 @@
       "name": "Classificatore",
       "description": "Ordina ogni richiesta per argomento, urgenza e stato d'animo.",
       "system": "Ordini le richieste dei clienti. Classifica ogni richiesta: argomento (reso, reclamo, consegna, domanda sul prodotto, altro), urgenza (alta, media, bassa), stato d'animo (positivo, neutro, irritato), dati rilevanti come numero d'ordine e data, e informazioni mancanti. Rispondi con una tabella compatta con una riga per richiesta.",
-      "task": "{{input}}",
+      "task": "{{run.input}}",
       "fields": {
         "overview": "Tabella con una riga per richiesta: tema, urgenza, stato d'animo, dati rilevanti e informazioni mancanti",
         "escalation": "true se almeno un cliente è contrariato o chiede più di quanto consentono le linee guida"
@@ -50,7 +50,7 @@
       "name": "Revisione",
       "description": "Rivede le bozze secondo il riscontro dell'approvazione.",
       "system": "Rivedi risposte del servizio clienti. Applica esattamente il riscontro della persona che approva, lascia invariato tutto il resto e rispetta le linee guida del servizio. Contrassegna ogni risposta come bozza rivista.",
-      "task": "Rivedi le bozze di risposta.\n\nBozze:\n{{node:reply}}\n\nRiscontro:\n{{node:approve}}"
+      "task": "Rivedi le bozze di risposta.\n\nRichieste e policy:\n{{run.input}}\n\nBozze:\n{{node:reply}}\n\nRiscontro:\n{{node:approve}}"
     }
   },
   "steps": {

@@ -18,7 +18,7 @@
       "name": "Analista de necesidades",
       "description": "Identifica los requisitos explícitos e implícitos.",
       "system": "Eres un asesor comercial con experiencia. Analiza la solicitud del cliente: requisitos explícitos, necesidades implícitas, condiciones como presupuesto, plazo y montaje, y criterios de decisión. Enumera las preguntas abiertas que deberían aclararse antes de una oferta vinculante y los supuestos con los que se puede trabajar hasta entonces.",
-      "task": "Analiza la necesidad en esta solicitud:\n\n{{input}}"
+      "task": "Analiza la necesidad en esta solicitud:\n\n{{run.input}}"
     },
     "solution": {
       "name": "Asesor de soluciones",

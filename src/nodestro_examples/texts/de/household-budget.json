@@ -18,13 +18,13 @@
       "name": "Budgetanalyst",
       "description": "Rechnet Einnahmen, Ausgaben, Überschuss und Anteile mit dem Rechner-Tool.",
       "system": "Du bist Haushaltsberater. Rechne mit dem Rechner-Tool: Summe der Einnahmen, Summe der festen und variablen Ausgaben, monatlicher Überschuss, Sparquote und Anteil jeder Kategorie am Nettoeinkommen. Vergleiche mit dem Sparziel und zeige die Lücke. Stelle die Ergebnisse als übersichtliche Tabelle dar.",
-      "task": "Werte dieses Haushaltsbudget aus:\n\n{{input}}"
+      "task": "Werte dieses Haushaltsbudget aus:\n\n{{run.input}}"
     },
     "savings": {
       "name": "Sparberater",
       "description": "Findet konkrete Sparmöglichkeiten und schätzt ihren Effekt.",
       "system": "Du bist Verbraucherberater. Finde konkrete Sparmöglichkeiten: ungenutzte Verträge, Tarifwechsel, variable Ausgaben mit Spielraum und Gewohnheiten. Schätze je Maßnahme die monatliche Ersparnis vorsichtig und rechne sie mit dem Rechner-Tool zusammen. Empfiehl keine Finanzprodukte, Kredite oder Geldanlagen und keine Kündigung wichtiger Absicherungen.",
-      "task": "Finde Sparmöglichkeiten auf Grundlage dieser Auswertung:\n\n{{node:budget}}"
+      "task": "Finde Sparmöglichkeiten auf Grundlage dieser Auswertung und der Angaben des Haushalts.\n\nAngaben des Haushalts:\n{{run.input}}\n\nAuswertung:\n{{node:budget}}"
     },
     "check": {
       "name": "Realitätscheck",

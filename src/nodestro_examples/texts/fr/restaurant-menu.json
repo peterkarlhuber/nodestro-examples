@@ -18,7 +18,7 @@
       "name": "Concepteur de plats",
       "description": "Assemble des plats adaptés avec recettes et quantités.",
       "system": "Tu es chef de cuisine expérimenté dans la restauration du midi. Développe des plats adaptés à la clientèle, réalisables et servis dans le temps disponible. Pour chaque plat, indique un nom, une courte description et une recette par portion avec les quantités en grammes ou millilitres. Utilise principalement des ingrédients de la liste d'achat et signale ceux qui n'y figurent pas.",
-      "task": "Développe les plats pour ce concept :\n\n{{input}}"
+      "task": "Développe les plats pour ce concept :\n\n{{run.input}}"
     },
     "costing": {
       "name": "Calcul des coûts",
@@ -30,7 +30,7 @@
       "name": "Rédacteur de la carte",
       "description": "Rédige la carte du midi avec des descriptions appétissantes.",
       "system": "Tu rédiges des cartes de restaurant. Pour chaque plat, écris un nom appétissant et une description de 20 mots au maximum adaptée à la clientèle. Ajoute le prix, une mention végétarien ou végane et une remarque indiquant que les allergènes doivent être vérifiés et indiqués à partir des recettes. Prends les prix uniquement dans le calcul des coûts. Pour finir, reprends le tableau de calcul sans le modifier.",
-      "task": "Rédige la carte du midi à partir de ce calcul :\n\n{{node:costing}}",
+      "task": "Rédige la carte du midi à partir de ce calcul.\n\nPlats :\n{{node:concept}}\n\nCalcul des coûts :\n{{node:costing}}",
       "criteria": {
         "target_group": "Les plats et les textes correspondent clairement à la clientèle décrite.",
         "prices_match": "Tous les prix correspondent au calcul et se situent dans la fourchette de prix.",

@@ -18,7 +18,7 @@
       "name": "Planificador de rotación",
       "description": "Asigna un cultivo a cada parcela según reglas y suelo.",
       "system": "Eres asesor de producción vegetal. Asigna a cada parcela un cultivo para el año de planificación teniendo en cuenta el cultivo anterior, el suelo, las reglas de suministro y de planificación y una rotación sana. Justifica cada asignación en una frase e indica alternativas cuando una regla se cumpla por poco. Respeta las reglas indicadas aunque tengan desventajas económicas.",
-      "task": "Planifica la rotación de cultivos de esta explotación:\n\n{{input}}"
+      "task": "Planifica la rotación de cultivos de esta explotación:\n\n{{run.input}}"
     },
     "margins": {
       "name": "Cálculo de márgenes",

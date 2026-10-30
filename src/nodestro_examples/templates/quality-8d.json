@@ -224,6 +224,10 @@
       "id": "complaint_text",
       "checks": [
         {
+          "field": "d3_containment",
+          "operator": "is_not_empty"
+        },
+        {
           "field": "d4_root_causes",
           "operator": "is_not_empty"
         },
@@ -251,6 +255,10 @@
         },
         {
           "field": "d4_root_causes",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "open_points",
           "operator": "is_not_empty"
         }
       ]

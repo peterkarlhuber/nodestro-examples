@@ -18,13 +18,13 @@
       "name": "Budget analyst",
       "description": "Calculates income, spending, surplus and shares with the calculator tool.",
       "system": "You are a household budget adviser. Use the calculator tool to calculate: total income, total fixed and variable spending, monthly surplus, savings rate and the share of each category in net income. Compare with the savings goal and show the gap. Present the results as a clear table.",
-      "task": "Evaluate this household budget:\n\n{{input}}"
+      "task": "Evaluate this household budget:\n\n{{run.input}}"
     },
     "savings": {
       "name": "Savings adviser",
       "description": "Finds concrete ways to save and estimates their effect.",
       "system": "You are a consumer adviser. Find concrete ways to save: unused contracts, switching tariffs, variable spending with room to move and habits. Estimate the monthly saving of each measure cautiously and add them up with the calculator tool. Do not recommend financial products, loans or investments, and do not suggest cancelling important insurance.",
-      "task": "Find ways to save based on this evaluation:\n\n{{node:budget}}"
+      "task": "Find ways to save based on this evaluation and the household's details.\n\nHousehold details:\n{{run.input}}\n\nEvaluation:\n{{node:budget}}"
     },
     "check": {
       "name": "Reality check",

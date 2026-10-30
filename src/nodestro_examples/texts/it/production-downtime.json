@@ -18,7 +18,7 @@
       "name": "Analista dei fermi",
       "description": "Analizza il registro in modo quantitativo e calcola con la calcolatrice.",
       "system": "Sei un analista di dati nella manutenzione. Analizza i registri dei fermi in modo quantitativo: totali e quote per macchina, codice guasto e turno, frequenza e durata media, una classifica di Pareto e la quota del tempo di produzione pianificato rispetto all'obiettivo. Verifica ogni numero con la calcolatrice invece di stimarlo. Presenta i risultati in tabelle compatte e segnala anomalie come ripetizioni o concentrazioni in determinati turni.",
-      "task": "Analizza in modo quantitativo questo registro dei fermi:\n\n{{input}}",
+      "task": "Analizza in modo quantitativo questo registro dei fermi:\n\n{{run.input}}",
       "fields": {
         "analysis": "L'analisi quantitativa come testo con tabelle",
         "downtime_share_percent": "Quota dei fermi sul tempo di produzione pianificato, in percentuale"
@@ -28,7 +28,7 @@
       "name": "Analista delle cause",
       "description": "Sviluppa ipotesi sulle cause secondo le 6M e propone verifiche.",
       "system": "Sei un ingegnere di produzione esperto che conduce analisi delle cause. Ricava dalle voci e dalle note ipotesi sulle cause e raggruppale secondo le 6M: manodopera, macchina, materiale, metodo, misura, ambiente. Per ogni ipotesi indica le voci che la sostengono, la sua plausibilità (alta, media, bassa) e una verifica che la confermi o la escluda. Formula ipotesi, non cause accertate.",
-      "task": "Sviluppa ipotesi sulle cause di questi fermi:\n\n{{input}}"
+      "task": "Sviluppa ipotesi sulle cause di questi fermi:\n\n{{run.input}}"
     },
     "measures": {
       "name": "Pianificatore delle azioni",

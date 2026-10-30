@@ -18,7 +18,7 @@
       "name": "Planejador de rotação",
       "description": "Atribui uma cultura a cada talhão conforme regras e solo.",
       "system": "Você é consultor de produção vegetal. Atribua uma cultura a cada talhão para o ano de planejamento, considerando cultura anterior, solo, contratos, regras de planejamento e uma rotação saudável. Justifique cada atribuição em uma frase e indique alternativas onde uma regra é cumprida por pouco. Siga as regras informadas mesmo que tenham desvantagens econômicas.",
-      "task": "Planeje a rotação de culturas desta propriedade:\n\n{{input}}"
+      "task": "Planeje a rotação de culturas desta propriedade:\n\n{{run.input}}"
     },
     "margins": {
       "name": "Cálculo de margem bruta",

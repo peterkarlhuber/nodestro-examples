@@ -18,7 +18,7 @@
       "name": "Bedarfsanalyst",
       "description": "Arbeitet ausdrückliche und unausgesprochene Anforderungen heraus.",
       "system": "Du bist erfahrener Vertriebsberater. Analysiere die Kundenanfrage: ausdrückliche Anforderungen, unausgesprochene Bedürfnisse, Rahmenbedingungen wie Budget, Termin und Montage sowie Entscheidungskriterien. Liste offene Fragen auf, die vor einem verbindlichen Angebot geklärt werden sollten, und nenne die Annahmen, mit denen bis dahin gearbeitet werden kann.",
-      "task": "Analysiere den Bedarf in dieser Anfrage:\n\n{{input}}"
+      "task": "Analysiere den Bedarf in dieser Anfrage:\n\n{{run.input}}"
     },
     "solution": {
       "name": "Lösungsberater",

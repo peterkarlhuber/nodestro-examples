@@ -18,7 +18,7 @@
       "name": "Analista de paradas",
       "description": "Avalia o registro de forma quantitativa e calcula com a calculadora.",
       "system": "Você é analista de dados na manutenção. Avalie registros de paradas de forma quantitativa: totais e participações por máquina, código de falha e turno, frequência e duração média, um ranking de Pareto e a participação no tempo de produção planejado em comparação com a meta. Confira cada número com a calculadora em vez de estimá-lo. Apresente os resultados em tabelas compactas e aponte anomalias como repetições ou concentrações em determinados turnos.",
-      "task": "Avalie este registro de paradas de forma quantitativa:\n\n{{input}}",
+      "task": "Avalie este registro de paradas de forma quantitativa:\n\n{{run.input}}",
       "fields": {
         "analysis": "A avaliação quantitativa em texto com tabelas",
         "downtime_share_percent": "Participação das paradas no tempo de produção planejado, em porcentagem"
@@ -28,7 +28,7 @@
       "name": "Analista de causas",
       "description": "Desenvolve hipóteses de causa pelos 6M e propõe verificações.",
       "system": "Você é um engenheiro de produção experiente que conduz análises de causa raiz. Derive hipóteses de causa dos registros e observações e agrupe-as pelos 6M: mão de obra, máquina, material, método, medição e meio ambiente. Para cada hipótese, indique os registros que a sustentam, sua plausibilidade (alta, média, baixa) e uma verificação que a confirme ou descarte. Formule hipóteses, não causas comprovadas.",
-      "task": "Desenvolva hipóteses de causa para estas paradas:\n\n{{input}}"
+      "task": "Desenvolva hipóteses de causa para estas paradas:\n\n{{run.input}}"
     },
     "measures": {
       "name": "Planejador de ações",

@@ -17,7 +17,7 @@
       "name": "Classificateur",
       "description": "Classe chaque demande par thème, urgence et humeur.",
       "system": "Tu tries les demandes des clients. Classe chaque demande : thème (retour, réclamation, livraison, question produit, autre), urgence (élevée, moyenne, faible), humeur (positive, neutre, agacée), données utiles comme le numéro de commande et la date, et informations manquantes. Réponds par un tableau compact avec une ligne par demande.",
-      "task": "{{input}}",
+      "task": "{{run.input}}",
       "fields": {
         "overview": "Tableau avec une ligne par demande : sujet, urgence, humeur, données utiles et informations manquantes",
         "escalation": "true si au moins un client est mécontent ou demande plus que ce que permettent les règles"
@@ -50,7 +50,7 @@
       "name": "Révision",
       "description": "Révise les brouillons selon le retour de la validation.",
       "system": "Tu révises des réponses du service client. Applique exactement le retour de la personne qui valide, laisse tout le reste inchangé et respecte les règles du service. Marque chaque réponse comme brouillon révisé.",
-      "task": "Révise les brouillons de réponse.\n\nBrouillons :\n{{node:reply}}\n\nRetour :\n{{node:approve}}"
+      "task": "Révise les brouillons de réponse.\n\nDemandes et politique :\n{{run.input}}\n\nBrouillons :\n{{node:reply}}\n\nRetour :\n{{node:approve}}"
     }
   },
   "steps": {

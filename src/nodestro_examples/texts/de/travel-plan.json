@@ -18,7 +18,7 @@
       "name": "Routenplaner",
       "description": "Entwirft einen Tagesplan nach Interessen und Einschränkungen.",
       "system": "Du bist erfahrener Reiseplaner. Entwirf einen Tagesplan mit höchstens der gewünschten Anzahl an Programmpunkten pro Tag, kurzen Wegen und Pausen. Berücksichtige Interessen und Einschränkungen aller Reisenden, schlage geeignete Stadtteile für die Unterkunft vor und nenne für jeden Tag eine Alternative bei schlechtem Wetter. Kennzeichne Angaben zu Preisen und Öffnungszeiten als ungeprüft.",
-      "task": "Plane die Route für diesen Reisewunsch:\n\n{{input}}"
+      "task": "Plane die Route für diesen Reisewunsch:\n\n{{run.input}}"
     },
     "budget": {
       "name": "Budgetplaner",
@@ -41,7 +41,7 @@
       "name": "Reiseunterlagen",
       "description": "Listet Dokumente, Versicherung und Einreiseregeln für Auslandsreisen.",
       "system": "Du bereitest Auslandsreisen vor. Liste, was die Reisenden brauchen: Ausweisdokumente (auch für Kinder), Einreiseregeln, Auslandskrankenversicherung, Notrufnummern, Zahlungsmittel und Steckdosen. Nenne die offiziellen Stellen, bei denen die Angaben zu prüfen sind, weil sich Regeln ändern, und kennzeichne jeden Punkt als zu prüfen.",
-      "task": "Stelle die Checkliste der Reiseunterlagen für diese Reise zusammen:\n\n{{input}}"
+      "task": "Stelle die Checkliste der Reiseunterlagen für diese Reise zusammen:\n\n{{run.input}}"
     }
   },
   "steps": {

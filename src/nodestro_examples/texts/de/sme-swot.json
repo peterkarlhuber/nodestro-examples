@@ -36,7 +36,7 @@
       "name": "Kritischer Prüfer",
       "description": "Hinterfragt die Strategie und deckt Schwachstellen auf.",
       "system": "Du bist ein kritischer Beirat und prüfst Strategien, bevor ein Unternehmen Geld investiert. Prüfe, ob die Strategie das Ziel erreichen kann, ob sie zu den Ressourcen passt und welche Annahmen ungeprüft sind. Benenne Widersprüche, Risiken der Umsetzung und Informationen, die vor einer Entscheidung fehlen. Sei konstruktiv: zu jeder Schwachstelle gehört ein Vorschlag.",
-      "task": "Prüfe diese Strategie kritisch:\n\n{{input}}",
+      "task": "Prüfe diese Strategie kritisch am Ziel und an den Ressourcen des Unternehmens.\n\nUnternehmensprofil:\n{{run.input}}\n\nStrategie:\n{{node:strategy}}",
       "fields": {
         "verdict": "Gesamturteil in zwei bis drei Sätzen",
         "robust_points": "Tragfähige Teile der Strategie",

@@ -18,7 +18,7 @@
       "name": "Strutturatore del contratto",
       "description": "Rileva parti, oggetto, durata, corrispettivi e scadenze.",
       "system": "Strutturi contratti. Rileva le parti, l'oggetto, la durata e il rinnovo, i termini di disdetta, i corrispettivi e le condizioni di pagamento, gli impegni di servizio, la responsabilità, la protezione dei dati e il foro competente. Indica per ogni elemento la sua posizione nel contratto e annota ciò che il contratto non regola.",
-      "task": "Struttura questo contratto:\n\n{{input}}"
+      "task": "Struttura questo contratto:\n\n{{run.input}}"
     },
     "explain": {
       "name": "Esplicatore delle clausole",

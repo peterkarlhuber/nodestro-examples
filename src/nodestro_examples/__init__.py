@@ -75,7 +75,7 @@ from nodestro_runtime.schemas import (
     SubworkflowConfig,
     WorkflowIn,
 )
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 try:
     __version__ = version("nodestro-examples")
@@ -213,12 +213,81 @@ class NodeSpec(_Strict):
 Connection = tuple[str, str] | tuple[str, str, str]
 
 
+def _graph_problems(nodes: list[NodeSpec], edges: list[Connection]) -> list[str]:
+    """What makes a graph of a template or part invalid (empty when it is a valid workflow)."""
+    found: list[str] = []
+    kinds = {node.id: node.type for node in nodes}
+    if len(kinds) != len(nodes):
+        found.append("node ids are not unique")
+    for kind in ("start", "output"):
+        if sum(node.type == kind for node in nodes) != 1:
+            found.append(f"exactly one {kind} node is needed")
+    for node in nodes:
+        if node.type == "condition" and not node.condition:
+            found.append(f"decision {node.id} has no rules")
+        if node.type == "subworkflow" and not node.part:
+            found.append(f"sub-workflow {node.id} names no part")
+    if len(set(edges)) != len(edges):
+        found.append("a connection is listed twice")
+    successors: dict[str, list[str]] = {}
+    for edge in edges:
+        source, target = edge[0], edge[1]
+        if source not in kinds or target not in kinds:
+            found.append(f"connection {source} -> {target} names an unknown node")
+            continue
+        successors.setdefault(source, []).append(target)
+        if len(edge) == 3:
+            condition = next(node.condition for node in nodes if node.id == source)
+            handles = {
+                "condition": {"default", *(rule.id for rule in condition.rules)} if condition else set(),
+                "approval": {"approved", "rejected"},
+            }.get(kinds[source], set())
+            if edge[2] not in handles:
+                found.append(f"connection {source} -> {target} uses the unknown branch {edge[2]!r}")
+    # No cycles, and every node lies on a way from the start node to the result node.
+    order: list[str] = []
+    state: dict[str, int] = {}
+
+    def visit(node_id: str) -> None:
+        state[node_id] = 1
+        for target in successors.get(node_id, []):
+            if state.get(target) == 1:
+                found.append(f"the connections form a cycle at {target}")
+            elif target not in state:
+                visit(target)
+        state[node_id] = 2
+        order.append(node_id)
+
+    start = next((node.id for node in nodes if node.type == "start"), None)
+    if start is not None:
+        visit(start)
+    unreachable = sorted(set(kinds) - set(state))
+    if unreachable:
+        found.append(f"not reachable from the start node: {', '.join(unreachable)}")
+    output = next((node.id for node in nodes if node.type == "output"), None)
+    leads = {output}
+    for node_id in order:
+        if any(target in leads for target in successors.get(node_id, [])):
+            leads.add(node_id)
+    dead = sorted(set(state) - leads)
+    if dead:
+        found.append(f"no way to the result node from: {', '.join(dead)}")
+    return found
+
+
 class PartSpec(_Strict):
     """A small workflow used as a sub-workflow by templates; not an example of its own."""
 
     id: str
     nodes: list[NodeSpec]
     edges: list[Connection]
+
+    @model_validator(mode="after")
+    def _valid_graph(self) -> PartSpec:
+        problems = _graph_problems(self.nodes, self.edges)
+        if problems:
+            raise ValueError("; ".join(problems))
+        return self
 
 
 SampleFormat = Literal["txt", "md", "csv", "json", "xlsx", "docx", "pdf", "zip", "png"]
@@ -272,6 +341,30 @@ class TemplateSpec(_Strict):
     edges: list[Connection]
     samples: list[SampleSpec] = Field(default_factory=list)
     tests: list[CaseSpec] = Field(default_factory=list)
+
+    @model_validator(mode="after")
+    def _valid_references(self) -> TemplateSpec:
+        problems = _graph_problems(self.nodes, self.edges)
+        fields = {field.name: field for node in self.nodes for field in node.form}
+        nodes = {node.id for node in self.nodes}
+        samples = {sample.id for sample in self.samples}
+        for sample in self.samples:
+            if sample.field not in fields or fields[sample.field].type != "file":
+                problems.append(f"sample {sample.id} names no file field ({sample.field})")
+        if len(samples) != len(self.samples) or len({case.id for case in self.tests}) != len(self.tests):
+            problems.append("sample or test case ids are not unique")
+        for case in self.tests:
+            name = f"test case {case.id}"
+            problems += [f"{name} uses the unknown sample {item}" for item in case.samples if item not in samples]
+            problems += [f"{name} sets the unknown field {key}" for key in case.values if key not in fields]
+            problems += [
+                f"{name} checks the unknown node {check.node}"
+                for check in case.checks
+                if check.node is not None and check.node not in nodes
+            ]
+        if problems:
+            raise ValueError("; ".join(problems))
+        return self
 
 
 class NodeTexts(_Strict):

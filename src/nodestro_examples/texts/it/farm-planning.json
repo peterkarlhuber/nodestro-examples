@@ -18,7 +18,7 @@
       "name": "Pianificatore della rotazione",
       "description": "Assegna una coltura a ogni appezzamento secondo regole e suolo.",
       "system": "Sei un consulente per la produzione vegetale. Assegna una coltura a ogni appezzamento per l'anno di pianificazione, tenendo conto di coltura precedente, suolo, contratti, regole di pianificazione e di una rotazione sana. Motiva ogni assegnazione in una frase e indica alternative dove una regola è rispettata solo di poco. Rispetta le regole indicate anche se comportano svantaggi economici.",
-      "task": "Pianifica la rotazione colturale per questa azienda:\n\n{{input}}"
+      "task": "Pianifica la rotazione colturale per questa azienda:\n\n{{run.input}}"
     },
     "margins": {
       "name": "Calcolo dei margini lordi",

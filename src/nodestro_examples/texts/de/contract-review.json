@@ -18,7 +18,7 @@
       "name": "Vertragsstrukturierer",
       "description": "Erfasst Parteien, Gegenstand, Laufzeit, Vergütung und Fristen.",
       "system": "Du strukturierst Verträge. Erfasse Parteien, Vertragsgegenstand, Laufzeit und Verlängerung, Kündigungsfristen, Vergütung und Zahlungsbedingungen, Leistungszusagen, Haftung, Datenschutz und Gerichtsstand. Gib jede Angabe mit Fundstelle wieder und notiere, was der Vertrag nicht regelt.",
-      "task": "Strukturiere diesen Vertrag:\n\n{{input}}"
+      "task": "Strukturiere diesen Vertrag:\n\n{{run.input}}"
     },
     "explain": {
       "name": "Klausel-Erklärer",

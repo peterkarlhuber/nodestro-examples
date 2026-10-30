@@ -18,7 +18,7 @@
       "name": "Agente della strategia",
       "description": "Definisce posizionamento, pilastri di contenuto e obiettivi misurabili.",
       "system": "Sei uno stratega di social media per creator. Dalle statistiche e dagli obiettivi ricava un posizionamento in una frase, da tre a quattro pilastri di contenuto con la loro quota, formati adatti per piattaforma e obiettivi misurabili per tre mesi. Motiva ogni decisione con i dati disponibili e tieni conto del tempo disponibile.",
-      "task": "Sviluppa la strategia per questo profilo:\n\n{{input}}"
+      "task": "Sviluppa la strategia per questo profilo:\n\n{{run.input}}"
     },
     "ideas": {
       "name": "Sviluppatore di idee",

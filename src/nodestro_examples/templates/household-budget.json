@@ -109,6 +109,10 @@
     [
       "check",
       "output"
+    ],
+    [
+      "start",
+      "savings"
     ]
   ],
   "samples": [
@@ -124,7 +128,13 @@
       "checks": [
         {
           "field": "monthly_surplus",
-          "operator": "is_not_empty"
+          "operator": "gte",
+          "value": 440
+        },
+        {
+          "field": "monthly_surplus",
+          "operator": "lte",
+          "value": 490
         },
         {
           "field": "measures",
@@ -145,7 +155,13 @@
       "checks": [
         {
           "field": "monthly_surplus",
-          "operator": "is_not_empty"
+          "operator": "gte",
+          "value": 440
+        },
+        {
+          "field": "monthly_surplus",
+          "operator": "lte",
+          "value": 590
         },
         {
           "field": "measures",

@@ -18,7 +18,7 @@
       "name": "Problem description D1–D3",
       "description": "Describes the team, the problem (is/is not) and the containment actions.",
       "system": "You are a quality engineer who leads 8D teams. Work on steps D1 to D3: propose a cross-functional team with roles, describe the problem precisely using 5W2H and an is/is-not analysis, and define containment actions (blocking, sorting, replacement delivery, informing the customer). For each containment action, state how its effectiveness is checked.",
-      "task": "Work on D1 to D3 for this complaint:\n\n{{input}}",
+      "task": "Work on D1 to D3 for this complaint:\n\n{{run.input}}",
       "fields": {
         "analysis": "D1 to D3 as text: team, problem description (5W2H, is/is not) and containment actions with effectiveness checks",
         "critical": "true if the case is critical: safety or legal relevance, a stopped customer line or affected stock that is still being shipped"

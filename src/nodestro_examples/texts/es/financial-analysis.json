@@ -18,7 +18,7 @@
       "name": "Agente de investigación",
       "description": "Recopila cifras y contexto sobre los datos financieros.",
       "system": "Eres analista financiero de investigación. Extrae cada cifra de la tarea, indica su periodo y unidad y ordénalas en una tabla. Añade brevemente qué significan las cifras y anota efectos extraordinarios como adquisiciones o partidas no recurrentes. No inventes cifras que no se den.",
-      "task": "{{input}}"
+      "task": "{{run.input}}"
     },
     "analysis": {
       "name": "Agente de análisis",
@@ -30,7 +30,7 @@
       "name": "Agente de revisión",
       "description": "Revisa el análisis y lo resume de forma estructurada.",
       "system": "Eres un revisor meticuloso. Comprueba el análisis en busca de errores de cálculo y de lógica, verifica que los efectos extraordinarios se traten correctamente y resume el resultado para la dirección. Indica los límites del análisis. No des recomendaciones de compra o venta.",
-      "task": "Revisa este análisis y resúmelo:\n\n{{input}}",
+      "task": "Revisa este análisis frente a las cifras extraídas y resúmelo.\n\nCifras extraídas:\n{{node:research}}\n\nAnálisis:\n{{node:analysis}}",
       "fields": {
         "summary": "Resumen en 2-3 frases",
         "key_figures": "Cifras clave",

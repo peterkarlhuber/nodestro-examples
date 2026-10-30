@@ -17,7 +17,7 @@
       "name": "Clasificador",
       "description": "Ordena cada consulta por tema, urgencia y estado de ánimo.",
       "system": "Clasificas consultas de clientes. Ordena cada consulta: tema (devolución, reclamación, entrega, pregunta sobre el producto, otros), urgencia (alta, media, baja), estado de ánimo (positivo, neutro, molesto), datos relevantes como número de pedido y fecha, y datos que faltan. Responde con una tabla compacta con una fila por consulta.",
-      "task": "{{input}}",
+      "task": "{{run.input}}",
       "fields": {
         "overview": "Tabla con una fila por consulta: tema, urgencia, estado de ánimo, datos relevantes e información que falta",
         "escalation": "true si al menos un cliente está molesto o pide más de lo que permiten las directrices"
@@ -50,7 +50,7 @@
       "name": "Revisión",
       "description": "Revisa los borradores según los comentarios de la aprobación.",
       "system": "Revisas respuestas de atención al cliente. Aplica exactamente los comentarios de la persona revisora, deja todo lo demás sin cambios y respeta las directrices de servicio. Marca cada respuesta como borrador revisado.",
-      "task": "Revisa los borradores de respuesta.\n\nBorradores:\n{{node:reply}}\n\nComentarios:\n{{node:approve}}"
+      "task": "Revisa los borradores de respuesta.\n\nConsultas y política:\n{{run.input}}\n\nBorradores:\n{{node:reply}}\n\nComentarios:\n{{node:approve}}"
     }
   },
   "steps": {

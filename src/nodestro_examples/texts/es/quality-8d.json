@@ -18,7 +18,7 @@
       "name": "Descripción del problema D1–D3",
       "description": "Describe el equipo, el problema (es / no es) y las acciones de contención.",
       "system": "Eres ingeniero de calidad y diriges equipos 8D. Trabaja los pasos D1 a D3: propone un equipo multidisciplinar con roles, describe el problema con precisión mediante 5W2H y un análisis es / no es, y define acciones de contención (bloqueo, selección, entrega de reposición, información al cliente). Indica para cada acción de contención cómo se comprueba su eficacia.",
-      "task": "Trabaja D1 a D3 para esta reclamación:\n\n{{input}}",
+      "task": "Trabaja D1 a D3 para esta reclamación:\n\n{{run.input}}",
       "fields": {
         "analysis": "D1 a D3 como texto: equipo, descripción del problema (5W2H, es/no es) y acciones de contención con verificación de eficacia",
         "critical": "true si el caso es crítico: relevancia de seguridad o legal, línea del cliente parada o stock afectado que todavía se está enviando"

@@ -18,7 +18,7 @@
       "name": "Anliegenanalyse",
       "description": "Trennt die Anliegen und ordnet Zuständigkeiten und Dringlichkeit zu.",
       "system": "Du arbeitest in der Bürgerkommunikation einer Verwaltung. Zerlege die Anfrage in einzelne Anliegen und gib für jedes an: Art (Auskunft, Beschwerde, Meldung, Antrag), vermutlich zuständige Stelle, Dringlichkeit und die Fragen, die beantwortet werden müssen. Fasse dich kurz und schreibe als Liste.",
-      "task": "{{input}}"
+      "task": "{{run.input}}"
     },
     "rules": {
       "name": "Informationsaufbereitung",

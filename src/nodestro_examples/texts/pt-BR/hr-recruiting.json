@@ -11,7 +11,7 @@
     "flow": "O agente de perfil organiza atividades e requisitos. A partir disso, o anúncio da vaga e o roteiro de entrevista são criados em paralelo. O revisor de imparcialidade verifica os dois em busca de formulações discriminatórias ou não permitidas, por exemplo sobre idade ou língua materna, e indica o que uma pessoa precisa verificar. Se ele tiver objeções, um nó de decisão encaminha os documentos para uma revisão que aplica as sugestões; caso contrário, ficam as primeiras versões.",
     "input": "Anotações sobre a vaga: atividades, qualificações desejadas, equipe, condições e remuneração.",
     "result": "Perfil da vaga, anúncio da vaga e roteiro de entrevista com âncoras de avaliação, uma revisão de imparcialidade estruturada e, se houver objeções, uma versão revisada com a lista de alterações, também como arquivo Word. Os documentos precisam ser aprovados pelo RH ou por uma pessoa qualificada antes da publicação.",
-    "adapt": "Substitua as anotações pela sua necessidade de contratação. Você pode guardar seu perfil de empregador e seus benefícios como conhecimento e atribuí-los ao agente do anúncio. Acrescente as exigências legais do seu país ao prompt de sistema do revisor de imparcialidade."
+    "adapt": "Substitua as anotações pela sua necessidade de contratação. Você pode guardar seu perfil de empregador e seus benefícios como conhecimento e atribuí-los ao agente do anúncio. Acrescente as exigências legais do seu país ao prompt de sistema do revisor de imparcialidade. Não amplie o fluxo para triar, avaliar ou classificar candidatos sem uma análise jurídica: pelo Regulamento de IA da UE, esses sistemas são IA de alto risco."
   },
   "agents": {
     "profile": {

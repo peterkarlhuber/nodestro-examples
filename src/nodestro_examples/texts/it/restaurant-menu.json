@@ -18,7 +18,7 @@
       "name": "Sviluppatore del concept",
       "description": "Compone piatti adatti con ricette e quantità.",
       "system": "Sei uno chef esperto nella ristorazione del pranzo. Sviluppa piatti adatti al target, preparabili e servibili nel tempo disponibile. Per ogni piatto indica un nome, una breve descrizione e una ricetta per porzione con quantità in grammi o millilitri. Usa principalmente ingredienti della lista d'acquisto e segnala quelli che non sono in lista.",
-      "task": "Sviluppa i piatti per questo concept:\n\n{{input}}"
+      "task": "Sviluppa i piatti per questo concept:\n\n{{run.input}}"
     },
     "costing": {
       "name": "Calcolo dei costi",
@@ -30,7 +30,7 @@
       "name": "Redattore del menù",
       "description": "Scrive il menù del pranzo con descrizioni invitanti.",
       "system": "Scrivi menù. Per ogni piatto scrivi un nome invitante e una descrizione di al massimo 20 parole adatta al target. Aggiungi il prezzo, un'indicazione vegetariano o vegano e un avviso che gli allergeni vanno verificati e indicati sulla base delle ricette. Prendi i prezzi solo dal calcolo dei costi. Infine riporta senza modifiche la tabella di calcolo.",
-      "task": "Scrivi il menù del pranzo a partire da questo calcolo:\n\n{{node:costing}}",
+      "task": "Scrivi il menù del pranzo a partire da questo calcolo.\n\nPiatti:\n{{node:concept}}\n\nCalcolo dei costi:\n{{node:costing}}",
       "criteria": {
         "target_group": "Piatti e testi sono chiaramente adatti al target descritto.",
         "prices_match": "Tutti i prezzi corrispondono al calcolo e rientrano nella fascia di prezzo.",

@@ -17,7 +17,7 @@
       "name": "Klassifizierer",
       "description": "Ordnet jede Anfrage nach Thema, Dringlichkeit und Stimmung ein.",
       "system": "Du sortierst Kundenanfragen. Ordne jede Anfrage ein: Thema (Rückgabe, Reklamation, Lieferung, Produktfrage, Sonstiges), Dringlichkeit (hoch, mittel, gering), Stimmung (positiv, neutral, verärgert), relevante Daten wie Bestellnummer und Datum sowie fehlende Angaben. Antworte als kompakte Tabelle mit einer Zeile pro Anfrage.",
-      "task": "{{input}}",
+      "task": "{{run.input}}",
       "fields": {
         "overview": "Tabelle mit einer Zeile pro Anfrage: Thema, Dringlichkeit, Stimmung, relevante Daten und fehlende Angaben",
         "escalation": "true, wenn mindestens ein Kunde verärgert ist oder mehr verlangt, als die Richtlinien erlauben"
@@ -50,7 +50,7 @@
       "name": "Überarbeitung",
       "description": "Überarbeitet die Entwürfe nach der Rückmeldung der Freigabe.",
       "system": "Du überarbeitest Antworten im Kundenservice. Setze die Rückmeldung der prüfenden Person genau um, lass alles andere unverändert und halte die Servicerichtlinien ein. Kennzeichne jede Antwort als überarbeiteten Entwurf.",
-      "task": "Überarbeite die Antwortentwürfe.\n\nEntwürfe:\n{{node:reply}}\n\nRückmeldung:\n{{node:approve}}"
+      "task": "Überarbeite die Antwortentwürfe.\n\nAnfragen und Richtlinien:\n{{run.input}}\n\nEntwürfe:\n{{node:reply}}\n\nRückmeldung:\n{{node:approve}}"
     }
   },
   "steps": {

@@ -103,7 +103,9 @@
       "id": "snippet",
       "checks": [
         {
-          "operator": "is_not_empty"
+          "field": "",
+          "operator": "contains",
+          "value": "def test_"
         }
       ]
     },
@@ -115,7 +117,9 @@
       ],
       "checks": [
         {
-          "operator": "is_not_empty"
+          "field": "",
+          "operator": "contains",
+          "value": "def test_"
         }
       ]
     }
