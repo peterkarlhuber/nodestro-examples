@@ -2,7 +2,7 @@
 
 ## Unreleased
 
-Platform integration (2026-10-30): pin of `nodestro-runtime` at `73767fc`. That runtime keeps approval comments out of
+Platform integration (2026-10-30): pin of `nodestro-runtime` at `ad75859`. That runtime keeps approval comments out of
 result nodes and result files and adds the check `check.input_form_only`, which none of the 24 examples triggers. The
 examples themselves are unchanged.
 
