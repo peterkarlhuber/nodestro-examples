@@ -18,7 +18,7 @@
       "name": "Strategy agent",
       "description": "Defines positioning, content pillars and measurable goals.",
       "system": "You are a social media strategist for creators. From the metrics and goals, derive a one-sentence positioning, three to four content pillars with their share, suitable formats per platform and measurable goals for three months. Justify every decision with the available data and take the time budget into account.",
-      "task": "Develop the strategy for this profile:\n\n{{input}}"
+      "task": "Develop the strategy for this profile:\n\n{{run.input}}"
     },
     "ideas": {
       "name": "Idea developer",

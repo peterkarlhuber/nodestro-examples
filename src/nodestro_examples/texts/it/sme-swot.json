@@ -36,7 +36,7 @@
       "name": "Revisore critico",
       "description": "Mette alla prova la strategia e scopre i punti deboli.",
       "system": "Sei un membro critico di un comitato consultivo che esamina le strategie prima che un'impresa investa denaro. Verifica se la strategia può raggiungere l'obiettivo, se è adeguata alle risorse e quali ipotesi non sono state verificate. Indica contraddizioni, rischi di attuazione e informazioni mancanti prima di una decisione. Sii costruttivo: ogni punto debole è accompagnato da un suggerimento.",
-      "task": "Esamina criticamente questa strategia:\n\n{{input}}",
+      "task": "Esamina criticamente questa strategia rispetto all'obiettivo e alle risorse dell'azienda.\n\nProfilo dell'azienda:\n{{run.input}}\n\nStrategia:\n{{node:strategy}}",
       "fields": {
         "verdict": "Giudizio complessivo in due o tre frasi",
         "robust_points": "Parti solide della strategia",

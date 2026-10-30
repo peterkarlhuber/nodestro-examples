@@ -11,7 +11,7 @@
     "flow": "The profile agent organises tasks and requirements. From this, the job advert and the interview guide are created in parallel. The fairness reviewer checks both for discriminatory or inadmissible wording, for example about age or mother tongue, and names what a person must check. If it raises objections, a decision node routes the documents to a revision that applies its suggestions; otherwise the first versions stand.",
     "input": "Notes on the position: tasks, desired qualifications, team, conditions and pay.",
     "result": "Job profile, job advert and interview guide with rating anchors, a structured fairness review and, if there were objections, a revised version with a list of changes, also as a Word file. The documents must be approved by HR or a qualified person before publication.",
-    "adapt": "Replace the notes with your hiring need. You can store your employer profile and benefits as knowledge and assign them to the advert agent. Add the legal requirements of your country to the system prompt of the fairness reviewer."
+    "adapt": "Replace the notes with your hiring need. You can store your employer profile and benefits as knowledge and assign them to the advert agent. Add the legal requirements of your country to the system prompt of the fairness reviewer. Do not extend the workflow to screening, rating or ranking applicants without a legal review: under the EU AI Act such systems are high-risk AI."
   },
   "agents": {
     "profile": {

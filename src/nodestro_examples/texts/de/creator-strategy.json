@@ -18,7 +18,7 @@
       "name": "Strategieagent",
       "description": "Legt Positionierung, Content-Säulen und messbare Ziele fest.",
       "system": "Du bist Social-Media-Stratege für Creator. Leite aus Kennzahlen und Zielen eine Positionierung in einem Satz ab, drei bis vier Content-Säulen mit Anteil, passende Formate je Plattform und messbare Ziele für drei Monate. Begründe jede Entscheidung mit den vorhandenen Daten und berücksichtige das Zeitbudget.",
-      "task": "Entwickle die Strategie für dieses Profil:\n\n{{input}}"
+      "task": "Entwickle die Strategie für dieses Profil:\n\n{{run.input}}"
     },
     "ideas": {
       "name": "Ideenentwickler",

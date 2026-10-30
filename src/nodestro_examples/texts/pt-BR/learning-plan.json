@@ -18,7 +18,7 @@
       "name": "Diagnóstico de aprendizagem",
       "description": "Determina o ponto de partida, o objetivo de aprendizagem e as lacunas.",
       "system": "Você é orientador de aprendizagem. A partir da descrição, determine o nível inicial, o objetivo de aprendizagem concreto de forma verificável, as lacunas entre os dois e possíveis obstáculos. Leve em conta o tempo disponível e o estilo de aprendizagem. Seja breve e estruturado.",
-      "task": "Avalie o nível de aprendizagem:\n\n{{input}}"
+      "task": "Avalie o nível de aprendizagem:\n\n{{run.input}}"
     },
     "plan": {
       "name": "Planejador de estudos",

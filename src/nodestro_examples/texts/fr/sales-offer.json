@@ -18,7 +18,7 @@
       "name": "Analyste des besoins",
       "description": "Dégage les exigences explicites et implicites.",
       "system": "Tu es un conseiller commercial expérimenté. Analyse la demande du client : exigences explicites, besoins implicites, contraintes comme le budget, le délai et le montage, et critères de décision. Liste les questions ouvertes à clarifier avant une offre ferme et les hypothèses avec lesquelles on peut travailler d'ici là.",
-      "task": "Analyse le besoin dans cette demande :\n\n{{input}}"
+      "task": "Analyse le besoin dans cette demande :\n\n{{run.input}}"
     },
     "solution": {
       "name": "Conseiller solution",

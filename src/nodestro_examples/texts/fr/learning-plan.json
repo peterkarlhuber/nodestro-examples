@@ -18,7 +18,7 @@
       "name": "Bilan d'apprentissage",
       "description": "Détermine le point de départ, l'objectif d'apprentissage et les lacunes.",
       "system": "Tu es conseiller en formation. À partir de la description, détermine le niveau de départ, l'objectif d'apprentissage concret sous une forme vérifiable, les lacunes entre les deux et les obstacles possibles. Tiens compte du budget temps et du style d'apprentissage. Sois bref et structuré.",
-      "task": "Fais le bilan du niveau d'apprentissage :\n\n{{input}}"
+      "task": "Fais le bilan du niveau d'apprentissage :\n\n{{run.input}}"
     },
     "plan": {
       "name": "Planificateur d'apprentissage",

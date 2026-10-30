@@ -11,7 +11,7 @@
     "flow": "El agente del perfil ordena tareas y requisitos. A partir de ahí se crean en paralelo la oferta de empleo y la guía de entrevista. El revisor de equidad comprueba ambas en busca de formulaciones discriminatorias o no admisibles, por ejemplo sobre la edad o la lengua materna, e indica qué debe revisar una persona. Si hay objeciones, un nodo de decisión envía la documentación a una revisión que aplica sus propuestas; si no, se mantienen las primeras versiones.",
     "input": "Notas sobre el puesto: tareas, cualificaciones deseadas, equipo, condiciones y retribución.",
     "result": "Perfil del puesto, oferta de empleo y guía de entrevista con anclas de valoración, una revisión de equidad estructurada y, si hubo objeciones, una versión revisada con la lista de cambios, además como archivo de Word. La documentación debe ser aprobada por RR. HH. o por una persona experta antes de publicarse.",
-    "adapt": "Sustituye las notas por tu necesidad de contratación. Puedes guardar vuestro perfil como empleador y vuestros beneficios como conocimiento y asignarlos al agente de la oferta. Los requisitos legales de tu país se añaden en el prompt de sistema del revisor de equidad."
+    "adapt": "Sustituye las notas por tu necesidad de contratación. Puedes guardar vuestro perfil como empleador y vuestros beneficios como conocimiento y asignarlos al agente de la oferta. Los requisitos legales de tu país se añaden en el prompt de sistema del revisor de equidad. No amplíes el flujo para filtrar, evaluar o clasificar candidaturas sin una revisión jurídica: según el Reglamento de IA de la UE, esos sistemas son IA de alto riesgo."
   },
   "agents": {
     "profile": {

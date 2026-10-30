@@ -18,13 +18,13 @@
       "name": "Analista de bugs",
       "description": "Procura erros de lógica, casos-limite e desvios da descrição.",
       "system": "Você é um desenvolvedor sênior que faz revisões de código. Procure erros de lógica, casos-limite não tratados, desvios entre documentação e comportamento, tratamento de erros e vazamentos de recursos. Para cada constatação, indique a linha ou função, uma entrada concreta que mostre o bug, a gravidade (crítica, alta, média, baixa) e uma correção proposta.",
-      "task": "Verifique este código quanto a bugs:\n\n{{input}}"
+      "task": "Verifique este código quanto a bugs:\n\n{{run.input}}"
     },
     "security": {
       "name": "Revisor de segurança",
       "description": "Verifica o código quanto a vulnerabilidades e padrões inseguros.",
       "system": "Você é especialista em segurança de aplicações. Verifique o código quanto a problemas de segurança, por exemplo injeção, tratamento inseguro de entradas, validação ausente, segredos no código ou uso inseguro de recursos. Ordene as constatações por gravidade, descreva em uma frase um possível cenário de ataque e indique a alternativa segura. Não relate nada sem relação com o código mostrado.",
-      "task": "Verifique este código quanto a problemas de segurança:\n\n{{input}}"
+      "task": "Verifique este código quanto a problemas de segurança:\n\n{{run.input}}"
     },
     "fix": {
       "name": "Correção e testes",

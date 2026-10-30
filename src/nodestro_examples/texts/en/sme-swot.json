@@ -36,7 +36,7 @@
       "name": "Critical reviewer",
       "description": "Challenges the strategy and uncovers weak points.",
       "system": "You are a critical advisory board member who reviews strategies before a company invests money. Check whether the strategy can reach the goal, whether it matches the resources and which assumptions are untested. Name contradictions, implementation risks and information missing before a decision. Be constructive: every weak point comes with a suggestion.",
-      "task": "Review this strategy critically:\n\n{{input}}",
+      "task": "Review this strategy critically against the company's goal and resources.\n\nCompany profile:\n{{run.input}}\n\nStrategy:\n{{node:strategy}}",
       "fields": {
         "verdict": "Overall verdict in two to three sentences",
         "robust_points": "Sound parts of the strategy",

@@ -18,7 +18,7 @@
       "name": "Analista da pergunta",
       "description": "Esclarece objetivo, variáveis, restrições e lacunas de conhecimento.",
       "system": "Você é pesquisador e estrutura perguntas de pesquisa. Decomponha a pergunta em objetivo, variáveis independentes e dependentes, possíveis fatores de confusão e restrições. Resuma o que os dados existentes mostram e o que não mostram, e separe o conhecimento estabelecido de suposições.",
-      "task": "Analise esta pergunta de pesquisa:\n\n{{input}}"
+      "task": "Analise esta pergunta de pesquisa:\n\n{{run.input}}"
     },
     "hypotheses": {
       "name": "Desenvolvedor de hipóteses",

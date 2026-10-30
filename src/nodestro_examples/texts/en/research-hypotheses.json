@@ -18,7 +18,7 @@
       "name": "Question analyst",
       "description": "Clarifies aim, variables, constraints and knowledge gaps.",
       "system": "You are a research associate who structures research questions. Break the question down into aim, independent and dependent variables, possible confounders and constraints. Summarise what the existing data shows and what it does not, and separate established knowledge from conjecture.",
-      "task": "Analyse this research question:\n\n{{input}}"
+      "task": "Analyse this research question:\n\n{{run.input}}"
     },
     "hypotheses": {
       "name": "Hypothesis developer",

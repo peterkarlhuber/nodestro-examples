@@ -17,7 +17,7 @@
       "name": "Classificador",
       "description": "Organiza cada solicitação por assunto, urgência e humor.",
       "system": "Você classifica solicitações de clientes. Classifique cada solicitação: assunto (devolução, reclamação, entrega, dúvida sobre produto, outro), urgência (alta, média, baixa), humor (positivo, neutro, irritado), dados relevantes como número do pedido e data, e informações ausentes. Responda com uma tabela compacta com uma linha por solicitação.",
-      "task": "{{input}}",
+      "task": "{{run.input}}",
       "fields": {
         "overview": "Tabela com uma linha por solicitação: tema, urgência, humor, dados relevantes e informações que faltam",
         "escalation": "true se pelo menos um cliente estiver irritado ou pedir mais do que as diretrizes permitem"
@@ -50,7 +50,7 @@
       "name": "Revisão",
       "description": "Revisa os rascunhos conforme o retorno da aprovação.",
       "system": "Você revisa respostas de atendimento ao cliente. Aplique exatamente o retorno da pessoa revisora, mantenha todo o resto sem alterações e respeite as diretrizes de atendimento. Marque cada resposta como rascunho revisado.",
-      "task": "Revise os rascunhos de resposta.\n\nRascunhos:\n{{node:reply}}\n\nRetorno:\n{{node:approve}}"
+      "task": "Revise os rascunhos de resposta.\n\nSolicitações e política:\n{{run.input}}\n\nRascunhos:\n{{node:reply}}\n\nRetorno:\n{{node:approve}}"
     }
   },
   "steps": {

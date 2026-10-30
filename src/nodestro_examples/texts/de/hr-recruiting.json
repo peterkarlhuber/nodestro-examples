@@ -11,7 +11,7 @@
     "flow": "Der Profil-Agent ordnet Aufgaben und Anforderungen. Daraus entstehen parallel die Stellenanzeige und der Interviewleitfaden. Der Fairness-Prüfer kontrolliert beide auf diskriminierende oder unzulässige Formulierungen, etwa zu Alter oder Muttersprache, und nennt, was ein Mensch prüfen muss. Hat er Beanstandungen, leitet ein Entscheidungsknoten die Unterlagen an eine Überarbeitung, die seine Vorschläge umsetzt; sonst bleibt es bei den ersten Fassungen.",
     "input": "Notizen zur Stelle: Aufgaben, gewünschte Qualifikationen, Team, Rahmenbedingungen und Vergütung.",
     "result": "Stellenprofil, Stellenanzeige und Interviewleitfaden mit Bewertungsankern, eine strukturierte Fairness-Prüfung und bei Beanstandungen eine überarbeitete Fassung mit Änderungsliste, zusätzlich als Word-Datei. Die Unterlagen müssen vor der Veröffentlichung von HR oder einer fachkundigen Person freigegeben werden.",
-    "adapt": "Ersetze die Notizen durch deinen Stellenbedarf. Euer Arbeitgeberprofil und eure Benefits kannst du als Wissen hinterlegen und dem Anzeigen-Agenten zuweisen. Rechtliche Vorgaben eures Landes ergänzt du im System-Prompt des Fairness-Prüfers."
+    "adapt": "Ersetze die Notizen durch deinen Stellenbedarf. Euer Arbeitgeberprofil und eure Benefits kannst du als Wissen hinterlegen und dem Anzeigen-Agenten zuweisen. Rechtliche Vorgaben eures Landes ergänzt du im System-Prompt des Fairness-Prüfers. Erweitere den Workflow nicht ohne rechtliche Prüfung auf das Sichten, Bewerten oder Reihen von Bewerbungen: Solche Systeme gelten nach der EU-KI-Verordnung als Hochrisiko-KI."
   },
   "agents": {
     "profile": {

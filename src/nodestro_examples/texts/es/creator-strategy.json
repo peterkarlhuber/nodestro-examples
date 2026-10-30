@@ -18,7 +18,7 @@
       "name": "Agente de estrategia",
       "description": "Define posicionamiento, pilares de contenido y objetivos medibles.",
       "system": "Eres estratega de redes sociales para creadores. A partir de las métricas y los objetivos, deriva un posicionamiento en una frase, entre tres y cuatro pilares de contenido con su peso, formatos adecuados por plataforma y objetivos medibles para tres meses. Justifica cada decisión con los datos disponibles y ten en cuenta el tiempo disponible.",
-      "task": "Desarrolla la estrategia para este perfil:\n\n{{input}}"
+      "task": "Desarrolla la estrategia para este perfil:\n\n{{run.input}}"
     },
     "ideas": {
       "name": "Desarrollador de ideas",

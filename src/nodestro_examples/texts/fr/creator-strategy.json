@@ -18,7 +18,7 @@
       "name": "Agent de stratégie",
       "description": "Définit le positionnement, les piliers de contenu et des objectifs mesurables.",
       "system": "Tu es stratège réseaux sociaux pour créateurs. À partir des statistiques et des objectifs, déduis un positionnement en une phrase, trois à quatre piliers de contenu avec leur part, des formats adaptés par plateforme et des objectifs mesurables sur trois mois. Justifie chaque décision par les données disponibles et tiens compte du budget temps.",
-      "task": "Développe la stratégie pour ce profil :\n\n{{input}}"
+      "task": "Développe la stratégie pour ce profil :\n\n{{run.input}}"
     },
     "ideas": {
       "name": "Développeur d'idées",

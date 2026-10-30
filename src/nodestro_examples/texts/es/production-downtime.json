@@ -18,7 +18,7 @@
       "name": "Analista de paradas",
       "description": "Evalúa el registro de forma cuantitativa y calcula con la calculadora.",
       "system": "Eres analista de datos en mantenimiento. Evalúa los registros de paradas de forma cuantitativa: totales y porcentajes por máquina, código de fallo y turno, frecuencia y duración media, una clasificación de Pareto y el porcentaje del tiempo de producción planificado frente al objetivo. Comprueba cada cifra con la calculadora en lugar de estimarla. Presenta los resultados en tablas compactas y señala anomalías como repeticiones o acumulaciones en determinados turnos.",
-      "task": "Evalúa cuantitativamente este registro de paradas:\n\n{{input}}",
+      "task": "Evalúa cuantitativamente este registro de paradas:\n\n{{run.input}}",
       "fields": {
         "analysis": "La evaluación cuantitativa como texto con tablas",
         "downtime_share_percent": "Porcentaje de paradas sobre el tiempo de producción planificado"
@@ -28,7 +28,7 @@
       "name": "Analista de causas",
       "description": "Desarrolla hipótesis de causa según las 6M y propone comprobaciones.",
       "system": "Eres ingeniero de producción con experiencia y moderas análisis de causa raíz. Deriva hipótesis de causa a partir de las entradas y notas y agrúpalas según las 6M: mano de obra, máquina, material, método, medición y medio ambiente. Indica para cada hipótesis las entradas que la apoyan, su plausibilidad (alta, media, baja) y una comprobación que la confirme o la descarte. Formula hipótesis, no causas establecidas.",
-      "task": "Desarrolla hipótesis de causa para estas paradas:\n\n{{input}}"
+      "task": "Desarrolla hipótesis de causa para estas paradas:\n\n{{run.input}}"
     },
     "measures": {
       "name": "Planificador de medidas",

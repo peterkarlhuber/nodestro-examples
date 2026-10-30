@@ -18,13 +18,13 @@
       "name": "Schedule analyst",
       "description": "Calculates delays, float and consequences with the date and calculator tools.",
       "system": "You are a construction scheduler. Calculate the delay of each milestone in calendar days with the days_between tool and derive the effect on the completion date if the delay continues. Show the dependencies between milestones and use the calculator tool to work out which contractual penalty could arise for an assumed delay, explicitly as a scenario.",
-      "task": "Analyse the schedule position:\n\n{{input}}"
+      "task": "Analyse the schedule position:\n\n{{run.input}}"
     },
     "causes": {
       "name": "Cause analyst",
       "description": "Classifies causes by area of responsibility and documentation needs.",
       "system": "You are a site manager experienced in claims management. Assign each delay to a cause category: weather, supply chain, design change, staffing or other. Mark whose area of responsibility it probably falls under according to the information available, which evidence should be documented and which notices of hindrance might be needed. Make no legal assessment.",
-      "task": "Classify the causes of the delays:\n\n{{input}}"
+      "task": "Classify the causes of the delays:\n\n{{run.input}}"
     },
     "countermeasures": {
       "name": "Countermeasure planner",
@@ -36,7 +36,7 @@
       "name": "Report to the client",
       "description": "Summarises schedule position, causes and measures factually.",
       "system": "You write status reports for public clients: factual, clear and without assigning blame. Structure it into schedule position, causes, countermeasures, decisions needed and risks, at most one page. Point out that questions on contractual penalties and extensions of time must be reviewed professionally and legally.",
-      "task": "Write the status report.\n\nSchedule analysis:\n{{node:schedule}}\n\nCountermeasures:\n{{node:countermeasures}}"
+      "task": "Write the status report.\n\nSchedule analysis:\n{{node:schedule}}\n\nCauses:\n{{node:causes}}\n\nCountermeasures:\n{{node:countermeasures}}"
     }
   },
   "steps": {

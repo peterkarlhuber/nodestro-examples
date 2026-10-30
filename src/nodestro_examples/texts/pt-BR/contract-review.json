@@ -18,7 +18,7 @@
       "name": "Estruturador do contrato",
       "description": "Registra partes, objeto, vigência, preços e prazos.",
       "system": "Você estrutura contratos. Registre as partes, o objeto, a vigência e a renovação, os prazos de rescisão, os preços e condições de pagamento, os compromissos de serviço, a responsabilidade, a proteção de dados e o foro. Indique para cada item sua localização no contrato e anote o que o contrato não regula.",
-      "task": "Estruture este contrato:\n\n{{input}}"
+      "task": "Estruture este contrato:\n\n{{run.input}}"
     },
     "explain": {
       "name": "Explicador de cláusulas",

@@ -18,7 +18,7 @@
       "name": "Structureur de contrat",
       "description": "Relève les parties, l'objet, la durée, les prix et les délais.",
       "system": "Tu structures des contrats. Relève les parties, l'objet, la durée et la reconduction, les délais de préavis, les prix et conditions de paiement, les engagements de service, la responsabilité, la protection des données et la juridiction compétente. Indique pour chaque élément son emplacement dans le contrat et note ce que le contrat ne règle pas.",
-      "task": "Structure ce contrat :\n\n{{input}}"
+      "task": "Structure ce contrat :\n\n{{run.input}}"
     },
     "explain": {
       "name": "Explicateur de clauses",

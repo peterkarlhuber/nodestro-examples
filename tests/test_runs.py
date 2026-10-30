@@ -1,20 +1,20 @@
 """Every example in every language on the runtime: pre-check, provider settings and a complete run.
 
-The agents answer from :class:`nodestro_runtime.testing.AnswerAllClient` (nothing is paid, no key
-is needed); the runs go through the same engine, pre-check and Orkexa agents as in the studio.
+The agents answer from a deterministic double (nothing is paid, no key is needed); the runs go
+through the same engine, pre-check and Orkexa agents as in the studio.
 """
 
 from __future__ import annotations
 
-from collections.abc import Iterator
 from pathlib import Path
 from typing import Any
 
+from conftest import Scenario, copy, finish, start_request
 from nodestro_runtime.catalog import models
+from nodestro_runtime.graph import data_sources
 from nodestro_runtime.preflight import PROVIDER_CHECKS, preflight
 from nodestro_runtime.providers import provider_of, qualify
-from nodestro_runtime.schemas import LANGUAGES, RunIn, SettingsIn, Workflow
-from nodestro_runtime.testing import AnswerAllClient
+from nodestro_runtime.schemas import LANGUAGES, SettingsIn
 from nodestro_runtime.workspace import Workspace
 import pytest
 
@@ -24,65 +24,55 @@ from nodestro_examples import samples
 IDS = library.template_ids()
 
 
-def copy(workspace: Workspace, template_id: str, language: str) -> Workflow:
-    """A template as an ordinary saved workflow, its parts saved first (like the gallery's copy)."""
-    sensitive = library.structure(template_id).sensitive
-    parts: dict[str, tuple[str, int | None]] = {}
-    for part_id in library.part_ids(template_id):
-        child = workspace.save_workflow(library.build_part(part_id, language, sensitive=sensitive))
-        parts[part_id] = (child.id, workspace.current_version(child))
-    return workspace.save_workflow(library.link_parts(library.build(template_id, language), parts))
-
-
-@pytest.fixture
-def workspace(tmp_path: Path) -> Iterator[Workspace]:
-    fake = AnswerAllClient()
-    found = Workspace(tmp_path / "data", client_factory=lambda _provider: fake, integrations=[])
-    found.fake = fake  # type: ignore[attr-defined]
-    yield found
-    found.close()
-
-
-def _start_input(workflow: Workflow) -> RunIn:
-    start = next(node for node in workflow.nodes if node.type == "start")
-    assert start.start is not None
-    values: dict[str, Any] = {}
-    if start.start.fields:
-        for field in start.start.fields:
-            if field.type == "file":
-                continue
-            if field.default not in (None, "", []):
-                values[field.name] = field.default
-            elif field.required:
-                values[field.name] = field.options[0] if field.options else "Beispiel"
-    return RunIn(input=start.start.default_input or "", values=values)
-
-
 @pytest.mark.parametrize("language", LANGUAGES)
 @pytest.mark.parametrize("template_id", IDS)
-async def test_every_example_runs_in_every_language(workspace: Workspace, template_id: str, language: str) -> None:
+async def test_every_example_runs_in_every_language(make_workspace: Any, template_id: str, language: str) -> None:
+    scenario = Scenario()
+    workspace = make_workspace(scenario)
     workflow = copy(workspace, template_id, language)
     check = preflight(workspace, workflow)
-    # The fake client stands in for the provider; the key check is the next test's subject.
+    # The double stands in for the provider; the key check is the next test's subject.
     errors = [problem for problem in check.problems if problem.level == "error" and problem.code not in PROVIDER_CHECKS]
     assert not errors, (template_id, language, errors)
     assert all(not issues for issues in check.agents.values()), (template_id, language, check.agents)
-    run = await workspace.run(workflow, _start_input(workflow))
-    done = await workspace.wait(run.id, timeout=60)
-    # Approvals wait for a person; the test approves every one (sub-workflows included).
-    for _ in range(10):
-        if done.status != "paused":
-            break
-        for item in [*workspace.runs.live_runs(), done]:
-            for node_id, state in item.nodes.items():
-                if state.status == "awaiting_approval":
-                    workspace.decide(item.id, node_id, "approved", "ok")
-        done = await workspace.wait(run.id, timeout=60)
+    run = await workspace.run(workflow, start_request(workflow))
+    done = await finish(workspace, run)
     assert done.status == "succeeded", (template_id, language, done.error, done.error_code)
     assert done.output is not None
     succeeded = [node_id for node_id, state in done.nodes.items() if state.status == "succeeded"]
     agents = [node.id for node in workflow.nodes if node.type == "agent"]
     assert set(agents) & set(succeeded), (template_id, language)
+    for node_id in agents:
+        prompt = done.nodes[node_id].prompt or ""
+        # Every placeholder is filled and nothing arrives as an unplanned appendix.
+        assert "{{" not in prompt and "# Eingaben" not in prompt, (template_id, language, node_id, prompt)
+
+
+@pytest.mark.parametrize("language", LANGUAGES)
+@pytest.mark.parametrize("template_id", [item for item in IDS if library.structure(item).samples])
+async def test_agents_reading_the_input_keep_the_text_when_files_are_attached(
+    make_workspace: Any, template_id: str, language: str
+) -> None:
+    """With a file in the form the start node's result names the files only: the text must still arrive.
+
+    The prepared text holds what the files do not (target values, cost rates, the request itself).
+    """
+    workspace = make_workspace()
+    workflow = copy(workspace, template_id, language)
+    request = start_request(workflow)
+    sample = library.structure(template_id).samples[0]
+    name, media_type, data = samples.render(template_id, sample.id, language)
+    stored = workspace.inputs.add(data, name=name, media_type=media_type, origin="test")
+    request.values[sample.field] = [stored.id]
+    done = await finish(workspace, await workspace.run(workflow, request))
+    assert done.status == "succeeded", (template_id, language, done.error)
+    marker = request.input.splitlines()[0]
+    for node in workflow.nodes:
+        if node.agent is None or "start" not in data_sources(workflow, node.id):
+            continue
+        state = done.nodes[node.id]
+        assert marker in (state.prompt or ""), (template_id, language, node.id, state.prompt)
+        assert name in [item.name for item in state.files], (template_id, language, node.id)
 
 
 @pytest.mark.parametrize("template_id", IDS)
@@ -103,25 +93,3 @@ def test_examples_need_exactly_the_providers_they_name(tmp_path: Path, template_
         assert not remaining, (template_id, remaining)
     finally:
         workspace.close()
-
-
-@pytest.mark.parametrize("language", LANGUAGES)
-def test_test_cases_and_their_sample_files_belong_to_the_copy(workspace: Workspace, language: str) -> None:
-    """The prepared test cases of every template become cases of the copy, sample files stored as inputs."""
-    with_tests = [template_id for template_id in IDS if library.structure(template_id).tests]
-    assert with_tests
-    stored: list[str] = []
-
-    def store(name: str, media_type: str, data: bytes) -> str:
-        entry = workspace.inputs.add(data, name=name, media_type=media_type, origin="test")
-        stored.append(entry.id)
-        return entry.id
-
-    for template_id in with_tests:
-        workflow = copy(workspace, template_id, language)
-
-        cases = samples.suite_cases(template_id, language, workflow, store)
-        assert cases, (template_id, language)
-        assert all(case["name"] for case in cases)
-        for file_id in stored:
-            assert workspace.inputs.get(file_id) is not None

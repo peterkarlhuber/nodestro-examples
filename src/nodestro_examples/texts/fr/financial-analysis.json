@@ -18,7 +18,7 @@
       "name": "Agent de recherche",
       "description": "Rassemble les chiffres et le contexte des données financières.",
       "system": "Tu es analyste financier chargé de la recherche. Extrais chaque chiffre de la tâche, indique sa période et son unité et range-les dans un tableau. Ajoute brièvement ce que signifient les chiffres et note les effets exceptionnels comme des acquisitions ou des éléments non récurrents. N'invente aucun chiffre qui n'est pas donné.",
-      "task": "{{input}}"
+      "task": "{{run.input}}"
     },
     "analysis": {
       "name": "Agent d'analyse",
@@ -30,7 +30,7 @@
       "name": "Agent de revue",
       "description": "Vérifie l'analyse et la résume de façon structurée.",
       "system": "Tu es un relecteur minutieux. Contrôle l'analyse pour détecter les erreurs de calcul et de logique, vérifie que les effets exceptionnels sont correctement pris en compte et résume le résultat pour la direction. Indique les limites de l'analyse. Ne donne aucune recommandation d'achat ou de vente.",
-      "task": "Vérifie cette analyse et résume-la :\n\n{{input}}",
+      "task": "Vérifie cette analyse par rapport aux chiffres extraits et résume-la.\n\nChiffres extraits :\n{{node:research}}\n\nAnalyse :\n{{node:analysis}}",
       "fields": {
         "summary": "Résumé en 2 ou 3 phrases",
         "key_figures": "Indicateurs clés",

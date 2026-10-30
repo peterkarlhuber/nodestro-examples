@@ -11,7 +11,7 @@
     "flow": "L'agente del profilo ordina compiti e requisiti. Da qui nascono in parallelo l'annuncio di lavoro e la traccia di colloquio. Il revisore dell'equità controlla entrambi alla ricerca di formulazioni discriminatorie o non ammesse, per esempio su età o madrelingua, e indica cosa deve verificare una persona. Se ha dei rilievi, un nodo decisionale passa i documenti a una revisione che applica le sue proposte; altrimenti restano le prime versioni.",
     "input": "Note sulla posizione: mansioni, qualifiche desiderate, team, condizioni e retribuzione.",
     "result": "Profilo della posizione, annuncio di lavoro e traccia di colloquio con ancoraggi di valutazione, una verifica dell'equità strutturata e, in caso di rilievi, una versione rivista con l'elenco delle modifiche, anche come file Word. I documenti devono essere approvati dall'HR o da una persona competente prima della pubblicazione.",
-    "adapt": "Sostituisci le note con il tuo fabbisogno di personale. Puoi salvare il tuo profilo di datore di lavoro e i benefit come conoscenza e assegnarli all'agente dell'annuncio. Aggiungi i requisiti di legge del tuo paese al prompt di sistema del revisore dell'equità."
+    "adapt": "Sostituisci le note con il tuo fabbisogno di personale. Puoi salvare il tuo profilo di datore di lavoro e i benefit come conoscenza e assegnarli all'agente dell'annuncio. Aggiungi i requisiti di legge del tuo paese al prompt di sistema del revisore dell'equità. Non estendere il workflow alla selezione, valutazione o classificazione dei candidati senza una verifica legale: secondo il regolamento UE sull'IA tali sistemi sono IA ad alto rischio."
   },
   "agents": {
     "profile": {

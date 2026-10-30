@@ -30,7 +30,7 @@ jobs:
           NODESTRO_READ: ${{ secrets.NODESTRO_READ }}
         run: |
           if [ -z "$NODESTRO_READ" ]; then
-            echo "::error::Secret NODESTRO_READ fehlt: ein Token mit Lesezugriff auf orkexa und die nodestro-Repositories."
+            echo "::error::The secret NODESTRO_READ is missing: a token with read access to orkexa and the nodestro repositories."
             exit 1
           fi
           git config --global url."https://x-access-token:${NODESTRO_READ}@github.com/peterkarlhuber/".insteadOf "https://github.com/peterkarlhuber/"
@@ -38,10 +38,11 @@ jobs:
       - run: ruff check .
       - run: ruff format --check .
       - run: mypy
+      # Templates, the six languages, sample files, test cases, decisions, approvals and the docs generator.
       - run: pytest
 
   package:
-    # The wheel installs on its own and contains what the package needs at run time.
+    # The wheel installs on its own and contains everything the package needs at run time.
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -56,18 +57,26 @@ jobs:
           NODESTRO_READ: ${{ secrets.NODESTRO_READ }}
         run: |
           if [ -z "$NODESTRO_READ" ]; then
-            echo "::error::Secret NODESTRO_READ fehlt: ein Token mit Lesezugriff auf orkexa und die nodestro-Repositories."
+            echo "::error::The secret NODESTRO_READ is missing: a token with read access to orkexa and the nodestro repositories."
             exit 1
           fi
           git config --global url."https://x-access-token:${NODESTRO_READ}@github.com/peterkarlhuber/".insteadOf "https://github.com/peterkarlhuber/"
       - run: pip install build
       - run: python -m build
-      - name: Install the wheel into a fresh environment
+      - name: Install the wheel into a fresh environment and check its contents
         run: |
           python -m venv "$RUNNER_TEMP/wheel"
           "$RUNNER_TEMP/wheel/bin/pip" install dist/*.whl
+          cp scripts/check_package.py "$RUNNER_TEMP/"
           cd "$RUNNER_TEMP"
-          "$RUNNER_TEMP/wheel/bin/python" -c "import nodestro_examples as p; print(p.__name__, p.__version__)"
+          "$RUNNER_TEMP/wheel/bin/python" check_package.py
+      - name: The sdist contains the sources, tests and package data
+        run: |
+          tar -tzf dist/*.tar.gz > contents.txt
+          grep -q "src/nodestro_examples/templates/parts/quality-check.json" contents.txt
+          grep -q "src/nodestro_examples/texts/pt-BR/_common.json" contents.txt
+          grep -q "src/nodestro_examples/samples/real-estate/floor-plan.png" contents.txt
+          grep -q "tests/test_cases.py" contents.txt
       - uses: actions/upload-artifact@v7
         with:
           name: dist

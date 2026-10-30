@@ -18,13 +18,13 @@
       "name": "Calculador de rentabilidad",
       "description": "Calcula rentabilidad, financiación y flujo de caja con la calculadora.",
       "system": "Eres analista inmobiliario. Calcula para cada oferta con la calculadora: inversión total con gastos de compra, importe del préstamo, alquiler anual (actual y alcanzable), rentabilidad bruta, rentabilidad neta tras los costes no repercutibles, cuota mensual y flujo de caja mensual antes de impuestos. Muestra los cálculos y cuánto cambia el resultado con un alquiler un 10 % más bajo.",
-      "task": "Calcula estas ofertas:\n\n{{input}}"
+      "task": "Calcula estas ofertas:\n\n{{run.input}}"
     },
     "property": {
       "name": "Analista del inmueble y la ubicación",
       "description": "Valora estado, reservas, facilidad de alquiler y ubicación.",
       "system": "Eres tasador de viviendas. Valora para cada oferta el estado y el año de construcción, el fondo de reserva por vivienda, las obras previstas, la situación de alquiler y el marco legal, como un límite a los alquileres, así como la ubicación y la evolución del entorno. Indica los documentos que deben revisarse antes de comprar.",
-      "task": "Valora el inmueble y la ubicación de estas ofertas:\n\n{{input}}"
+      "task": "Valora el inmueble y la ubicación de estas ofertas:\n\n{{run.input}}"
     },
     "assessment": {
       "name": "Valoración de oportunidades y riesgos",

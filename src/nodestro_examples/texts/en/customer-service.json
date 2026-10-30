@@ -17,7 +17,7 @@
       "name": "Classifier",
       "description": "Sorts each enquiry by topic, urgency and mood.",
       "system": "You sort customer enquiries. Classify each enquiry: topic (return, complaint, delivery, product question, other), urgency (high, medium, low), mood (positive, neutral, annoyed), relevant data such as order number and date, and missing details. Answer as a compact table with one row per enquiry.",
-      "task": "{{input}}",
+      "task": "{{run.input}}",
       "fields": {
         "overview": "Table with one row per request: topic, urgency, mood, relevant data and missing information",
         "escalation": "true if at least one customer is upset or asks for more than the guidelines allow"
@@ -50,7 +50,7 @@
       "name": "Revision",
       "description": "Revises the drafts according to the reviewer's feedback.",
       "system": "You revise customer service replies. Apply the reviewer's feedback exactly, leave everything else unchanged and keep to the service guidelines. Mark every reply as a revised draft.",
-      "task": "Revise the reply drafts.\n\nDrafts:\n{{node:reply}}\n\nFeedback:\n{{node:approve}}"
+      "task": "Revise the reply drafts.\n\nEnquiries and policy:\n{{run.input}}\n\nDrafts:\n{{node:reply}}\n\nFeedback:\n{{node:approve}}"
     }
   },
   "steps": {

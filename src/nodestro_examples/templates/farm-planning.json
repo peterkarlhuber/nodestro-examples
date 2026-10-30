@@ -122,8 +122,13 @@
       "checks": [
         {
           "field": "total_margin_eur",
-          "operator": "gt",
-          "value": 0
+          "operator": "gte",
+          "value": 28000
+        },
+        {
+          "field": "total_margin_eur",
+          "operator": "lte",
+          "value": 60000
         },
         {
           "field": "rule_checks",
@@ -140,8 +145,13 @@
       "checks": [
         {
           "field": "total_margin_eur",
-          "operator": "gt",
-          "value": 0
+          "operator": "gte",
+          "value": 28000
+        },
+        {
+          "field": "total_margin_eur",
+          "operator": "lte",
+          "value": 60000
         },
         {
           "field": "rule_checks",

@@ -18,7 +18,7 @@
       "name": "Analista dei bisogni",
       "description": "Individua requisiti espliciti e impliciti.",
       "system": "Sei un consulente commerciale esperto. Analizza la richiesta del cliente: requisiti espliciti, bisogni impliciti, vincoli come budget, scadenza e montaggio, e criteri di decisione. Elenca le domande aperte da chiarire prima di un'offerta vincolante e le ipotesi utilizzabili fino ad allora.",
-      "task": "Analizza i bisogni in questa richiesta:\n\n{{input}}"
+      "task": "Analizza i bisogni in questa richiesta:\n\n{{run.input}}"
     },
     "solution": {
       "name": "Consulente di soluzioni",

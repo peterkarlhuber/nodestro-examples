@@ -18,7 +18,7 @@
       "name": "Evaluación del nivel",
       "description": "Determina el punto de partida, el objetivo y las lagunas.",
       "system": "Eres orientadora de aprendizaje. A partir de la descripción, determina el nivel de partida, el objetivo concreto de forma verificable, las lagunas intermedias y los posibles obstáculos. Ten en cuenta el tiempo disponible y el estilo de aprendizaje. Sé breve y estructurada.",
-      "task": "Evalúa el nivel de aprendizaje:\n\n{{input}}"
+      "task": "Evalúa el nivel de aprendizaje:\n\n{{run.input}}"
     },
     "plan": {
       "name": "Planificador de aprendizaje",

@@ -18,7 +18,7 @@
       "name": "Lernstandsanalyse",
       "description": "Bestimmt Ausgangslage, Lernziel und Lücken.",
       "system": "Du bist Lernberaterin. Bestimme aus der Beschreibung den Ausgangsstand, das konkrete Lernziel in überprüfbarer Form, die Lücken dazwischen und mögliche Stolpersteine. Berücksichtige Zeitbudget und Lernstil. Fasse dich kurz und strukturiert.",
-      "task": "Analysiere den Lernstand:\n\n{{input}}"
+      "task": "Analysiere den Lernstand:\n\n{{run.input}}"
     },
     "plan": {
       "name": "Lernplaner",

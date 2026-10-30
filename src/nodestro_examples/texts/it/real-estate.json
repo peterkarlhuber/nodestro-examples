@@ -18,13 +18,13 @@
       "name": "Calcolatore del rendimento",
       "description": "Calcola rendimento, finanziamento e flusso di cassa con la calcolatrice.",
       "system": "Sei un analista immobiliare. Per ogni offerta usa la calcolatrice per calcolare: investimento totale costi accessori inclusi, importo del mutuo, affitto netto annuo (attuale e ottenibile), rendimento lordo da locazione, rendimento netto dopo le spese non ripartibili, rata mensile e flusso di cassa mensile prima delle imposte. Mostra i calcoli e quanto cambia il risultato con un affitto inferiore del 10 %.",
-      "task": "Fai i calcoli per queste offerte:\n\n{{input}}"
+      "task": "Fai i calcoli per queste offerte:\n\n{{run.input}}"
     },
     "property": {
       "name": "Analista di immobile e posizione",
       "description": "Valuta stato, riserve, locabilità e posizione.",
       "system": "Sei un perito di immobili residenziali. Per ogni offerta valuta stato e anno di costruzione, fondo di manutenzione per appartamento, interventi previsti, situazione locativa e condizioni giuridiche come il tetto agli affitti, oltre alla posizione e all'evoluzione della zona. Indica i documenti da esaminare prima dell'acquisto.",
-      "task": "Valuta immobile e posizione di queste offerte:\n\n{{input}}"
+      "task": "Valuta immobile e posizione di queste offerte:\n\n{{run.input}}"
     },
     "assessment": {
       "name": "Valutazione di opportunità e rischi",

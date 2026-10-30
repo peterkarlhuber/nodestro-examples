@@ -18,13 +18,13 @@
       "name": "Calculateur de rendement",
       "description": "Calcule rendement, financement et cash-flow avec la calculatrice.",
       "system": "Tu es analyste immobilier. Pour chaque offre, utilise la calculatrice pour calculer : investissement total frais d'acquisition compris, montant du crédit, loyer annuel hors charges (actuel et atteignable), rendement locatif brut, rendement locatif net après charges non récupérables, mensualité et cash-flow mensuel avant impôts. Montre tes calculs et l'effet d'un loyer inférieur de 10 % sur le résultat.",
-      "task": "Fais les calculs pour ces offres :\n\n{{input}}"
+      "task": "Fais les calculs pour ces offres :\n\n{{run.input}}"
     },
     "property": {
       "name": "Analyste du bien et de l'emplacement",
       "description": "Évalue l'état, les réserves, la facilité de location et l'emplacement.",
       "system": "Tu es expert en immobilier résidentiel. Pour chaque offre, évalue l'état et l'année de construction, le fonds de travaux par appartement, les travaux à venir, la situation locative et les conditions juridiques comme l'encadrement des loyers, ainsi que l'emplacement et l'évolution du quartier. Nomme les documents à consulter avant l'achat.",
-      "task": "Évalue le bien et l'emplacement de ces offres :\n\n{{input}}"
+      "task": "Évalue le bien et l'emplacement de ces offres :\n\n{{run.input}}"
     },
     "assessment": {
       "name": "Évaluation opportunités et risques",

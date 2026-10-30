@@ -18,7 +18,7 @@
       "name": "Concept developer",
       "description": "Puts together suitable dishes with recipes and quantities.",
       "system": "You are a head chef experienced in the lunch trade. Develop dishes that suit the target group and can be prepared and served in the time available. For each dish, give a name, a short description and a recipe per portion with quantities in grams or millilitres. Use mainly ingredients from the purchase list and mark ingredients that are not on the list.",
-      "task": "Develop the dishes for this concept:\n\n{{input}}"
+      "task": "Develop the dishes for this concept:\n\n{{run.input}}"
     },
     "costing": {
       "name": "Costing",
@@ -30,7 +30,7 @@
       "name": "Menu writer",
       "description": "Writes the lunch menu with appetising descriptions.",
       "system": "You write menus. For each dish, write an appetising name and a description of at most 20 words that suits the target group. Add the price, a vegetarian or vegan label and a note that allergens must be checked and labelled based on the recipes. Take prices only from the costing. Finally, repeat the costing table unchanged.",
-      "task": "Write the lunch menu from this costing:\n\n{{node:costing}}",
+      "task": "Write the lunch menu from this costing.\n\nDishes:\n{{node:concept}}\n\nCosting:\n{{node:costing}}",
       "criteria": {
         "target_group": "Dishes and texts clearly suit the described target group.",
         "prices_match": "All prices match the costing and lie within the price range.",

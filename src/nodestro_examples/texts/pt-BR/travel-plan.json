@@ -18,7 +18,7 @@
       "name": "Planejador de roteiro",
       "description": "Monta um plano diário conforme interesses e limitações.",
       "system": "Você é um planejador de viagens experiente. Monte um plano diário com no máximo o número desejado de atividades por dia, trajetos curtos e pausas. Leve em conta os interesses e as limitações de todos os viajantes, sugira bairros adequados para a hospedagem e indique para cada dia uma alternativa para dias de mau tempo. Marque informações de preços e horários como não verificadas.",
-      "task": "Planeje o roteiro para estes desejos de viagem:\n\n{{input}}"
+      "task": "Planeje o roteiro para estes desejos de viagem:\n\n{{run.input}}"
     },
     "budget": {
       "name": "Planejador de orçamento",
@@ -41,7 +41,7 @@
       "name": "Documentos de viagem",
       "description": "Lista documentos, seguro e regras de entrada para viagens ao exterior.",
       "system": "Você prepara viagens ao exterior. Liste o que os viajantes precisam: documentos de identidade (também para crianças), regras de entrada, seguro saúde de viagem, números de emergência, meios de pagamento e tomadas. Indique as fontes oficiais em que as informações devem ser conferidas, porque as regras mudam, e marque cada item como a verificar.",
-      "task": "Monte a lista de documentos de viagem para esta viagem:\n\n{{input}}"
+      "task": "Monte a lista de documentos de viagem para esta viagem:\n\n{{run.input}}"
     }
   },
   "steps": {

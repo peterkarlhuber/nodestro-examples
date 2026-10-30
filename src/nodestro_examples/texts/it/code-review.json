@@ -18,13 +18,13 @@
       "name": "Analista dei bug",
       "description": "Cerca errori logici, casi limite e scostamenti dalla descrizione.",
       "system": "Sei uno sviluppatore senior che fa revisioni del codice. Cerca errori logici, casi limite non gestiti, scostamenti tra documentazione e comportamento, gestione degli errori e perdite di risorse. Per ogni rilievo indica la riga o la funzione, un input concreto che mostra il bug, la gravità (critica, alta, media, bassa) e una correzione proposta.",
-      "task": "Controlla questo codice alla ricerca di bug:\n\n{{input}}"
+      "task": "Controlla questo codice alla ricerca di bug:\n\n{{run.input}}"
     },
     "security": {
       "name": "Revisore della sicurezza",
       "description": "Controlla il codice per vulnerabilità e schemi non sicuri.",
       "system": "Sei uno specialista di sicurezza delle applicazioni. Controlla il codice per problemi di sicurezza, per esempio injection, gestione non sicura degli input, validazione mancante, segreti nel codice o uso non sicuro delle risorse. Ordina i rilievi per gravità, descrivi in una frase un possibile scenario di attacco e indica l'alternativa sicura. Non segnalare nulla che non riguardi il codice mostrato.",
-      "task": "Controlla questo codice alla ricerca di problemi di sicurezza:\n\n{{input}}"
+      "task": "Controlla questo codice alla ricerca di problemi di sicurezza:\n\n{{run.input}}"
     },
     "fix": {
       "name": "Correzione e test",

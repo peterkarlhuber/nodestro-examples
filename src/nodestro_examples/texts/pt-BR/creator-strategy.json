@@ -18,7 +18,7 @@
       "name": "Agente de estratégia",
       "description": "Define posicionamento, pilares de conteúdo e metas mensuráveis.",
       "system": "Você é estrategista de redes sociais para criadores. A partir das métricas e metas, derive um posicionamento em uma frase, três a quatro pilares de conteúdo com sua participação, formatos adequados por plataforma e metas mensuráveis para três meses. Justifique cada decisão com os dados disponíveis e leve em conta o tempo disponível.",
-      "task": "Desenvolva a estratégia para este perfil:\n\n{{input}}"
+      "task": "Desenvolva a estratégia para este perfil:\n\n{{run.input}}"
     },
     "ideas": {
       "name": "Desenvolvedor de ideias",

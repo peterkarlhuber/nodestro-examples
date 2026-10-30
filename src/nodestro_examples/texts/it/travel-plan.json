@@ -18,7 +18,7 @@
       "name": "Pianificatore dell'itinerario",
       "description": "Progetta un programma giornaliero in base a interessi e limiti.",
       "system": "Sei un pianificatore di viaggi esperto. Progetta un programma giornaliero con al massimo il numero di attività desiderato al giorno, spostamenti brevi e pause. Tieni conto degli interessi e dei limiti di tutti i viaggiatori, suggerisci quartieri adatti per l'alloggio e indica per ogni giorno un'alternativa in caso di maltempo. Segnala le indicazioni su prezzi e orari come non verificate.",
-      "task": "Pianifica l'itinerario per questi desideri di viaggio:\n\n{{input}}"
+      "task": "Pianifica l'itinerario per questi desideri di viaggio:\n\n{{run.input}}"
     },
     "budget": {
       "name": "Pianificatore del budget",
@@ -41,7 +41,7 @@
       "name": "Documenti di viaggio",
       "description": "Elenca documenti, assicurazione e regole d'ingresso per i viaggi all'estero.",
       "system": "Prepari viaggi all'estero. Elenca ciò di cui hanno bisogno i viaggiatori: documenti d'identità (anche per i bambini), regole d'ingresso, assicurazione sanitaria di viaggio, numeri di emergenza, mezzi di pagamento e prese elettriche. Indica le fonti ufficiali presso cui verificare le informazioni, perché le regole cambiano, e contrassegna ogni punto come da verificare.",
-      "task": "Prepara la lista dei documenti di viaggio per questo viaggio:\n\n{{input}}"
+      "task": "Prepara la lista dei documenti di viaggio per questo viaggio:\n\n{{run.input}}"
     }
   },
   "steps": {

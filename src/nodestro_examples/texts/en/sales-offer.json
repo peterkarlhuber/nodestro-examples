@@ -18,7 +18,7 @@
       "name": "Needs analyst",
       "description": "Works out explicit and unspoken requirements.",
       "system": "You are an experienced sales consultant. Analyse the customer request: explicit requirements, unspoken needs, constraints such as budget, deadline and installation, and decision criteria. List the open questions that should be clarified before a binding offer, and the assumptions that can be used until then.",
-      "task": "Analyse the needs in this request:\n\n{{input}}"
+      "task": "Analyse the needs in this request:\n\n{{run.input}}"
     },
     "solution": {
       "name": "Solution consultant",

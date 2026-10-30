@@ -11,7 +11,7 @@
     "flow": "L'agent de profil organise les missions et les exigences. À partir de là, l'offre d'emploi et le guide d'entretien sont créés en parallèle. Le contrôleur d'équité vérifie les deux à la recherche de formulations discriminatoires ou non admises, par exemple sur l'âge ou la langue maternelle, et indique ce qu'une personne doit vérifier. S'il émet des objections, un nœud de décision transmet les documents à une révision qui applique ses propositions ; sinon, les premières versions sont conservées.",
     "input": "Des notes sur le poste : missions, qualifications souhaitées, équipe, conditions et rémunération.",
     "result": "Profil de poste, offre d'emploi et guide d'entretien avec repères d'évaluation, un contrôle d'équité structuré et, en cas d'objections, une version révisée avec la liste des modifications, aussi en fichier Word. Les documents doivent être validés par les RH ou une personne compétente avant publication.",
-    "adapt": "Remplacez les notes par votre besoin de recrutement. Vous pouvez enregistrer votre marque employeur et vos avantages comme connaissance et les attribuer à l'agent de l'offre. Ajoutez les exigences légales de votre pays au prompt système du contrôleur d'équité."
+    "adapt": "Remplacez les notes par votre besoin de recrutement. Vous pouvez enregistrer votre marque employeur et vos avantages comme connaissance et les attribuer à l'agent de l'offre. Ajoutez les exigences légales de votre pays au prompt système du contrôleur d'équité. N'étendez pas le workflow au tri, à l'évaluation ou au classement de candidatures sans examen juridique : selon le règlement européen sur l'IA, de tels systèmes sont des IA à haut risque."
   },
   "agents": {
     "profile": {

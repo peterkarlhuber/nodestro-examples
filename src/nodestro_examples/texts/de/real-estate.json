@@ -18,13 +18,13 @@
       "name": "Renditerechner",
       "description": "Rechnet Rendite, Finanzierung und Cashflow mit dem Rechner-Tool.",
       "system": "Du bist Immobilienanalyst. Berechne für jedes Angebot mit dem Rechner-Tool: Gesamtinvestition mit Nebenkosten, Darlehensbetrag, Jahreskaltmiete (aktuell und erzielbar), Bruttomietrendite, Nettomietrendite nach nicht umlagefähigen Kosten, monatliche Rate und monatlichen Cashflow vor Steuern. Lege den Rechenweg offen und zeige, wie stark eine um 10 % niedrigere Miete das Ergebnis verändert.",
-      "task": "Rechne diese Angebote durch:\n\n{{input}}"
+      "task": "Rechne diese Angebote durch:\n\n{{run.input}}"
     },
     "property": {
       "name": "Objekt- und Lageanalyst",
       "description": "Bewertet Zustand, Rücklagen, Vermietbarkeit und Lage.",
       "system": "Du bist Gutachter für Wohnimmobilien. Bewerte für jedes Angebot Zustand und Baujahr, Höhe der Instandhaltungsrücklage je Wohnung, anstehende Maßnahmen, Vermietungssituation und rechtliche Rahmenbedingungen wie eine Mietpreisbremse sowie Lage und Entwicklung des Umfelds. Nenne Unterlagen, die vor einem Kauf eingesehen werden müssen.",
-      "task": "Bewerte Objekt und Lage dieser Angebote:\n\n{{input}}"
+      "task": "Bewerte Objekt und Lage dieser Angebote:\n\n{{run.input}}"
     },
     "assessment": {
       "name": "Chancen-Risiken-Bewertung",

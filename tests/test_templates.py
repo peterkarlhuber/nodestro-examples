@@ -2,15 +2,20 @@
 
 from __future__ import annotations
 
+import json
+from pathlib import Path
 import re
 from typing import Any, get_args
 
 from nodestro_runtime.builtin_tools import BUILTIN_TOOLS
+from nodestro_runtime.engine import check_workflow
 from nodestro_runtime.graph import comment_sources, data_sources
-from nodestro_runtime.schemas import LANGUAGES
+from nodestro_runtime.schemas import LANGUAGES, Workflow
+from pydantic import ValidationError
 import pytest
 
 import nodestro_examples as library
+from nodestro_examples import samples
 
 IDS = library.template_ids()
 #: The marker every prepared test input with sample data starts with.
@@ -219,8 +224,6 @@ def test_the_documents_feature_follows_the_file_fields() -> None:
 def test_sample_files_are_built_and_read_like_uploads(language: str) -> None:
     from nodestro_runtime.file_formats import detect, extract
 
-    from nodestro_examples import samples
-
     built = 0
     for template_id in IDS:
         for sample_id in samples.sample_ids(template_id):
@@ -276,3 +279,85 @@ def test_result_files_proposals_and_memory_use_the_regular_settings() -> None:
         "nonprofit-campaign": "generated",
         "citizen-inquiry": "extracted",
     }
+
+
+def test_sample_data_has_the_same_figures_in_every_language() -> None:
+    """Translations change words, never the numbers a test case depends on."""
+
+    def numbers(value: Any) -> list[Any]:
+        if isinstance(value, dict):
+            return [item for inner in value.values() for item in numbers(inner)]
+        if isinstance(value, list):
+            return [item for inner in value for item in numbers(inner)]
+        return [value] if isinstance(value, (int, float)) and not isinstance(value, bool) else []
+
+    for template_id in IDS:
+        english = library.texts(template_id, "en").samples
+        for language in LANGUAGES:
+            for sample_id, sample in library.texts(template_id, language).samples.items():
+                assert numbers(sample.content) == numbers(english[sample_id].content), (language, template_id)
+
+
+def test_builds_are_independent_of_each_other_and_of_the_template() -> None:
+    first = library.build("production-downtime", "en")
+    first.nodes[1].agent.system_prompt = "changed"  # type: ignore[union-attr]
+    first.nodes.pop()
+    library.link_parts(first, {"quality-check": ("wf_x", 3)})
+    second = library.build("production-downtime", "en")
+    assert second.nodes[1].agent.system_prompt != "changed"  # type: ignore[union-attr]
+    assert len(second.nodes) == len(library.structure("production-downtime").nodes)
+    sub = next(node for node in second.nodes if node.subworkflow)
+    assert sub.subworkflow is not None and sub.subworkflow.workflow_id == "library-part:quality-check"
+
+
+def test_unknown_ids_and_languages() -> None:
+    for bad in ("does-not-exist", "../templates/blog-article", "Blog-Article", ""):
+        with pytest.raises(KeyError):
+            library.structure(bad)
+        with pytest.raises(KeyError):
+            library.part(bad)
+    with pytest.raises(KeyError):
+        samples.render("blog-article", "nothing", "en")
+    # An unknown language falls back to English, the documented fallback of the API.
+    assert library.summary("blog-article", "xx").language == "en"
+    assert library.build("blog-article", "xx").name == library.build("blog-article", "en").name
+
+
+def _template(**changes: Any) -> dict[str, Any]:
+    data = json.loads((Path(library.__file__).parent / "templates" / "travel-plan.json").read_text("utf-8"))
+    data.update(changes)
+    return data
+
+
+@pytest.mark.parametrize(
+    ("change", "message"),
+    [
+        (lambda data: data["nodes"].append(dict(data["nodes"][1])), "not unique"),
+        (lambda data: data["edges"].append(["start", "nowhere"]), "unknown node"),
+        (lambda data: data["edges"].append(data["edges"][0]), "listed twice"),
+        (lambda data: data["edges"].append(["organizer", "itinerary"]), "cycle"),
+        (lambda data: data["edges"].append(["gate", "budget", "maybe"]), "unknown branch"),
+        (lambda data: data["edges"].remove(["organizer", "output"]), "no way to the result node"),
+        (lambda data: data["edges"].remove(["start", "itinerary"]), "not reachable"),
+        (lambda data: data["tests"][0]["checks"].append({"node": "ghost"}), "unknown node ghost"),
+        (lambda data: data["tests"][1]["values"].update(colour="red"), "unknown field colour"),
+        (lambda data: data["tests"][0].update(samples=["ghost"]), "unknown sample ghost"),
+        (lambda data: data["nodes"].append({"id": "x", "type": "robot", "x": 0, "y": 0}), "type"),
+    ],
+)
+def test_invalid_templates_are_refused_on_load(change: Any, message: str) -> None:
+    data = _template()
+    change(data)
+    with pytest.raises(ValidationError, match=message):
+        library.TemplateSpec.model_validate(data)
+    assert library.TemplateSpec.model_validate(_template()).id == "travel-plan"
+
+
+def test_templates_and_the_part_are_valid_workflows_for_the_engine() -> None:
+    for language in LANGUAGES:
+        built = [library.build(template_id, language) for template_id in IDS]
+        for workflow in [*built, library.build_part("quality-check", language)]:
+            assert not check_workflow(Workflow(**workflow.model_dump())), (language, workflow.name)
+            # Nodes do not sit on top of each other in the editor.
+            places = [(round(node.position.x / 40), round(node.position.y / 40)) for node in workflow.nodes]
+            assert len(set(places)) == len(places), (language, workflow.name)

@@ -18,13 +18,13 @@
       "name": "Analista del bilancio",
       "description": "Calcola entrate, uscite, avanzo e quote con la calcolatrice.",
       "system": "Sei un consulente per il bilancio familiare. Usa la calcolatrice per calcolare: entrate totali, totale delle spese fisse e variabili, avanzo mensile, tasso di risparmio e quota di ogni categoria sulle entrate nette. Confronta con l'obiettivo di risparmio e mostra la differenza. Presenta i risultati in una tabella chiara.",
-      "task": "Analizza questo bilancio familiare:\n\n{{input}}"
+      "task": "Analizza questo bilancio familiare:\n\n{{run.input}}"
     },
     "savings": {
       "name": "Consulente del risparmio",
       "description": "Trova possibilità di risparmio concrete e ne stima l'effetto.",
       "system": "Sei un consulente per i consumatori. Trova possibilità di risparmio concrete: contratti inutilizzati, cambi di tariffa, spese variabili con margine e abitudini. Stima con prudenza il risparmio mensile di ogni misura e sommali con la calcolatrice. Non raccomandare prodotti finanziari, prestiti o investimenti e non proporre di disdire assicurazioni importanti.",
-      "task": "Trova possibilità di risparmio sulla base di questa analisi:\n\n{{node:budget}}"
+      "task": "Trova possibilità di risparmio sulla base di questa analisi e dei dati della famiglia.\n\nDati della famiglia:\n{{run.input}}\n\nAnalisi:\n{{node:budget}}"
     },
     "check": {
       "name": "Controllo di realtà",

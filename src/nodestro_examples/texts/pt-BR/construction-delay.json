@@ -18,13 +18,13 @@
       "name": "Analista de cronograma",
       "description": "Calcula atrasos, folgas e consequências com a ferramenta de datas e a calculadora.",
       "system": "Você é planejador de obras. Calcule o atraso de cada marco em dias corridos com a ferramenta days_between e derive o efeito sobre a data de conclusão se o atraso continuar. Mostre as dependências entre os marcos e use a calculadora para determinar qual multa contratual poderia surgir de um atraso suposto, explicitamente como cenário.",
-      "task": "Analise a posição do cronograma:\n\n{{input}}"
+      "task": "Analise a posição do cronograma:\n\n{{run.input}}"
     },
     "causes": {
       "name": "Analista de causas",
       "description": "Classifica as causas por área de responsabilidade e necessidade de documentação.",
       "system": "Você é gerente de obra com experiência em gestão de pleitos. Atribua cada atraso a uma categoria de causa: clima, cadeia de suprimentos, mudança de projeto, equipe ou outra. Indique em qual área de responsabilidade ele provavelmente se enquadra segundo as informações disponíveis, quais evidências devem ser documentadas e quais notificações de impedimento podem ser necessárias. Não faça avaliação jurídica.",
-      "task": "Classifique as causas dos atrasos:\n\n{{input}}"
+      "task": "Classifique as causas dos atrasos:\n\n{{run.input}}"
     },
     "countermeasures": {
       "name": "Planejador de contramedidas",
@@ -36,7 +36,7 @@
       "name": "Relatório ao contratante",
       "description": "Resume de forma objetiva a posição do cronograma, as causas e as medidas.",
       "system": "Você redige relatórios de situação para contratantes públicos: objetivos, claros e sem atribuir culpa. Estruture-o em posição do cronograma, causas, contramedidas, decisões necessárias e riscos, em no máximo uma página. Indique que questões de multas contratuais e prorrogação de prazo precisam de análise técnica e jurídica.",
-      "task": "Redija o relatório de situação.\n\nAnálise do cronograma:\n{{node:schedule}}\n\nContramedidas:\n{{node:countermeasures}}"
+      "task": "Redija o relatório de situação.\n\nAnálise do cronograma:\n{{node:schedule}}\n\nCausas:\n{{node:causes}}\n\nContramedidas:\n{{node:countermeasures}}"
     }
   },
   "steps": {

@@ -18,13 +18,13 @@
       "name": "Analista de errores",
       "description": "Busca errores lógicos, casos límite y desviaciones respecto a la descripción.",
       "system": "Eres desarrollador de software sénior y haces revisiones de código. Busca errores lógicos, casos límite no tratados, desviaciones entre documentación y comportamiento, gestión de errores y fugas de recursos. Indica para cada hallazgo la línea o función, una entrada concreta que muestre el error, la gravedad (crítica, alta, media, baja) y una propuesta de solución.",
-      "task": "Revisa este código en busca de errores:\n\n{{input}}"
+      "task": "Revisa este código en busca de errores:\n\n{{run.input}}"
     },
     "security": {
       "name": "Revisor de seguridad",
       "description": "Revisa el código en busca de vulnerabilidades y patrones inseguros.",
       "system": "Eres especialista en seguridad de aplicaciones. Revisa el código en busca de problemas de seguridad, por ejemplo inyección, tratamiento inseguro de entradas, falta de validación, secretos en el código o manejo inseguro de recursos. Ordena los hallazgos por gravedad, describe en una frase un posible escenario de ataque e indica la alternativa segura. No informes de nada que no tenga relación con el código mostrado.",
-      "task": "Revisa este código en busca de problemas de seguridad:\n\n{{input}}"
+      "task": "Revisa este código en busca de problemas de seguridad:\n\n{{run.input}}"
     },
     "fix": {
       "name": "Mejora y pruebas",

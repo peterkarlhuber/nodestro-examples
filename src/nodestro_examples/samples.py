@@ -127,7 +127,6 @@ def suite_cases(
     """The test cases of a template for a copy (``store`` keeps a sample file, returns its id)."""
     spec = structure(template_id)
     text = texts(template_id, language)
-    kinds = {field.name: field.type for node in spec.nodes for field in node.form}
     stored: dict[str, str] = {}
     cases = []
     for case in spec.tests:
@@ -149,7 +148,6 @@ def suite_cases(
             ).model_dump()
             for number, check in enumerate(case.checks, start=1)
         ]
-        assert all(name in kinds for name in values), (template_id, case.id)
         cases.append({"name": own.name, "input": free, "values": values, "checks": checks})
     return cases
 

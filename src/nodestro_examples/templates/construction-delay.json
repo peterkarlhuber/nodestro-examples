@@ -119,6 +119,10 @@
       "release",
       "output",
       "approved"
+    ],
+    [
+      "causes",
+      "report"
     ]
   ],
   "samples": [

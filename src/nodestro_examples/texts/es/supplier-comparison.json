@@ -18,13 +18,13 @@
       "name": "Analista de costes",
       "description": "Calcula el coste total de cada oferta con la calculadora.",
       "system": "Eres analista de costes en compras. Calcula para cada oferta el coste total por unidad y por año: precio, flete y aranceles, capital inmovilizado por pedidos mínimos y anticipos, coste de almacenaje y coste esperado de las reclamaciones. Usa la calculadora para cada cálculo y muestra el procedimiento. Compara el resultado con el precio objetivo e indica qué supuestos influyen más en el resultado.",
-      "task": "Calcula el coste total de estas ofertas:\n\n{{input}}"
+      "task": "Calcula el coste total de estas ofertas:\n\n{{run.input}}"
     },
     "risk": {
       "name": "Analista de riesgos",
       "description": "Valora plazos, dependencias, capacidad y riesgos de calidad.",
       "system": "Eres gestor de riesgos de la cadena de suministro. Valora los riesgos de suministro de cada oferta: plazo y flexibilidad, ruta de transporte, ocupación de la capacidad, historial de calidad y certificación, compromiso financiero y dependencia. Valora cada riesgo por probabilidad e impacto (alto, medio, bajo) y propone medidas de protección, por ejemplo stock de seguridad o una segunda fuente.",
-      "task": "Valora los riesgos de suministro de estas ofertas:\n\n{{input}}"
+      "task": "Valora los riesgos de suministro de estas ofertas:\n\n{{run.input}}"
     },
     "recommendation": {
       "name": "Recomendación de compra",

@@ -18,7 +18,7 @@
       "name": "Konzeptentwickler",
       "description": "Stellt passende Gerichte mit Rezepturen und Mengen zusammen.",
       "system": "Du bist Küchenchef mit Erfahrung im Mittagsgeschäft. Entwickle Gerichte, die zur Zielgruppe passen und in der verfügbaren Zeit zubereitet und serviert werden können. Gib je Gericht Name, kurze Beschreibung und eine Rezeptur pro Portion mit Mengen in Gramm oder Millilitern an. Nutze vor allem Zutaten aus der Einkaufsliste und markiere Zutaten, die nicht auf der Liste stehen.",
-      "task": "Entwickle die Gerichte für dieses Konzept:\n\n{{input}}"
+      "task": "Entwickle die Gerichte für dieses Konzept:\n\n{{run.input}}"
     },
     "costing": {
       "name": "Kalkulation",
@@ -30,7 +30,7 @@
       "name": "Kartentexter",
       "description": "Schreibt die Mittagskarte mit appetitlichen Beschreibungen.",
       "system": "Du schreibst Speisekarten. Formuliere für jedes Gericht einen appetitlichen Namen und eine Beschreibung mit höchstens 20 Wörtern, passend zur Zielgruppe. Ergänze Preis, Kennzeichnung vegetarisch oder vegan und einen Hinweis, dass Allergene anhand der Rezepturen zu prüfen und zu kennzeichnen sind. Übernimm Preise nur aus der Kalkulation. Gib zum Schluss die Kalkulationstabelle unverändert wieder.",
-      "task": "Schreibe die Mittagskarte aus dieser Kalkulation:\n\n{{node:costing}}",
+      "task": "Schreibe die Mittagskarte aus dieser Kalkulation.\n\nGerichte:\n{{node:concept}}\n\nKalkulation:\n{{node:costing}}",
       "criteria": {
         "target_group": "Gerichte und Texte passen erkennbar zur beschriebenen Zielgruppe.",
         "prices_match": "Alle Preise stimmen mit der Kalkulation überein und liegen im Preisrahmen.",

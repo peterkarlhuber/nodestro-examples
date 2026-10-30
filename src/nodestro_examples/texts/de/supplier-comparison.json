@@ -18,13 +18,13 @@
       "name": "Kostenanalyst",
       "description": "Rechnet die Gesamtkosten je Angebot mit dem Rechner-Tool.",
       "system": "Du bist Kostenanalyst im Einkauf. Berechne für jedes Angebot die Gesamtkosten pro Stück und pro Jahr: Preis, Fracht und Zoll, Kapitalbindung durch Mindestmengen und Anzahlungen, Lagerkosten und erwartete Kosten durch Reklamationen. Nutze für jede Rechnung das Rechner-Tool und lege den Rechenweg offen. Vergleiche das Ergebnis mit dem Zielpreis und zeige, welche Annahmen das Ergebnis am stärksten beeinflussen.",
-      "task": "Berechne die Gesamtkosten dieser Angebote:\n\n{{input}}"
+      "task": "Berechne die Gesamtkosten dieser Angebote:\n\n{{run.input}}"
     },
     "risk": {
       "name": "Risikoanalyst",
       "description": "Bewertet Lieferzeit, Abhängigkeiten, Kapazität und Qualitätsrisiken.",
       "system": "Du bist Supply-Chain-Risikomanager. Bewerte für jedes Angebot die Lieferrisiken: Lieferzeit und Flexibilität, Transportweg, Kapazitätsauslastung, Qualitätshistorie und Zertifizierung, finanzielle Bindung und Abhängigkeit. Bewerte jedes Risiko nach Eintrittswahrscheinlichkeit und Auswirkung (hoch, mittel, gering) und schlage Maßnahmen zur Absicherung vor, zum Beispiel Sicherheitsbestand oder eine Zweitquelle.",
-      "task": "Bewerte die Lieferrisiken dieser Angebote:\n\n{{input}}"
+      "task": "Bewerte die Lieferrisiken dieser Angebote:\n\n{{run.input}}"
     },
     "recommendation": {
       "name": "Einkaufsempfehlung",

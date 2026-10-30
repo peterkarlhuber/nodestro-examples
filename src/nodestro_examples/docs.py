@@ -1,19 +1,25 @@
 """The per-example part of the documentation chapter "beispiele", generated from the templates.
 
-The handwritten chapter (frontend/src/docs/chapters/<language>/beispiele.md) explains the
-gallery; everything between the two markers below is written by this module, so the
+The handwritten chapter (frontend/src/docs/chapters/<language>/beispiele.md in nodestro-studio)
+explains the gallery; everything between the two markers below is written by this module, so the
 documentation of each example always matches its template. After changing a template run
 
-    python -m nodestro_examples.docs
+    python -m nodestro_examples.docs [--root PATH_TO_NODESTRO_STUDIO] [--check]
 
-in the root of nodestro-studio, where the chapters live; a test there fails while they are out of date.
+``--root`` defaults to the current directory (the studio's ``make example-docs`` runs it there);
+``--check`` writes nothing and exits with 1 while a chapter is out of date. A test of the studio
+fails while the chapters are out of date. Text outside the markers is never changed; a chapter with
+broken markers is refused instead of being rewritten.
 """
 
 from __future__ import annotations
 
+import argparse
+import os
 from pathlib import Path
 import re
 import sys
+import tempfile
 
 from . import detail, template_ids
 
@@ -339,21 +345,59 @@ _PART = re.compile(re.escape(START) + r".*?" + re.escape(END), re.S)
 
 
 def updated(chapter: str, language: str) -> str:
-    """The chapter text with its generated part replaced (or appended if it has none yet)."""
+    """The chapter text with its generated part replaced (or appended if it has none yet).
+
+    Raises ``ValueError`` when the markers are broken: only one of them, more than one pair, or
+    the end before the start; nothing handwritten is ever overwritten by guessing.
+    """
+    starts, ends = chapter.count(START), chapter.count(END)
+    if starts != ends or starts > 1 or (starts == 1 and chapter.index(END) < chapter.index(START)):
+        raise ValueError(f"the chapter needs exactly one {START} … {END} pair (found {starts} and {ends})")
     part = render(language)
-    if _PART.search(chapter):
+    if starts:
         return _PART.sub(lambda _match: part, chapter)
     return chapter.rstrip("\n") + "\n\n" + part + "\n"
 
 
-def main(root: Path = Path()) -> int:
+def _write(path: Path, text: str) -> None:
+    """Replace ``path`` in one step, so an interrupted run never leaves half a chapter."""
+    handle, temporary = tempfile.mkstemp(dir=path.parent, prefix=f".{path.name}.", suffix=".tmp")
+    try:
+        with os.fdopen(handle, "w", encoding="utf-8", newline="") as file:
+            file.write(text)
+        os.replace(temporary, path)
+    except BaseException:
+        Path(temporary).unlink(missing_ok=True)
+        raise
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(prog="python -m nodestro_examples.docs", description=__doc__.splitlines()[0])
+    parser.add_argument("--root", type=Path, default=Path(), help="the nodestro-studio checkout (default: .)")
+    parser.add_argument("--check", action="store_true", help="only report chapters that are out of date")
+    args = parser.parse_args(argv)
+    stale = []
     for language in LANGUAGES:
-        path = root / CHAPTERS / language / "beispiele.md"
-        text = path.read_text(encoding="utf-8")
-        new = updated(text, language)
-        if new != text:
-            path.write_text(new, encoding="utf-8")
+        path = args.root / CHAPTERS / language / "beispiele.md"
+        try:
+            text = path.read_text(encoding="utf-8")
+            new = updated(text, language)
+        except (OSError, ValueError) as error:
+            print(f"error: {path}: {error}", file=sys.stderr)
+            return 2
+        if new == text:
+            continue
+        stale.append(path)
+        if not args.check:
+            try:
+                _write(path, new)
+            except OSError as error:
+                print(f"error: {path}: {error}", file=sys.stderr)
+                return 2
             print(f"updated {path}")
+    if args.check and stale:
+        print("out of date: " + ", ".join(str(path) for path in stale), file=sys.stderr)
+        return 1
     return 0
 
 

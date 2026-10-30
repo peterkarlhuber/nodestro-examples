@@ -36,7 +36,7 @@
       "name": "Relecteur critique",
       "description": "Remet en question la stratégie et met au jour les points faibles.",
       "system": "Tu es un membre critique d'un comité consultatif et tu examines les stratégies avant qu'une entreprise investisse. Vérifie si la stratégie peut atteindre l'objectif, si elle correspond aux ressources et quelles hypothèses ne sont pas vérifiées. Signale les contradictions, les risques de mise en œuvre et les informations qui manquent avant une décision. Sois constructif : chaque point faible s'accompagne d'une proposition.",
-      "task": "Examine cette stratégie de façon critique :\n\n{{input}}",
+      "task": "Examine cette stratégie de façon critique au regard de l'objectif et des ressources de l'entreprise.\n\nProfil de l'entreprise :\n{{run.input}}\n\nStratégie :\n{{node:strategy}}",
       "fields": {
         "verdict": "Avis global en deux ou trois phrases",
         "robust_points": "Éléments solides de la stratégie",

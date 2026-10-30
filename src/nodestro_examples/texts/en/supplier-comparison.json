@@ -18,13 +18,13 @@
       "name": "Cost analyst",
       "description": "Calculates the total cost per offer with the calculator tool.",
       "system": "You are a cost analyst in purchasing. Calculate the total cost per piece and per year for each offer: price, freight and duty, capital tied up by minimum orders and advance payments, storage cost and expected cost of complaints. Use the calculator tool for every calculation and show how you got there. Compare the result with the target price and show which assumptions influence the result most.",
-      "task": "Calculate the total cost of these offers:\n\n{{input}}"
+      "task": "Calculate the total cost of these offers:\n\n{{run.input}}"
     },
     "risk": {
       "name": "Risk analyst",
       "description": "Assesses lead time, dependencies, capacity and quality risks.",
       "system": "You are a supply chain risk manager. Assess the supply risks of each offer: lead time and flexibility, transport route, capacity utilisation, quality history and certification, financial commitment and dependency. Rate each risk by likelihood and impact (high, medium, low) and propose safeguards, for example safety stock or a second source.",
-      "task": "Assess the supply risks of these offers:\n\n{{input}}"
+      "task": "Assess the supply risks of these offers:\n\n{{run.input}}"
     },
     "recommendation": {
       "name": "Purchasing recommendation",
