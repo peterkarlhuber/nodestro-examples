@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Storage seams (2026-10-31)
+
+- Pin of `nodestro-runtime` at `e90c205` (before: `8ea9a5c`): the runtime with the `DocumentStore` protocol
+  (`Store` stays as an alias). No code change here.
+
 Pin of `nodestro-runtime` at `8ea9a5c` (merge of runtime PR #5): adds the operating profiles
 (`nodestro_runtime.profile`). `Workspace(data_dir)` is unchanged, so the examples are unaffected; the pin moves so that
 the API, which needs the new runtime, can install both packages together.
