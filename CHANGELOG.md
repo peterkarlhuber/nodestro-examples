@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Nodestro Local Docker and MCP tools (2026-10-31)
+
+- Pin of `nodestro-runtime` at `78d2899` (before: `d2cb987`): the `local-container` profile and the sandbox gateway
+  of Nodestro Local Docker, and the runtime side of MCP tools; nothing changes in this package.
+
 ### Strict price-mode error codes (2026-10-31)
 
 - Pin of `nodestro-runtime` at `d2cb987` (before: `45e7774`): strict price-mode refusals get their own error codes;
