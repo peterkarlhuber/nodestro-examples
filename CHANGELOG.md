@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+### Sandbox gateway security fixes (2026-10-31)
+
+- Pin of `nodestro-runtime` at `8597544` (before: `b6b757b`): the sandbox gateway of Nodestro Local Docker parses
+  request heads strictly (request smuggling fix, runtime PR #33) and refuses to start sandboxes when the Docker daemon
+  cannot enforce resource limits (runtime PR #37). It also carries the tool approval work of runtime PRs #30 to #36.
+  Nothing changes in this package.
+
 ### Flow kernel, loop connections and MCP tool provenance (2026-10-31)
 
 - Pin of `nodestro-runtime` at `b6b757b` (before: `78d2899`): the engine runs on the `orkexa.flow` kernel (Orkexa
