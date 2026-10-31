@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Server storage and identity (2026-10-31)
+
+- Pin of `nodestro-runtime` at `8eea1ea` (before: `d6e75b7`): PostgreSQL storage, tenant workspaces and identity
+  records for the server profile (plan steps PR-7 to PR-9); nothing changes for the desktop.
+
 ### Sandbox policy (2026-10-31)
 
 - Pin of `nodestro-runtime` at `d6e75b7` (before: `e90c205`): the runtime with the sandbox policy and trust
