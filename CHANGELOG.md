@@ -4,8 +4,9 @@
 
 ### Server settings and tenant secrets (2026-10-31)
 
-- Pin of `nodestro-runtime` at `640ed68` (before: `4104176`): server settings validation, encrypted tenant provider
-  keys and container calls without bind mounts (plan step PR-12); nothing changes in this package.
+- Pin of `nodestro-runtime` at `51f0a6c` (before: `4104176`): server settings validation, encrypted tenant provider
+  keys, container calls without bind mounts and an allowlist for tenant model endpoints (plan step PR-12); nothing
+  changes in this package.
 
 ### Libraries in the Docker sandbox (2026-10-31)
 
