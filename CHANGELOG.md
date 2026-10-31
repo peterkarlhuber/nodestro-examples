@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Runtime pin: teams and orchestrator (2026-10-31)
+
+- Pin of `nodestro-runtime` at `40e04b4` (before: `0aee6a9`): output contracts and capabilities (Adaptive
+  Orchestration M3), the orchestrator node (M4) and pool selection by capability (M5), stdio MCP servers (#50).
+  Nothing changes in this package.
+
 ### Runtime pin (2026-10-31)
 
 - Pin of `nodestro-runtime` at `0aee6a9` (before: `4660d37`): step limits (#48), MCP OAuth (#44), local sandbox
