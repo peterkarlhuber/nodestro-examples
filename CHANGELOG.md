@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Runtime pin: legacy exemption fix (2026-10-31)
+
+- Pin of `nodestro-runtime` at `a13f894` (before: `40e04b4`): the per-call tool approval activation step runs once,
+  and removed tools lose their legacy exemption (S-2 security acceptance), plus MCP tools in releases (#51).
+  Nothing changes in this package.
+
 ### Runtime pin: teams and orchestrator (2026-10-31)
 
 - Pin of `nodestro-runtime` at `40e04b4` (before: `0aee6a9`): output contracts and capabilities (Adaptive
