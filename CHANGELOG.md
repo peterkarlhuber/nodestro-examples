@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Runs stored as running (2026-10-31)
+
+- Pin of `nodestro-runtime` at `c6bc2e5` (before: `51f0a6c`): a run executed by a worker is stored as `running`
+  when it starts (plan step PR-12); nothing changes in this package.
+
 ### Server settings and tenant secrets (2026-10-31)
 
 - Pin of `nodestro-runtime` at `51f0a6c` (before: `4104176`): server settings validation, encrypted tenant provider
