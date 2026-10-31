@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Model pricing and cost reconciliation (2026-10-31)
+
+- Pin of `nodestro-runtime` at `272e2f6` (before: `c6bc2e5`): the workspace's price catalog, automatic price
+  updates, costs priced with the catalog and the strict price mode, and the comparison with the providers' bills
+  (PRICING-1); nothing changes in this package.
+
 ### Runs stored as running (2026-10-31)
 
 - Pin of `nodestro-runtime` at `c6bc2e5` (before: `51f0a6c`): a run executed by a worker is stored as `running`
