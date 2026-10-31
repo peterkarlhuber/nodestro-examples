@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Flow kernel, loop connections and MCP tool provenance (2026-10-31)
+
+- Pin of `nodestro-runtime` at `b6b757b` (before: `78d2899`): the engine runs on the `orkexa.flow` kernel (Orkexa
+  `456b92f`) and supports loop connections with mandatory limits; MCP tools carry their provenance. Nothing changes
+  in this package.
+
 ### Nodestro Local Docker and MCP tools (2026-10-31)
 
 - Pin of `nodestro-runtime` at `78d2899` (before: `d2cb987`): the `local-container` profile and the sandbox gateway
