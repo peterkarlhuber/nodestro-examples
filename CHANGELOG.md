@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+### Customer service: revisions through an approval loop (Adaptive Orchestration M1, 2026-10-31)
+
+- `customer-service`: a rejection with feedback now leads back to the reply writer through a loop connection (at most
+  three rounds, then the run fails) instead of a separate one-shot revision agent. The reply writer receives
+  `{{feedback}}` and `{{previous}}`; texts ×6 updated, the `revise` agent is gone.
+- Templates can declare loops as a fourth connection element (`EdgeLoop`); graph checks ignore loop connections when
+  looking for cycles and for the way from the start node.
+- Pin of `nodestro-runtime` at `4660d37` (before: `8597544`): loop placeholders in the pre-check (runtime #40), budget
+  reservations (#43, Orkexa `b85133d`) and run limits (#45).
+
 ### Sandbox gateway security fixes (2026-10-31)
 
 - Pin of `nodestro-runtime` at `8597544` (before: `b6b757b`): the sandbox gateway of Nodestro Local Docker parses

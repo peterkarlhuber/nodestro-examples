@@ -7,7 +7,7 @@
   "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nData de hoje: 2026-03-20\n\nTrecho da nossa política de atendimento (loja online de exemplo \"Cozinha Amostra\"):\n- Devoluções: 30 dias a partir da entrega, produto sem uso na embalagem original; a devolução é gratuita.\n- Garantia: 2 anos; em caso de defeito, reparo ou troca após análise, uma foto do defeito ajuda.\n- Prazo de entrega: 2–4 dias úteis; em caso de atraso de mais de 7 dias úteis oferecemos cancelamento gratuito.\n- Vales e gestos de cortesia acima de 20 EUR somente após aprovação da liderança da equipe.\n\nSolicitação 1 – Jonas Exemplo, pedido 10442, entregue em 2026-02-27:\n\"A frigideira não funciona no meu cooktop de indução. Posso devolver? Ainda está na embalagem original.\"\n\nSolicitação 2 – Maria Amostra, pedido 10518, entregue em 2026-01-15:\n\"O cabo da minha panela soltou, depois de dois meses! Isso é muito chato. Quero meu dinheiro de volta.\"\n\nSolicitação 3 – Ali Instância, pedido 10603, feito em 2026-03-09, ainda não entregue:\n\"Onde está meu pedido? Preciso do jogo de facas como presente no fim de semana.\"\n\nSolicitação 4 – Sofia Teste:\n\"Vocês também têm formas de silicone para assar sem plastificantes?\"",
   "guide": {
     "problem": "No atendimento ao cliente muitas solicitações chegam ao mesmo tempo, e cada uma precisa da regra certa e do tom certo. O workflow classifica as solicitações, verifica políticas e prazos e prepara respostas para aprovação.",
-    "flow": "Um classificador rápido organiza cada solicitação por assunto, urgência e humor. O verificador de políticas aplica a política de atendimento e recalcula prazos com a ferramenta de datas. O redator de respostas redige as respostas; uma verificação de qualidade garante que nada seja prometido além da política. Um nó de decisão envia os escalonamentos primeiro a um agente de desescalada. Cada rascunho aguarda aprovação; uma rejeição com retorno gera uma versão revisada.",
+    "flow": "Um classificador rápido organiza cada solicitação por assunto, urgência e humor. O verificador de políticas aplica a política de atendimento e recalcula prazos com a ferramenta de datas. O redator de respostas redige as respostas; uma verificação de qualidade garante que nada seja prometido além da política. Um nó de decisão envia os escalonamentos primeiro a um agente de desescalada. Cada rascunho aguarda aprovação; uma rejeição com retorno devolve os rascunhos, por um laço, ao redator de respostas, que os revisa e os envia de novo para aprovação (no máximo três rodadas).",
     "input": "Várias solicitações de clientes com dados de pedido e entrega, a data de hoje e a sua política de atendimento, como trecho no texto ou como arquivo (PDF, Word, Markdown); o arquivo de exemplo contém uma política mais detalhada.",
     "result": "Para cada solicitação, uma classificação, a regra aplicável com verificação de prazo e um rascunho de resposta que uma pessoa aprova antes do envio.",
     "adapt": "Anexe a sua política completa e as perguntas frequentes como arquivo, ou carregue-as como conhecimento e atribua-as ao verificador de políticas se valerem de forma permanente. O tom da sua marca (você ou senhor/senhora, despedida) é definido no prompt de sistema do redator de respostas. Para muitas solicitações de uma vez, use o processamento em lote."
@@ -33,7 +33,7 @@
       "name": "Redator de respostas",
       "description": "Redige rascunhos de resposta cordiais para aprovação.",
       "system": "Você redige respostas de atendimento ao cliente: cordiais, claras, orientadas a soluções e educadas. Responda à preocupação e ao humor, indique o próximo passo e peça especificamente as informações que faltam. Prometa apenas o que a verificação de políticas permite. Marque cada resposta como rascunho e indique quando é necessária a aprovação da liderança da equipe.",
-      "task": "Redija um rascunho de resposta para cada solicitação.\n\nClassificação:\n{{node:triage}}\n\nVerificação de políticas:\n{{node:policy}}\n\nDesescalada (somente em escalonamentos):\n{{node:deescalation}}",
+      "task": "Redija um rascunho de resposta para cada solicitação.\n\nClassificação:\n{{node:triage}}\n\nVerificação de políticas:\n{{node:policy}}\n\nDesescalada (somente em escalonamentos):\n{{node:deescalation}}\n\nRetorno da aprovação (somente em revisões; caso contrário, “-”):\n{{feedback}}\n\nSeu rascunho anterior:\n{{previous}}",
       "criteria": {
         "policy_compliant": "Cada resposta está de acordo com a política de atendimento e com os resultados da verificação de prazos.",
         "tone": "As respostas são cordiais, claras e respondem ao humor do cliente.",
@@ -45,12 +45,6 @@
       "description": "Prepara como lidar com clientes irritados e o que precisa de aprovação.",
       "system": "Você é uma gestora de reclamações experiente. Para cada cliente irritado e cada exigência além das diretrizes, proponha como acalmar a situação: reconhecer o problema, a solução dentro das diretrizes, possíveis gestos de cortesia e quais deles precisam da aprovação da liderança da equipe. Não prometa nada por conta própria.",
       "task": "Prepare a desescalada.\n\nSolicitações e diretrizes:\n{{run.input}}\n\nClassificação:\n{{node:triage}}"
-    },
-    "revise": {
-      "name": "Revisão",
-      "description": "Revisa os rascunhos conforme o retorno da aprovação.",
-      "system": "Você revisa respostas de atendimento ao cliente. Aplique exatamente o retorno da pessoa revisora, mantenha todo o resto sem alterações e respeite as diretrizes de atendimento. Marque cada resposta como rascunho revisado.",
-      "task": "Revise os rascunhos de resposta.\n\nSolicitações e política:\n{{run.input}}\n\nRascunhos:\n{{node:reply}}\n\nRetorno:\n{{node:approve}}"
     }
   },
   "steps": {
@@ -63,7 +57,7 @@
     },
     "approve": {
       "name": "Aprovar respostas",
-      "instructions": "Leia cada rascunho antes do envio: tom, fatos e promessas. Se rejeitar, diga o que precisa mudar; os rascunhos são então revisados."
+      "instructions": "Leia cada rascunho antes do envio: tom, fatos e promessas. Se rejeitar, diga o que precisa mudar; os rascunhos são então revisados e apresentados a você de novo."
     }
   },
   "form": {

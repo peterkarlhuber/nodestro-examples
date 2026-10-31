@@ -9,7 +9,7 @@ from typing import Any, get_args
 
 from nodestro_runtime.builtin_tools import BUILTIN_TOOLS
 from nodestro_runtime.engine import check_workflow
-from nodestro_runtime.graph import comment_sources, data_sources
+from nodestro_runtime.graph import comment_sources, data_sources, loop_bodies
 from nodestro_runtime.schemas import LANGUAGES, Workflow
 from pydantic import ValidationError
 import pytest
@@ -156,6 +156,9 @@ def test_tasks_name_every_predecessor_exactly(language: str) -> None:
             # Decision and approval nodes pass results through: name what arrives at them.
             sources = [*data_sources(workflow, node.id), *comment_sources(workflow, node.id)]
             used = {name.lower() for name in PLACEHOLDER.findall(node.agent.task_template)}
+            if node.id in set().union(*loop_bodies(workflow).values()):
+                # A node inside a loop also reads its round, its previous result and the loop's feedback.
+                used -= {"iteration", "previous", "feedback"}
             fields = {
                 f"form.{field.name.lower()}" for item in workflow.nodes if item.start for field in item.start.fields
             }

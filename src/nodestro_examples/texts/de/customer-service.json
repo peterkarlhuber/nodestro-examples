@@ -7,7 +7,7 @@
   "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nHeutiges Datum: 2026-03-20\n\nAuszug aus unseren Servicerichtlinien (Beispiel-Onlineshop „Musterküche“):\n- Rückgabe: 30 Tage ab Zustellung, Ware unbenutzt in Originalverpackung; Rücksendung kostenlos.\n- Gewährleistung: 2 Jahre; bei Defekten Reparatur oder Ersatz nach Prüfung, Foto des Defekts hilft.\n- Lieferzeit: 2–4 Werktage; bei Verzögerung über 7 Werktage bieten wir kostenlose Stornierung an.\n- Gutscheine und Kulanz über 20 EUR nur nach Freigabe durch die Teamleitung.\n\nAnfrage 1 – Jonas Beispiel, Bestellung 10442, zugestellt am 2026-02-27:\n„Die Pfanne passt nicht auf mein Induktionsfeld. Kann ich sie zurückgeben? Sie ist noch originalverpackt.“\n\nAnfrage 2 – Maria Muster, Bestellung 10518, zugestellt am 2026-01-15:\n„Der Griff meines Topfes hat sich gelöst, nach zwei Monaten! Das ist echt ärgerlich. Ich will mein Geld zurück.“\n\nAnfrage 3 – Ali Exempel, Bestellung 10603, bestellt am 2026-03-09, noch nicht geliefert:\n„Wo bleibt meine Bestellung? Ich brauche das Messerset als Geschenk am Wochenende.“\n\nAnfrage 4 – Sophie Probe:\n„Habt ihr auch Backformen aus Silikon ohne Weichmacher?“",
   "guide": {
     "problem": "Im Kundenservice kommen viele Anfragen gleichzeitig an, und jede braucht die richtige Regel und den richtigen Ton. Der Workflow sortiert die Anfragen, prüft Richtlinien und Fristen und bereitet Antworten zur Freigabe vor.",
-    "flow": "Ein schneller Klassifizierer ordnet jede Anfrage nach Thema, Dringlichkeit und Stimmung. Der Richtlinienprüfer wendet die Servicerichtlinien an und rechnet Fristen mit dem Datums-Tool nach. Der Antwortverfasser schreibt die Entwürfe; eine Qualitätsprüfung kontrolliert, dass nichts über die Richtlinien hinaus zugesagt wird. Ein Entscheidungsknoten schickt Eskalationen zuerst an einen Deeskalations-Agenten. Jeder Entwurf wartet auf eine Freigabe; eine Ablehnung mit Rückmeldung führt zu einer überarbeiteten Fassung.",
+    "flow": "Ein schneller Klassifizierer ordnet jede Anfrage nach Thema, Dringlichkeit und Stimmung. Der Richtlinienprüfer wendet die Servicerichtlinien an und rechnet Fristen mit dem Datums-Tool nach. Der Antwortverfasser schreibt die Entwürfe; eine Qualitätsprüfung kontrolliert, dass nichts über die Richtlinien hinaus zugesagt wird. Ein Entscheidungsknoten schickt Eskalationen zuerst an einen Deeskalations-Agenten. Jeder Entwurf wartet auf eine Freigabe; eine Ablehnung mit Rückmeldung schickt die Entwürfe über eine Schleife zurück an den Antwortschreiber, der sie überarbeitet und erneut zur Freigabe vorlegt (höchstens drei Runden).",
     "input": "Mehrere Kundenanfragen mit Bestell- und Lieferdaten, das heutige Datum und eure Servicerichtlinien, als Auszug im Text oder als Datei (PDF, Word, Markdown); die Beispieldatei enthält ausführlichere Richtlinien.",
     "result": "Für jede Anfrage eine Einordnung, die anzuwendende Regel mit Fristprüfung und ein Antwortentwurf, der vor dem Versand von einem Menschen freigegeben wird.",
     "adapt": "Hänge eure vollständigen Richtlinien und FAQ als Datei an oder lade sie als Wissen hoch und weise sie dem Richtlinienprüfer zu, wenn sie dauerhaft gelten. Den Ton eurer Marke (Du oder Sie, Grußformel) legst du im System-Prompt des Antwortverfassers fest. Viele Anfragen auf einmal bearbeitest du mit der Stapelverarbeitung."
@@ -33,7 +33,7 @@
       "name": "Antwortverfasser",
       "description": "Schreibt freundliche Antwortentwürfe zur Freigabe.",
       "system": "Du schreibst Antworten im Kundenservice: freundlich, klar, lösungsorientiert und in der Sie-Form. Geh auf das Anliegen und die Stimmung ein, nenne den nächsten Schritt und frage fehlende Informationen gezielt ab. Sage nur zu, was die Richtlinienprüfung erlaubt. Kennzeichne jede Antwort als Entwurf und vermerke, wenn eine Freigabe durch die Teamleitung nötig ist.",
-      "task": "Schreibe je Anfrage einen Antwortentwurf.\n\nEinordnung:\n{{node:triage}}\n\nRichtlinienprüfung:\n{{node:policy}}\n\nDeeskalation (nur bei Eskalationen):\n{{node:deescalation}}",
+      "task": "Schreibe je Anfrage einen Antwortentwurf.\n\nEinordnung:\n{{node:triage}}\n\nRichtlinienprüfung:\n{{node:policy}}\n\nDeeskalation (nur bei Eskalationen):\n{{node:deescalation}}\n\nRückmeldung aus der Freigabe (nur bei Überarbeitung, sonst „-“):\n{{feedback}}\n\nDein vorheriger Entwurf:\n{{previous}}",
       "criteria": {
         "policy_compliant": "Jede Antwort hält die Servicerichtlinien und die Ergebnisse der Fristprüfung ein.",
         "tone": "Die Antworten sind freundlich, klar und gehen auf die Stimmung des Kunden ein.",
@@ -45,12 +45,6 @@
       "description": "Bereitet den Umgang mit verärgerten Kunden vor und klärt, was eine Freigabe braucht.",
       "system": "Du bist erfahrene Beschwerdemanagerin. Schlage für jeden verärgerten Kunden und jede Forderung über die Richtlinien hinaus vor, wie die Lage entschärft wird: das Problem anerkennen, die Lösung im Rahmen der Richtlinien, mögliche Kulanz und welche davon eine Freigabe durch die Teamleitung braucht. Sage selbst nichts verbindlich zu.",
       "task": "Bereite die Deeskalation vor.\n\nAnfragen und Richtlinien:\n{{run.input}}\n\nEinordnung:\n{{node:triage}}"
-    },
-    "revise": {
-      "name": "Überarbeitung",
-      "description": "Überarbeitet die Entwürfe nach der Rückmeldung der Freigabe.",
-      "system": "Du überarbeitest Antworten im Kundenservice. Setze die Rückmeldung der prüfenden Person genau um, lass alles andere unverändert und halte die Servicerichtlinien ein. Kennzeichne jede Antwort als überarbeiteten Entwurf.",
-      "task": "Überarbeite die Antwortentwürfe.\n\nAnfragen und Richtlinien:\n{{run.input}}\n\nEntwürfe:\n{{node:reply}}\n\nRückmeldung:\n{{node:approve}}"
     }
   },
   "steps": {
@@ -63,7 +57,7 @@
     },
     "approve": {
       "name": "Antworten freigeben",
-      "instructions": "Lies jeden Entwurf vor dem Versand: Ton, Fakten und Zusagen. Wenn du ablehnst, schreib, was sich ändern muss; die Entwürfe werden dann überarbeitet."
+      "instructions": "Lies jeden Entwurf vor dem Versand: Ton, Fakten und Zusagen. Wenn du ablehnst, schreib, was sich ändern muss; die Entwürfe werden dann überarbeitet und dir erneut vorgelegt."
     }
   },
   "form": {

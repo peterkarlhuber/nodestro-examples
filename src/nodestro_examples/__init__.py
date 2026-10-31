@@ -56,6 +56,7 @@ from nodestro_runtime.schemas import (
     ConditionRule,
     ContentKind,
     Edge,
+    EdgeLoop,
     Effort,
     InputField,
     InputFieldType,
@@ -210,7 +211,13 @@ class NodeSpec(_Strict):
     memory: MemorySpec | None = None
 
 
-Connection = tuple[str, str] | tuple[str, str, str]
+#: ``[source, target]``, ``[source, target, branch]`` or ``[source, target, branch, loop]``: a loop
+#: (``{"max_iterations": n, "on_exhausted": "fail" | "continue"}``) leads from a branch back to an earlier step.
+Connection = tuple[str, str] | tuple[str, str, str] | tuple[str, str, str, EdgeLoop]
+
+
+def _is_loop(connection: Connection) -> bool:
+    return len(connection) == 4
 
 
 def _graph_problems(nodes: list[NodeSpec], edges: list[Connection]) -> list[str]:
@@ -227,7 +234,7 @@ def _graph_problems(nodes: list[NodeSpec], edges: list[Connection]) -> list[str]
             found.append(f"decision {node.id} has no rules")
         if node.type == "subworkflow" and not node.part:
             found.append(f"sub-workflow {node.id} names no part")
-    if len(set(edges)) != len(edges):
+    if len({edge[:3] for edge in edges}) != len(edges):
         found.append("a connection is listed twice")
     successors: dict[str, list[str]] = {}
     for edge in edges:
@@ -235,8 +242,10 @@ def _graph_problems(nodes: list[NodeSpec], edges: list[Connection]) -> list[str]
         if source not in kinds or target not in kinds:
             found.append(f"connection {source} -> {target} names an unknown node")
             continue
-        successors.setdefault(source, []).append(target)
-        if len(edge) == 3:
+        if not _is_loop(edge):
+            # A loop leads back on purpose; the runtime checks it (check_workflow).
+            successors.setdefault(source, []).append(target)
+        if len(edge) >= 3:
             condition = next(node.condition for node in nodes if node.id == source)
             handles = {
                 "condition": {"default", *(rule.id for rule in condition.rules)} if condition else set(),
@@ -244,7 +253,7 @@ def _graph_problems(nodes: list[NodeSpec], edges: list[Connection]) -> list[str]
             }.get(kinds[source], set())
             if edge[2] not in handles:
                 found.append(f"connection {source} -> {target} uses the unknown branch {edge[2]!r}")
-    # No cycles, and every node lies on a way from the start node to the result node.
+    # No cycles except loops, and every node lies on a way from the start node to the result node.
     order: list[str] = []
     state: dict[str, int] = {}
 
@@ -510,7 +519,8 @@ def _fed_by_start(spec_nodes: list[NodeSpec], edges: list[Connection]) -> set[st
     kinds = {node.id: node.type for node in spec_nodes}
     incoming: dict[str, list[str]] = {}
     for connection in edges:
-        incoming.setdefault(connection[1], []).append(connection[0])
+        if not _is_loop(connection):
+            incoming.setdefault(connection[1], []).append(connection[0])
 
     def reaches_start(node_id: str, seen: set[str]) -> bool:
         for source in incoming.get(node_id, []):
@@ -685,9 +695,10 @@ def _build_nodes(
     built_edges = []
     for connection in edges:
         source, target = connection[0], connection[1]
-        handle = connection[2] if len(connection) == 3 else None
+        handle = connection[2] if len(connection) >= 3 else None
+        loop = connection[3] if len(connection) == 4 else None
         edge_id = f"e-{source}-{target}" + (f"-{handle}" if handle else "")
-        built_edges.append(Edge(id=edge_id, source=source, target=target, source_handle=handle))
+        built_edges.append(Edge(id=edge_id, source=source, target=target, source_handle=handle, loop=loop))
     return nodes, built_edges
 
 
@@ -823,7 +834,8 @@ def _pattern(spec: TemplateSpec) -> Pattern:
     agents = [node.id for node in spec.nodes if node.type == "agent"]
     successors: dict[str, list[str]] = {}
     for edge in spec.edges:
-        successors.setdefault(edge[0], []).append(edge[1])
+        if not _is_loop(edge):
+            successors.setdefault(edge[0], []).append(edge[1])
 
     def reachable(start: str) -> set[str]:
         seen: set[str] = set()

@@ -7,7 +7,7 @@
   "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nDate du jour : 2026-03-20\n\nExtrait de notre politique de service (boutique en ligne d'exemple « Cuisine Modèle ») :\n- Retours : 30 jours à compter de la livraison, article non utilisé dans son emballage d'origine ; retour gratuit.\n- Garantie : 2 ans ; en cas de défaut, réparation ou remplacement après examen, une photo du défaut aide.\n- Délai de livraison : 2 à 4 jours ouvrés ; au-delà de 7 jours ouvrés de retard, nous proposons l'annulation gratuite.\n- Bons d'achat et gestes commerciaux de plus de 20 EUR uniquement après accord du chef d'équipe.\n\nDemande 1 – Jonas Exemple, commande 10442, livrée le 2026-02-27 :\n« La poêle ne fonctionne pas sur ma plaque à induction. Puis-je la retourner ? Elle est encore dans son emballage d'origine. »\n\nDemande 2 – Maria Modèle, commande 10518, livrée le 2026-01-15 :\n« La poignée de ma casserole s'est détachée, au bout de deux mois ! C'est vraiment agaçant. Je veux être remboursée. »\n\nDemande 3 – Ali Spécimen, commande 10603, passée le 2026-03-09, pas encore livrée :\n« Où est ma commande ? J'ai besoin du coffret de couteaux comme cadeau ce week-end. »\n\nDemande 4 – Sophie Essai :\n« Avez-vous aussi des moules en silicone sans plastifiants ? »",
   "guide": {
     "problem": "Au service client, de nombreuses demandes arrivent en même temps, et chacune exige la bonne règle et le bon ton. Le workflow trie les demandes, vérifie règles et délais et prépare des réponses à valider.",
-    "flow": "Un classificateur rapide classe chaque demande par thème, urgence et humeur. Le vérificateur des règles applique la politique de service et recalcule les délais avec l'outil de dates. Le rédacteur des réponses rédige les projets ; une vérification qualité contrôle que rien n'est promis au-delà de la politique. Un nœud de décision envoie d'abord les escalades à un agent de désescalade. Chaque brouillon attend une validation ; un refus avec retour mène à une version révisée.",
+    "flow": "Un classificateur rapide classe chaque demande par thème, urgence et humeur. Le vérificateur des règles applique la politique de service et recalcule les délais avec l'outil de dates. Le rédacteur des réponses rédige les projets ; une vérification qualité contrôle que rien n'est promis au-delà de la politique. Un nœud de décision envoie d'abord les escalades à un agent de désescalade. Chaque brouillon attend une validation ; un refus avec retour renvoie les brouillons par une boucle au rédacteur de réponses, qui les révise et les soumet de nouveau à validation (trois tours au plus).",
     "input": "Plusieurs demandes de clients avec données de commande et de livraison, la date du jour et votre politique de service, en extrait dans le texte ou en fichier (PDF, Word, Markdown) ; le fichier d'exemple contient une politique plus détaillée.",
     "result": "Pour chaque demande, un classement, la règle applicable avec contrôle du délai et un projet de réponse qu'une personne valide avant l'envoi.",
     "adapt": "Joignez votre politique complète et votre FAQ en fichier, ou chargez-les comme connaissance et attribuez-les au vérificateur des règles si elles s'appliquent durablement. Le ton de votre marque (tutoiement ou vouvoiement, formule de politesse) se définit dans le prompt système du rédacteur des réponses. Pour traiter de nombreuses demandes à la fois, utilisez le traitement par lots."
@@ -33,7 +33,7 @@
       "name": "Rédacteur des réponses",
       "description": "Rédige des projets de réponse aimables à valider.",
       "system": "Tu rédiges des réponses du service client : aimables, claires, orientées solution et en vouvoyant. Réponds à la demande et à l'humeur, indique la prochaine étape et demande précisément les informations manquantes. Ne promets que ce que la vérification des règles autorise. Indique que chaque réponse est un projet et précise quand l'accord du chef d'équipe est nécessaire.",
-      "task": "Rédige un projet de réponse pour chaque demande.\n\nClassement :\n{{node:triage}}\n\nVérification des règles :\n{{node:policy}}\n\nDésescalade (uniquement en cas d'escalade) :\n{{node:deescalation}}",
+      "task": "Rédige un projet de réponse pour chaque demande.\n\nClassement :\n{{node:triage}}\n\nVérification des règles :\n{{node:policy}}\n\nDésescalade (uniquement en cas d'escalade) :\n{{node:deescalation}}\n\nRetour de la validation (uniquement pour une révision, sinon « - ») :\n{{feedback}}\n\nTon brouillon précédent :\n{{previous}}",
       "criteria": {
         "policy_compliant": "Chaque réponse respecte la politique de service et les résultats du contrôle des délais.",
         "tone": "Les réponses sont aimables, claires et tiennent compte de l'humeur du client.",
@@ -45,12 +45,6 @@
       "description": "Prépare la réponse aux clients mécontents et ce qui nécessite une validation.",
       "system": "Tu es une gestionnaire de réclamations expérimentée. Pour chaque client mécontent et chaque demande qui dépasse les règles, propose comment apaiser la situation : reconnaître le problème, la solution dans le cadre des règles, les gestes commerciaux possibles et ceux qui nécessitent l'accord du responsable d'équipe. Ne promets rien toi-même.",
       "task": "Prépare la désescalade.\n\nDemandes et règles :\n{{run.input}}\n\nClassement :\n{{node:triage}}"
-    },
-    "revise": {
-      "name": "Révision",
-      "description": "Révise les brouillons selon le retour de la validation.",
-      "system": "Tu révises des réponses du service client. Applique exactement le retour de la personne qui valide, laisse tout le reste inchangé et respecte les règles du service. Marque chaque réponse comme brouillon révisé.",
-      "task": "Révise les brouillons de réponse.\n\nDemandes et politique :\n{{run.input}}\n\nBrouillons :\n{{node:reply}}\n\nRetour :\n{{node:approve}}"
     }
   },
   "steps": {
@@ -63,7 +57,7 @@
     },
     "approve": {
       "name": "Valider les réponses",
-      "instructions": "Lis chaque brouillon avant l'envoi : ton, faits et engagements. Si tu refuses, indique ce qui doit changer ; les brouillons sont alors révisés."
+      "instructions": "Lis chaque brouillon avant l'envoi : ton, faits et engagements. Si tu refuses, indique ce qui doit changer ; les brouillons sont alors révisés et te sont soumis de nouveau."
     }
   },
   "form": {

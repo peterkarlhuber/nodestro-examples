@@ -107,14 +107,6 @@
       }
     },
     {
-      "id": "revise",
-      "type": "agent",
-      "x": 1700,
-      "y": 380,
-      "role": "writing",
-      "icon": "pen"
-    },
-    {
       "id": "output",
       "type": "output",
       "x": 2040,
@@ -162,12 +154,12 @@
     ],
     [
       "approve",
-      "revise",
-      "rejected"
-    ],
-    [
-      "revise",
-      "output"
+      "reply",
+      "rejected",
+      {
+        "max_iterations": 3,
+        "on_exhausted": "fail"
+      }
     ],
     [
       "start",
