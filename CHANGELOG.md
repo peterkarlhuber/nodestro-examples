@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Server settings and tenant secrets (2026-10-31)
+
+- Pin of `nodestro-runtime` at `51f0a6c` (before: `4104176`): server settings validation, encrypted tenant provider
+  keys, container calls without bind mounts and an allowlist for tenant model endpoints (plan step PR-12); nothing
+  changes in this package.
+
 ### Libraries in the Docker sandbox (2026-10-31)
 
 - Pin of `nodestro-runtime` at `4104176` (before: `3a052d1`): an approved Python environment becomes a container image
