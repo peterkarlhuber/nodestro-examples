@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Sandbox policy (2026-10-31)
+
+- Pin of `nodestro-runtime` at `d6e75b7` (before: `e90c205`): the runtime with the sandbox policy and trust
+  classes for tool code (ADR-0006).
+
 ### Storage seams (2026-10-31)
 
 - Pin of `nodestro-runtime` at `e90c205` (before: `8ea9a5c`): the runtime with the `DocumentStore` protocol
