@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Built-in Linux sandbox (2026-10-31)
+
+- Pin of `nodestro-runtime` at `45e7774` (before: `272e2f6`): the built-in Linux sandbox (Landlock, seccomp and
+  resource limits) that the desktop uses automatically for AI-generated tools; nothing changes in this package.
+
 ### Model pricing and cost reconciliation (2026-10-31)
 
 - Pin of `nodestro-runtime` at `272e2f6` (before: `c6bc2e5`): the workspace's price catalog, automatic price
