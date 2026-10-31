@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Strict price-mode error codes (2026-10-31)
+
+- Pin of `nodestro-runtime` at `d2cb987` (before: `45e7774`): strict price-mode refusals get their own error codes;
+  nothing changes in this package.
+
 ### Built-in Linux sandbox (2026-10-31)
 
 - Pin of `nodestro-runtime` at `45e7774` (before: `272e2f6`): the built-in Linux sandbox (Landlock, seccomp and
