@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+Pin of `nodestro-runtime` at `8ea9a5c` (merge of runtime PR #5): adds the operating profiles
+(`nodestro_runtime.profile`). `Workspace(data_dir)` is unchanged, so the examples are unaffected; the pin moves so that
+the API, which needs the new runtime, can install both packages together.
+
 Platform integration (2026-10-30): pin of `nodestro-runtime` at `ad75859`. That runtime keeps approval comments out of
 result nodes and result files and adds the check `check.input_form_only`, which none of the 24 examples triggers. The
 examples themselves are unchanged.
