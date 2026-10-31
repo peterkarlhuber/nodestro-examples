@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Jobs and workers (2026-10-31)
+
+- Pin of `nodestro-runtime` at `3a052d1` (before: `8eea1ea`): the job queue, run workers, reaper and run events of
+  the server profile (plan step PR-10); nothing changes for the desktop.
+
 ### Server storage and identity (2026-10-31)
 
 - Pin of `nodestro-runtime` at `8eea1ea` (before: `d6e75b7`): PostgreSQL storage, tenant workspaces and identity
