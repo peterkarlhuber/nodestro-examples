@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Libraries in the Docker sandbox (2026-10-31)
+
+- Pin of `nodestro-runtime` at `4104176` (before: `3a052d1`): an approved Python environment becomes a container image
+  in the Docker sandbox (plan step PR-11); nothing changes in this package.
+
 ### Jobs and workers (2026-10-31)
 
 - Pin of `nodestro-runtime` at `3a052d1` (before: `8eea1ea`): the job queue, run workers, reaper and run events of
