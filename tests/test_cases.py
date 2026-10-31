@@ -244,10 +244,21 @@ async def test_a_rejection_stops_or_revises_as_configured(
     comment = "Please name the delivery date."
     workspace.decide(run.id, node_id, "rejected", comment)
     done = await workspace.wait(run.id, timeout=60)
+    edges = library.structure(template_id).edges
+    loops = [edge[1] for edge in edges if edge[0] == node_id and edge[2:3] == ("rejected",) and len(edge) == 4]
+    if loops:
+        # A loop sends the drafts back: they are revised with the comment and wait for approval again.
+        assert done.status == "paused" and done.nodes[node_id].status == "awaiting_approval"
+        assert done.nodes[node_id].iteration == [1]
+        for target in loops:
+            assert done.nodes[target].iteration == [1] and comment in (done.nodes[target].prompt or "")
+        workspace.decide(run.id, node_id, "approved", "")
+        done = await workspace.wait(run.id, timeout=60)
+        assert done.status == "succeeded", (template_id, done.error)
+        return
     # A decided approval cannot be decided again.
     with pytest.raises(NodestroError):
         workspace.decide(run.id, node_id, "approved", "")
-    edges = library.structure(template_id).edges
     revisers = [edge[1] for edge in edges if edge[0] == node_id and edge[2:] == ("rejected",)]
     if spec.on_reject == "stop":
         assert not revisers

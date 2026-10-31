@@ -7,7 +7,7 @@
   "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nToday's date: 2026-03-20\n\nExtract from our service policy (sample online shop \"Sample Kitchen\"):\n- Returns: 30 days from delivery, goods unused in original packaging; returns are free of charge.\n- Warranty: 2 years; for defects, repair or replacement after inspection, a photo of the defect helps.\n- Delivery time: 2–4 working days; if delayed by more than 7 working days we offer free cancellation.\n- Vouchers and goodwill gestures above EUR 20 only after approval by the team lead.\n\nEnquiry 1 – Jonas Example, order 10442, delivered on 2026-02-27:\n\"The pan doesn't work on my induction hob. Can I return it? It's still in its original packaging.\"\n\nEnquiry 2 – Maria Sample, order 10518, delivered on 2026-01-15:\n\"The handle of my pot has come loose, after two months! That's really annoying. I want my money back.\"\n\nEnquiry 3 – Ali Instance, order 10603, ordered on 2026-03-09, not delivered yet:\n\"Where is my order? I need the knife set as a present at the weekend.\"\n\nEnquiry 4 – Sophie Test:\n\"Do you also have silicone baking moulds without plasticisers?\"",
   "guide": {
     "problem": "In customer service many enquiries arrive at once, and each needs the right rule and the right tone. The workflow sorts the enquiries, checks policies and deadlines and prepares replies for approval.",
-    "flow": "A fast classifier sorts each enquiry by topic, urgency and mood. The policy checker applies the service policy and recalculates deadlines with the date tool. The reply writer drafts the replies; a quality check makes sure nothing is promised beyond the policy. A decision node sends escalations to a de-escalation agent first. Every draft waits for approval; a rejection with feedback leads to a revised version.",
+    "flow": "A fast classifier sorts each enquiry by topic, urgency and mood. The policy checker applies the service policy and recalculates deadlines with the date tool. The reply writer drafts the replies; a quality check makes sure nothing is promised beyond the policy. A decision node sends escalations to a de-escalation agent first. Every draft waits for approval; a rejection with feedback sends the drafts back to the reply writer through a loop, who revises them and submits them for approval again (at most three rounds).",
     "input": "Several customer enquiries with order and delivery data, today's date and your service policy, as an extract in the text or as a file (PDF, Word, Markdown); the sample file contains a more detailed policy.",
     "result": "For each enquiry a classification, the applicable rule with a deadline check and a draft reply that a person approves before sending.",
     "adapt": "Attach your complete policy and FAQ as a file, or upload them as knowledge and assign them to the policy checker if they apply permanently. Set your brand's tone (formal or informal, sign-off) in the system prompt of the reply writer. Use batch processing to handle many enquiries at once."
@@ -33,7 +33,7 @@
       "name": "Reply writer",
       "description": "Writes friendly draft replies for approval.",
       "system": "You write customer service replies: friendly, clear, solution-oriented and polite. Respond to the concern and the mood, name the next step and ask specifically for missing information. Promise only what the policy check allows. Mark every reply as a draft and note when approval by the team lead is needed.",
-      "task": "Write a draft reply for each enquiry.\n\nClassification:\n{{node:triage}}\n\nPolicy check:\n{{node:policy}}\n\nDe-escalation (escalations only):\n{{node:deescalation}}",
+      "task": "Write a draft reply for each enquiry.\n\nClassification:\n{{node:triage}}\n\nPolicy check:\n{{node:policy}}\n\nDe-escalation (escalations only):\n{{node:deescalation}}\n\nFeedback from the approval (revisions only, otherwise “-”):\n{{feedback}}\n\nYour previous draft:\n{{previous}}",
       "criteria": {
         "policy_compliant": "Every reply complies with the service policy and the results of the deadline check.",
         "tone": "The replies are friendly, clear and respond to the customer's mood.",
@@ -45,12 +45,6 @@
       "description": "Prepares how to handle upset customers and what needs approval.",
       "system": "You are an experienced complaint manager. For every upset customer and every demand beyond the guidelines, propose how to defuse the situation: acknowledge the problem, the solution within the guidelines, possible goodwill gestures and which of them need approval by the team lead. Do not promise anything yourself.",
       "task": "Prepare the de-escalation.\n\nRequests and guidelines:\n{{run.input}}\n\nTriage:\n{{node:triage}}"
-    },
-    "revise": {
-      "name": "Revision",
-      "description": "Revises the drafts according to the reviewer's feedback.",
-      "system": "You revise customer service replies. Apply the reviewer's feedback exactly, leave everything else unchanged and keep to the service guidelines. Mark every reply as a revised draft.",
-      "task": "Revise the reply drafts.\n\nEnquiries and policy:\n{{run.input}}\n\nDrafts:\n{{node:reply}}\n\nFeedback:\n{{node:approve}}"
     }
   },
   "steps": {
@@ -63,7 +57,7 @@
     },
     "approve": {
       "name": "Approve replies",
-      "instructions": "Read every draft before it is sent: tone, facts and promises. If you reject, say what has to change; the drafts are then revised."
+      "instructions": "Read every draft before it is sent: tone, facts and promises. If you reject, say what has to change; the drafts are then revised and shown to you again."
     }
   },
   "form": {
