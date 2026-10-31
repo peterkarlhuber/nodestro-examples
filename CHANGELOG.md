@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Runtime pin (2026-10-31)
+
+- Pin of `nodestro-runtime` at `0aee6a9` (before: `4660d37`): step limits (#48), MCP OAuth (#44), local sandbox
+  hardening (#47) and the tool approval audit and inbox (#46). No template changes.
+
 ### Customer service: revisions through an approval loop (Adaptive Orchestration M1, 2026-10-31)
 
 - `customer-service`: a rejection with feedback now leads back to the reply writer through a loop connection (at most
