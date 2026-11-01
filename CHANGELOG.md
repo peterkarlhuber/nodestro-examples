@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Runtime pin: MCP re-review fixes R-1, R-2 (2026-11-01)
+
+- Pin of `nodestro-runtime` at `58cec5c` (before: `f71086a`): a per-call approval also covers the tool's
+  classification (a reclassification while a call waits makes the approval stale), and the tool name `memory` is
+  reserved for the agent's memory tool.
+
 ### Runtime pin: MCP security fixes (2026-11-01)
 
 - Pin of `nodestro-runtime` at `f71086a` (before: `c86781b`): fixes from the independent MCP review (per-call
