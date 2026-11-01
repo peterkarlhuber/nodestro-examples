@@ -56,3 +56,12 @@ python_version = "3.10"
 strict = true
 packages = ["nodestro_examples"]
 mypy_path = "src"
+
+# The demo MCP server needs the MCP SDK (Python 3.11+, installed with the runtime there); on Python 3.10 it is absent.
+[[tool.mypy.overrides]]
+module = ["mcp.*", "mcp_types", "uvicorn"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["nodestro_examples.demo_mcp"]
+disable_error_code = ["untyped-decorator", "unused-ignore"]
