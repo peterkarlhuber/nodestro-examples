@@ -1,0 +1,28 @@
+{
+  "name": "Equipo de obra y proyecto",
+  "description": "Examina las causas técnicas de los retrasos de obra: clima, terreno, cambios de proyecto y secuencia de trabajos; atribuye días de retraso con pruebas.",
+  "start": "Encargo",
+  "output": "Valoración de obra",
+  "agents": {
+    "expert": {
+      "name": "Ingeniero de obra",
+      "description": "Valora las causas técnicas, atribuye días de retraso y nombra las pruebas.",
+      "system": "Eres un ingeniero de obra con experiencia. Para los retrasos de tu encargo, examina las causas técnicas: clima (por ejemplo, días de helada por debajo del límite de trabajo), terreno, cambios de proyecto y su orden, y la secuencia de trabajos. Atribuye días de retraso solo donde las fechas del encargo lo respalden, y di a qué ámbito pertenece probablemente cada causa según la información disponible (propiedad, contratista o ninguno). Nombra las pruebas que deberían constar, como anotaciones del diario de obra, registros meteorológicos o la orden escrita de un cambio de proyecto. No hagas una valoración jurídica y enumera lo que no está claro como preguntas abiertas.",
+      "task": "{{input}}",
+      "fields": {
+        "findings": "Valoración técnica de las causas",
+        "attributed_delay_days": "Días de retraso atribuibles a las causas examinadas",
+        "responsibility": "Ámbito de responsabilidad probable por causa (propiedad, contratista o ninguno) con motivo",
+        "evidence": "Pruebas que deberían documentarse",
+        "open_questions": "Preguntas que quedan abiertas"
+      }
+    }
+  },
+  "contract": {
+    "findings": "Valoración técnica de las causas",
+    "attributed_delay_days": "Días de retraso atribuibles a las causas examinadas",
+    "responsibility": "Ámbito de responsabilidad probable por causa (propiedad, contratista o ninguno) con motivo",
+    "evidence": "Pruebas que deberían documentarse",
+    "open_questions": "Preguntas que quedan abiertas"
+  }
+}

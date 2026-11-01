@@ -6,11 +6,13 @@
   "output": "Borradores de respuesta",
   "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nFecha de hoy: 2026-03-20\n\nExtracto de nuestra política de servicio (tienda online de ejemplo «Cocina Muestra»):\n- Devoluciones: 30 días desde la entrega, artículo sin usar en su embalaje original; la devolución es gratuita.\n- Garantía: 2 años; en caso de defecto, reparación o sustitución tras revisión; una foto del defecto ayuda.\n- Plazo de entrega: 2–4 días laborables; si el retraso supera 7 días laborables ofrecemos la cancelación gratuita.\n- Vales y gestos comerciales de más de 20 EUR solo con la aprobación de la jefatura de equipo.\n\nConsulta 1 – Jonás Ejemplo, pedido 10442, entregado el 2026-02-27:\n«La sartén no sirve para mi placa de inducción. ¿Puedo devolverla? Todavía está en su embalaje original.»\n\nConsulta 2 – María Muestra, pedido 10518, entregado el 2026-01-15:\n«¡Se ha soltado el asa de mi olla a los dos meses! Es muy molesto. Quiero que me devuelvan el dinero.»\n\nConsulta 3 – Alí Ejemplar, pedido 10603, realizado el 2026-03-09, aún no entregado:\n«¿Dónde está mi pedido? Necesito el juego de cuchillos para un regalo este fin de semana.»\n\nConsulta 4 – Sofía Prueba:\n«¿Tenéis también moldes de silicona sin plastificantes?»",
   "guide": {
-    "problem": "En atención al cliente llegan muchas consultas a la vez y cada una necesita la regla y el tono adecuados. El flujo ordena las consultas, comprueba políticas y plazos y prepara respuestas para su aprobación.",
-    "flow": "Un clasificador rápido ordena cada consulta por tema, urgencia y estado de ánimo. El revisor de políticas aplica la política de servicio y recalcula los plazos con la herramienta de fechas. El redactor de respuestas escribe los borradores; una revisión de calidad comprueba que no se prometa nada que vaya más allá de la política. Un nodo de decisión envía primero los escalados a un agente de desescalada. Cada borrador espera una aprobación; un rechazo con comentarios devuelve los borradores mediante un bucle al redactor de respuestas, que los revisa y los presenta de nuevo para su aprobación (como máximo tres rondas).",
-    "input": "Varias consultas de clientes con datos de pedido y entrega, la fecha de hoy y vuestra política de servicio, como extracto en el texto o como archivo (PDF, Word, Markdown); el archivo de ejemplo contiene una política más detallada.",
-    "result": "Para cada consulta, una clasificación, la regla aplicable con la comprobación del plazo y un borrador de respuesta que una persona aprueba antes de enviarlo.",
-    "adapt": "Adjunta vuestra política completa y las preguntas frecuentes como archivo, o súbelas como conocimiento y asígnalas al revisor de políticas si se aplican de forma permanente. El tono de tu marca (tú o usted, despedida) se define en el prompt de sistema del redactor de respuestas. Para muchas consultas a la vez, usa el procesamiento por lotes."
+    "problem": "En atención al cliente llegan muchas consultas a la vez y cada una necesita la regla, los datos de pedido y el tono adecuados. El flujo ordena las consultas, comprueba políticas y plazos con los datos del pedido y prepara respuestas para su aprobación.",
+    "flow": "Un clasificador rápido ordena cada consulta por tema, urgencia y estado de ánimo. El revisor de políticas aplica la política de servicio y recalcula los plazos con la herramienta de fechas; si tu copia está conectada a la tienda, consulta cada pedido en modo de solo lectura con get_order, y si no, usa los datos de pedido de las consultas o una exportación de pedidos adjunta. El redactor de respuestas escribe los borradores; una revisión de calidad comprueba que no se prometa nada que vaya más allá de la política. Un nodo de decisión envía primero los escalados a un agente de desescalada. Cada borrador espera una aprobación; un rechazo con comentario devuelve los borradores mediante un bucle al redactor de respuestas, que los revisa y los presenta de nuevo para su aprobación (como máximo tres rondas).",
+    "input": "Varias consultas de clientes con números de pedido, la fecha de hoy y vuestra política de servicio, como extracto en el texto o como archivo (PDF, Word, Markdown); el archivo de ejemplo contiene una política más detallada. Las fechas de pedido y entrega proceden de las consultas, de una exportación de pedidos de vuestra tienda adjunta (JSON, CSV o Excel) o, con conexión, directamente de la tienda; la exportación de ejemplo contiene los tres pedidos de las consultas de ejemplo.",
+    "result": "Para cada consulta, una clasificación, la regla aplicable con la comprobación del plazo y un borrador de respuesta que una persona aprueba antes de enviarlo. La revisión de políticas indica de dónde proceden los datos de pedido (tienda, exportación o consulta) y cuáles faltan.",
+    "adapt": "Adjunta vuestra política completa y las preguntas frecuentes como archivo, o súbelas como conocimiento y asígnalas al revisor de políticas si se aplican de forma permanente. Para comprobar pedidos en directo, haz configurar la integración con la tienda y elige el servidor al copiar el ejemplo. El tono de tu marca (tú o usted, despedida) se define en el prompt de sistema del redactor de respuestas. El procesamiento por lotes atiende muchas consultas a la vez, pero las ejecuciones sin una persona presente no pueden usar la conexión con la tienda, así que adjunta a los lotes una exportación de pedidos.",
+    "control": "Automático: la clasificación, la decisión de escalado (a desescalada cuando al menos un cliente está molesto o pide más de lo que permite la política), la revisión de políticas y los borradores; la herramienta de fechas calcula los plazos, una revisión de calidad comprueba los borradores con tres criterios (conforme a la política, tono, sin promesas) y cada paso queda registrado. Una persona aprueba cada borrador antes de enviar nada: un rechazo requiere un comentario y devuelve los borradores al redactor de respuestas; si tras un máximo de tres rondas se siguen rechazando, la ejecución termina como fallida. Las respuestas siguen siendo borradores; nada se envía automáticamente. La conexión con la tienda es opcional y solo lee: la copia recibe get_order solo si la conectas a un servidor MCP cuya herramienta un administrador haya aprobado como de solo lectura; si no, funciona en un modo sin conexión claramente señalado. Las ejecuciones sin una persona presente (programaciones, series de pruebas, procesamiento por lotes) no pueden usar herramientas MCP salvo que un administrador permita expresamente el MCP desatendido.",
+    "why": "Los pasos se apoyan unos en otros (clasificar, comprobar, redactar), así que basta una cadena fija con una rama para los escalados; un orquestador añadiría coste sin beneficio, y para clasificar basta un modelo rápido. Los datos de pedido llegan por una integración porque están en la tienda y cambian cada hora; el modo sin conexión con una exportación mantiene el ejemplo utilizable sin conexión. La aprobación con bucle de revisión se mantiene porque las respuestas van a clientes: la última palabra la tiene una persona."
   },
   "agents": {
     "triage": {
@@ -27,7 +29,9 @@
       "name": "Revisor de políticas",
       "description": "Aplica la política de servicio y comprueba plazos con la herramienta de fechas.",
       "system": "Eres jefe de equipo de atención al cliente. Determina para cada consulta qué regla de la política de servicio se aplica. Calcula los plazos con la herramienta days_between en lugar de estimarlos. Decide qué se puede prometer, qué necesita aprobación y qué información falta del cliente. Si la política no cubre una respuesta, dilo con claridad.",
-      "task": "Comprueba la política para estas consultas.\n\nConsultas y política:\n{{run.input}}\n\nClasificación:\n{{node:triage}}"
+      "task": "Comprueba la política para estas consultas.\n\nConsultas y política:\n{{run.input}}\n\nClasificación:\n{{node:triage}}",
+      "online": "Estás conectado a la tienda (solo lectura). Consulta cada número de pedido de las consultas con get_order: fechas de pedido y entrega, estado, artículos y la última nota del transportista. Los datos de la tienda prevalecen sobre lo que dicen los clientes; si difieren, dilo y calcula los plazos con los datos de la tienda. Si una consulta no tiene número de pedido o un pedido no aparece, dilo e indica qué hay que preguntar. Nunca adivines datos de pedido.",
+      "offline": "No hay ninguna tienda conectada (modo sin conexión). Usa solo los datos de pedido de las consultas o de una exportación de pedidos de la tienda adjunta; la exportación prevalece sobre lo que dicen los clientes de su pedido. Indica para cada consulta qué datos de pedido faltan (fecha de pedido, fecha de entrega, estado, artículos) y deben comprobarse en la tienda o preguntarse al cliente. Nunca inventes datos de pedido ni plazos."
     },
     "reply": {
       "name": "Redactor de respuestas",
@@ -64,6 +68,10 @@
     "policies": {
       "label": "Política de servicio como archivo",
       "description": "Opcional: vuestras políticas o preguntas frecuentes en PDF, Word, Markdown o texto, hasta 5 archivos. Sin archivo vale el extracto del texto."
+    },
+    "orders": {
+      "label": "Exportación de pedidos (tienda)",
+      "description": "Opcional: una exportación de los pedidos afectados de vuestra tienda en JSON, CSV o Excel. No hace falta si tu copia está conectada a la tienda; sin ninguna de las dos, solo valen los datos de pedido de las consultas."
     }
   },
   "samples": {
@@ -71,6 +79,45 @@
       "name": "Politica_servicio_Cocina_Muestra",
       "description": "Una política de servicio inventada más completa, en PDF.",
       "content": "# Política de servicio de la tienda online «Cocina Muestra» (ficticia)\n\nVersión: 01/01/2026\n\n## 1. Devoluciones\n\n- 30 días desde la entrega, artículo sin usar en su embalaje original.\n- La devolución es gratuita; enviamos la etiqueta de devolución por correo electrónico.\n- Reembolso en un plazo de 5 días laborables tras recibir el artículo.\n\n## 2. Garantía\n\n- 2 años desde la entrega.\n- En caso de defecto, primero reparación o sustitución tras revisión; una foto del defecto acelera la revisión.\n- El reembolso del precio solo es posible si fallan la reparación o la sustitución.\n\n## 3. Entrega\n\n- Plazo de entrega de 2–4 días laborables.\n- Si el retraso supera 7 días laborables, ofrecemos la cancelación gratuita.\n- Envío exprés posible para pedidos hasta las 14 h por 9,90 EUR.\n\n## 4. Gestos comerciales\n\n- El equipo de atención puede conceder vales y gestos comerciales de hasta 20 EUR por sí mismo.\n- Todo lo que supere 20 EUR, solo con la aprobación de la jefatura de equipo.\n\n## 5. Preguntas sobre productos\n\n- Información sobre materiales solo a partir de las fichas técnicas; ante la duda, preguntar en lugar de suponer."
+    },
+    "orders": {
+      "name": "Pedidos_tienda_Cocina_Muestra",
+      "description": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar. Tres pedidos de la tienda de ejemplo como exportación JSON: fechas de pedido y entrega, estado, artículos y nota del transportista.",
+      "content": [
+        {
+          "order": "10442",
+          "customer": "Jonás Ejemplo",
+          "ordered": "2026-02-24",
+          "delivered": "2026-02-27",
+          "status": "entregado",
+          "items": [
+            "Sartén de aluminio 28 cm (datos del producto: no apta para inducción)"
+          ],
+          "carrier_note": "Entregado al cliente."
+        },
+        {
+          "order": "10518",
+          "customer": "María Muestra",
+          "ordered": "2026-01-12",
+          "delivered": "2026-01-15",
+          "status": "entregado",
+          "items": [
+            "Olla de acero inoxidable 20 cm con tapa"
+          ],
+          "carrier_note": "Entregado, dejado con un vecino."
+        },
+        {
+          "order": "10603",
+          "customer": "Alí Ejemplar",
+          "ordered": "2026-03-09",
+          "delivered": null,
+          "status": "retrasado",
+          "items": [
+            "Juego de cuchillos, 5 piezas, con taco"
+          ],
+          "carrier_note": "Retraso en el centro de paquetería; nueva fecha de entrega 2026-03-23."
+        }
+      ]
     }
   },
   "tests": {
@@ -84,6 +131,19 @@
     "policies_file": {
       "name": "Política como archivo PDF",
       "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nFecha de hoy: 2026-03-20\nNuestra política de servicio se adjunta como archivo.\n\nConsulta 1 – Jonás Ejemplo, pedido 10442, entregado el 2026-02-27:\n«La sartén no sirve para mi placa de inducción. ¿Puedo devolverla? Todavía está en su embalaje original.»\n\nConsulta 2 – María Muestra, pedido 10518, entregado el 2026-01-15:\n«¡Se ha soltado el asa de mi olla a los dos meses! Es muy molesto. Quiero que me devuelvan el dinero.»"
+    },
+    "order_lookup": {
+      "name": "Solo números de pedido, exportación de pedidos adjunta",
+      "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nFecha de hoy: 2026-03-20\n\nExtracto de nuestra política de servicio (tienda online de ejemplo «Cocina Muestra»):\n- Devoluciones: 30 días desde la entrega, artículo sin usar en su embalaje original; la devolución es gratuita.\n- Garantía: 2 años; en caso de defecto, reparación o sustitución tras revisión; una foto del defecto ayuda.\n- Plazo de entrega: 2–4 días laborables; si el retraso supera 7 días laborables ofrecemos la cancelación gratuita.\n- Vales y gestos comerciales de más de 20 EUR solo con la aprobación de la jefatura de equipo.\n\nLa exportación de pedidos de nuestra tienda se adjunta como archivo.\n\nConsulta 1 – Jonás Ejemplo, pedido 10442:\n«La sartén no sirve para mi placa de inducción. ¿Puedo devolverla? Todavía está en su embalaje original.»\n\nConsulta 2 – María Muestra, pedido 10518:\n«¡Se ha soltado el asa de mi olla a los dos meses! Es muy molesto. Quiero que me devuelvan el dinero.»\n\nConsulta 3 – Alí Ejemplar, pedido 10603:\n«¿Dónde está mi pedido? Necesito el juego de cuchillos para un regalo este fin de semana.»"
+    }
+  },
+  "integrations": {
+    "shop": {
+      "name": "Tienda online (pedidos)",
+      "description": "Consulta de pedidos de solo lectura en vuestra tienda mediante MCP: get_order devuelve las fechas de pedido y entrega, el estado, los artículos y la última nota del transportista de un pedido. El revisor de políticas la usa para comprobar plazos con datos reales del pedido en lugar de con lo que dicen los clientes.",
+      "setup": "Un administrador añade el servidor MCP de vuestra tienda en Herramientas → Servicios conectados y aprueba su herramienta get_order como de solo lectura. Al copiar el ejemplo eliges ese servidor como conexión; sin conexión, la copia funciona en modo sin conexión. Para probarlo sin tienda, ejecuta `python -m nodestro_examples.demo_mcp --language es` en el ordenador con la aplicación de escritorio de Nodestro, añade http://127.0.0.1:8765/mcp en Herramientas → Servicios conectados con el consentimiento para un servidor de desarrollo local, aprueba sus herramientas como de solo lectura y elígelo al copiar. El servidor de demostración solo lee y sirve los pedidos sintéticos de la exportación de ejemplo, nunca datos reales de clientes. Las ejecuciones sin una persona presente (programaciones, series de pruebas, procesamiento por lotes) no pueden usar herramientas MCP salvo que un administrador permita expresamente el MCP desatendido.",
+      "online": "Conectado a la tienda: el revisor de políticas consulta pedidos en modo de solo lectura con get_order; los datos de la tienda prevalecen sobre lo que dicen los clientes.",
+      "offline": "Modo sin conexión: no hay ninguna tienda conectada. El revisor de políticas usa solo los datos de pedido de las consultas o de una exportación de pedidos adjunta e indica los que faltan; no consulta nada."
     }
   }
 }

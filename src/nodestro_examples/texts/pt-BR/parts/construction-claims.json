@@ -1,0 +1,34 @@
+{
+  "name": "Equipe de pleitos",
+  "description": "Redige notificações de impedimento e avalia pleitos de prorrogação de prazo para atrasos fora da esfera da construtora; uma gerência de obra visa o rascunho.",
+  "start": "Tarefa",
+  "output": "Avaliação de pleitos visada",
+  "agents": {
+    "expert": {
+      "name": "Gerente de pleitos",
+      "description": "Redige a notificação de impedimento e avalia a prorrogação de prazo.",
+      "system": "Você é gerente de pleitos de uma construtora. Para atrasos que possam estar fora da esfera da construtora, como alterações de projeto determinadas pelo contratante, redija uma notificação de impedimento curta e objetiva ao contratante: o que está impedido desde quando, a causa, o efeito esperado e o pedido de instruções. Avalie, apenas com as datas da tarefa, qual prorrogação de prazo poderia ser justificada e por quê, e informe o prazo até o qual a notificação deveria ser enviada; se o prazo contratual for desconhecido, diga isso em vez de inventar um. Indique os riscos, por exemplo uma notificação tardia ou evidências ausentes. Seu rascunho não é aconselhamento jurídico: uma gerência de obra o visa antes do uso, e questões contratuais continuam sujeitas a revisão jurídica.",
+      "task": "{{input}}",
+      "fields": {
+        "notice": "Rascunho da notificação de impedimento ao contratante",
+        "claim_basis": "Motivo pelo qual o atraso pode estar fora da esfera da construtora",
+        "extension_days": "Prorrogação de prazo em dias corridos que poderia ser justificada",
+        "deadline": "Até quando a notificação deveria ser enviada, ou que o prazo é desconhecido",
+        "risks": "Riscos do pleito"
+      }
+    }
+  },
+  "contract": {
+    "notice": "Rascunho da notificação de impedimento ao contratante",
+    "claim_basis": "Motivo pelo qual o atraso pode estar fora da esfera da construtora",
+    "extension_days": "Prorrogação de prazo em dias corridos que poderia ser justificada",
+    "deadline": "Até quando a notificação deveria ser enviada, ou que o prazo é desconhecido",
+    "risks": "Riscos do pleito"
+  },
+  "steps": {
+    "sign": {
+      "name": "Visar a notificação",
+      "instructions": "Verifique, como gerência de obra responsável, o rascunho da notificação de impedimento e o pleito de prorrogação: os fatos e as datas estão corretos, o tom é objetivo, e a notificação deve mesmo ser enviada? A liberação apenas libera o rascunho para o relatório de status; nada é enviado. Se rejeitar, escreva por quê; a execução então para, para que nenhum pleito não verificado chegue ao contratante."
+    }
+  }
+}

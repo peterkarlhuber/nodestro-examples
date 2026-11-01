@@ -8,17 +8,19 @@
   "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nOrganisation: Reading Friends Exampletown (fictional charity), 60 volunteers, one part-time employee\nProject: \"Reading buddies at primary schools\" – volunteers read weekly for a school year with children who need\nsupport with reading.\nSo far: 2025/26 at 4 schools with 48 children. Teachers' feedback: 31 of 48 children read more fluently\n(an assessment, not a standardised measurement).\nGoal: expansion to 8 schools and 100 children in the 2026/27 school year\nFunding need: EUR 25,000 (coordination EUR 15,000, books and materials EUR 6,000, training EUR 4,000)\nCampaign period: 2026-09-01 to 2026-11-30\nExisting channels: newsletter (1,200 recipients), Instagram (900 followers), good contacts with the local paper",
   "guide": {
     "problem": "Fundraising campaigns need a moving story, but also honest statements about impact. The workflow develops a campaign, assesses the possible impact and checks whether promises are credible and ethically sound.",
-    "flow": "The campaign developer and the impact analyst work in parallel: one designs message, target groups and measures, the other builds an impact model with indicators and calculates the cost per child with the calculator tool. The credibility reviewer checks both; the result contains all three parts.",
+    "flow": "The campaign developer and the impact analyst work in parallel: one designs message, target groups and measures, the other builds an impact model with indicators and calculates the cost per child with the calculator tool. The credibility reviewer checks both. If it rates the campaign as not credible, a condition sends it back to the campaign developer together with the review's notes; the revised campaign is reviewed again, at most twice. The result contains all three parts.",
     "input": "Organisation, project, results so far, goal, funding need, campaign period and existing channels.",
     "result": "A campaign concept with timeline and draft texts, an impact model with indicators and a structured review for exaggerated claims, ethical notes and a plan for measuring impact, also as a Word file. The impact analyst proposes its impact model for knowledge, for example for later funding applications; only what you confirm is stored.",
-    "adapt": "Describe your project and your results as honestly as possible. Upload annual reports or evaluations as knowledge and assign them to the impact analyst."
+    "adapt": "Describe your project and your results as honestly as possible. Upload annual reports or evaluations as knowledge and assign them to the impact analyst.",
+    "control": "Automatic: the credibility reviewer's yes/no verdict on credibility decides whether the campaign goes back for revision; the run shows which branch was taken. The campaign developer revises at most twice, each time with the reviewer's notes and its previous draft. If the campaign is still not rated credible after that, the run continues to the result anyway, and the review's notes show what is still open. No step waits for a person: texts and figures are drafts that your organisation checks before publishing, especially statements about impact and photos of children. Proposed impact models are only stored as knowledge if you confirm them.",
+    "why": "Credibility problems are best fixed by whoever wrote the text, so the review leads back to the campaign developer instead of only listing problems. The loop is limited to two rounds: a campaign that still overstates after that needs better evidence from the organisation, not more rewording. The impact model stays outside the loop because it is based on the project data, not on the campaign texts. There is no approval step, because the campaign remains a draft and is published outside the workflow anyway."
   },
   "agents": {
     "campaign": {
       "name": "Campaign developer",
       "description": "Designs the message, target groups, channels and schedule of the campaign.",
-      "system": "You are a fundraising expert for non-profit organisations. Develop a fundraising campaign: core message, target groups, giving prompts such as \"With 50 euros …\", channels, a schedule over the campaign period and three draft texts (newsletter, social media, press release). Tell the story respectfully and without pity imagery, and use only results stated in the description.",
-      "task": "Develop the campaign for this project:\n\n{{input}}"
+      "system": "You are a fundraising expert for non-profit organisations. Develop a fundraising campaign: core message, target groups, giving prompts such as \"With 50 euros …\", channels, a schedule over the campaign period and three draft texts (newsletter, social media, press release). Tell the story respectfully and without pity imagery, and use only results stated in the description. If the task contains feedback from the credibility review, revise your previous draft point by point: rephrase overstated claims as suggested, take the ethical notes into account and keep what was not criticised.",
+      "task": "Develop the campaign for this project:\n\n{{run.input}}\n\nFeedback from the credibility review (revisions only, otherwise “-”):\n{{feedback}}\n\nYour previous draft:\n{{previous}}"
     },
     "impact": {
       "name": "Impact analyst",
@@ -29,7 +31,7 @@
     "integrity": {
       "name": "Credibility reviewer",
       "description": "Checks statements for exaggeration, ethics and evidence.",
-      "system": "You check fundraising material for credibility and ethics. Compare the campaign's statements with the impact model: what is proven, what is overstated, what should be phrased more cautiously? Pay attention to the dignity of the people shown, data protection for photos of children and transparency about the use of funds. Propose a simple plan for measuring impact.",
+      "system": "You check fundraising material for credibility and ethics. Compare the campaign's statements with the impact model: what is proven, what is overstated, what should be phrased more cautiously? Pay attention to the dignity of the people shown, data protection for photos of children and transparency about the use of funds. Propose a simple plan for measuring impact. Rate the campaign as not credible only if it cannot be used without changes, for example because of unsupported impact claims, figures that are not in the description or depictions that violate dignity; it then goes back to the campaign developer with your notes.",
       "task": "Review the campaign and the impact model.\n\nCampaign:\n{{node:campaign}}\n\nImpact model:\n{{node:impact}}",
       "fields": {
         "credible": "Is the campaign credible in its current form?",
@@ -43,6 +45,15 @@
   "tests": {
     "reading_mentors": {
       "name": "Reading buddies at primary schools"
+    }
+  },
+  "steps": {
+    "check": {
+      "name": "Credible?",
+      "branches": {
+        "credible": "To the result"
+      },
+      "default": "Revise campaign"
     }
   }
 }

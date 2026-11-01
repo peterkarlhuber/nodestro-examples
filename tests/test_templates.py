@@ -32,7 +32,7 @@ ICONS = {
     *("bot", "search", "calculator", "check", "pen", "list", "users", "brain", "code", "globe"),
     *("book", "file", "mail", "chat", "shield", "scale", "target", "idea", "sparkles"),
 }
-MODELS = {"claude-opus-5-5", "claude-sonnet-5-5", "claude-haiku-5-5"}
+TIERS = set(get_args(library.Tier))
 PLACEHOLDER = re.compile(r"\{\{\s*([^{}]+?)\s*\}\}")
 
 
@@ -65,11 +65,15 @@ def test_the_library_has_24_templates_across_all_categories() -> None:
     assert sum(spec.featured for spec in specs) >= 6
     # Different structures: sequential chains, parallel branches, reviewers and judges.
     summaries = library.summaries("de")
-    assert {item.pattern for item in summaries} == {"sequential", "parallel", "branching"}
+    assert {item.pattern for item in summaries} == {"sequential", "parallel", "branching", "adaptive"}
     features = {feature for item in summaries for feature in item.features}
     assert features == set(get_args(library.Feature))
-    assert all(2 <= item.agents <= 5 for item in summaries)
-    # Parts used as sub-workflows are not examples of their own.
+    assert all(1 <= item.agents <= 5 for item in summaries)
+    # Orchestrated examples have a pool of teams to choose from; the others none.
+    adaptive = {item.id for item in summaries if item.pattern == "adaptive"}
+    assert adaptive == {"research-hypotheses", "business-idea", "construction-delay"}
+    assert all((item.teams >= 4) == (item.id in adaptive) for item in summaries)
+    # Parts used as sub-workflows or teams are not examples of their own.
     assert all(part not in IDS for template_id in IDS for part in library.part_ids(template_id))
 
 
@@ -90,8 +94,25 @@ def test_every_text_exists_in_every_language(language: str) -> None:
         model = library.texts(template_id, language)
         agents = {node.id: node for node in spec.nodes if node.type == "agent"}
         assert set(model.agents) == set(agents), (language, template_id)
-        steps = {node.id for node in spec.nodes if node.type in ("condition", "approval", "subworkflow")}
+        steps = {
+            node.id for node in spec.nodes if node.type in ("condition", "approval", "subworkflow", "orchestrator")
+        }
         assert set(model.steps) == steps, (language, template_id)
+        for node in spec.nodes:
+            if node.type == "orchestrator":
+                step = model.steps[node.id]
+                assert step.instructions.strip() and step.task.strip() and step.description.strip()
+            if node.mcp:
+                # A copy says what the agent does with and without the connection.
+                assert model.agents[node.id].online.strip() and model.agents[node.id].offline.strip()
+            elif node.type == "agent":
+                assert not model.agents[node.id].online and not model.agents[node.id].offline
+        assert all(value.strip() for value in model.guide.model_dump().values()), (language, template_id)
+        assert set(model.knowledge) == {item.id for item in spec.knowledge}, (language, template_id)
+        assert all(isinstance(item.content, str) and len(item.content) > 400 for item in model.knowledge.values())
+        assert set(model.integrations) == {item.id for item in spec.integrations}, (language, template_id)
+        output = next(node for node in spec.nodes if node.type == "output")
+        assert set(model.contract) == {field.name for field in output.contract}, (language, template_id)
         for node in spec.nodes:
             if node.condition is not None:
                 assert set(model.steps[node.id].branches) == {rule.id for rule in node.condition.rules}
@@ -102,9 +123,23 @@ def test_every_text_exists_in_every_language(language: str) -> None:
         assert set(model.form) == form, (language, template_id)
         for part_id in library.part_ids(template_id):
             part_text = library.part_texts(part_id, language)
-            assert set(part_text.agents) == {node.id for node in library.part(part_id).nodes if node.type == "agent"}
-            if language != "de":
-                assert part_text.agents["risk"].system != library.part_texts(part_id, "de").agents["risk"].system
+            part_spec = library.part(part_id)
+            assert keys_of(library.raw_part_texts(part_id, language)) == keys_of(
+                library.raw_part_texts(part_id, "de")
+            ), (language, part_id)
+            part_agents = {node.id: node for node in part_spec.nodes if node.type == "agent"}
+            assert set(part_text.agents) == set(part_agents), (language, part_id)
+            assert set(part_text.steps) == {
+                node.id for node in part_spec.nodes if node.type in ("condition", "approval", "subworkflow")
+            }, (language, part_id)
+            assert set(part_text.form) == {field.name for node in part_spec.nodes for field in node.form}
+            part_output = next(node for node in part_spec.nodes if node.type == "output")
+            assert set(part_text.contract) == {field.name for field in part_output.contract}, (language, part_id)
+            for node_id, node in part_agents.items():
+                assert set(part_text.agents[node_id].fields) == {field.name for field in node.output_fields}
+                if language != "de":
+                    german_part = library.part_texts(part_id, "de")
+                    assert part_text.agents[node_id].system != german_part.agents[node_id].system, (language, part_id)
         for node_id, node in agents.items():
             own = model.agents[node_id]
             assert set(own.fields) == {field.name for field in node.output_fields}, (language, template_id, node_id)
@@ -131,16 +166,23 @@ def test_every_text_exists_in_every_language(language: str) -> None:
 def test_templates_only_use_what_nodestro_offers() -> None:
     tools = {tool.name for tool in BUILTIN_TOOLS}
     for template_id in IDS:
-        for node in library.structure(template_id).nodes:
-            if node.type != "agent":
+        parts = [library.part(part_id) for part_id in library.part_ids(template_id)]
+        nodes = [*library.structure(template_id).nodes, *(node for part in parts for node in part.nodes)]
+        for node in nodes:
+            if node.type not in ("agent", "orchestrator"):
                 continue
-            assert node.model in MODELS, (template_id, node.id)
+            # Tiers, never fixed models: a copy follows the workspace's provider.
+            assert node.model is None and (node.tier is None or node.tier in TIERS), (template_id, node.id)
             assert node.icon in ICONS, (template_id, node.id)
             assert set(node.tools) <= tools, (template_id, node.id)
             assert node.role is not None, (template_id, node.id)
         workflow = library.build(template_id, "de")
         # No server tools: they cost extra (web search) and are never needed by the examples.
         assert all(not node.agent.server_tools for node in workflow.nodes if node.agent), template_id
+        # Without a connection no agent gets tools of an MCP server.
+        assert all(
+            not any(tool.startswith("mcp__") for tool in node.agent.tools) for node in workflow.nodes if node.agent
+        ), template_id
 
 
 @pytest.mark.parametrize("language", LANGUAGES)
@@ -259,6 +301,8 @@ def test_agents_that_receive_files_are_told_how_to_treat_them() -> None:
 
 def test_result_files_proposals_and_memory_use_the_regular_settings() -> None:
     proposals: dict[str, str] = {}
+    memories: set[tuple[str, str, str]] = set()
+    knowledge: dict[str, str] = {}
     for template_id in IDS:
         workflow = library.build(template_id, "en")
         output = next(node for node in workflow.nodes if node.type == "output")
@@ -266,14 +310,29 @@ def test_result_files_proposals_and_memory_use_the_regular_settings() -> None:
         assert len(formats) == len(set(formats)) <= 2, template_id
         # Reply drafts go into the ticket system, not into a file.
         assert bool(formats) == (template_id != "customer-service"), template_id
+        # The reply to a citizen leaves the administration: its file replaces personal data by placeholders.
+        sanitized = any(spec.sanitize for spec in output.output.files) if output.output else False
+        assert sanitized == (template_id == "citizen-inquiry"), template_id
         for node in workflow.nodes:
             if node.agent and node.agent.knowledge_proposals.enabled:
                 proposals[template_id] = node.agent.knowledge_proposals.content_kind
                 # A person chooses the collection; nothing is preset that might not exist.
                 assert node.agent.knowledge_proposals.collection == ""
             if node.agent and node.agent.memory.mode != "none":
-                assert (template_id, node.id, node.agent.memory.space) == ("creator-strategy", "ideas", "creator-ideas")
-            assert not (node.agent and node.agent.knowledge.file_ids), "no example needs private knowledge"
+                memories.add((template_id, node.id, str(node.agent.memory.space)))
+            if node.agent and node.agent.knowledge.file_ids:
+                # Only the template's own synthetic reference documents, searched with citations.
+                assert all(ref.startswith(library.KNOWLEDGE_PREFIX) for ref in node.agent.knowledge.file_ids)
+                assert node.agent.knowledge.mode == "search"
+                # Citations wherever the answer is text; a structured answer names its sources in its fields.
+                assert node.agent.knowledge.citations == (node.agent.output.mode != "structured")
+                knowledge[template_id] = node.id
+    assert memories == {
+        ("creator-strategy", "ideas", "creator-ideas"),
+        ("learning-plan", "assessment", "learning-progress"),
+        ("learning-plan", "plan", "learning-progress"),
+    }
+    assert knowledge == {"quality-8d": "root_cause", "contract-review": "checkpoints", "citizen-inquiry": "rules"}
     assert proposals == {
         "quality-8d": "generated",
         "financial-analysis": "extracted",
@@ -359,7 +418,8 @@ def test_invalid_templates_are_refused_on_load(change: Any, message: str) -> Non
 def test_templates_and_the_part_are_valid_workflows_for_the_engine() -> None:
     for language in LANGUAGES:
         built = [library.build(template_id, language) for template_id in IDS]
-        for workflow in [*built, library.build_part("quality-check", language)]:
+        part_ids = sorted({part for template_id in IDS for part in library.part_ids(template_id)})
+        for workflow in [*built, *(library.build_part(part_id, language) for part_id in part_ids)]:
             assert not check_workflow(Workflow(**workflow.model_dump())), (language, workflow.name)
             # Nodes do not sit on top of each other in the editor.
             places = [(round(node.position.x / 40), round(node.position.y / 40)) for node in workflow.nodes]

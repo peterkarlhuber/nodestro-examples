@@ -21,6 +21,16 @@
           ],
           "multiple": true,
           "max_files": 10
+        },
+        {
+          "name": "history",
+          "type": "file",
+          "accept": [
+            "xlsx",
+            "csv"
+          ],
+          "multiple": false,
+          "max_files": 1
         }
       ]
     },
@@ -41,7 +51,17 @@
       "x": 360,
       "y": 320,
       "role": "analysis",
-      "icon": "shield"
+      "icon": "shield",
+      "mcp": [
+        {
+          "integration": "erp",
+          "tools": [
+            "list_suppliers",
+            "supplier_scorecard"
+          ]
+        }
+      ],
+      "tools": []
     },
     {
       "id": "recommendation",
@@ -126,6 +146,11 @@
       "id": "offer_c",
       "format": "xlsx",
       "field": "offers"
+    },
+    {
+      "id": "history",
+      "format": "xlsx",
+      "field": "history"
     }
   ],
   "tests": [
@@ -163,6 +188,36 @@
           "field": "ranking",
           "operator": "is_not_empty"
         }
+      ]
+    },
+    {
+      "id": "with_history",
+      "input": "own",
+      "samples": [
+        "offer_a",
+        "offer_b",
+        "offer_c",
+        "history"
+      ],
+      "checks": [
+        {
+          "field": "recommended_supplier",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "ranking",
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ],
+  "integrations": [
+    {
+      "id": "erp",
+      "kind": "mcp",
+      "tools": [
+        "list_suppliers",
+        "supplier_scorecard"
       ]
     }
   ]

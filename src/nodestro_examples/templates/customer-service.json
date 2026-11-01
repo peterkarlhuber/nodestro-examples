@@ -21,6 +21,17 @@
           ],
           "multiple": true,
           "max_files": 5
+        },
+        {
+          "name": "orders",
+          "type": "file",
+          "accept": [
+            "json",
+            "csv",
+            "xlsx"
+          ],
+          "multiple": false,
+          "max_files": 1
         }
       ]
     },
@@ -31,7 +42,6 @@
       "y": 160,
       "role": "analysis",
       "icon": "list",
-      "model": "claude-haiku-5-5",
       "effort": "low",
       "output_name": "Triage",
       "output_fields": [
@@ -43,7 +53,8 @@
           "name": "escalation",
           "type": "boolean"
         }
-      ]
+      ],
+      "tier": "fast"
     },
     {
       "id": "policy",
@@ -54,6 +65,14 @@
       "icon": "shield",
       "tools": [
         "days_between"
+      ],
+      "mcp": [
+        {
+          "integration": "shop",
+          "tools": [
+            "get_order"
+          ]
+        }
       ]
     },
     {
@@ -171,6 +190,11 @@
       "id": "policies",
       "format": "pdf",
       "field": "policies"
+    },
+    {
+      "id": "orders",
+      "format": "json",
+      "field": "orders"
     }
   ],
   "tests": [
@@ -201,6 +225,27 @@
         {
           "operator": "is_not_empty"
         }
+      ]
+    },
+    {
+      "id": "order_lookup",
+      "input": "own",
+      "samples": [
+        "orders"
+      ],
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ],
+  "integrations": [
+    {
+      "id": "shop",
+      "kind": "mcp",
+      "tools": [
+        "get_order"
       ]
     }
   ]

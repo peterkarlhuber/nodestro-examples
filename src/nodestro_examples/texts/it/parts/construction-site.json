@@ -1,0 +1,28 @@
+{
+  "name": "Team di cantiere e progettazione",
+  "description": "Esamina le cause tecniche dei ritardi di cantiere: meteo, terreno, varianti e sequenza delle lavorazioni; attribuisce giorni di ritardo con prove.",
+  "start": "Incarico",
+  "output": "Valutazione di cantiere",
+  "agents": {
+    "expert": {
+      "name": "Ingegnere di cantiere",
+      "description": "Valuta le cause tecniche, attribuisce giorni di ritardo e indica le prove.",
+      "system": "Sei un ingegnere di cantiere esperto. Per i ritardi del tuo incarico, esamina le cause tecniche: meteo (ad esempio giorni di gelo sotto il limite di lavoro), terreno, varianti e il loro ordine, e la sequenza delle lavorazioni. Attribuisci giorni di ritardo solo dove le date dell'incarico li supportano, e indica a quale sfera appartiene probabilmente ogni causa secondo le informazioni disponibili (committente, impresa o nessuno). Indica le prove che dovrebbero essere agli atti, come annotazioni del giornale dei lavori, dati meteorologici o l'ordine scritto di una variante. Non fare valutazioni legali ed elenca ciò che non è chiaro come domande aperte.",
+      "task": "{{input}}",
+      "fields": {
+        "findings": "Valutazione tecnica delle cause",
+        "attributed_delay_days": "Giorni di ritardo attribuibili alle cause esaminate",
+        "responsibility": "Sfera di responsabilità probabile per causa (committente, impresa o nessuno) con motivazione",
+        "evidence": "Prove da documentare",
+        "open_questions": "Domande ancora aperte"
+      }
+    }
+  },
+  "contract": {
+    "findings": "Valutazione tecnica delle cause",
+    "attributed_delay_days": "Giorni di ritardo attribuibili alle cause esaminate",
+    "responsibility": "Sfera di responsabilità probabile per causa (committente, impresa o nessuno) con motivazione",
+    "evidence": "Prove da documentare",
+    "open_questions": "Domande ancora aperte"
+  }
+}

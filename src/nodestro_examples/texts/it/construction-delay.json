@@ -1,48 +1,50 @@
 {
   "name": "Analizzare i ritardi di cantiere",
   "field": "Edilizia",
-  "description": "Calcolare gli scostamenti dal cronoprogramma, classificare le cause, sviluppare contromisure e riferire al committente.",
+  "description": "Calcolare gli scostamenti dal cronoprogramma e lasciare che un coordinamento di cantiere coinvolga i team specialistici di cui il ritardo ha bisogno – da cantiere e forniture a riserve e recupero – quindi riferire al committente dopo l'approvazione.",
   "start": "Stato del progetto",
   "output": "Rapporto sullo stato",
   "file_name": "Rapporto di avanzamento",
   "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nProgetto: nuovo asilo nido \"Raggio di Sole\", Città Esempio; committente: Comune di Città Esempio\nData di ultimazione contrattuale: 2026-09-30; data del rapporto: 2026-05-15\n\n| Traguardo | Previsto | Effettivo / previsione | Nota |\n|---|---|---|---|\n| Struttura completata | 2026-02-27 | 2026-03-20 | 9 giorni di gelo a gennaio, getti sospesi |\n| Copertura impermeabile | 2026-03-27 | 2026-04-24 | Consegna in ritardo degli elementi di copertura (il fornitore segnala carenza di materiale) |\n| Serramenti montati | 2026-04-17 | 2026-05-29 (previsione) | Modifica progettuale delle finestre di emergenza su richiesta della verifica antincendio |\n| Impianti, prima fase | 2026-05-22 | 2026-06-19 (previsione) | Dipende dai serramenti; elettricista in cantiere con solo 2 persone invece di 4 |\n| Finiture interne completate | 2026-08-28 | aperto | — |\n| Collaudo | 2026-09-30 | aperto | Penale contrattuale dello 0,2 % dell'importo contrattuale per giorno lavorativo, max. 5 % |\n\nImporto contrattuale dell'impresa generale: 3,2 mln EUR. Il committente si aspetta un rapporto per la riunione del 2026-05-20.",
   "guide": {
-    "problem": "I ritardi in cantiere si sommano e i committenti hanno bisogno in fretta di un quadro chiaro. Il workflow calcola gli scostamenti, classifica le cause, sviluppa contromisure e scrive un rapporto sullo stato.",
-    "flow": "L'analista del cronoprogramma e l'analista delle cause lavorano in parallelo. Il primo calcola ritardi e margini con gli strumenti per date e calcoli, il secondo ordina le cause per ambito di responsabilità e necessità di documentazione; entrambi analizzano anche cronoprogrammi, giornali dei lavori e foto allegati. Il pianificatore delle contromisure sviluppa opzioni di accelerazione e l'agente del rapporto riassume tutto per il committente. Prima che il rapporto lasci il team di progetto, una persona lo approva.",
-    "input": "Un cronoprogramma con traguardi previsti ed effettivi, note sulle cause, data del rapporto e condizioni contrattuali, come testo o come file: cronoprogramma in Excel, giornale dei lavori in PDF, foto come immagine. I file di esempio contengono un cronoprogramma e un estratto del giornale dei lavori.",
-    "result": "Un rapporto di avanzamento oggettivo con situazione dei tempi, cause, contromisure, decisioni necessarie e rischi. Dopo l'approvazione l'esecuzione lo salva in PDF e come file Word modificabile. Le questioni su penali e proroga dei termini restano soggette a verifica tecnica e legale.",
-    "adapt": "Esporta il tuo cronoprogramma dal software di progetto in Excel e allega giornale dei lavori e foto. Per un rapporto periodico puoi pianificare la copia; l'approvazione ti aspetterà."
+    "problem": "I ritardi in cantiere hanno cause diverse, e ogni causa richiede competenze diverse: il gelo va documentato, un fornitore in ritardo richiede una comunicazione di impedimento alla parte giusta, una variante ordinata dal committente può giustificare una proroga dei termini e la carenza di personale richiede un piano di accelerazione. Il workflow calcola gli scostamenti e lascia che un coordinamento di cantiere coinvolga esattamente i team specialistici di cui la situazione ha bisogno.",
+    "flow": "L'analista del cronoprogramma calcola con lo strumento delle date il ritardo di ogni traguardo ed elenca le cause presunte. Il coordinamento di cantiere, un orchestratore, compone prima una squadra di al massimo tre dei quattro team specialistici e poi assegna gli incarichi: il team di cantiere per meteo, terreno e varianti, il team forniture per fornitori e subappaltatori, il team riserve per comunicazioni di impedimento e proroghe dei termini, il team recupero per misure di accelerazione con i relativi costi. I team indipendenti lavorano in parallelo. Il team riserve si ferma per una persona: la sua bozza di comunicazione viene usata solo dopo il visto della direzione di cantiere responsabile. L'agente del rapporto scrive il rapporto di avanzamento e, prima che arrivi al committente, una persona lo approva.",
+    "input": "Una panoramica del cronoprogramma con traguardi pianificati ed effettivi, note sulle cause, data del rapporto e condizioni contrattuali, come testo o come file: cronoprogramma in Excel, giornale dei lavori in PDF, foto come immagini. I file di esempio contengono un cronoprogramma e un estratto del giornale dei lavori.",
+    "result": "Un rapporto di avanzamento oggettivo con situazione dei tempi, cause e sfere di responsabilità, comunicazioni e richieste di proroga, misure di recupero con costi, decisioni necessarie e rischi; dopo l'approvazione in PDF e in un file Word modificabile. La vista di orchestrazione mostra quali team il coordinamento ha composto, che cosa ciascuno ha consegnato come dati strutturati e perché. Le questioni su penali contrattuali e proroghe dei termini restano soggette a verifica tecnica e legale.",
+    "adapt": "Esporta il tuo cronoprogramma dal software di progetto in Excel e allega giornale dei lavori e foto. Adatta il team riserve al tuo tipo di contratto (ad esempio FIDIC o condizioni proprie) e inserisci nel team recupero le tariffe di costo della tua impresa. Se ti serve un'altra specialità, come gli impianti, salvala come workflow con una descrizione chiara e aggiungila ai team del coordinamento.",
+    "control": "Automatico: il coordinamento sceglie al massimo tre team, ne fa lavorare al massimo due contemporaneamente e dà a ogni team al massimo due incarichi; ogni decisione di composizione e di incarico viene registrata con la motivazione. Una persona decide due volte: la direzione di cantiere vista la bozza di comunicazione di impedimento all'interno del team riserve (un rifiuto termina l'esecuzione), e una persona approva il rapporto di avanzamento prima che vengano creati i file. Limiti: al massimo 8 decisioni del coordinamento, 50 passi, 40 minuti e 4 USD per esecuzione.",
+    "why": "Una catena fissa trattava ogni ritardo allo stesso modo: un analista delle cause, un pianificatore delle misure, che il problema fosse il gelo o una comunicazione mancante. Con il coordinamento, un ritardo puramente meteorologico non costa un esame delle riserve, mentre una variante ordinata dal committente coinvolge il team riserve con il suo visto. I team restituiscono risultati strutturati (giorni, responsabilità, prove), così il rapporto può sommarli invece di riformulare testo. Il calcolo dei tempi, il rapporto e l'approvazione finale restano passi fissi perché ogni rapporto ne ha bisogno."
   },
   "agents": {
     "schedule": {
       "name": "Analista del cronoprogramma",
-      "description": "Calcola ritardi, margini e conseguenze con lo strumento delle date e la calcolatrice.",
-      "system": "Sei un pianificatore di cantiere. Calcola il ritardo di ogni traguardo in giorni di calendario con lo strumento days_between e ricava l'effetto sulla data di ultimazione se il ritardo continua. Mostra le dipendenze tra i traguardi e usa la calcolatrice per determinare quale penale contrattuale potrebbe derivare da un ritardo ipotizzato, esplicitamente come scenario.",
-      "task": "Analizza la situazione del cronoprogramma:\n\n{{run.input}}"
-    },
-    "causes": {
-      "name": "Analista delle cause",
-      "description": "Classifica le cause per ambito di responsabilità ed esigenze di documentazione.",
-      "system": "Sei un direttore di cantiere esperto nella gestione delle riserve. Assegna ogni ritardo a una categoria di causa: meteo, catena di fornitura, modifica progettuale, personale o altro. Indica in quale ambito di responsabilità rientra probabilmente secondo le informazioni disponibili, quali prove andrebbero documentate e quali comunicazioni di impedimento potrebbero servire. Non dare valutazioni giuridiche.",
-      "task": "Classifica le cause dei ritardi:\n\n{{run.input}}"
-    },
-    "countermeasures": {
-      "name": "Pianificatore delle contromisure",
-      "description": "Sviluppa misure di accelerazione con costi ed effetti.",
-      "system": "Sei un project controller. Sviluppa contromisure per mantenere la data di ultimazione o limitare il ritardo, per esempio riorganizzare la sequenza delle lavorazioni, capacità aggiuntive o lavori in parallelo. Valuta ogni misura per tempo guadagnato, costo, rischio e decisioni necessarie del committente. Raccomanda un pacchetto di misure.",
-      "task": "Sviluppa contromisure.\n\nAnalisi del cronoprogramma:\n{{node:schedule}}\n\nCause:\n{{node:causes}}"
+      "description": "Calcola ritardi e percorso critico con gli strumenti delle date e di calcolo.",
+      "system": "Sei un pianificatore di cantiere. Calcola il ritardo di ogni traguardo in giorni di calendario con lo strumento days_between e ricava l'effetto sulla data di ultimazione se il ritardo persiste. Mostra quali traguardi dipendono da quali e quale ritardo si trova sul percorso critico. Elenca le cause presunte come riportate nei documenti, senza giudicare la responsabilità. I team specialistici lavoreranno poi senza i file: inserisci nel tuo riepilogo ogni data, nota e cifra di cui hanno bisogno.",
+      "task": "Analizza la situazione del cronoprogramma:\n\n{{run.input}}",
+      "fields": {
+        "summary": "Situazione dei tempi con tutte le date, le note e le cifre contrattuali rilevanti dei documenti",
+        "delay_days": "Ritardo previsto della data di ultimazione in giorni di calendario",
+        "critical_path": "I traguardi sul percorso critico e come si propagano i loro ritardi",
+        "suspected_causes": "Cause presunte, una per ritardo, come indicate nei documenti"
+      }
     },
     "report": {
       "name": "Rapporto al committente",
-      "description": "Riassume in modo oggettivo situazione del cronoprogramma, cause e misure.",
-      "system": "Scrivi rapporti sullo stato per committenti pubblici: oggettivi, chiari e senza attribuire colpe. Strutturalo in situazione del cronoprogramma, cause, contromisure, decisioni necessarie e rischi, in al massimo una pagina. Fai presente che le questioni su penali e proroghe dei termini devono essere verificate a livello tecnico e legale.",
-      "task": "Scrivi il rapporto sullo stato.\n\nAnalisi del cronoprogramma:\n{{node:schedule}}\n\nCause:\n{{node:causes}}\n\nContromisure:\n{{node:countermeasures}}"
+      "description": "Riassume in modo oggettivo per il committente tempi, cause, riserve e misure.",
+      "system": "Scrivi rapporti di avanzamento per committenti pubblici: oggettivi, chiari e senza attribuire colpe. Strutturalo in situazione dei tempi, cause e sfere di responsabilità, comunicazioni e riserve, contromisure con costi, decisioni richieste al committente e rischi, al massimo due pagine. Usa solo le cifre dell'analisi del cronoprogramma e dei team; se i team divergono, mostra entrambe le posizioni. Fai presente che le questioni su penali contrattuali e proroghe dei termini devono essere verificate tecnicamente e legalmente.",
+      "task": "Scrivi il rapporto di avanzamento.\n\nAnalisi del cronoprogramma:\n{{node:schedule}}\n\nRisultati dei team specialistici:\n{{node:control}}"
     }
   },
   "steps": {
     "release": {
       "name": "Approvare il rapporto",
-      "instructions": "Verifica il rapporto di avanzamento prima che vada al committente: date e ritardi sono corretti, le cause sono descritte in modo oggettivo e senza attribuire colpe, ed è chiaro quali decisioni deve prendere il committente? Le affermazioni su penali e proroga dei termini devono essere state verificate da un esperto. Se lo respingi, scrivi cosa manca; l'esecuzione termina allora senza file del rapporto."
+      "instructions": "Controlla il rapporto di avanzamento prima che arrivi al committente: date e ritardi sono corretti, cause e responsabilità sono descritte in modo oggettivo e senza colpe, le comunicazioni e le richieste di proroga corrispondono a quanto vistato dalla direzione di cantiere, ed è chiaro quali decisioni deve prendere il committente? Le affermazioni su penali contrattuali e proroghe dei termini devono essere state verificate da un esperto. Se rifiuti, scrivi che cosa manca; l'esecuzione termina allora senza file del rapporto."
+    },
+    "control": {
+      "name": "Coordinamento di cantiere",
+      "description": "Compone i team specialistici di cui il ritardo ha bisogno e assegna i loro incarichi.",
+      "instructions": "Componi prima una squadra di al massimo tre dei team specialistici. Scegli in base alle cause presunte: cause tecniche, meteo, terreno o varianti richiedono il team di cantiere; materiale in ritardo, fornitori o l'organico dei subappaltatori richiedono il team forniture; non appena un ritardo può ricadere fuori dalla sfera dell'impresa o manca una comunicazione di impedimento, il team riserve; ogni volta che la data di ultimazione è a rischio, il team recupero. Assegna in parallelo gli incarichi indipendenti. I team non vedono i file: inserisci in ogni incarico le date e le note rilevanti dell'analisi del cronoprogramma. Incarica il team recupero solo dopo che i team sulle cause hanno riferito, e passagli i giorni di ritardo che hanno attribuito. Se due team attribuiscono gli stessi giorni in modo diverso, dai a uno dei due un incarico di chiarimento. Concludi con il risultato strutturato di ogni team sotto il nome del team e indica quali team non hai usato e perché.",
+      "task": "Chiarisci con i team specialistici di cui questo ritardo ha bisogno cause, responsabilità, riserve e contromisure.\n\nAnalisi del cronoprogramma:\n{{node:schedule}}"
     }
   },
   "form": {

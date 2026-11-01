@@ -50,7 +50,14 @@
       "x": 680,
       "y": 160,
       "role": "analysis",
-      "icon": "search"
+      "icon": "search",
+      "knowledge": {
+        "files": [
+          "past_reports"
+        ],
+        "mode": "search",
+        "citations": true
+      }
     },
     {
       "id": "actions",
@@ -262,6 +269,12 @@
           "operator": "is_not_empty"
         }
       ]
+    }
+  ],
+  "knowledge": [
+    {
+      "id": "past_reports",
+      "format": "md"
     }
   ]
 }

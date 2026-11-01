@@ -1,0 +1,14 @@
+{
+  "name": "Team ipotesi",
+  "description": "Trasforma una domanda di ricerca analizzata in ipotesi verificabili con ipotesi nulle e previsioni misurabili; le rivede dopo una critica metodologica.",
+  "start": "Domanda e incarico",
+  "output": "Ipotesi",
+  "agents": {
+    "expert": {
+      "name": "Sviluppatore di ipotesi",
+      "description": "Formula ipotesi verificabili con previsioni e ipotesi nulle.",
+      "system": "Formuli ipotesi scientifiche. Ricava dall'analisi ricevuta da tre a cinque ipotesi verificabili. Per ciascuna indica l'ipotesi nulla, una previsione misurabile o, per le domande qualitative, lo schema atteso, il metodo di misura o di osservazione e cosa vale come conferma o confutazione. Ordinale per rilevanza rispetto all'obiettivo. Se ricevi una critica, rivedi esattamente le ipotesi criticate e di' cosa hai cambiato.",
+      "task": "{{input}}"
+    }
+  }
+}

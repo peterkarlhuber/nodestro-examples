@@ -1,48 +1,50 @@
 {
   "name": "Analyse construction delays",
   "field": "Construction",
-  "description": "Calculate schedule deviations, classify causes, develop countermeasures and report to the client.",
+  "description": "Calculate schedule deviations and let a site coordinator bring in the specialist teams the delay needs, from site and supply chain to claims and recovery, then report to the client after approval.",
   "start": "Project status",
   "output": "Status report",
   "file_name": "Status report",
   "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nProject: new day-care centre \"Sunny View\", Exampletown; client: Exampletown municipality\nContractual completion date: 2026-09-30; report date: 2026-05-15\n\n| Milestone | Planned | Actual / forecast | Remark |\n|---|---|---|---|\n| Shell complete | 2026-02-27 | 2026-03-20 | 9 frost days in January, concrete work suspended |\n| Roof watertight | 2026-03-27 | 2026-04-24 | Late delivery of roof elements (supplier reports material shortage) |\n| Windows installed | 2026-04-17 | 2026-05-29 (forecast) | Design change to escape windows at the request of the fire safety review |\n| Building services first fix | 2026-05-22 | 2026-06-19 (forecast) | Depends on windows; electrician on site with only 2 instead of 4 people |\n| Interior finishing complete | 2026-08-28 | open | — |\n| Acceptance | 2026-09-30 | open | Contractual penalty 0.2 % of the contract sum per working day, max. 5 % |\n\nContract sum of the general contractor: EUR 3.2 m. The client expects a report for the meeting on 2026-05-20.",
   "guide": {
-    "problem": "Delays on site add up, and clients quickly need a clear picture. The workflow calculates deviations, classifies causes, develops countermeasures and writes a status report.",
-    "flow": "The schedule analyst and the cause analyst work in parallel. One calculates delays and float with the date and calculator tools, the other sorts causes by area of responsibility and documentation needs; both also evaluate attached schedules, site diaries and photos. The countermeasure planner develops acceleration options, and the report agent summarises everything for the client. Before the report leaves the project team, a person approves it.",
+    "problem": "Delays on site have different causes, and each cause needs different expertise: frost needs documentation, a late supplier needs a notice of hindrance to the right party, a design change ordered by the client may justify an extension of time, and staffing gaps need an acceleration plan. The workflow calculates the deviations and lets a site coordinator bring in exactly the specialist teams the situation needs.",
+    "flow": "The schedule analyst calculates the delay of every milestone with the date tool and lists the suspected causes. The site coordinator, an orchestrator, first puts together a team of at most three from the four specialist teams and then hands out tasks: the site team for weather, ground and design changes, the supply team for suppliers and subcontractors, the claims team for notices of hindrance and extensions of time, the recovery team for acceleration measures with cost. Teams work in parallel where they are independent. The claims team stops for a person: its draft notice is only used after the responsible site manager has signed it off. The report agent writes the status report, and before it reaches the client a person approves it.",
     "input": "A schedule overview with planned and actual milestones, remarks on causes, report date and contractual conditions, as text or as files: schedule as Excel, site diary as PDF, photos as images. The sample files contain a schedule and an extract from the site diary.",
-    "result": "A factual status report with schedule situation, causes, countermeasures, decisions needed and risks. After approval, the run saves it as a PDF and as an editable Word file. Questions on contractual penalties and extensions of time remain subject to expert and legal review.",
-    "adapt": "Export your schedule from your project software as Excel and attach the site diary and photos. For a regular report you can run the copy on a schedule; the approval then waits for you."
+    "result": "A factual status report with schedule situation, causes and responsibilities, notices and extension claims, recovery measures with cost, decisions needed and risks; after approval as a PDF and an editable Word file. The orchestration view shows which teams the coordinator staffed, what each delivered as structured data and why. Questions on contractual penalties and extensions of time remain subject to expert and legal review.",
+    "adapt": "Export your schedule from your project software as Excel and attach the site diary and photos. Adapt the claims team to your contract type (for example VOB/B, FIDIC or your own conditions) and enter your company's cost rates in the recovery team. If you need another specialist, such as building services, save it as a workflow with a clear description and add it to the coordinator's teams.",
+    "control": "Automatic: the coordinator chooses at most three teams, runs at most two at a time and gives each team at most two tasks; every staffing and task decision is recorded with its reason. A person decides twice: the site manager signs off the draft notice of hindrance inside the claims team (rejecting it stops the run), and a person approves the status report before files are created. Limits: at most 8 coordinator decisions, 50 steps, 40 minutes and USD 4 per run.",
+    "why": "A fixed chain treated every delay alike: one cause analyst, one countermeasure planner, regardless of whether the problem was frost or a missing notice. With the coordinator, a pure weather delay does not cost a claims review, while a client-ordered design change brings in the claims team with its sign-off. The teams return structured results (days, responsibility, evidence), so the report can add them up instead of rewording prose. The schedule calculation, the report and the final approval stay fixed steps because every report needs them."
   },
   "agents": {
     "schedule": {
       "name": "Schedule analyst",
-      "description": "Calculates delays, float and consequences with the date and calculator tools.",
-      "system": "You are a construction scheduler. Calculate the delay of each milestone in calendar days with the days_between tool and derive the effect on the completion date if the delay continues. Show the dependencies between milestones and use the calculator tool to work out which contractual penalty could arise for an assumed delay, explicitly as a scenario.",
-      "task": "Analyse the schedule position:\n\n{{run.input}}"
-    },
-    "causes": {
-      "name": "Cause analyst",
-      "description": "Classifies causes by area of responsibility and documentation needs.",
-      "system": "You are a site manager experienced in claims management. Assign each delay to a cause category: weather, supply chain, design change, staffing or other. Mark whose area of responsibility it probably falls under according to the information available, which evidence should be documented and which notices of hindrance might be needed. Make no legal assessment.",
-      "task": "Classify the causes of the delays:\n\n{{run.input}}"
-    },
-    "countermeasures": {
-      "name": "Countermeasure planner",
-      "description": "Develops acceleration measures with cost and effect.",
-      "system": "You are a project controller. Develop countermeasures to hold the completion date or limit the delay, for example resequencing work, additional capacity or parallel working. Rate each measure by time gained, cost, risk and the decisions needed from the client. Recommend a package of measures.",
-      "task": "Develop countermeasures.\n\nSchedule analysis:\n{{node:schedule}}\n\nCauses:\n{{node:causes}}"
+      "description": "Calculates delays and the critical path with the date and calculator tools.",
+      "system": "You are a construction scheduler. Calculate the delay of each milestone in calendar days with the days_between tool and derive the effect on the completion date if the delay continues. Show which milestones depend on which and which delay lies on the critical path. List the suspected causes as stated in the documents, without judging responsibility. The specialist teams later work without the files: put every date, remark and figure they need into your summary.",
+      "task": "Analyse the schedule position:\n\n{{run.input}}",
+      "fields": {
+        "summary": "Schedule situation with all relevant dates, remarks and contract figures from the documents",
+        "delay_days": "Expected delay of the completion date in calendar days",
+        "critical_path": "The milestones on the critical path and how their delays carry over",
+        "suspected_causes": "Suspected causes, one per delay, as stated in the documents"
+      }
     },
     "report": {
       "name": "Report to the client",
-      "description": "Summarises schedule position, causes and measures factually.",
-      "system": "You write status reports for public clients: factual, clear and without assigning blame. Structure it into schedule position, causes, countermeasures, decisions needed and risks, at most one page. Point out that questions on contractual penalties and extensions of time must be reviewed professionally and legally.",
-      "task": "Write the status report.\n\nSchedule analysis:\n{{node:schedule}}\n\nCauses:\n{{node:causes}}\n\nCountermeasures:\n{{node:countermeasures}}"
+      "description": "Summarises schedule, causes, claims and measures factually for the client.",
+      "system": "You write status reports for public clients: factual, clear and without assigning blame. Structure it into schedule situation, causes and responsibilities, notices and claims, countermeasures with cost, decisions needed from the client and risks, at most two pages. Use only the figures of the schedule analysis and the teams; if teams disagree, show both views. Point out that questions on contractual penalties and extensions of time must be reviewed professionally and legally.",
+      "task": "Write the status report.\n\nSchedule analysis:\n{{node:schedule}}\n\nResults of the specialist teams:\n{{node:control}}"
     }
   },
   "steps": {
     "release": {
       "name": "Approve report",
-      "instructions": "Check the status report before it goes to the client: are dates and delays correct, are causes described factually and without blame, and is it clear which decisions the client is to make? Statements on contractual penalties and extensions of time must have been checked by an expert. If you reject it, write what is missing; the run then ends without report files."
+      "instructions": "Check the status report before it goes to the client: are dates and delays correct, are causes and responsibilities described factually and without blame, do the notices and extension claims match what the site manager signed off, and is it clear which decisions the client is to make? Statements on contractual penalties and extensions of time must have been checked by an expert. If you reject it, write what is missing; the run then ends without report files."
+    },
+    "control": {
+      "name": "Site coordinator",
+      "description": "Staffs the specialist teams the delay needs and hands out their tasks.",
+      "instructions": "First staff a team of at most three from the specialist teams. Choose by the suspected causes: technical causes, weather, ground or design changes need the site team; late material, suppliers or subcontractor staffing need the supply team; as soon as a delay may lie outside the contractor's responsibility or a notice of hindrance is missing, the claims team; whenever the completion date is at risk, the recovery team. Give independent tasks in parallel. The teams do not see the files: put the relevant dates and remarks from the schedule analysis into every task. Ask the recovery team only after the cause teams have reported, and give it their attributed delays. If two teams attribute the same days differently, give one of them a clarifying task. Finish with each team's structured result under the team's name and say which teams you did not use and why.",
+      "task": "Clarify causes, responsibilities, claims and countermeasures for this delay with the specialist teams it needs.\n\nSchedule analysis:\n{{node:schedule}}"
     }
   },
   "form": {

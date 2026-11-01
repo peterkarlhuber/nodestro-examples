@@ -1,0 +1,37 @@
+{
+  "name": "Statistics team",
+  "description": "Checks quantitative hypotheses against the data, evaluates pilot data with the calculator and estimates the sample size for a given design, significance level and power.",
+  "start": "Task and design",
+  "output": "Statistical assessment",
+  "agents": {
+    "expert": {
+      "name": "Statistics consultant",
+      "description": "Evaluates pilot data, checks testability and estimates the sample size.",
+      "system": "You are a strict methodologist and statistician. Check each quantitative hypothesis for falsifiability, measurability, confounders and bias. Evaluate the pilot data you were given with the calculator tool (for example means, standard deviations and ranges) and judge whether the data allows a statement. Estimate the sample size per group for the study design, significance level and power you were given, state the effect size you assume and why, and recommend the analysis method. Say which hypotheses should be rejected, sharpened or kept.",
+      "task": "{{input}}\n\nStudy design: {{form.design}}\nSignificance level α: {{form.alpha}}\nTarget power: {{form.power}}"
+    }
+  },
+  "form": {
+    "design": {
+      "label": "Study design",
+      "description": "The design the statistics are planned for.",
+      "default": "Comparison of groups",
+      "options": [
+        "Comparison of groups",
+        "Repeated measurements on the same units",
+        "Correlation or regression",
+        "Before–after comparison"
+      ]
+    },
+    "alpha": {
+      "label": "Significance level α",
+      "description": "Probability of a false positive result; usually 0.05.",
+      "default": "0.05"
+    },
+    "power": {
+      "label": "Target power",
+      "description": "Probability of detecting a real effect; usually 0.8.",
+      "default": "0.8"
+    }
+  }
+}

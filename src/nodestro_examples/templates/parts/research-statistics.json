@@ -1,0 +1,59 @@
+{
+  "id": "research-statistics",
+  "capabilities": [
+    "statistics",
+    "power analysis",
+    "quantitative methods"
+  ],
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160,
+      "form": [
+        {
+          "name": "design",
+          "type": "select",
+          "required": true
+        },
+        {
+          "name": "alpha",
+          "type": "number"
+        },
+        {
+          "name": "power",
+          "type": "number"
+        }
+      ]
+    },
+    {
+      "id": "expert",
+      "type": "agent",
+      "x": 340,
+      "y": 160,
+      "role": "analysis",
+      "icon": "calculator",
+      "effort": "high",
+      "tools": [
+        "calculator"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 680,
+      "y": 160
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "expert"
+    ],
+    [
+      "expert",
+      "output"
+    ]
+  ]
+}

@@ -29,29 +29,53 @@
       "id": "schedule",
       "type": "agent",
       "x": 360,
-      "y": 40,
+      "y": 180,
       "role": "analysis",
       "icon": "calculator",
       "tools": [
         "days_between",
         "calculator"
+      ],
+      "output_name": "ScheduleAnalysis",
+      "output_fields": [
+        {
+          "name": "summary",
+          "type": "string"
+        },
+        {
+          "name": "delay_days",
+          "type": "number"
+        },
+        {
+          "name": "critical_path",
+          "type": "string"
+        },
+        {
+          "name": "suspected_causes",
+          "type": "string_list"
+        }
       ]
     },
     {
-      "id": "causes",
-      "type": "agent",
-      "x": 360,
-      "y": 320,
-      "role": "analysis",
-      "icon": "search"
-    },
-    {
-      "id": "countermeasures",
-      "type": "agent",
+      "id": "control",
+      "type": "orchestrator",
       "x": 720,
       "y": 180,
       "role": "planning",
-      "icon": "target"
+      "icon": "users",
+      "orchestrator": {
+        "members": [
+          "construction-site",
+          "construction-supply",
+          "construction-claims",
+          "construction-recovery"
+        ],
+        "max_decisions": 8,
+        "max_per_member": 2,
+        "max_parallel": 2,
+        "staffing": true,
+        "max_team": 3
+      }
     },
     {
       "id": "report",
@@ -65,7 +89,7 @@
     {
       "id": "release",
       "type": "approval",
-      "x": 2040,
+      "x": 1440,
       "y": 180,
       "approval": {
         "on_reject": "stop",
@@ -78,7 +102,7 @@
     {
       "id": "output",
       "type": "output",
-      "x": 2380,
+      "x": 1800,
       "y": 180,
       "files": [
         "pdf",
@@ -92,23 +116,15 @@
       "schedule"
     ],
     [
-      "start",
-      "causes"
-    ],
-    [
       "schedule",
-      "countermeasures"
-    ],
-    [
-      "causes",
-      "countermeasures"
+      "control"
     ],
     [
       "schedule",
       "report"
     ],
     [
-      "countermeasures",
+      "control",
       "report"
     ],
     [
@@ -119,10 +135,6 @@
       "release",
       "output",
       "approved"
-    ],
-    [
-      "causes",
-      "report"
     ]
   ],
   "samples": [
@@ -159,5 +171,10 @@
         }
       ]
     }
-  ]
+  ],
+  "budget_usd": 4.0,
+  "limits": {
+    "max_steps": 50,
+    "max_duration_s": 2400
+  }
 }

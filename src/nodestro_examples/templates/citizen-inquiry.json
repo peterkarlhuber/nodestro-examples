@@ -34,8 +34,8 @@
       "y": 160,
       "role": "analysis",
       "icon": "list",
-      "model": "claude-haiku-5-5",
-      "effort": "low"
+      "effort": "low",
+      "tier": "fast"
     },
     {
       "id": "rules",
@@ -44,7 +44,14 @@
       "y": 160,
       "role": "research",
       "icon": "book",
-      "proposals": "extracted"
+      "proposals": "extracted",
+      "knowledge": {
+        "files": [
+          "municipal_rules"
+        ],
+        "mode": "search",
+        "citations": true
+      }
     },
     {
       "id": "reply",
@@ -60,12 +67,28 @@
       ]
     },
     {
-      "id": "output",
-      "type": "output",
+      "id": "release",
+      "type": "approval",
       "x": 1360,
       "y": 160,
+      "approval": {
+        "on_reject": "branch",
+        "require_comment_on_reject": true,
+        "show": [
+          "reply"
+        ]
+      }
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1700,
+      "y": 160,
       "files": [
-        "docx"
+        {
+          "format": "docx",
+          "sanitize": true
+        }
       ]
     }
   ],
@@ -87,12 +110,26 @@
       "reply"
     ],
     [
-      "reply",
-      "output"
-    ],
-    [
       "start",
       "rules"
+    ],
+    [
+      "reply",
+      "release"
+    ],
+    [
+      "release",
+      "output",
+      "approved"
+    ],
+    [
+      "release",
+      "reply",
+      "rejected",
+      {
+        "max_iterations": 2,
+        "on_exhausted": "fail"
+      }
     ]
   ],
   "samples": [
@@ -122,6 +159,12 @@
           "operator": "is_not_empty"
         }
       ]
+    }
+  ],
+  "knowledge": [
+    {
+      "id": "municipal_rules",
+      "format": "md"
     }
   ]
 }

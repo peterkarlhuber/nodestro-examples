@@ -8,17 +8,19 @@
   "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nOrganizzazione: Amici della Lettura Città Esempio (associazione fittizia), 60 volontari, una dipendente part-time\nProgetto: \"Padrini di lettura nelle scuole primarie\" – volontari leggono ogni settimana per un anno scolastico con\nbambini che hanno bisogno di sostegno nella lettura.\nFinora: 2025/26 in 4 scuole con 48 bambini. Riscontro degli insegnanti: 31 bambini su 48 leggono in modo più\nscorrevole (una valutazione, non una misurazione standardizzata).\nObiettivo: estensione a 8 scuole e 100 bambini nell'anno scolastico 2026/27\nFabbisogno: 25.000 EUR (coordinamento 15.000 EUR, libri e materiali 6.000 EUR, formazione 4.000 EUR)\nPeriodo della campagna: dal 2026-09-01 al 2026-11-30\nCanali esistenti: newsletter (1.200 destinatari), Instagram (900 follower), buoni contatti con il giornale locale",
   "guide": {
     "problem": "Le campagne di raccolta fondi hanno bisogno di una storia che coinvolga, ma anche di affermazioni oneste sull'impatto. Il workflow sviluppa una campagna, valuta il possibile impatto e verifica se le promesse sono credibili ed eticamente corrette.",
-    "flow": "Lo sviluppatore della campagna e l'analista dell'impatto lavorano in parallelo: uno progetta messaggio, target e azioni, l'altro costruisce un modello di impatto con indicatori e calcola il costo per bambino con la calcolatrice. Il revisore della credibilità controlla entrambi; il risultato contiene tutte e tre le parti.",
+    "flow": "Lo sviluppatore della campagna e l'analista dell'impatto lavorano in parallelo: uno progetta messaggio, target e azioni, l'altro costruisce un modello di impatto con indicatori e calcola il costo per bambino con la calcolatrice. Il revisore della credibilità controlla entrambi. Se ritiene la campagna non credibile, una condizione la rimanda allo sviluppatore della campagna insieme alle osservazioni della revisione; la campagna rivista viene controllata di nuovo, al massimo due volte. Il risultato contiene tutte e tre le parti.",
     "input": "Organizzazione, progetto, risultati finora, obiettivo, fabbisogno, periodo della campagna e canali esistenti.",
     "result": "Un concept di campagna con calendario e bozze di testi, un modello d'impatto con indicatori e una verifica strutturata di affermazioni esagerate, avvertenze etiche e un piano di misurazione dell'impatto, anche come file Word. L'analista dell'impatto propone il suo modello d'impatto per la conoscenza, per esempio per future richieste di finanziamento; viene salvato solo ciò che confermi.",
-    "adapt": "Descrivi il tuo progetto e i tuoi risultati nel modo più onesto possibile. Carica bilanci sociali o valutazioni come conoscenza e assegnali all'analista dell'impatto."
+    "adapt": "Descrivi il tuo progetto e i tuoi risultati nel modo più onesto possibile. Carica bilanci sociali o valutazioni come conoscenza e assegnali all'analista dell'impatto.",
+    "control": "Automatico: il giudizio sì/no del revisore della credibilità sulla credibilità decide se la campagna torna in revisione; l'esecuzione mostra quale ramo è stato preso. Lo sviluppatore della campagna rivede al massimo due volte, ogni volta con le osservazioni della revisione e la sua bozza precedente. Se poi la campagna non è ancora ritenuta credibile, l'esecuzione prosegue comunque fino al risultato, e le osservazioni della revisione mostrano cosa resta aperto. Nessun passaggio attende una persona: testi e cifre sono bozze che la tua organizzazione controlla prima della pubblicazione, soprattutto le affermazioni sull'impatto e le foto di bambini. I modelli d'impatto proposti vengono salvati come conoscenza solo se li confermi.",
+    "why": "I problemi di credibilità li corregge meglio chi ha scritto il testo; per questo la revisione riporta allo sviluppatore della campagna invece di limitarsi a elencare i problemi. Il ciclo è limitato a due giri: una campagna che dopo esagera ancora ha bisogno di prove migliori dall'organizzazione, non di altre riformulazioni. Il modello d'impatto resta fuori dal ciclo perché si basa sui dati del progetto, non sui testi della campagna. Non c'è un passaggio di approvazione, perché la campagna resta una bozza e viene comunque pubblicata fuori dal workflow."
   },
   "agents": {
     "campaign": {
       "name": "Sviluppatore della campagna",
       "description": "Progetta messaggio, target, canali e calendario della campagna.",
-      "system": "Sei un esperto di raccolta fondi per organizzazioni non profit. Sviluppa una campagna di raccolta fondi: messaggio centrale, target, inviti alla donazione come \"Con 50 euro …\", canali, un calendario sul periodo della campagna e tre bozze di testi (newsletter, social media, comunicato stampa). Racconta la storia con rispetto e senza immagini pietistiche, e usa solo i risultati indicati nella descrizione.",
-      "task": "Sviluppa la campagna per questo progetto:\n\n{{input}}"
+      "system": "Sei un esperto di raccolta fondi per organizzazioni non profit. Sviluppa una campagna di raccolta fondi: messaggio centrale, target, inviti alla donazione come \"Con 50 euro …\", canali, un calendario sul periodo della campagna e tre bozze di testi (newsletter, social media, comunicato stampa). Racconta la storia con rispetto e senza immagini pietistiche, e usa solo i risultati indicati nella descrizione. Se il compito contiene un riscontro della revisione della credibilità, rivedi la tua bozza precedente punto per punto: riformula le affermazioni esagerate come proposto, tieni conto delle osservazioni etiche e mantieni ciò che non è stato criticato.",
+      "task": "Sviluppa la campagna per questo progetto:\n\n{{run.input}}\n\nRiscontro della revisione della credibilità (solo per le revisioni, altrimenti «-»):\n{{feedback}}\n\nLa tua bozza precedente:\n{{previous}}"
     },
     "impact": {
       "name": "Analista dell'impatto",
@@ -29,7 +31,7 @@
     "integrity": {
       "name": "Revisore della credibilità",
       "description": "Verifica le affermazioni per esagerazioni, etica ed evidenze.",
-      "system": "Verifichi la credibilità e l'etica dei materiali di raccolta fondi. Confronta le affermazioni della campagna con il modello di impatto: cosa è dimostrato, cosa è esagerato, cosa andrebbe formulato con più prudenza? Fai attenzione alla dignità delle persone rappresentate, alla protezione dei dati nelle foto di bambini e alla trasparenza sull'uso dei fondi. Proponi un piano semplice per misurare l'impatto.",
+      "system": "Verifichi materiali di raccolta fondi per credibilità ed etica. Confronta le affermazioni della campagna con il modello d'impatto: cosa è dimostrato, cosa è esagerato, cosa andrebbe formulato con più prudenza? Fai attenzione alla dignità delle persone mostrate, alla protezione dei dati nelle foto di bambini e alla trasparenza sull'uso dei fondi. Proponi un piano semplice di misurazione dell'impatto. Valuta la campagna come non credibile solo se non è utilizzabile senza modifiche, per esempio per promesse d'impatto non documentate, cifre che non compaiono nella descrizione o rappresentazioni lesive della dignità; torna allora allo sviluppatore della campagna con le tue osservazioni.",
       "task": "Verifica la campagna e il modello di impatto.\n\nCampagna:\n{{node:campaign}}\n\nModello di impatto:\n{{node:impact}}",
       "fields": {
         "credible": "La campagna è credibile nella forma attuale?",
@@ -43,6 +45,15 @@
   "tests": {
     "reading_mentors": {
       "name": "Padrini di lettura nelle scuole primarie"
+    }
+  },
+  "steps": {
+    "check": {
+      "name": "Credibile?",
+      "branches": {
+        "credible": "Al risultato"
+      },
+      "default": "Rivedere la campagna"
     }
   }
 }

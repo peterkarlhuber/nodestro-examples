@@ -8,17 +8,19 @@
   "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nOrganización: Amigos de la Lectura de Villaejemplo (asociación ficticia), 60 voluntarios, una persona a media jornada\nProyecto: «Padrinos de lectura en primaria»: voluntarios leen cada semana durante un curso escolar con niños que\nnecesitan apoyo en la lectura.\nHasta ahora: curso 2025/26 en 4 colegios con 48 niños. Valoración del profesorado: 31 de 48 niños leen con más\nfluidez (una estimación, no una medición estandarizada).\nObjetivo: ampliar a 8 colegios y 100 niños en el curso 2026/27\nNecesidad de financiación: 25.000 EUR (coordinación 15.000 EUR, libros y material 6.000 EUR, formación 4.000 EUR)\nPeriodo de la campaña: 2026-09-01 a 2026-11-30\nCanales disponibles: boletín (1.200 destinatarios), Instagram (900 seguidores), buenos contactos con el periódico local",
   "guide": {
     "problem": "Las campañas de donaciones necesitan una historia que conmueva, pero también afirmaciones honestas sobre el impacto. El flujo desarrolla una campaña, valora el posible impacto y comprueba si las promesas son creíbles y éticamente defendibles.",
-    "flow": "El desarrollador de la campaña y el analista de impacto trabajan en paralelo: uno diseña mensaje, públicos y acciones, y el otro elabora un modelo de impacto con indicadores y calcula el coste por niño con la calculadora. El revisor de credibilidad comprueba ambos; el resultado incluye las tres partes.",
+    "flow": "El desarrollador de la campaña y el analista de impacto trabajan en paralelo: uno diseña mensaje, públicos y acciones, y el otro elabora un modelo de impacto con indicadores y calcula el coste por niño con la calculadora. El revisor de credibilidad comprueba ambos. Si considera que la campaña no es creíble, una condición la devuelve al desarrollador de la campaña junto con las observaciones de la revisión; la campaña revisada se comprueba de nuevo, como máximo dos veces. El resultado incluye las tres partes.",
     "input": "Organización, proyecto, resultados hasta ahora, objetivo, necesidad de financiación, periodo de la campaña y canales disponibles.",
     "result": "Un concepto de campaña con calendario y borradores de textos, un modelo de impacto con indicadores y una revisión estructurada de afirmaciones exageradas, avisos éticos y un plan para medir el impacto, además como archivo de Word. El analista de impacto propone su modelo de impacto para el conocimiento, por ejemplo para futuras solicitudes de financiación; solo se guarda lo que confirmes.",
-    "adapt": "Describe tu proyecto y tus resultados con la mayor honestidad posible. Sube memorias anuales o evaluaciones como conocimiento y asígnalas al analista de impacto."
+    "adapt": "Describe tu proyecto y tus resultados con la mayor honestidad posible. Sube memorias anuales o evaluaciones como conocimiento y asígnalas al analista de impacto.",
+    "control": "Automático: el veredicto sí/no del revisor de credibilidad sobre la credibilidad decide si la campaña vuelve para revisarse; la ejecución muestra qué rama se tomó. El desarrollador de la campaña revisa como máximo dos veces, cada vez con las observaciones de la revisión y su borrador anterior. Si después la campaña sigue sin considerarse creíble, la ejecución continúa igualmente hasta el resultado, y las observaciones de la revisión muestran qué queda pendiente. Ningún paso espera a una persona: los textos y las cifras son borradores que tu organización revisa antes de publicar, sobre todo las afirmaciones sobre el impacto y las fotos de niños. Los modelos de impacto propuestos solo se guardan como conocimiento si los confirmas.",
+    "why": "Los problemas de credibilidad los corrige mejor quien escribió el texto; por eso la revisión vuelve al desarrollador de la campaña en lugar de limitarse a enumerar problemas. El bucle se limita a dos rondas: una campaña que sigue exagerando después necesita mejores pruebas de la organización, no más reformulaciones. El modelo de impacto queda fuera del bucle porque se basa en los datos del proyecto, no en los textos de la campaña. No hay paso de aprobación, porque la campaña sigue siendo un borrador y se publica de todos modos fuera del flujo."
   },
   "agents": {
     "campaign": {
       "name": "Desarrollador de la campaña",
       "description": "Diseña mensaje, públicos, canales y calendario de la campaña.",
-      "system": "Eres experta en captación de fondos para organizaciones sin ánimo de lucro. Desarrolla una campaña de donaciones: mensaje central, públicos, incentivos como «Con 50 euros…», canales, calendario a lo largo del periodo de la campaña y tres borradores (boletín, redes sociales, nota de prensa). Cuenta la historia con respeto y sin imágenes que busquen lástima, y usa solo resultados que figuren en la descripción.",
-      "task": "Desarrolla la campaña para este proyecto:\n\n{{input}}"
+      "system": "Eres experta en captación de fondos para organizaciones sin ánimo de lucro. Desarrolla una campaña de donaciones: mensaje central, públicos, incentivos como «Con 50 euros…», canales, calendario a lo largo del periodo de la campaña y tres borradores (boletín, redes sociales, nota de prensa). Cuenta la historia con respeto y sin imágenes que busquen lástima, y usa solo resultados que figuren en la descripción. Si la tarea contiene comentarios de la revisión de credibilidad, revisa tu borrador anterior punto por punto: reformula las afirmaciones exageradas como se propone, ten en cuenta los avisos éticos y conserva lo que no se ha criticado.",
+      "task": "Desarrolla la campaña para este proyecto:\n\n{{run.input}}\n\nComentarios de la revisión de credibilidad (solo en revisiones; si no, «-»):\n{{feedback}}\n\nTu borrador anterior:\n{{previous}}"
     },
     "impact": {
       "name": "Analista de impacto",
@@ -29,7 +31,7 @@
     "integrity": {
       "name": "Revisor de credibilidad",
       "description": "Revisa las afirmaciones en cuanto a exageración, ética y respaldo.",
-      "system": "Revisas material de captación de fondos en cuanto a credibilidad y ética. Compara las afirmaciones de la campaña con el modelo de impacto: ¿qué está demostrado, qué es exagerado, qué debería formularse con más prudencia? Cuida la dignidad de las personas representadas, la protección de datos en las fotos de niños y la transparencia sobre el uso de los fondos. Propone un plan sencillo para medir el impacto.",
+      "system": "Revisas material de captación de fondos en cuanto a credibilidad y ética. Compara las afirmaciones de la campaña con el modelo de impacto: ¿qué está probado, qué es exagerado, qué debería formularse con más cautela? Presta atención a la dignidad de las personas mostradas, a la protección de datos en las fotos de niños y a la transparencia sobre el uso de los fondos. Propón un plan sencillo para medir el impacto. Califica la campaña como no creíble solo si no puede usarse sin cambios, por ejemplo por promesas de impacto sin respaldo, cifras que no figuran en la descripción o representaciones que atentan contra la dignidad; entonces vuelve al desarrollador de la campaña con tus observaciones.",
       "task": "Revisa la campaña y el modelo de impacto.\n\nCampaña:\n{{node:campaign}}\n\nModelo de impacto:\n{{node:impact}}",
       "fields": {
         "credible": "¿Es creíble la campaña en su forma actual?",
@@ -43,6 +45,15 @@
   "tests": {
     "reading_mentors": {
       "name": "Padrinos de lectura en primaria"
+    }
+  },
+  "steps": {
+    "check": {
+      "name": "¿Creíble?",
+      "branches": {
+        "credible": "Al resultado"
+      },
+      "default": "Revisar la campaña"
     }
   }
 }

@@ -1,0 +1,28 @@
+{
+  "name": "Equipe de obra e projeto",
+  "description": "Examina causas técnicas de atrasos de obra: clima, solo, alterações de projeto e sequência dos serviços; atribui dias de atraso com evidências.",
+  "start": "Tarefa",
+  "output": "Avaliação da obra",
+  "agents": {
+    "expert": {
+      "name": "Engenheiro de obra",
+      "description": "Avalia causas técnicas, atribui dias de atraso e indica as evidências.",
+      "system": "Você é um engenheiro de obra experiente. Para os atrasos da sua tarefa, examine as causas técnicas: clima (por exemplo, dias de geada abaixo do limite de trabalho), solo, alterações de projeto e sua determinação, e a sequência dos serviços. Atribua dias de atraso apenas onde as datas da tarefa os sustentarem, e diga a que esfera cada causa provavelmente pertence segundo as informações disponíveis (contratante, construtora ou nenhum). Indique as evidências que deveriam constar, como registros do diário de obra, dados meteorológicos ou a ordem escrita de uma alteração de projeto. Não faça avaliação jurídica e liste o que não está claro como perguntas em aberto.",
+      "task": "{{input}}",
+      "fields": {
+        "findings": "Avaliação técnica das causas",
+        "attributed_delay_days": "Dias de atraso atribuíveis às causas examinadas",
+        "responsibility": "Esfera de responsabilidade provável por causa (contratante, construtora ou nenhum) com justificativa",
+        "evidence": "Evidências que devem ser documentadas",
+        "open_questions": "Perguntas em aberto"
+      }
+    }
+  },
+  "contract": {
+    "findings": "Avaliação técnica das causas",
+    "attributed_delay_days": "Dias de atraso atribuíveis às causas examinadas",
+    "responsibility": "Esfera de responsabilidade provável por causa (contratante, construtora ou nenhum) com justificativa",
+    "evidence": "Evidências que devem ser documentadas",
+    "open_questions": "Perguntas em aberto"
+  }
+}

@@ -1,42 +1,32 @@
 {
   "name": "Forschungsfrage in Hypothesen übersetzen",
   "field": "Forschung und Entwicklung",
-  "description": "Forschungsfrage analysieren, prüfbare Hypothesen entwickeln, kritisch prüfen und einen Versuchsplan ableiten.",
+  "description": "Eine Forschungsfrage analysieren und einen Koordinator genau die Methodenteams einbeziehen lassen, die sie braucht – von Hypothesen über Statistik und qualitative Methoden bis zur Ethik –, und daraus einen Studienplan ableiten.",
   "start": "Forschungsfrage",
   "output": "Versuchsplan",
   "file_name": "Versuchsplan",
   "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nForschungsfrage: Kann die Aushärtetemperatur unseres Pulverlacks PL-7 von 180 °C auf 165 °C gesenkt werden,\nohne dass die Haftung auf verzinktem Stahl leidet? Ziel ist, rund 10 % Energie im Ofen zu sparen.\n\nVorversuch (je 5 Bleche, Gitterschnitt-Kennwert nach ISO 2409, 0 = beste Haftung, 5 = schlechteste):\n- 180 °C, 15 min: 0, 0, 1, 0, 1\n- 165 °C, 15 min: 1, 0, 2, 1, 1\n- 165 °C, 20 min: 0, 1, 0, 1, 0\n\nRahmenbedingungen: 40 Prüfbleche pro Woche verfügbar, Ofen zwei Tage pro Woche für Versuche frei,\nVorbehandlung der Bleche erfolgte bisher an zwei verschiedenen Tagen.",
   "guide": {
-    "problem": "Gute Forschung beginnt mit einer präzisen, prüfbaren Frage. Der Workflow zerlegt eine Forschungsfrage, formuliert Hypothesen, lässt sie methodisch kritisieren und leitet einen realistischen Versuchsplan ab.",
-    "flow": "Eine sequenzielle Kette mit Rückgriff: Der Analyst klärt Variablen und Annahmen, der Hypothesen-Agent formuliert prüfbare Hypothesen mit Nullhypothesen, der Methodenkritiker prüft sie mit dem Rechner-Tool an den Vorversuchsdaten und benennt Störgrößen. Der Versuchsplaner nutzt Hypothesen und Kritik zusammen.",
-    "input": "Eine Forschungsfrage mit Ziel, vorhandenen Daten aus Vorversuchen und Rahmenbedingungen wie Material, Zeit und Geräte. Messdaten und Unterlagen kannst du als Dateien anhängen; die Beispieldatei enthält die Vorversuchswerte je Blech.",
-    "result": "Ein Versuchsplan mit Hypothesen, Faktoren und Stufen, Stichprobengröße, Messmethode, Auswertung und Abbruchkriterien sowie den offenen Risiken, zusätzlich als Word-Datei. Der Versuchsplaner schlägt den Plan für das Wissen vor; ob er gespeichert wird, entscheidest du.",
-    "adapt": "Ersetze Frage und Vorversuch durch deine eigenen und hänge Messdaten direkt an. Fachliteratur, die du immer wieder brauchst, lädst du als Wissen im Modus „Volltextsuche“ hoch und weist sie dem Analysten zu, damit er mit Zitaten arbeitet. Eure Statistikvorgaben ergänzt du beim Methodenkritiker."
+    "problem": "Gute Forschung beginnt mit einer präzisen, prüfbaren Frage und den passenden Methoden. Ein Werkstofftest braucht eine Poweranalyse, eine Interviewstudie einen Stichprobenplan und eine Einwilligungserklärung, und viele Fragen brauchen beides. Der Workflow analysiert die Frage und lässt eine Forschungskoordination genau die Methodenteams hinzuziehen, die die Frage braucht.",
+    "flow": "Der Fragestellungsanalyst strukturiert die Frage und fasst beigefügte Daten zusammen, weil die Teams ohne die Dateien arbeiten. Die Forschungskoordination, ein Orchestrator, beginnt immer mit dem Hypothesenteam und entscheidet dann: Messbare Zielgrößen gehen an das Statistikteam, dessen Studiendesign und Signifikanzniveau sie als Parameter setzt; Erfahrungen und Gründe gehen an das Team für qualitative Methoden; Menschen oder personenbezogene Daten holen das Team für Ethik und Datenschutz dazu. Hält ein Team eine Hypothese für nicht prüfbar, schickt die Koordination sie einmal an das Hypothesenteam zurück. Der Studienplaner macht aus allem einen Plan.",
+    "input": "Eine Forschungsfrage mit Ziel, vorhandenen Daten aus Vorversuchen und Rahmenbedingungen wie Material, Zeit und Ausstattung. Messdaten und Dokumente kannst du als Dateien anhängen; die Beispieldatei enthält die Vorversuchsbewertungen je Blech.",
+    "result": "Ein Studienplan mit Hypothesen, Design, Stichprobengröße, Mess- oder Interviewmethode, Auswertung, Abbruchkriterien und offenen Risiken, zusätzlich als Word-Datei. Die Orchestrierungsansicht des Laufs zeigt, welche Methodenteams mit welchen Parametern beteiligt waren und welche weggelassen wurden und warum. Der Studienplaner schlägt den Plan für das Wissen vor; du entscheidest, ob er gespeichert wird.",
+    "adapt": "Ersetze Frage und Vorversuch durch deine eigenen und hänge Messdaten direkt an. Deine Statistikrichtlinien ergänzt du beim Agenten des Statistikteams. Braucht dein Fachgebiet ein weiteres Methodenteam, etwa ein Laborteam, speicherst du es als Workflow mit klarer Beschreibung und fügst es den Teams der Koordination hinzu.",
+    "control": "Automatisch: Die Koordination entscheidet, welche Methodenteams arbeiten, und füllt das Formular des Statistikteams (Design, Signifikanzniveau, Power); jede Entscheidung wird mit Begründung festgehalten. Grenzen: höchstens 7 Entscheidungen, jedes Team höchstens zweimal, ein Budget von 4 USD pro Lauf. Kein Schritt wartet auf eine Person; der Plan ist ein Entwurf für die verantwortliche Forscherin oder den verantwortlichen Forscher.",
+    "why": "Eine feste Kette würde immer eine Statistikkritik ausführen, auch bei einer Interviewstudie, in der es nichts zu rechnen gibt, und Ethik nur einbeziehen, wenn jemand daran denkt. Die Koordination wählt je Frage und übergibt dem Statistikteam strukturierte Parameter statt Freitext, sodass die Poweranalyse mit einem definierten Design rechnet. Analyse und Studienplan bleiben feste Schritte: Jede Studie braucht sie."
   },
   "agents": {
     "framing": {
       "name": "Fragestellungsanalyst",
       "description": "Klärt Ziel, Variablen, Rahmenbedingungen und Wissenslücken.",
-      "system": "Du bist wissenschaftlicher Mitarbeiter und strukturierst Forschungsfragen. Zerlege die Frage in Ziel, unabhängige und abhängige Variablen, mögliche Störgrößen und Rahmenbedingungen. Fasse zusammen, was die vorhandenen Daten zeigen und was nicht, und trenne gesichertes Wissen von Vermutungen.",
+      "system": "Du bist wissenschaftlicher Mitarbeiter und strukturierst Forschungsfragen. Zerlege die Frage in Ziel, unabhängige und abhängige Variablen, mögliche Störgrößen und Rahmenbedingungen. Fasse zusammen, was die vorhandenen Daten zeigen und was nicht, und trenne gesichertes Wissen von Vermutungen. Die Methodenteams arbeiten später ohne die Dateien: Fasse die Daten beigefügter Dateien mit ihren Kennzahlen zusammen (Anzahl Messungen, Werte je Gruppe, Bedingungen), damit nichts Wichtiges verloren geht.",
       "task": "Analysiere diese Forschungsfrage:\n\n{{run.input}}"
     },
-    "hypotheses": {
-      "name": "Hypothesenentwickler",
-      "description": "Formuliert prüfbare Hypothesen mit Vorhersagen und Nullhypothesen.",
-      "system": "Du formulierst wissenschaftliche Hypothesen. Leite aus der Analyse drei bis fünf prüfbare Hypothesen ab. Nenne je Hypothese die Nullhypothese, eine messbare Vorhersage, das Messverfahren und was als Bestätigung oder Widerlegung gilt. Ordne sie nach Relevanz für das Ziel.",
-      "task": "Entwickle Hypothesen auf Grundlage dieser Analyse:\n\n{{node:framing}}"
-    },
-    "critic": {
-      "name": "Methodenkritiker",
-      "description": "Prüft Hypothesen auf Prüfbarkeit, Störgrößen und Datenlage.",
-      "system": "Du bist ein strenger Methodiker und Gutachter. Prüfe jede Hypothese auf Falsifizierbarkeit, Messbarkeit, Störgrößen und Verzerrungen. Werte vorhandene Vorversuchsdaten mit dem Rechner-Tool aus (zum Beispiel Mittelwerte und Spannweiten) und beurteile, ob die Datenlage eine Aussage erlaubt. Nenne, welche Hypothesen verworfen, geschärft oder beibehalten werden sollten.",
-      "task": "Prüfe diese Hypothesen kritisch.\n\nForschungsfrage und Daten:\n{{run.input}}\n\nHypothesen:\n{{node:hypotheses}}"
-    },
     "design": {
-      "name": "Versuchsplaner",
-      "description": "Leitet aus Hypothesen und Kritik einen Versuchsplan ab.",
-      "system": "Du planst Versuche nach den Grundsätzen der statistischen Versuchsplanung. Entwirf für die beibehaltenen Hypothesen einen Versuchsplan: Faktoren und Stufen, Wiederholungen, Randomisierung und Blockbildung gegen Störgrößen, Messmethode, Auswertungsverfahren, Abbruch- und Erfolgskriterien sowie einen Zeitplan, der zu den Rahmenbedingungen passt. Schließe mit offenen Risiken.",
-      "task": "Entwirf den Versuchsplan.\n\nHypothesen:\n{{node:hypotheses}}\n\nMethodenkritik:\n{{node:critic}}"
+      "name": "Studienplaner",
+      "description": "Leitet aus der Analyse und den Ergebnissen der Methodenteams den Studienplan ab.",
+      "system": "Du planst Studien. Entwirf für die beibehaltenen Hypothesen den Studienplan: bei Experimenten Faktoren und Stufen, Wiederholungen, Randomisierung und Blockbildung gegen Störgrößen, Messmethode und Auswertung; bei qualitativen Teilen Stichprobe, Interviewleitfaden und Auswertungsmethode; bei Studien mit Menschen die Maßnahmen zu Einwilligung und Datenschutz. Ergänze Abbruch- und Erfolgskriterien und einen Zeitplan, der zu den Rahmenbedingungen passt. Verwende die Stichprobengrößen und Entscheidungen der Methodenteams und erfinde keine neuen Zahlen. Schließe mit den offenen Risiken.",
+      "task": "Entwirf den Studienplan.\n\nAnalyse der Frage:\n{{node:framing}}\n\nErgebnisse der Methodenteams:\n{{node:coordinator}}"
     }
   },
   "form": {
@@ -172,6 +162,18 @@
     "pretest_file": {
       "name": "Vorversuchsdaten als CSV",
       "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nForschungsfrage: Kann die Aushärtetemperatur unseres Pulverlacks PL-7 von 180 °C auf 165 °C gesenkt werden, ohne dass die Haftung auf verzinktem Stahl leidet? Ziel ist, rund 10 % Energie im Ofen zu sparen.\n\nDie Werte des Vorversuchs (Gitterschnitt nach ISO 2409, 0 = beste Haftung) liegen als CSV-Datei bei.\n\nRahmenbedingungen: 40 Prüfbleche pro Woche verfügbar, Ofen zwei Tage pro Woche für Versuche frei."
+    },
+    "interview_study": {
+      "name": "Interviewstudie ohne Messwerte",
+      "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nForschungsfrage: Warum nutzen Nachtschichtbeschäftigte in unserem Werk die neue Pausen-App zum Buchen von Ruheräumen kaum, obwohl sie sie gewünscht hatten?\n\nBekannt: 140 Personen arbeiten in Nachtschicht; in den ersten zwei Monaten haben 9 von ihnen einen Raum gebucht. Tagschichten: 210 Buchungen von 380 Personen. Einige Teamleitungen berichten, dass die App die Firmenanmeldung braucht, die viele Nachtschichtbeschäftigte nicht nutzen.\n\nRahmenbedingungen: Interviews nur in den Pausen (30 Minuten), der Betriebsrat muss zustimmen, keine Aufzeichnungen ohne Einwilligung; Ergebnisse bis Quartalsende."
+    }
+  },
+  "steps": {
+    "coordinator": {
+      "name": "Forschungskoordination",
+      "description": "Entscheidet, welche Methodenteams die Frage braucht, und setzt die Parameter des Statistikteams.",
+      "instructions": "Beginne immer mit dem Hypothesenteam. Entscheide dann anhand von Frage und Daten: Messbare Zielgrößen und Vorversuchsdaten brauchen das Statistikteam, dessen Studiendesign du als Parameter setzt (Signifikanzniveau oder Power nur, wenn die Frage andere Werte als 0,05 und 0,8 verlangt); Fragen nach Erfahrungen, Gründen oder Verhalten, die sich nicht zählen lassen, brauchen das Team für qualitative Methoden; alles, was Menschen, Gesundheit oder personenbezogene Daten betrifft, braucht das Team für Ethik und Datenschutz. Hält das Statistik- oder das qualitative Team eine Hypothese in dieser Form für nicht prüfbar, gib dem Hypothesenteam einen Überarbeitungsauftrag mit der Kritik. Die Teams sehen die Dateien nicht: Schreibe die relevanten Daten aus der Analyse in jeden Auftrag. Schließe mit den endgültigen Hypothesen und den wichtigsten Ergebnissen jedes Teams unter dem Namen des Teams und nenne, welche Teams du nicht einbezogen hast und warum.",
+      "task": "Plane, wie diese Forschungsfrage mit den Methodenteams untersucht wird, die sie braucht.\n\nAnalyse der Frage und der Daten:\n{{node:framing}}"
     }
   }
 }

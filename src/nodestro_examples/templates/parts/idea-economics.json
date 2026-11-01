@@ -1,0 +1,43 @@
+{
+  "id": "idea-economics",
+  "capabilities": [
+    "profitability",
+    "break-even",
+    "financial planning"
+  ],
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160
+    },
+    {
+      "id": "expert",
+      "type": "agent",
+      "x": 340,
+      "y": 160,
+      "role": "analysis",
+      "icon": "calculator",
+      "tools": [
+        "calculator"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 680,
+      "y": 160
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "expert"
+    ],
+    [
+      "expert",
+      "output"
+    ]
+  ]
+}

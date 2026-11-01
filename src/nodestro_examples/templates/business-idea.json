@@ -8,40 +8,33 @@
       "id": "start",
       "type": "start",
       "x": 0,
-      "y": 220
+      "y": 200
     },
     {
-      "id": "market",
-      "type": "agent",
+      "id": "coach",
+      "type": "orchestrator",
       "x": 360,
-      "y": 0,
-      "role": "research",
-      "icon": "search"
-    },
-    {
-      "id": "economics",
-      "type": "agent",
-      "x": 360,
-      "y": 220,
-      "role": "analysis",
-      "icon": "calculator",
-      "tools": [
-        "calculator"
-      ]
-    },
-    {
-      "id": "risks",
-      "type": "agent",
-      "x": 360,
-      "y": 440,
-      "role": "analysis",
-      "icon": "shield"
+      "y": 200,
+      "role": "planning",
+      "icon": "users",
+      "orchestrator": {
+        "members": [
+          "idea-market",
+          "idea-economics",
+          "idea-risks",
+          "idea-regulation",
+          "idea-operations"
+        ],
+        "max_decisions": 6,
+        "max_per_member": 2,
+        "max_parallel": 3
+      }
     },
     {
       "id": "jury",
       "type": "agent",
       "x": 720,
-      "y": 220,
+      "y": 200,
       "role": "review",
       "icon": "scale",
       "output_name": "IdeaVerdict",
@@ -76,7 +69,7 @@
       "id": "output",
       "type": "output",
       "x": 1080,
-      "y": 220,
+      "y": 200,
       "files": [
         "pdf"
       ]
@@ -85,26 +78,14 @@
   "edges": [
     [
       "start",
-      "market"
+      "coach"
     ],
     [
       "start",
-      "economics"
-    ],
-    [
-      "start",
-      "risks"
-    ],
-    [
-      "market",
       "jury"
     ],
     [
-      "economics",
-      "jury"
-    ],
-    [
-      "risks",
+      "coach",
       "jury"
     ],
     [
@@ -135,6 +116,35 @@
           "operator": "is_not_empty"
         }
       ]
+    },
+    {
+      "id": "regulated_idea",
+      "input": "own",
+      "checks": [
+        {
+          "field": "score",
+          "operator": "gte",
+          "value": 1
+        },
+        {
+          "field": "score",
+          "operator": "lte",
+          "value": 10
+        },
+        {
+          "field": "verdict",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "assumptions_to_test",
+          "operator": "is_not_empty"
+        }
+      ]
     }
-  ]
+  ],
+  "budget_usd": 3.0,
+  "limits": {
+    "max_steps": 40,
+    "max_duration_s": 1800
+  }
 }

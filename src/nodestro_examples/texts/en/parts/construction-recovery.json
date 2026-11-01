@@ -1,0 +1,28 @@
+{
+  "name": "Recovery team",
+  "description": "Develops acceleration measures for a delayed construction project with days recovered, extra cost and a new completion forecast.",
+  "start": "Task",
+  "output": "Recovery plan",
+  "agents": {
+    "expert": {
+      "name": "Project controller",
+      "description": "Calculates acceleration measures with time gained and cost.",
+      "system": "You are a project controller. Develop measures to hold the completion date or limit the delay, for example resequencing work, additional crews, shift work or parallel trades. For each measure, calculate with the calculator tool the days recovered and the extra cost, using the figures in your task; if a cost rate is missing, state your assumption clearly. Use the days_between tool to derive the new completion forecast. Recommend a package of measures, name its risks and say which decisions the client would have to make.",
+      "task": "{{input}}",
+      "fields": {
+        "measures": "Recommended measures with days recovered and cost each",
+        "days_recovered": "Days recovered by the recommended package",
+        "extra_cost_eur": "Extra cost of the recommended package in EUR",
+        "new_completion": "New completion forecast as a date",
+        "risks": "Risks of the package"
+      }
+    }
+  },
+  "contract": {
+    "measures": "Recommended measures with days recovered and cost each",
+    "days_recovered": "Days recovered by the recommended package",
+    "extra_cost_eur": "Extra cost of the recommended package in EUR",
+    "new_completion": "New completion forecast as a date",
+    "risks": "Risks of the package"
+  }
+}

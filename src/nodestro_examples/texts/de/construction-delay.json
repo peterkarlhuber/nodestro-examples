@@ -1,48 +1,50 @@
 {
   "name": "Bauverzögerungen analysieren",
   "field": "Bauwesen",
-  "description": "Terminabweichungen berechnen, Ursachen einordnen, Gegenmaßnahmen entwickeln und an den Bauherrn berichten.",
+  "description": "Terminabweichungen berechnen und eine Bauleitungskoordination die Fachteams hinzuziehen lassen, die der Verzug braucht – von Baustelle und Lieferkette bis Nachträge und Beschleunigung –, und nach Freigabe an den Bauherrn berichten.",
   "start": "Projektstatus",
   "output": "Statusbericht",
   "file_name": "Statusbericht",
   "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nProjekt: Neubau Kita „Sonnenblick“, Beispielstadt; Bauherr: Gemeinde Beispielstadt\nVertraglicher Fertigstellungstermin: 2026-09-30; Stichtag des Berichts: 2026-05-15\n\n| Meilenstein | Geplant | Tatsächlich / Prognose | Bemerkung |\n|---|---|---|---|\n| Rohbau fertig | 2026-02-27 | 2026-03-20 | 9 Frosttage im Januar, Betonarbeiten ausgesetzt |\n| Dach dicht | 2026-03-27 | 2026-04-24 | Lieferverzug Dachelemente (Lieferant meldet Materialengpass) |\n| Fenster eingebaut | 2026-04-17 | 2026-05-29 (Prognose) | Planänderung Fluchtfenster auf Wunsch der Brandschutzprüfung |\n| Haustechnik Rohinstallation | 2026-05-22 | 2026-06-19 (Prognose) | abhängig von Fenstern; Elektriker nur mit 2 statt 4 Personen vor Ort |\n| Innenausbau fertig | 2026-08-28 | offen | — |\n| Abnahme | 2026-09-30 | offen | Vertragsstrafe 0,2 % der Auftragssumme je Werktag, max. 5 % |\n\nAuftragssumme Generalunternehmer: 3,2 Mio. EUR. Der Bauherr erwartet einen Bericht zur Sitzung am 2026-05-20.",
   "guide": {
-    "problem": "Verzögerungen auf der Baustelle summieren sich, und Bauherren brauchen schnell ein klares Bild. Der Workflow berechnet Abweichungen, ordnet Ursachen ein, entwickelt Gegenmaßnahmen und formuliert einen Statusbericht.",
-    "flow": "Terminanalyst und Ursachenanalyst arbeiten parallel. Der eine berechnet Verzüge und Puffer mit Datums- und Rechner-Tool, der andere ordnet Ursachen nach Verantwortungsbereich und Dokumentationsbedarf; beide werten auch angehängte Terminpläne, Bautagebücher und Fotos aus. Der Maßnahmenplaner entwickelt Beschleunigungsoptionen, der Berichtsagent fasst alles für den Bauherrn zusammen. Bevor der Bericht das Projektteam verlässt, gibt ihn ein Mensch frei.",
-    "input": "Eine Terminübersicht mit geplanten und tatsächlichen Meilensteinen, Bemerkungen zu den Ursachen, Stichtag und vertraglichen Rahmenbedingungen, als Text oder als Dateien: Terminplan als Excel, Bautagebuch als PDF, Fotos als Bild. Die Beispieldateien enthalten einen Terminplan und einen Bautagebuch-Auszug.",
-    "result": "Ein sachlicher Statusbericht mit Terminlage, Ursachen, Gegenmaßnahmen, Entscheidungsbedarf und Risiken. Nach der Freigabe speichert der Lauf ihn als PDF und als bearbeitbare Word-Datei. Fragen zu Vertragsstrafen und Bauzeitverlängerung bleiben der fachlichen und rechtlichen Prüfung vorbehalten.",
-    "adapt": "Exportiere deinen Terminplan aus der Projektsoftware als Excel und hänge Bautagebuch und Fotos an. Für einen regelmäßigen Bericht kannst du die Kopie zeitgesteuert starten; die Freigabe wartet dann auf dich."
+    "problem": "Verzögerungen auf der Baustelle haben unterschiedliche Ursachen, und jede Ursache braucht anderes Fachwissen: Frost muss dokumentiert werden, ein säumiger Lieferant braucht eine Behinderungsanzeige an die richtige Stelle, eine vom Bauherrn angeordnete Planänderung kann eine Bauzeitverlängerung begründen, und fehlendes Personal braucht einen Beschleunigungsplan. Der Workflow berechnet die Abweichungen und lässt eine Bauleitungskoordination genau die Fachteams hinzuziehen, die die Lage braucht.",
+    "flow": "Der Terminanalyst berechnet mit dem Datumswerkzeug den Verzug jedes Meilensteins und listet die vermuteten Ursachen. Die Bauleitungskoordination, ein Orchestrator, stellt zuerst aus den vier Fachteams ein Team von höchstens drei zusammen und verteilt dann Aufträge: das Baustellenteam für Witterung, Baugrund und Planänderungen, das Lieferkettenteam für Lieferanten und Nachunternehmer, das Nachtragsteam für Behinderungsanzeigen und Bauzeitverlängerung, das Beschleunigungsteam für Maßnahmen mit Kosten. Unabhängige Teams arbeiten parallel. Das Nachtragsteam hält für eine Person an: Sein Entwurf der Behinderungsanzeige wird erst verwendet, wenn die verantwortliche Bauleitung ihn abgezeichnet hat. Der Berichtsagent schreibt den Statusbericht, und bevor er an den Bauherrn geht, gibt eine Person ihn frei.",
+    "input": "Eine Terminübersicht mit geplanten und tatsächlichen Meilensteinen, Bemerkungen zu Ursachen, Berichtsdatum und Vertragsbedingungen, als Text oder als Dateien: Terminplan als Excel, Bautagebuch als PDF, Fotos als Bilder. Die Beispieldateien enthalten einen Terminplan und einen Auszug aus dem Bautagebuch.",
+    "result": "Ein sachlicher Statusbericht mit Terminlage, Ursachen und Verantwortungsbereichen, Anzeigen und Verlängerungsansprüchen, Beschleunigungsmaßnahmen mit Kosten, nötigen Entscheidungen und Risiken; nach der Freigabe als PDF und bearbeitbare Word-Datei. Die Orchestrierungsansicht zeigt, welche Teams die Koordination besetzt hat, was jedes als strukturierte Daten geliefert hat und warum. Fragen zu Vertragsstrafen und Bauzeitverlängerung bleiben der fachlichen und rechtlichen Prüfung vorbehalten.",
+    "adapt": "Exportiere deinen Terminplan aus deiner Projektsoftware als Excel und hänge Bautagebuch und Fotos an. Passe das Nachtragsteam an deine Vertragsart an (etwa VOB/B, FIDIC oder eigene Bedingungen) und trage im Beschleunigungsteam die Kostensätze deines Unternehmens ein. Brauchst du eine weitere Fachrichtung, etwa die Haustechnik, speicherst du sie als Workflow mit klarer Beschreibung und fügst sie den Teams der Koordination hinzu.",
+    "control": "Automatisch: Die Koordination wählt höchstens drei Teams, lässt höchstens zwei gleichzeitig arbeiten und gibt jedem Team höchstens zwei Aufträge; jede Besetzungs- und Auftragsentscheidung wird mit Begründung festgehalten. Eine Person entscheidet zweimal: Die Bauleitung zeichnet im Nachtragsteam den Entwurf der Behinderungsanzeige ab (eine Ablehnung beendet den Lauf), und eine Person gibt den Statusbericht frei, bevor Dateien entstehen. Grenzen: höchstens 8 Entscheidungen der Koordination, 50 Schritte, 40 Minuten und 4 USD pro Lauf.",
+    "why": "Eine feste Kette behandelte jeden Verzug gleich: ein Ursachenanalyst, ein Maßnahmenplaner, egal ob das Problem Frost oder eine fehlende Anzeige war. Mit der Koordination kostet ein reiner Witterungsverzug keine Nachtragsprüfung, während eine vom Bauherrn angeordnete Planänderung das Nachtragsteam mit seiner Abzeichnung dazuholt. Die Teams liefern strukturierte Ergebnisse (Tage, Verantwortung, Nachweise), sodass der Bericht sie zusammenrechnen kann, statt Fließtext umzuformulieren. Terminberechnung, Bericht und abschließende Freigabe bleiben feste Schritte, weil jeder Bericht sie braucht."
   },
   "agents": {
     "schedule": {
       "name": "Terminanalyst",
-      "description": "Berechnet Verzüge, Puffer und Folgen mit Datums- und Rechner-Tool.",
-      "system": "Du bist Terminplaner im Bauwesen. Berechne für jeden Meilenstein den Verzug in Kalendertagen mit dem Tool days_between und leite die Auswirkung auf den Fertigstellungstermin ab, wenn sich der Verzug fortsetzt. Zeige Abhängigkeiten zwischen Meilensteinen und berechne mit dem Rechner-Tool, welche Vertragsstrafe bei einem angenommenen Verzug drohen könnte, ausdrücklich als Szenario.",
-      "task": "Analysiere die Terminlage:\n\n{{run.input}}"
-    },
-    "causes": {
-      "name": "Ursachenanalyst",
-      "description": "Ordnet Ursachen nach Verantwortungsbereich und Dokumentationsbedarf ein.",
-      "system": "Du bist Bauleiter mit Erfahrung im Nachtragsmanagement. Ordne jede Verzögerung einer Ursachenkategorie zu: Witterung, Lieferkette, Planänderung, Personal oder Sonstiges. Kennzeichne, in wessen Verantwortungsbereich sie nach den vorliegenden Angaben voraussichtlich fällt, welche Nachweise dokumentiert werden sollten und welche Behinderungsanzeigen nötig sein könnten. Triff keine rechtliche Bewertung.",
-      "task": "Ordne die Ursachen der Verzögerungen ein:\n\n{{run.input}}"
-    },
-    "countermeasures": {
-      "name": "Maßnahmenplaner",
-      "description": "Entwickelt Beschleunigungsmaßnahmen mit Kosten und Wirkung.",
-      "system": "Du bist Projektsteuerer. Entwickle Gegenmaßnahmen, um den Fertigstellungstermin zu halten oder den Verzug zu begrenzen, zum Beispiel Umplanung von Abläufen, zusätzliche Kapazität oder Parallelarbeit. Bewerte jede Maßnahme nach Zeitgewinn, Kosten, Risiko und Entscheidungsbedarf beim Bauherrn. Empfiehl ein Maßnahmenpaket.",
-      "task": "Entwickle Gegenmaßnahmen.\n\nTerminanalyse:\n{{node:schedule}}\n\nUrsachen:\n{{node:causes}}"
+      "description": "Berechnet Verzug und kritischen Pfad mit dem Datums- und dem Rechenwerkzeug.",
+      "system": "Du bist Terminplaner im Bauwesen. Berechne den Verzug jedes Meilensteins in Kalendertagen mit dem Werkzeug days_between und leite die Auswirkung auf den Fertigstellungstermin ab, wenn der Verzug bestehen bleibt. Zeige, welche Meilensteine voneinander abhängen und welcher Verzug auf dem kritischen Pfad liegt. Liste die vermuteten Ursachen so, wie sie in den Unterlagen stehen, ohne die Verantwortung zu bewerten. Die Fachteams arbeiten später ohne die Dateien: Nimm jedes Datum, jede Bemerkung und jede Zahl, die sie brauchen, in deine Zusammenfassung auf.",
+      "task": "Analysiere die Terminlage:\n\n{{run.input}}",
+      "fields": {
+        "summary": "Terminlage mit allen relevanten Daten, Bemerkungen und Vertragszahlen aus den Unterlagen",
+        "delay_days": "Erwarteter Verzug des Fertigstellungstermins in Kalendertagen",
+        "critical_path": "Die Meilensteine auf dem kritischen Pfad und wie sich ihr Verzug fortpflanzt",
+        "suspected_causes": "Vermutete Ursachen, eine je Verzug, wie in den Unterlagen angegeben"
+      }
     },
     "report": {
       "name": "Bericht an den Bauherrn",
-      "description": "Fasst Terminlage, Ursachen und Maßnahmen sachlich zusammen.",
-      "system": "Du schreibst Statusberichte für öffentliche Bauherren: sachlich, klar und ohne Schuldzuweisungen. Gliedere in Terminlage, Ursachen, Gegenmaßnahmen, Entscheidungsbedarf und Risiken, höchstens eine Seite. Weise darauf hin, dass Fragen zu Vertragsstrafen und Bauzeitverlängerung fachlich und rechtlich geprüft werden müssen.",
-      "task": "Schreibe den Statusbericht.\n\nTerminanalyse:\n{{node:schedule}}\n\nUrsachen:\n{{node:causes}}\n\nGegenmaßnahmen:\n{{node:countermeasures}}"
+      "description": "Fasst Terminlage, Ursachen, Ansprüche und Maßnahmen sachlich für den Bauherrn zusammen.",
+      "system": "Du schreibst Statusberichte für öffentliche Bauherren: sachlich, klar und ohne Schuldzuweisungen. Gliedere in Terminlage, Ursachen und Verantwortungsbereiche, Anzeigen und Ansprüche, Gegenmaßnahmen mit Kosten, vom Bauherrn benötigte Entscheidungen und Risiken, höchstens zwei Seiten. Verwende nur die Zahlen der Terminanalyse und der Teams; sind sich Teams uneinig, zeige beide Sichtweisen. Weise darauf hin, dass Fragen zu Vertragsstrafen und Bauzeitverlängerung fachlich und rechtlich geprüft werden müssen.",
+      "task": "Schreibe den Statusbericht.\n\nTerminanalyse:\n{{node:schedule}}\n\nErgebnisse der Fachteams:\n{{node:control}}"
     }
   },
   "steps": {
     "release": {
       "name": "Bericht freigeben",
-      "instructions": "Prüfe den Statusbericht, bevor er an den Bauherrn geht: Stimmen Termine und Verzüge, sind Ursachen sachlich und ohne Schuldzuweisung beschrieben, und ist klar, welche Entscheidungen der Bauherr treffen soll? Aussagen zu Vertragsstrafen und Bauzeitverlängerung müssen fachlich geprüft sein. Bei Ablehnung schreib, was fehlt; der Lauf endet dann ohne Berichtsdateien."
+      "instructions": "Prüfe den Statusbericht, bevor er an den Bauherrn geht: Stimmen Termine und Verzüge, sind Ursachen und Verantwortungsbereiche sachlich und ohne Schuldzuweisung beschrieben, passen Anzeigen und Verlängerungsansprüche zu dem, was die Bauleitung abgezeichnet hat, und ist klar, welche Entscheidungen der Bauherr treffen soll? Aussagen zu Vertragsstrafen und Bauzeitverlängerung müssen fachkundig geprüft sein. Wenn du ablehnst, schreibe, was fehlt; der Lauf endet dann ohne Berichtsdateien."
+    },
+    "control": {
+      "name": "Bauleitungskoordination",
+      "description": "Besetzt die Fachteams, die der Verzug braucht, und verteilt ihre Aufträge.",
+      "instructions": "Stelle zuerst aus den Fachteams ein Team von höchstens drei zusammen. Wähle nach den vermuteten Ursachen: Technische Ursachen, Witterung, Baugrund oder Planänderungen brauchen das Baustellenteam; verspätetes Material, Lieferanten oder die Besetzung von Nachunternehmern brauchen das Lieferkettenteam; sobald ein Verzug außerhalb des Verantwortungsbereichs des Auftragnehmers liegen kann oder eine Behinderungsanzeige fehlt, das Nachtragsteam; immer wenn der Fertigstellungstermin gefährdet ist, das Beschleunigungsteam. Vergib unabhängige Aufträge parallel. Die Teams sehen die Dateien nicht: Schreibe die relevanten Daten und Bemerkungen aus der Terminanalyse in jeden Auftrag. Beauftrage das Beschleunigungsteam erst, wenn die Ursachenteams berichtet haben, und gib ihm deren zugeordnete Verzugstage mit. Ordnen zwei Teams dieselben Tage unterschiedlich zu, gib einem von ihnen einen Klärungsauftrag. Schließe mit dem strukturierten Ergebnis jedes Teams unter dem Namen des Teams und nenne, welche Teams du nicht eingesetzt hast und warum.",
+      "task": "Kläre mit den Fachteams, die dieser Verzug braucht, Ursachen, Verantwortung, Ansprüche und Gegenmaßnahmen.\n\nTerminanalyse:\n{{node:schedule}}"
     }
   },
   "form": {

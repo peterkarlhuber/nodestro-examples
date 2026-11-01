@@ -2,6 +2,33 @@
 
 ## Unreleased
 
+### Template format 2 and the modernized examples (2026-11-01)
+
+- `FORMAT_VERSION = 2`, package version 0.3.0. New, optional template features, validated on load: model tiers
+  (`fast`, `standard`, `strong`) with `model_choice()` instead of fixed models; orchestrator nodes over parts
+  (teams with capabilities, limits, staffing and parameters); knowledge files of the template (stored when copied,
+  searched with citations); persistent memory; optional read-only MCP integrations with a labelled offline mode;
+  loops; output contracts; sanitized result files; budget and limits. Guides gain `control` (who decides what) and
+  `why` (why this architecture) in all six languages.
+- `instantiate()` creates everything a copy needs through a host (knowledge files once, parts in dependency order,
+  every reference pinned); `connect()` binds an integration only to approved read-only tools and raises
+  `IntegrationProblem` otherwise. The API models gain teams, integrations, knowledge, budget and the orchestrator
+  agent kind; the pattern `adaptive`.
+- Examples 10 (research), 16 (business idea) and 19 (construction delay) are orchestrated: a coordinator chooses
+  among four or five expert teams, runs independent teams in parallel, sets team parameters (research) or staffs a
+  team (construction; the claims team stops for a site manager's sign-off).
+- Example 2 searches an archive of past 8D reports, 12 checks contracts against a company playbook, 24 answers from
+  stored municipal rules with citations, an approval with revision and a sanitized reply file.
+- Examples 3 and 8 can read an ERP or shop system through MCP (`erp`, `shop`); without a connection they use an
+  exported file (new sample files `history` and `orders`). `python -m nodestro_examples.demo_mcp` is a local
+  read-only demo server with the same synthetic data.
+- Example 6 uses one structured brief instead of two planners, 7 sends a rejected offer back for revision (the
+  writer recalculates with the calculator), 9 ends with a hiring manager's approval, 13 remembers the learner's
+  progress, 23 sends a campaign the credibility review rejects back to the writer (at most twice).
+- New test files `test_format2.py` and `test_demo_mcp.py`; 49 test cases (before 45). The quality judge now follows
+  the workspace's provider (the former Anthropic-only judge limitation is gone).
+- `docs.py` documents teams, integrations, knowledge files and the two new guide sections.
+
 ### Runtime pin: MCP re-review fixes R-1, R-2 (2026-11-01)
 
 - Pin of `nodestro-runtime` at `58cec5c` (before: `f71086a`): a per-call approval also covers the tool's

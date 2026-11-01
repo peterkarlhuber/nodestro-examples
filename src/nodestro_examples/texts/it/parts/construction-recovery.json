@@ -1,0 +1,28 @@
+{
+  "name": "Team recupero",
+  "description": "Sviluppa misure di accelerazione per un cantiere in ritardo con giorni recuperati, costi aggiuntivi e una nuova previsione di ultimazione.",
+  "start": "Incarico",
+  "output": "Piano di recupero",
+  "agents": {
+    "expert": {
+      "name": "Controller di progetto",
+      "description": "Calcola misure di accelerazione con il tempo guadagnato e i costi.",
+      "system": "Sei un controller di progetto. Sviluppa misure per mantenere la data di ultimazione o limitare il ritardo, ad esempio riordinare le lavorazioni, squadre aggiuntive, lavoro su turni o lavorazioni in parallelo. Per ogni misura calcola con lo strumento di calcolo i giorni recuperati e i costi aggiuntivi usando le cifre del tuo incarico; se manca una tariffa di costo, dichiara chiaramente la tua ipotesi. Usa lo strumento days_between per ricavare la nuova previsione di ultimazione. Raccomanda un pacchetto di misure, indica i suoi rischi e quali decisioni dovrebbe prendere il committente.",
+      "task": "{{input}}",
+      "fields": {
+        "measures": "Misure raccomandate con i giorni recuperati e il costo di ciascuna",
+        "days_recovered": "Giorni recuperati dal pacchetto raccomandato",
+        "extra_cost_eur": "Costi aggiuntivi del pacchetto raccomandato in EUR",
+        "new_completion": "Nuova previsione di ultimazione come data",
+        "risks": "Rischi del pacchetto"
+      }
+    }
+  },
+  "contract": {
+    "measures": "Misure raccomandate con i giorni recuperati e il costo di ciascuna",
+    "days_recovered": "Giorni recuperati dal pacchetto raccomandato",
+    "extra_cost_eur": "Costi aggiuntivi del pacchetto raccomandato in EUR",
+    "new_completion": "Nuova previsione di ultimazione come data",
+    "risks": "Rischi del pacchetto"
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "name": "Nachtragsteam",
+  "description": "Entwirft Behinderungsanzeigen und bewertet Ansprüche auf Bauzeitverlängerung für Verzug außerhalb des Bereichs des Auftragnehmers; eine Bauleitung zeichnet den Entwurf ab.",
+  "start": "Auftrag",
+  "output": "Abgezeichnete Anspruchsbewertung",
+  "agents": {
+    "expert": {
+      "name": "Nachtragsmanager",
+      "description": "Entwirft die Behinderungsanzeige und bewertet die Bauzeitverlängerung.",
+      "system": "Du bist Nachtragsmanager eines Generalunternehmers. Entwirf für Verzüge, die außerhalb des Bereichs des Auftragnehmers liegen können, etwa vom Bauherrn angeordnete Planänderungen, eine kurze, sachliche Behinderungsanzeige an den Bauherrn: was seit wann behindert ist, die Ursache, die erwartete Auswirkung und die Bitte um Anordnung. Bewerte nur anhand der Daten im Auftrag, welche Bauzeitverlängerung begründet sein könnte und warum, und nenne die Frist, bis zu der die Anzeige versandt werden sollte; ist die vertragliche Frist unbekannt, sage das, statt eine zu erfinden. Nenne die Risiken, etwa eine verspätete Anzeige oder fehlende Nachweise. Dein Entwurf ist keine Rechtsberatung: Eine Bauleitung zeichnet ihn ab, bevor er verwendet wird, und Vertragsfragen bleiben der rechtlichen Prüfung vorbehalten.",
+      "task": "{{input}}",
+      "fields": {
+        "notice": "Entwurf der Behinderungsanzeige an den Bauherrn",
+        "claim_basis": "Begründung, warum der Verzug außerhalb des Bereichs des Auftragnehmers liegen kann",
+        "extension_days": "Bauzeitverlängerung in Kalendertagen, die begründet sein könnte",
+        "deadline": "Bis wann die Anzeige versandt werden sollte, oder dass die Frist unbekannt ist",
+        "risks": "Risiken des Anspruchs"
+      }
+    }
+  },
+  "contract": {
+    "notice": "Entwurf der Behinderungsanzeige an den Bauherrn",
+    "claim_basis": "Begründung, warum der Verzug außerhalb des Bereichs des Auftragnehmers liegen kann",
+    "extension_days": "Bauzeitverlängerung in Kalendertagen, die begründet sein könnte",
+    "deadline": "Bis wann die Anzeige versandt werden sollte, oder dass die Frist unbekannt ist",
+    "risks": "Risiken des Anspruchs"
+  },
+  "steps": {
+    "sign": {
+      "name": "Anzeige abzeichnen",
+      "instructions": "Prüfe als verantwortliche Bauleitung den Entwurf der Behinderungsanzeige und den Verlängerungsanspruch: Stimmen Sachverhalt und Daten, ist der Ton sachlich, und soll die Anzeige wirklich versandt werden? Die Freigabe gibt den Entwurf nur für den Statusbericht frei; nichts wird versandt. Wenn du ablehnst, schreibe warum; der Lauf endet dann, damit kein ungeprüfter Anspruch beim Bauherrn ankommt."
+    }
+  }
+}

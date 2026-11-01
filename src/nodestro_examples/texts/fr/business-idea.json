@@ -1,42 +1,26 @@
 {
   "name": "Évaluer une idée d'entreprise",
   "field": "Indépendants et créateurs d'entreprise",
-  "description": "Évaluer en parallèle le potentiel de marché, la rentabilité et les risques d'une idée d'entreprise et rendre un verdict.",
+  "description": "Faire examiner une idée d'entreprise par exactement les équipes d'experts dont elle a besoin et rendre un verdict argumenté.",
   "start": "Idée d'entreprise",
   "output": "Évaluation",
   "file_name": "Evaluation_idee_entreprise",
   "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nIdée : service mobile de réparation de vélos « Vélo Secours » dans une ville de 180 000 habitants.\nUn vélo cargo équipé d'outils se rend chez les clients à domicile ou au bureau ; réservation via un site web simple.\n\nHypothèses du fondateur :\n- Intervention moyenne 65 EUR HT, part de matériel 30 %\n- Capacité 6 interventions par jour, 20 jours ouvrés par mois ; en moyenne 50 % d'occupation la première année\n- Investissement de départ 18 000 EUR (vélo cargo, outils, site web), financé sur fonds propres\n- Frais courants 1 400 EUR par mois (assurance, stockage, téléphone, logiciel, marketing)\n- Rémunération souhaitée du fondateur 2 500 EUR par mois\n- Cibles : navetteurs, familles avec vélos cargo, entreprises proposant le leasing de vélos à leurs salariés\n- Connu : trois magasins de vélos en ville avec deux à trois semaines d'attente au printemps",
   "guide": {
-    "problem": "Avant de créer une entreprise, il vaut la peine de regarder sobrement le marché, les chiffres et les risques. Le workflow fait examiner l'idée par trois experts en même temps et un jury rend un verdict justifié.",
-    "flow": "Trois agents travaillent en parallèle : l'analyste de marché estime les cibles et la concurrence, le calculateur de rentabilité détermine le point mort et des scénarios avec la calculatrice, l'analyste des risques cherche les points faibles. Le jury d'investisseurs pèse le tout et livre un verdict structuré avec une note.",
+    "problem": "Avant de créer une entreprise, un regard lucide sur le marché, les chiffres et les risques est payant. Mais toutes les idées n'ont pas besoin des mêmes experts : un service de réparation de vélos n'a pas besoin d'une spécialiste des autorisations, une start-up de boissons si. Le workflow laisse une coach en création d'entreprise réunir les bonnes équipes d'experts et un jury d'investisseurs rendre un verdict argumenté.",
+    "flow": "La coach en création est un orchestrateur : elle lit l'idée et décide lesquelles des cinq équipes d'experts elle implique. Marché, rentabilité et risques travaillent en parallèle pour chaque idée ; réglementation et exploitation ne s'ajoutent que si l'idée le demande. Si des résultats se contredisent, la coach pose à une équipe une question complémentaire ciblée. Le jury d'investisseurs pèse ensuite tous les rapports et rend un verdict structuré avec une note.",
     "input": "Une description de l'idée avec l'offre, les cibles, les prix, les coûts, la capacité et les concurrents connus.",
-    "result": "Un verdict structuré (poursuivre, adapter ou abandonner) avec une note, des forces, des risques, des hypothèses à vérifier et des prochaines étapes concrètes pour valider l'idée, aussi en rapport PDF.",
-    "adapt": "Décrivez votre idée avec vos chiffres. Plus les hypothèses sont honnêtes, plus le verdict est utile. Chargez vos propres données de marché ou résultats d'enquête comme connaissance et attribuez-les à l'analyste de marché."
+    "result": "Un verdict structuré (poursuivre, adapter ou abandonner) avec une note, les forces, les risques, les hypothèses à tester et des prochaines étapes concrètes, également sous forme de rapport PDF. Dans l'exécution, la vue d'orchestration montre quelles équipes la coach a choisies, pourquoi, avec quelle mission et ce que chaque équipe a livré.",
+    "adapt": "Décrivez votre idée avec vos propres chiffres. Pour ajouter un expert, par exemple pour les questions fiscales, enregistrez un workflow avec une description claire et des capacités et ajoutez-le aux équipes de la coach ; elle décide alors seule quand il est utile. Vos propres données de marché peuvent être importées comme connaissances et attribuées à l'analyste de marché de l'équipe marché.",
+    "control": "Automatique : la coach décide quelles équipes travaillent, dans quel ordre et avec quelle mission ; chaque décision est consignée avec sa raison. Des limites encadrent cela : au plus 6 décisions, chaque équipe au plus deux fois, au plus 3 équipes en même temps et un budget de 3 USD par exécution. Aucune étape n'attend une personne ; le verdict est la base de votre propre décision.",
+    "why": "Un workflow fixe ferait soit travailler les cinq équipes à chaque fois et paierait une analyse des autorisations dont un service de vélos n'a pas besoin, soit les omettrait quand elles comptent. La coach fait exactement ce choix, de façon traçable et dans des limites. Le jury reste une étape fixe, car un verdict structuré et comparable ne doit pas dépendre de la façon dont la coach a réparti le travail."
   },
   "agents": {
-    "market": {
-      "name": "Analyste de marché",
-      "description": "Estime les cibles, la demande et la concurrence.",
-      "system": "Tu es analyste de marché pour les start-ups. Décris les cibles, leurs besoins et leur disposition à payer, estime le potentiel de marché par un calcul approximatif transparent et prudent et analyse la concurrence. Indique quelles informations viennent de la description et lesquelles reposent sur des connaissances générales et doivent être vérifiées sur place.",
-      "task": "Analyse le marché pour cette idée :\n\n{{input}}"
-    },
-    "economics": {
-      "name": "Calculateur de rentabilité",
-      "description": "Calcule marge sur coûts variables, point mort et scénarios avec la calculatrice.",
-      "system": "Tu es conseiller en création d'entreprise spécialisé en finance. Utilise la calculatrice pour calculer la marge sur coûts variables par intervention, le chiffre d'affaires et le résultat mensuels, le point mort en interventions par mois (rémunération du fondateur comprise) et le délai de retour de l'investissement de départ. Calcule trois scénarios (prudent, attendu, optimiste) et montre la sensibilité du résultat à l'occupation et au prix.",
-      "task": "Calcule la rentabilité de cette idée :\n\n{{input}}"
-    },
-    "risks": {
-      "name": "Analyste des risques",
-      "description": "Cherche les points faibles et les risques de l'idée.",
-      "system": "Tu es un coach de création d'entreprise expérimenté et tu joues délibérément l'avocat du diable. Cherche les plus grands risques : demande, saisonnalité, dépendance à une seule personne, concurrence, exigences légales, possibilité de croissance et financement. Évalue chaque risque selon sa probabilité et son impact et propose un moyen peu coûteux de le tester avant la création.",
-      "task": "Analyse les risques de cette idée :\n\n{{input}}"
-    },
     "jury": {
       "name": "Jury d'investisseurs",
       "description": "Pèse le marché, les chiffres et les risques et rend un verdict.",
       "system": "Tu es un jury de fondateurs et d'investisseurs expérimentés. Pèse le marché, la rentabilité et les risques les uns par rapport aux autres et rends un verdict : poursuivre, adapter ou abandonner. Donne une note de 1 à 10 et justifie-la. Nomme les hypothèses à tester en premier et des prochaines étapes concrètes et peu coûteuses. Sois honnête mais juste.",
-      "task": "Évalue l'idée.\n\nAnalyse de marché :\n{{node:market}}\n\nRentabilité :\n{{node:economics}}\n\nRisques :\n{{node:risks}}",
+      "task": "Évalue l'idée.\n\nIdée :\n{{run.input}}\n\nRapports des équipes d'experts :\n{{node:coach}}",
       "fields": {
         "verdict": "Verdict (poursuivre, adapter ou abandonner) avec justification",
         "score": "Note de 1 à 10",
@@ -50,6 +34,18 @@
   "tests": {
     "idea": {
       "name": "Service mobile de réparation de vélos"
+    },
+    "regulated_idea": {
+      "name": "Brasserie de kombucha (aliment réglementé)",
+      "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nIdée : petite brasserie de kombucha « Fermento » dans une cuisine professionnelle louée ; vente en bouteilles de 0,33 l sur des marchés hebdomadaires et à 15 cafés de la région.\n\nHypothèses des fondateurs :\n- Prix aux cafés 2,20 EUR la bouteille, au marché 3,50 EUR ; ingrédients et bouteille 0,70 EUR\n- 2 000 bouteilles par mois la première année, dont 60 % pour les cafés\n- Investissement de départ 35 000 EUR (cuves de fermentation, embouteilleuse, étiquettes, utilitaire), dont 20 000 EUR par prêt bancaire\n- Coûts courants 2 600 EUR par mois (location de la cuisine, assurance, droits de place, carburant)\n- Rémunération des fondateurs 2 × 2 000 EUR par mois\n- La fermentation peut faire passer la teneur en alcool au-dessus de 0,5 % si les bouteilles sont stockées au chaud\n- Connu : deux marques de supermarché, aucun producteur local"
+    }
+  },
+  "steps": {
+    "coach": {
+      "name": "Coach en création",
+      "description": "Décide de quelles équipes d'experts l'idée a besoin, les fait travailler en parallèle et pose des questions complémentaires.",
+      "instructions": "Chaque idée a besoin des équipes marché, rentabilité et risques : lance-les ensemble par une décision en parallèle. N'ajoute l'équipe réglementation que si l'idée touche aux autorisations, aux aliments, à la santé, à l'alcool, aux finances, aux données personnelles, au transport de personnes ou à d'autres domaines réglementés. N'ajoute l'équipe exploitation que si l'idée dépend de la production, de la technique, de la logistique ou de fournisseurs. Donne à chaque équipe l'idée complète avec tous les chiffres et hypothèses et dis ce dont tu as besoin. Si des résultats se contredisent ou si une équipe signale une question ouverte à laquelle une autre peut répondre, confie une seule question complémentaire ciblée. Termine avec les résultats des équipes côte à côte, chacun sous le nom de son équipe, suivis des contradictions et des questions ouvertes. Ne rends pas de verdict toi-même ; c'est le rôle du jury.",
+      "task": "Fais examiner cette idée d'entreprise par les équipes d'experts dont elle a besoin :\n\n{{run.input}}"
     }
   }
 }

@@ -6,11 +6,13 @@
   "output": "Antwortentwürfe",
   "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nHeutiges Datum: 2026-03-20\n\nAuszug aus unseren Servicerichtlinien (Beispiel-Onlineshop „Musterküche“):\n- Rückgabe: 30 Tage ab Zustellung, Ware unbenutzt in Originalverpackung; Rücksendung kostenlos.\n- Gewährleistung: 2 Jahre; bei Defekten Reparatur oder Ersatz nach Prüfung, Foto des Defekts hilft.\n- Lieferzeit: 2–4 Werktage; bei Verzögerung über 7 Werktage bieten wir kostenlose Stornierung an.\n- Gutscheine und Kulanz über 20 EUR nur nach Freigabe durch die Teamleitung.\n\nAnfrage 1 – Jonas Beispiel, Bestellung 10442, zugestellt am 2026-02-27:\n„Die Pfanne passt nicht auf mein Induktionsfeld. Kann ich sie zurückgeben? Sie ist noch originalverpackt.“\n\nAnfrage 2 – Maria Muster, Bestellung 10518, zugestellt am 2026-01-15:\n„Der Griff meines Topfes hat sich gelöst, nach zwei Monaten! Das ist echt ärgerlich. Ich will mein Geld zurück.“\n\nAnfrage 3 – Ali Exempel, Bestellung 10603, bestellt am 2026-03-09, noch nicht geliefert:\n„Wo bleibt meine Bestellung? Ich brauche das Messerset als Geschenk am Wochenende.“\n\nAnfrage 4 – Sophie Probe:\n„Habt ihr auch Backformen aus Silikon ohne Weichmacher?“",
   "guide": {
-    "problem": "Im Kundenservice kommen viele Anfragen gleichzeitig an, und jede braucht die richtige Regel und den richtigen Ton. Der Workflow sortiert die Anfragen, prüft Richtlinien und Fristen und bereitet Antworten zur Freigabe vor.",
-    "flow": "Ein schneller Klassifizierer ordnet jede Anfrage nach Thema, Dringlichkeit und Stimmung. Der Richtlinienprüfer wendet die Servicerichtlinien an und rechnet Fristen mit dem Datums-Tool nach. Der Antwortverfasser schreibt die Entwürfe; eine Qualitätsprüfung kontrolliert, dass nichts über die Richtlinien hinaus zugesagt wird. Ein Entscheidungsknoten schickt Eskalationen zuerst an einen Deeskalations-Agenten. Jeder Entwurf wartet auf eine Freigabe; eine Ablehnung mit Rückmeldung schickt die Entwürfe über eine Schleife zurück an den Antwortschreiber, der sie überarbeitet und erneut zur Freigabe vorlegt (höchstens drei Runden).",
-    "input": "Mehrere Kundenanfragen mit Bestell- und Lieferdaten, das heutige Datum und eure Servicerichtlinien, als Auszug im Text oder als Datei (PDF, Word, Markdown); die Beispieldatei enthält ausführlichere Richtlinien.",
-    "result": "Für jede Anfrage eine Einordnung, die anzuwendende Regel mit Fristprüfung und ein Antwortentwurf, der vor dem Versand von einem Menschen freigegeben wird.",
-    "adapt": "Hänge eure vollständigen Richtlinien und FAQ als Datei an oder lade sie als Wissen hoch und weise sie dem Richtlinienprüfer zu, wenn sie dauerhaft gelten. Den Ton eurer Marke (Du oder Sie, Grußformel) legst du im System-Prompt des Antwortverfassers fest. Viele Anfragen auf einmal bearbeitest du mit der Stapelverarbeitung."
+    "problem": "Im Kundenservice kommen viele Anfragen gleichzeitig an, und jede braucht die richtige Regel, die richtigen Bestelldaten und den richtigen Ton. Der Workflow sortiert die Anfragen, prüft Richtlinien und Fristen anhand der Bestelldaten und bereitet Antworten zur Freigabe vor.",
+    "flow": "Ein schneller Klassifizierer ordnet jede Anfrage nach Thema, Dringlichkeit und Stimmung. Der Richtlinienprüfer wendet die Servicerichtlinien an und rechnet Fristen mit dem Datums-Tool nach; ist deine Kopie mit dem Shopsystem verbunden, schlägt er jede Bestellung mit get_order nur lesend nach, sonst nutzt er die Bestelldaten aus den Anfragen oder einen angehängten Bestellexport. Der Antwortverfasser schreibt die Entwürfe; eine Qualitätsprüfung kontrolliert, dass nichts über die Richtlinien hinaus zugesagt wird. Ein Entscheidungsknoten schickt Eskalationen zuerst an einen Deeskalations-Agenten. Jeder Entwurf wartet auf eine Freigabe; eine Ablehnung mit Kommentar schickt die Entwürfe über eine Schleife zurück an den Antwortverfasser, der sie überarbeitet und erneut zur Freigabe vorlegt (höchstens drei Runden).",
+    "input": "Mehrere Kundenanfragen mit Bestellnummern, das heutige Datum und eure Servicerichtlinien, als Auszug im Text oder als Datei (PDF, Word, Markdown); die Beispieldatei enthält ausführlichere Richtlinien. Bestell- und Lieferdaten stammen aus den Anfragen, aus einem angehängten Bestellexport eures Shopsystems (JSON, CSV oder Excel) oder bei bestehender Verbindung direkt aus dem Shopsystem; der Beispielexport enthält die drei Bestellungen der Beispielanfragen.",
+    "result": "Für jede Anfrage eine Einordnung, die anzuwendende Regel mit Fristprüfung und ein Antwortentwurf, der vor dem Versand von einem Menschen freigegeben wird. Die Richtlinienprüfung nennt, woher die Bestelldaten stammen (Shopsystem, Export oder Anfrage) und welche fehlen.",
+    "adapt": "Hänge eure vollständigen Richtlinien und FAQ als Datei an oder lade sie als Wissen hoch und weise sie dem Richtlinienprüfer zu, wenn sie dauerhaft gelten. Um Bestellungen live zu prüfen, lässt du die Shop-Integration einrichten und wählst den Server beim Kopieren des Beispiels. Den Ton eurer Marke (Du oder Sie, Grußformel) legst du im System-Prompt des Antwortverfassers fest. Viele Anfragen auf einmal bearbeitest du mit der Stapelverarbeitung; Läufe ohne anwesende Person dürfen die Shop-Verbindung aber nicht nutzen, gib Stapeln deshalb einen Bestellexport mit.",
+    "control": "Automatisch: die Einordnung, die Eskalationsentscheidung (zur Deeskalation, wenn mindestens ein Kunde verärgert ist oder mehr verlangt, als die Richtlinien erlauben), die Richtlinienprüfung und die Entwürfe; das Datums-Tool rechnet Fristen, eine Qualitätsprüfung testet die Entwürfe gegen drei Kriterien (richtlinienkonform, Ton, keine Zusagen), und jeder Schritt wird protokolliert. Ein Mensch gibt jeden Entwurf frei, bevor etwas versendet wird: Eine Ablehnung braucht einen Kommentar und schickt die Entwürfe zurück an den Antwortverfasser; werden sie nach höchstens drei Runden weiter abgelehnt, endet der Lauf als fehlgeschlagen. Die Antworten bleiben Entwürfe; nichts wird automatisch versendet. Die Shop-Verbindung ist optional und liest nur: Die Kopie bekommt get_order nur, wenn du sie mit einem MCP-Server verbindest, dessen Tool ein Administrator als nur lesend freigegeben hat; sonst läuft sie in einem deutlich gekennzeichneten Offline-Modus. Läufe ohne anwesende Person (Zeitpläne, Testreihen, Stapelverarbeitung) dürfen keine MCP-Tools nutzen, außer ein Administrator erlaubt unbeaufsichtigtes MCP ausdrücklich.",
+    "why": "Die Schritte bauen aufeinander auf (einordnen, prüfen, schreiben), daher genügt eine feste Kette mit einer Abzweigung für Eskalationen; ein Orchestrator brächte Kosten ohne Nutzen, und für das Einordnen reicht ein schnelles Modell. Bestelldaten kommen über eine Integration, weil sie im Shopsystem liegen und sich stündlich ändern; der Offline-Modus mit Export hält das Beispiel auch ohne Verbindung nutzbar. Die Freigabe mit Überarbeitungsschleife bleibt, weil die Antworten an Kunden gehen: Das letzte Wort hat ein Mensch."
   },
   "agents": {
     "triage": {
@@ -27,7 +29,9 @@
       "name": "Richtlinienprüfer",
       "description": "Wendet die Servicerichtlinien an und prüft Fristen mit dem Datums-Tool.",
       "system": "Du bist Teamleiter im Kundenservice. Bestimme für jede Anfrage, welche Regel aus den Servicerichtlinien gilt. Berechne Fristen mit dem Tool days_between, statt sie zu schätzen. Lege fest, was zugesagt werden darf, was eine Freigabe braucht und welche Informationen beim Kunden fehlen. Steht eine Antwort nicht in den Richtlinien, sage das deutlich.",
-      "task": "Prüfe die Richtlinien für diese Anfragen.\n\nAnfragen und Richtlinien:\n{{run.input}}\n\nEinordnung:\n{{node:triage}}"
+      "task": "Prüfe die Richtlinien für diese Anfragen.\n\nAnfragen und Richtlinien:\n{{run.input}}\n\nEinordnung:\n{{node:triage}}",
+      "online": "Du bist mit dem Shopsystem verbunden (nur lesend). Schlage jede Bestellnummer aus den Anfragen mit get_order nach: Bestell- und Lieferdatum, Status, Artikel und den letzten Hinweis des Paketdienstes. Die Shopdaten sind maßgeblich gegenüber den Angaben der Kunden; weichen sie ab, sage das und rechne Fristen mit den Shopdaten. Hat eine Anfrage keine Bestellnummer oder wird eine Bestellung nicht gefunden, sage das und nenne, was nachgefragt werden muss. Rate nie Bestelldaten.",
+      "offline": "Es ist kein Shopsystem verbunden (Offline-Modus). Nutze nur die Bestelldaten aus den Anfragen oder aus einem angehängten Bestellexport des Shopsystems; der Export ist maßgeblich gegenüber den Angaben der Kunden zu ihrer Bestellung. Nenne für jede Anfrage, welche Bestelldaten fehlen (Bestelldatum, Lieferdatum, Status, Artikel) und im Shopsystem geprüft oder beim Kunden erfragt werden müssen. Erfinde nie Bestelldaten oder Fristen."
     },
     "reply": {
       "name": "Antwortverfasser",
@@ -64,6 +68,10 @@
     "policies": {
       "label": "Servicerichtlinien als Datei",
       "description": "Optional: eure Richtlinien oder FAQ als PDF, Word, Markdown oder Text, bis zu 5 Dateien. Ohne Datei gilt der Auszug im Text."
+    },
+    "orders": {
+      "label": "Bestellexport (Shopsystem)",
+      "description": "Optional: ein Export der betroffenen Bestellungen aus eurem Shopsystem als JSON, CSV oder Excel. Nicht nötig, wenn deine Kopie mit dem Shopsystem verbunden ist; ohne beides gelten nur die Bestelldaten in den Anfragen."
     }
   },
   "samples": {
@@ -71,6 +79,45 @@
       "name": "Servicerichtlinien_Musterkueche",
       "description": "Vollständigere erfundene Servicerichtlinien als PDF.",
       "content": "# Servicerichtlinien Onlineshop „Musterküche“ (fiktiv)\n\nStand: 01.01.2026\n\n## 1. Rückgabe\n\n- 30 Tage ab Zustellung, Ware unbenutzt in Originalverpackung.\n- Die Rücksendung ist kostenlos; das Rücksendeetikett schicken wir per E-Mail.\n- Erstattung innerhalb von 5 Werktagen nach Eingang der Ware.\n\n## 2. Gewährleistung\n\n- 2 Jahre ab Zustellung.\n- Bei Defekten zuerst Reparatur oder Ersatz nach Prüfung; ein Foto des Defekts beschleunigt die Prüfung.\n- Eine Erstattung des Kaufpreises ist erst möglich, wenn Reparatur oder Ersatz scheitern.\n\n## 3. Lieferung\n\n- Lieferzeit 2–4 Werktage.\n- Bei Verzögerung über 7 Werktage bieten wir die kostenlose Stornierung an.\n- Expressversand ist für Bestellungen bis 14 Uhr gegen 9,90 EUR möglich.\n\n## 4. Kulanz\n\n- Gutscheine und Kulanz bis 20 EUR darf das Serviceteam selbst gewähren.\n- Alles über 20 EUR nur nach Freigabe durch die Teamleitung.\n\n## 5. Produktfragen\n\n- Auskünfte zu Materialien nur aus den Produktdatenblättern; im Zweifel nachfragen statt raten."
+    },
+    "orders": {
+      "name": "Shop_Bestellungen_Musterkueche",
+      "description": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren. Drei Bestellungen des Beispielshops als JSON-Export: Bestell- und Lieferdatum, Status, Artikel und Hinweis des Paketdienstes.",
+      "content": [
+        {
+          "order": "10442",
+          "customer": "Jonas Beispiel",
+          "ordered": "2026-02-24",
+          "delivered": "2026-02-27",
+          "status": "zugestellt",
+          "items": [
+            "Aluminium-Bratpfanne 28 cm (Produktdaten: nicht induktionsgeeignet)"
+          ],
+          "carrier_note": "Zugestellt, an den Kunden übergeben."
+        },
+        {
+          "order": "10518",
+          "customer": "Maria Muster",
+          "ordered": "2026-01-12",
+          "delivered": "2026-01-15",
+          "status": "zugestellt",
+          "items": [
+            "Edelstahl-Kochtopf 20 cm mit Deckel"
+          ],
+          "carrier_note": "Zugestellt, beim Nachbarn abgegeben."
+        },
+        {
+          "order": "10603",
+          "customer": "Ali Exempel",
+          "ordered": "2026-03-09",
+          "delivered": null,
+          "status": "verzögert",
+          "items": [
+            "Messerset, 5-teilig, mit Block"
+          ],
+          "carrier_note": "Verzögerung im Paketzentrum; neuer Zustelltermin 2026-03-23."
+        }
+      ]
     }
   },
   "tests": {
@@ -84,6 +131,19 @@
     "policies_file": {
       "name": "Richtlinien als PDF-Datei",
       "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nHeutiges Datum: 2026-03-20\nUnsere Servicerichtlinien liegen als Datei bei.\n\nAnfrage 1 – Jonas Beispiel, Bestellung 10442, zugestellt am 2026-02-27:\n„Die Pfanne passt nicht auf mein Induktionsfeld. Kann ich sie zurückgeben? Sie ist noch originalverpackt.“\n\nAnfrage 2 – Maria Muster, Bestellung 10518, zugestellt am 2026-01-15:\n„Der Griff meines Topfes hat sich gelöst, nach zwei Monaten! Das ist echt ärgerlich. Ich will mein Geld zurück.“"
+    },
+    "order_lookup": {
+      "name": "Nur Bestellnummern, Bestellexport angehängt",
+      "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nHeutiges Datum: 2026-03-20\n\nAuszug aus unseren Servicerichtlinien (Beispiel-Onlineshop „Musterküche“):\n- Rückgabe: 30 Tage ab Zustellung, Ware unbenutzt in Originalverpackung; Rücksendung kostenlos.\n- Gewährleistung: 2 Jahre; bei Defekten Reparatur oder Ersatz nach Prüfung, Foto des Defekts hilft.\n- Lieferzeit: 2–4 Werktage; bei Verzögerung über 7 Werktage bieten wir kostenlose Stornierung an.\n- Gutscheine und Kulanz über 20 EUR nur nach Freigabe durch die Teamleitung.\n\nDer Bestellexport aus unserem Shopsystem liegt als Datei bei.\n\nAnfrage 1 – Jonas Beispiel, Bestellung 10442:\n„Die Pfanne passt nicht auf mein Induktionsfeld. Kann ich sie zurückgeben? Sie ist noch originalverpackt.“\n\nAnfrage 2 – Maria Muster, Bestellung 10518:\n„Der Griff meines Topfes hat sich gelöst, nach zwei Monaten! Das ist echt ärgerlich. Ich will mein Geld zurück.“\n\nAnfrage 3 – Ali Exempel, Bestellung 10603:\n„Wo bleibt meine Bestellung? Ich brauche das Messerset als Geschenk am Wochenende.“"
+    }
+  },
+  "integrations": {
+    "shop": {
+      "name": "Shopsystem (Bestellungen)",
+      "description": "Nur lesende Bestellabfrage in eurem Shopsystem über MCP: get_order liefert Bestell- und Lieferdatum, Status, Artikel und den letzten Hinweis des Paketdienstes einer Bestellung. Der Richtlinienprüfer prüft damit Fristen anhand echter Bestelldaten statt anhand der Angaben der Kunden.",
+      "setup": "Ein Administrator fügt den MCP-Server eures Shopsystems unter Tools → Verbundene Dienste hinzu und gibt dessen Tool get_order als nur lesend frei. Beim Kopieren des Beispiels wählst du diesen Server als Verbindung; ohne Verbindung läuft die Kopie im Offline-Modus. Zum Ausprobieren ohne Shopsystem startest du auf dem Rechner mit der Nodestro-Desktop-App `python -m nodestro_examples.demo_mcp --language de`, fügst http://127.0.0.1:8765/mcp unter Tools → Verbundene Dienste mit der Zustimmung für einen lokalen Entwicklungsserver hinzu, gibst seine Tools als nur lesend frei und wählst ihn beim Kopieren. Der Demo-Server liest nur und liefert die synthetischen Bestellungen des Beispielexports, nie echte Kundendaten. Läufe ohne anwesende Person (Zeitpläne, Testreihen, Stapelverarbeitung) dürfen keine MCP-Tools nutzen, außer ein Administrator erlaubt unbeaufsichtigtes MCP ausdrücklich.",
+      "online": "Mit dem Shopsystem verbunden: Der Richtlinienprüfer schlägt Bestellungen mit get_order nur lesend nach; die Shopdaten sind maßgeblich gegenüber den Angaben der Kunden.",
+      "offline": "Offline-Modus: Es ist kein Shopsystem verbunden. Der Richtlinienprüfer nutzt nur die Bestelldaten aus den Anfragen oder aus einem angehängten Bestellexport und nennt fehlende Bestelldaten; er fragt nichts ab."
     }
   }
 }

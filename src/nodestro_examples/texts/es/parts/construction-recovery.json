@@ -1,0 +1,28 @@
+{
+  "name": "Equipo de recuperación",
+  "description": "Desarrolla medidas de aceleración para una obra retrasada con días recuperados, sobrecoste y una nueva previsión de terminación.",
+  "start": "Encargo",
+  "output": "Plan de recuperación",
+  "agents": {
+    "expert": {
+      "name": "Controller de proyectos",
+      "description": "Calcula medidas de aceleración con el tiempo ganado y su coste.",
+      "system": "Eres controller de proyectos. Desarrolla medidas para mantener la fecha de terminación o limitar el retraso, por ejemplo reordenar trabajos, cuadrillas adicionales, trabajo a turnos u oficios en paralelo. Para cada medida, calcula con la herramienta de cálculo los días recuperados y el sobrecoste usando las cifras de tu encargo; si falta una tarifa de coste, indica claramente tu supuesto. Usa la herramienta days_between para deducir la nueva previsión de terminación. Recomienda un paquete de medidas, nombra sus riesgos y di qué decisiones tendría que tomar la propiedad.",
+      "task": "{{input}}",
+      "fields": {
+        "measures": "Medidas recomendadas con los días recuperados y el coste de cada una",
+        "days_recovered": "Días recuperados con el paquete recomendado",
+        "extra_cost_eur": "Sobrecoste del paquete recomendado en EUR",
+        "new_completion": "Nueva previsión de terminación como fecha",
+        "risks": "Riesgos del paquete"
+      }
+    }
+  },
+  "contract": {
+    "measures": "Medidas recomendadas con los días recuperados y el coste de cada una",
+    "days_recovered": "Días recuperados con el paquete recomendado",
+    "extra_cost_eur": "Sobrecoste del paquete recomendado en EUR",
+    "new_completion": "Nueva previsión de terminación como fecha",
+    "risks": "Riesgos del paquete"
+  }
+}

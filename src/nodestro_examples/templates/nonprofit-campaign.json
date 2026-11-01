@@ -62,6 +62,22 @@
       ]
     },
     {
+      "id": "check",
+      "type": "condition",
+      "x": 1000,
+      "y": 340,
+      "condition": {
+        "source": "integrity",
+        "rules": [
+          {
+            "id": "credible",
+            "field": "credible",
+            "operator": "is_true"
+          }
+        ]
+      }
+    },
+    {
       "id": "output",
       "type": "output",
       "x": 1080,
@@ -89,6 +105,10 @@
       "integrity"
     ],
     [
+      "integrity",
+      "check"
+    ],
+    [
       "campaign",
       "output"
     ],
@@ -99,6 +119,20 @@
     [
       "integrity",
       "output"
+    ],
+    [
+      "check",
+      "output",
+      "credible"
+    ],
+    [
+      "check",
+      "campaign",
+      "default",
+      {
+        "max_iterations": 2,
+        "on_exhausted": "continue"
+      }
     ]
   ],
   "tests": [

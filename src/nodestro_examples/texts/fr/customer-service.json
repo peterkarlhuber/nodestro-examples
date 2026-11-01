@@ -6,11 +6,13 @@
   "output": "Projets de réponse",
   "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nDate du jour : 2026-03-20\n\nExtrait de notre politique de service (boutique en ligne d'exemple « Cuisine Modèle ») :\n- Retours : 30 jours à compter de la livraison, article non utilisé dans son emballage d'origine ; retour gratuit.\n- Garantie : 2 ans ; en cas de défaut, réparation ou remplacement après examen, une photo du défaut aide.\n- Délai de livraison : 2 à 4 jours ouvrés ; au-delà de 7 jours ouvrés de retard, nous proposons l'annulation gratuite.\n- Bons d'achat et gestes commerciaux de plus de 20 EUR uniquement après accord du chef d'équipe.\n\nDemande 1 – Jonas Exemple, commande 10442, livrée le 2026-02-27 :\n« La poêle ne fonctionne pas sur ma plaque à induction. Puis-je la retourner ? Elle est encore dans son emballage d'origine. »\n\nDemande 2 – Maria Modèle, commande 10518, livrée le 2026-01-15 :\n« La poignée de ma casserole s'est détachée, au bout de deux mois ! C'est vraiment agaçant. Je veux être remboursée. »\n\nDemande 3 – Ali Spécimen, commande 10603, passée le 2026-03-09, pas encore livrée :\n« Où est ma commande ? J'ai besoin du coffret de couteaux comme cadeau ce week-end. »\n\nDemande 4 – Sophie Essai :\n« Avez-vous aussi des moules en silicone sans plastifiants ? »",
   "guide": {
-    "problem": "Au service client, de nombreuses demandes arrivent en même temps, et chacune exige la bonne règle et le bon ton. Le workflow trie les demandes, vérifie règles et délais et prépare des réponses à valider.",
-    "flow": "Un classificateur rapide classe chaque demande par thème, urgence et humeur. Le vérificateur des règles applique la politique de service et recalcule les délais avec l'outil de dates. Le rédacteur des réponses rédige les projets ; une vérification qualité contrôle que rien n'est promis au-delà de la politique. Un nœud de décision envoie d'abord les escalades à un agent de désescalade. Chaque brouillon attend une validation ; un refus avec retour renvoie les brouillons par une boucle au rédacteur de réponses, qui les révise et les soumet de nouveau à validation (trois tours au plus).",
-    "input": "Plusieurs demandes de clients avec données de commande et de livraison, la date du jour et votre politique de service, en extrait dans le texte ou en fichier (PDF, Word, Markdown) ; le fichier d'exemple contient une politique plus détaillée.",
-    "result": "Pour chaque demande, un classement, la règle applicable avec contrôle du délai et un projet de réponse qu'une personne valide avant l'envoi.",
-    "adapt": "Joignez votre politique complète et votre FAQ en fichier, ou chargez-les comme connaissance et attribuez-les au vérificateur des règles si elles s'appliquent durablement. Le ton de votre marque (tutoiement ou vouvoiement, formule de politesse) se définit dans le prompt système du rédacteur des réponses. Pour traiter de nombreuses demandes à la fois, utilisez le traitement par lots."
+    "problem": "Au service client, de nombreuses demandes arrivent en même temps, et chacune exige la bonne règle, les bonnes données de commande et le bon ton. Le workflow trie les demandes, vérifie règles et délais d'après les données de commande et prépare des réponses à valider.",
+    "flow": "Un classificateur rapide classe chaque demande par thème, urgence et humeur. Le vérificateur des règles applique la politique de service et recalcule les délais avec l'outil de dates ; si votre copie est connectée à la boutique, il consulte chaque commande en lecture seule avec get_order, sinon il utilise les données de commande des demandes ou un export de commandes joint. Le rédacteur des réponses rédige les projets ; une vérification qualité contrôle que rien n'est promis au-delà de la politique. Un nœud de décision envoie d'abord les escalades à un agent de désescalade. Chaque brouillon attend une validation ; un refus avec commentaire renvoie les brouillons par une boucle au rédacteur des réponses, qui les révise et les soumet de nouveau à validation (trois tours au plus).",
+    "input": "Plusieurs demandes de clients avec numéros de commande, la date du jour et votre politique de service, en extrait dans le texte ou en fichier (PDF, Word, Markdown) ; le fichier d'exemple contient une politique plus détaillée. Les dates de commande et de livraison viennent des demandes, d'un export de commandes de votre boutique joint (JSON, CSV ou Excel) ou, avec une connexion, directement de la boutique ; l'export d'exemple contient les trois commandes des demandes d'exemple.",
+    "result": "Pour chaque demande, un classement, la règle applicable avec contrôle du délai et un projet de réponse qu'une personne valide avant l'envoi. La vérification des règles indique d'où viennent les données de commande (boutique, export ou demande) et lesquelles manquent.",
+    "adapt": "Joignez votre politique complète et votre FAQ en fichier, ou chargez-les comme connaissance et attribuez-les au vérificateur des règles si elles s'appliquent durablement. Pour vérifier les commandes en direct, faites configurer l'intégration boutique et choisissez le serveur en copiant l'exemple. Le ton de votre marque (tutoiement ou vouvoiement, formule de politesse) se définit dans le prompt système du rédacteur des réponses. Le traitement par lots traite de nombreuses demandes à la fois, mais les exécutions sans personne présente ne peuvent pas utiliser la connexion à la boutique ; joignez donc un export de commandes aux lots.",
+    "control": "Automatique : le classement, la décision d'escalade (vers la désescalade lorsqu'au moins un client est mécontent ou demande plus que ce que permet la politique), la vérification des règles et les brouillons ; l'outil de dates calcule les délais, une vérification qualité teste les brouillons selon trois critères (conformité à la politique, ton, aucune promesse) et chaque étape est consignée. Une personne valide chaque brouillon avant tout envoi : un refus exige un commentaire et renvoie les brouillons au rédacteur des réponses ; s'ils sont encore refusés après trois tours au plus, l'exécution se termine en échec. Les réponses restent des brouillons ; rien n'est envoyé automatiquement. La connexion à la boutique est facultative et ne fait que lire : la copie ne reçoit get_order que si vous la connectez à un serveur MCP dont un administrateur a approuvé l'outil en lecture seule ; sinon, elle fonctionne dans un mode hors ligne clairement signalé. Les exécutions sans personne présente (planifications, séries de tests, traitement par lots) ne peuvent pas utiliser d'outils MCP, sauf si un administrateur autorise expressément le MCP sans surveillance.",
+    "why": "Les étapes s'appuient les unes sur les autres (classer, vérifier, rédiger) : une chaîne fixe avec une branche pour les escalades suffit ; un orchestrateur ajouterait des coûts sans bénéfice, et un modèle rapide suffit pour le classement. Les données de commande passent par une intégration, car elles se trouvent dans la boutique et changent d'heure en heure ; le mode hors ligne avec un export garde l'exemple utilisable sans connexion. La validation avec boucle de révision reste, car les réponses partent vers des clients : le dernier mot revient à une personne."
   },
   "agents": {
     "triage": {
@@ -27,7 +29,9 @@
       "name": "Vérificateur des règles",
       "description": "Applique la politique de service et vérifie les délais avec l'outil de dates.",
       "system": "Tu es chef d'équipe au service client. Détermine pour chaque demande quelle règle de la politique de service s'applique. Calcule les délais avec l'outil days_between au lieu de les estimer. Établis ce qui peut être promis, ce qui nécessite un accord et quelles informations manquent du côté du client. Si la politique ne couvre pas une réponse, dis-le clairement.",
-      "task": "Vérifie les règles pour ces demandes.\n\nDemandes et politique :\n{{run.input}}\n\nClassement :\n{{node:triage}}"
+      "task": "Vérifie les règles pour ces demandes.\n\nDemandes et politique :\n{{run.input}}\n\nClassement :\n{{node:triage}}",
+      "online": "Tu es connecté à la boutique (lecture seule). Consulte chaque numéro de commande des demandes avec get_order : dates de commande et de livraison, statut, articles et dernière note du transporteur. Les données de la boutique font foi face aux déclarations des clients ; en cas d'écart, signale-le et calcule les délais avec les données de la boutique. Si une demande n'a pas de numéro de commande ou si une commande est introuvable, dis-le et indique ce qu'il faut demander. Ne devine jamais de données de commande.",
+      "offline": "Aucune boutique n'est connectée (mode hors ligne). Utilise uniquement les données de commande des demandes ou d'un export de commandes de la boutique joint ; l'export fait foi face à ce que les clients disent de leur commande. Indique pour chaque demande quelles données de commande manquent (date de commande, date de livraison, statut, articles) et doivent être vérifiées dans la boutique ou demandées au client. N'invente jamais de données de commande ni de délais."
     },
     "reply": {
       "name": "Rédacteur des réponses",
@@ -64,6 +68,10 @@
     "policies": {
       "label": "Politique de service en fichier",
       "description": "Facultatif : vos règles ou FAQ en PDF, Word, Markdown ou texte, jusqu'à 5 fichiers. Sans fichier, l'extrait du texte fait foi."
+    },
+    "orders": {
+      "label": "Export de commandes (boutique)",
+      "description": "Facultatif : un export des commandes concernées de votre boutique en JSON, CSV ou Excel. Inutile si votre copie est connectée à la boutique ; sans l'un ni l'autre, seules les données de commande des demandes font foi."
     }
   },
   "samples": {
@@ -71,6 +79,45 @@
       "name": "Politique_service_Cuisine_Modele",
       "description": "Une politique de service fictive plus complète, en PDF.",
       "content": "# Politique de service de la boutique en ligne « Cuisine Modèle » (fictive)\n\nVersion : 01/01/2026\n\n## 1. Retours\n\n- 30 jours à compter de la livraison, article non utilisé dans son emballage d'origine.\n- Le retour est gratuit ; nous envoyons l'étiquette de retour par e-mail.\n- Remboursement sous 5 jours ouvrés après réception de l'article.\n\n## 2. Garantie\n\n- 2 ans à compter de la livraison.\n- En cas de défaut, d'abord réparation ou remplacement après examen ; une photo du défaut accélère l'examen.\n- Le remboursement du prix n'est possible que si la réparation ou le remplacement échouent.\n\n## 3. Livraison\n\n- Délai de livraison de 2 à 4 jours ouvrés.\n- Au-delà de 7 jours ouvrés de retard, nous proposons l'annulation gratuite.\n- Envoi express possible pour les commandes passées avant 14 h, pour 9,90 EUR.\n\n## 4. Gestes commerciaux\n\n- L'équipe service peut accorder seule des bons et gestes commerciaux jusqu'à 20 EUR.\n- Au-delà de 20 EUR, uniquement après accord du chef d'équipe.\n\n## 5. Questions sur les produits\n\n- Informations sur les matériaux uniquement d'après les fiches produit ; en cas de doute, demander plutôt que deviner."
+    },
+    "orders": {
+      "name": "Commandes_boutique_Cuisine_Modele",
+      "description": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer. Trois commandes de la boutique d'exemple en export JSON : dates de commande et de livraison, statut, articles et note du transporteur.",
+      "content": [
+        {
+          "order": "10442",
+          "customer": "Jonas Exemple",
+          "ordered": "2026-02-24",
+          "delivered": "2026-02-27",
+          "status": "livrée",
+          "items": [
+            "Poêle en aluminium 28 cm (données produit : non compatible induction)"
+          ],
+          "carrier_note": "Livrée, remise au client."
+        },
+        {
+          "order": "10518",
+          "customer": "Maria Modèle",
+          "ordered": "2026-01-12",
+          "delivered": "2026-01-15",
+          "status": "livrée",
+          "items": [
+            "Casserole en inox 20 cm avec couvercle"
+          ],
+          "carrier_note": "Livrée, déposée chez un voisin."
+        },
+        {
+          "order": "10603",
+          "customer": "Ali Spécimen",
+          "ordered": "2026-03-09",
+          "delivered": null,
+          "status": "retardée",
+          "items": [
+            "Coffret de couteaux, 5 pièces, avec bloc"
+          ],
+          "carrier_note": "Retard au centre de tri ; nouvelle date de livraison 2026-03-23."
+        }
+      ]
     }
   },
   "tests": {
@@ -84,6 +131,19 @@
     "policies_file": {
       "name": "Politique en fichier PDF",
       "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nDate du jour : 2026-03-20\nNotre politique de service est jointe en fichier.\n\nDemande 1 – Jonas Exemple, commande 10442, livrée le 2026-02-27 :\n« La poêle ne fonctionne pas sur ma plaque à induction. Puis-je la retourner ? Elle est encore dans son emballage d'origine. »\n\nDemande 2 – Maria Modèle, commande 10518, livrée le 2026-01-15 :\n« La poignée de ma casserole s'est détachée, au bout de deux mois ! C'est vraiment agaçant. Je veux être remboursée. »"
+    },
+    "order_lookup": {
+      "name": "Numéros de commande seuls, export de commandes joint",
+      "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nDate du jour : 2026-03-20\n\nExtrait de notre politique de service (boutique en ligne d'exemple « Cuisine Modèle ») :\n- Retours : 30 jours à compter de la livraison, article non utilisé dans son emballage d'origine ; retour gratuit.\n- Garantie : 2 ans ; en cas de défaut, réparation ou remplacement après examen, une photo du défaut aide.\n- Délai de livraison : 2 à 4 jours ouvrés ; au-delà de 7 jours ouvrés de retard, nous proposons l'annulation gratuite.\n- Bons d'achat et gestes commerciaux de plus de 20 EUR uniquement après accord du chef d'équipe.\n\nL'export de commandes de notre boutique est joint en fichier.\n\nDemande 1 – Jonas Exemple, commande 10442 :\n« La poêle ne fonctionne pas sur ma plaque à induction. Puis-je la retourner ? Elle est encore dans son emballage d'origine. »\n\nDemande 2 – Maria Modèle, commande 10518 :\n« La poignée de ma casserole s'est détachée, au bout de deux mois ! C'est vraiment agaçant. Je veux être remboursée. »\n\nDemande 3 – Ali Spécimen, commande 10603 :\n« Où est ma commande ? J'ai besoin du coffret de couteaux comme cadeau ce week-end. »"
+    }
+  },
+  "integrations": {
+    "shop": {
+      "name": "Boutique en ligne (commandes)",
+      "description": "Consultation des commandes en lecture seule dans votre boutique via MCP : get_order renvoie les dates de commande et de livraison, le statut, les articles et la dernière note du transporteur d'une commande. Le vérificateur des règles s'en sert pour contrôler les délais d'après de vraies données de commande plutôt que d'après les déclarations des clients.",
+      "setup": "Un administrateur ajoute le serveur MCP de votre boutique sous Outils → Services connectés et approuve son outil get_order en lecture seule. En copiant l'exemple, vous choisissez ce serveur comme connexion ; sans connexion, la copie fonctionne en mode hors ligne. Pour essayer sans boutique, lancez `python -m nodestro_examples.demo_mcp --language fr` sur l'ordinateur où tourne l'application de bureau Nodestro, ajoutez http://127.0.0.1:8765/mcp sous Outils → Services connectés avec le consentement pour un serveur de développement local, approuvez ses outils en lecture seule et choisissez-le en copiant. Le serveur de démonstration ne fait que lire et sert les commandes synthétiques de l'export d'exemple, jamais de vraies données clients. Les exécutions sans personne présente (planifications, séries de tests, traitement par lots) ne peuvent pas utiliser d'outils MCP, sauf si un administrateur autorise expressément le MCP sans surveillance.",
+      "online": "Connecté à la boutique : le vérificateur des règles consulte les commandes en lecture seule avec get_order ; les données de la boutique font foi face aux déclarations des clients.",
+      "offline": "Mode hors ligne : aucune boutique n'est connectée. Le vérificateur des règles utilise uniquement les données de commande des demandes ou d'un export de commandes joint et signale celles qui manquent ; il ne consulte rien."
     }
   }
 }

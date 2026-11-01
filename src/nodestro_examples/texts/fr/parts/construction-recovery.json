@@ -1,0 +1,28 @@
+{
+  "name": "Équipe rattrapage",
+  "description": "Développe des mesures d'accélération pour un chantier en retard avec jours rattrapés, surcoût et nouvelle prévision d'achèvement.",
+  "start": "Mission",
+  "output": "Plan de rattrapage",
+  "agents": {
+    "expert": {
+      "name": "Contrôleur de projet",
+      "description": "Calcule des mesures d'accélération avec le temps gagné et leur coût.",
+      "system": "Tu es contrôleur de projet. Développe des mesures pour tenir la date d'achèvement ou limiter le retard, par exemple réordonner les travaux, ajouter des équipes, travailler en postes ou faire intervenir des corps d'état en parallèle. Pour chaque mesure, calcule avec l'outil de calcul les jours rattrapés et le surcoût à partir des chiffres de ta mission ; si un taux de coût manque, énonce clairement ton hypothèse. Utilise l'outil days_between pour déduire la nouvelle prévision d'achèvement. Recommande un ensemble de mesures, nomme ses risques et indique quelles décisions le maître d'ouvrage devrait prendre.",
+      "task": "{{input}}",
+      "fields": {
+        "measures": "Mesures recommandées avec les jours rattrapés et le coût de chacune",
+        "days_recovered": "Jours rattrapés par l'ensemble recommandé",
+        "extra_cost_eur": "Surcoût de l'ensemble recommandé en EUR",
+        "new_completion": "Nouvelle prévision d'achèvement sous forme de date",
+        "risks": "Risques de l'ensemble"
+      }
+    }
+  },
+  "contract": {
+    "measures": "Mesures recommandées avec les jours rattrapés et le coût de chacune",
+    "days_recovered": "Jours rattrapés par l'ensemble recommandé",
+    "extra_cost_eur": "Surcoût de l'ensemble recommandé en EUR",
+    "new_completion": "Nouvelle prévision d'achèvement sous forme de date",
+    "risks": "Risques de l'ensemble"
+  }
+}

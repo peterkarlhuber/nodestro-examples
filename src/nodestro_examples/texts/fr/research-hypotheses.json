@@ -1,42 +1,32 @@
 {
   "name": "Transformer une question de recherche en hypothèses",
   "field": "Recherche et développement",
-  "description": "Analyser une question de recherche, développer des hypothèses testables, les critiquer et en déduire un plan d'expériences.",
+  "description": "Analyser une question de recherche et laisser une coordination impliquer exactement les équipes méthodologiques dont elle a besoin – des hypothèses aux statistiques, aux méthodes qualitatives et à l'éthique – pour en déduire un plan d'étude.",
   "start": "Question de recherche",
   "output": "Plan d'expériences",
   "file_name": "Plan d'expériences",
   "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nQuestion de recherche : peut-on abaisser la température de cuisson de notre peinture poudre PL-7 de 180 °C à\n165 °C sans nuire à l'adhérence sur acier galvanisé ? L'objectif est d'économiser environ 10 % d'énergie au four.\n\nEssai préliminaire (5 plaques chacun, quadrillage selon ISO 2409, 0 = meilleure adhérence, 5 = pire) :\n- 180 °C, 15 min : 0, 0, 1, 0, 1\n- 165 °C, 15 min : 1, 0, 2, 1, 1\n- 165 °C, 20 min : 0, 1, 0, 1, 0\n\nContraintes : 40 plaques d'essai disponibles par semaine, four libre pour les essais deux jours par semaine,\nle prétraitement des plaques a jusqu'ici été fait sur deux jours différents.",
   "guide": {
-    "problem": "Une bonne recherche commence par une question précise et testable. Le workflow décompose une question de recherche, formule des hypothèses, les fait critiquer sur le plan méthodologique et en déduit un plan d'expériences réaliste.",
-    "flow": "Une chaîne séquentielle avec retour en arrière : l'analyste clarifie variables et hypothèses de départ, l'agent d'hypothèses formule des hypothèses testables avec hypothèses nulles, le critique méthodologique les confronte aux données préliminaires avec la calculatrice et nomme les facteurs de confusion. Le planificateur d'expériences utilise ensemble les hypothèses et la critique.",
-    "input": "Une question de recherche avec son objectif, les données d'essais préliminaires et les contraintes comme la matière, le temps et les équipements. Vous pouvez joindre des données de mesure et des documents en fichiers ; le fichier d'exemple contient les notes de l'essai préliminaire par plaque.",
-    "result": "Un plan d'expériences avec hypothèses, facteurs et niveaux, taille d'échantillon, méthode de mesure, analyse et critères d'arrêt, ainsi que les risques ouverts, aussi en fichier Word. Le planificateur d'expériences propose le plan pour la connaissance ; c'est vous qui décidez s'il est enregistré.",
-    "adapt": "Remplacez la question et l'essai préliminaire par les vôtres et joignez directement les données de mesure. La littérature dont vous avez souvent besoin peut être chargée comme connaissance en mode « Recherche » et attribuée à l'analyste de la question pour qu'il travaille avec des citations. Ajoutez vos règles statistiques au critique méthodologique."
+    "problem": "Une bonne recherche commence par une question précise et testable et par les bonnes méthodes. Un essai de matériaux demande une analyse de puissance, une étude par entretiens un plan d'échantillonnage et un formulaire de consentement, et beaucoup de questions demandent les deux. Le workflow analyse la question et laisse une coordination de recherche faire appel exactement aux équipes méthodologiques dont la question a besoin.",
+    "flow": "L'analyste de la question la structure et résume les données jointes, car les équipes travaillent sans les fichiers. La coordination de recherche, un orchestrateur, commence toujours par l'équipe hypothèses puis décide : les critères mesurables vont à l'équipe statistique, dont elle fixe le plan d'étude et le seuil de signification comme paramètres ; les expériences et les motifs vont à l'équipe méthodes qualitatives ; les personnes ou les données personnelles font intervenir l'équipe éthique et protection des données. Si une équipe juge une hypothèse non testable, la coordination la renvoie une fois à l'équipe hypothèses. Le planificateur d'étude en fait un plan.",
+    "input": "Une question de recherche avec son objectif, les données existantes d'essais préliminaires et les contraintes comme le matériel, le temps et l'équipement. Tu peux joindre des données de mesure et des documents ; le fichier d'exemple contient les notes de l'essai préliminaire par plaque.",
+    "result": "Un plan d'étude avec hypothèses, plan, taille d'échantillon, méthode de mesure ou d'entretien, analyse, critères d'arrêt et risques ouverts, également en fichier Word. La vue d'orchestration de l'exécution montre quelles équipes méthodologiques ont participé, avec quels paramètres, et lesquelles ont été écartées et pourquoi. Le planificateur propose le plan pour les connaissances ; vous décidez s'il est enregistré.",
+    "adapt": "Remplacez la question et l'essai préliminaire par les vôtres et joignez directement les données de mesure. Ajoutez vos lignes directrices statistiques à l'agent de l'équipe statistique. Si votre domaine a besoin d'une autre équipe méthodologique, par exemple une équipe laboratoire, enregistrez-la comme workflow avec une description claire et ajoutez-la aux équipes de la coordination.",
+    "control": "Automatique : la coordination décide quelles équipes méthodologiques travaillent et remplit le formulaire de l'équipe statistique (plan, seuil de signification, puissance) ; chaque décision est consignée avec sa raison. Limites : au plus 7 décisions, chaque équipe au plus deux fois, un budget de 4 USD par exécution. Aucune étape n'attend une personne ; le plan est un projet pour la personne responsable de la recherche.",
+    "why": "Une chaîne fixe exécuterait toujours une critique statistique, même pour une étude par entretiens où il n'y a rien à calculer, et n'impliquerait l'éthique que si quelqu'un y pensait. La coordination choisit selon la question et transmet à l'équipe statistique des paramètres structurés plutôt que du texte libre, de sorte que l'analyse de puissance calcule avec un plan défini. L'analyse et le plan final restent des étapes fixes : toute étude en a besoin."
   },
   "agents": {
     "framing": {
       "name": "Analyste de la question",
       "description": "Clarifie l'objectif, les variables, les contraintes et les lacunes de connaissance.",
-      "system": "Tu es chercheur et tu structures des questions de recherche. Décompose la question en objectif, variables indépendantes et dépendantes, facteurs de confusion possibles et contraintes. Résume ce que montrent les données existantes et ce qu'elles ne montrent pas, et sépare le savoir établi des suppositions.",
+      "system": "Tu es chercheur et tu structures des questions de recherche. Décompose la question en objectif, variables indépendantes et dépendantes, facteurs de confusion possibles et contraintes. Résume ce que montrent les données existantes et ce qu'elles ne montrent pas, et sépare le savoir établi des suppositions. Les équipes méthodologiques travaillent ensuite sans les fichiers : résume les données des fichiers joints avec leurs chiffres clés (nombre de mesures, valeurs par groupe, conditions) afin que rien d'important ne se perde.",
       "task": "Analyse cette question de recherche :\n\n{{run.input}}"
     },
-    "hypotheses": {
-      "name": "Développeur d'hypothèses",
-      "description": "Formule des hypothèses testables avec prédictions et hypothèses nulles.",
-      "system": "Tu formules des hypothèses scientifiques. Déduis de l'analyse trois à cinq hypothèses testables. Pour chacune, indique l'hypothèse nulle, une prédiction mesurable, la méthode de mesure et ce qui vaut confirmation ou réfutation. Classe-les selon leur pertinence pour l'objectif.",
-      "task": "Développe des hypothèses à partir de cette analyse :\n\n{{node:framing}}"
-    },
-    "critic": {
-      "name": "Critique méthodologique",
-      "description": "Vérifie la testabilité des hypothèses, les facteurs de confusion et les données disponibles.",
-      "system": "Tu es un méthodologiste et relecteur exigeant. Vérifie pour chaque hypothèse la réfutabilité, la mesurabilité, les facteurs de confusion et les biais. Exploite les données préliminaires disponibles avec la calculatrice (par exemple moyennes et étendues) et juge si les données permettent une conclusion. Indique quelles hypothèses doivent être rejetées, précisées ou conservées.",
-      "task": "Examine ces hypothèses de manière critique.\n\nQuestion de recherche et données :\n{{run.input}}\n\nHypothèses :\n{{node:hypotheses}}"
-    },
     "design": {
-      "name": "Planificateur d'expériences",
-      "description": "Déduit un plan d'expériences des hypothèses et de la critique.",
-      "system": "Tu planifies des expériences selon les principes des plans d'expériences. Pour les hypothèses conservées, conçois un plan : facteurs et niveaux, répétitions, randomisation et blocage contre les facteurs de confusion, méthode de mesure, méthode d'analyse, critères d'arrêt et de réussite, et un calendrier compatible avec les contraintes. Termine par les risques ouverts.",
-      "task": "Conçois le plan d'expériences.\n\nHypothèses :\n{{node:hypotheses}}\n\nCritique méthodologique :\n{{node:critic}}"
+      "name": "Planificateur d'étude",
+      "description": "Déduit le plan d'étude de l'analyse et des résultats des équipes méthodologiques.",
+      "system": "Tu planifies des études. Pour les hypothèses conservées, conçois le plan d'étude : pour les expériences, facteurs et niveaux, répétitions, randomisation et blocage contre les facteurs de confusion, méthode de mesure et analyse ; pour les parties qualitatives, l'échantillon, le guide d'entretien et la méthode d'analyse ; pour les études impliquant des personnes, les mesures de consentement et de protection des données. Ajoute des critères d'arrêt et de réussite et un calendrier compatible avec les contraintes. Utilise les tailles d'échantillon et les décisions des équipes méthodologiques et n'invente pas de nouveaux chiffres. Termine par les risques ouverts.",
+      "task": "Conçois le plan d'étude.\n\nAnalyse de la question :\n{{node:framing}}\n\nRésultats des équipes méthodologiques :\n{{node:coordinator}}"
     }
   },
   "form": {
@@ -172,6 +162,18 @@
     "pretest_file": {
       "name": "Données de l'essai préliminaire en CSV",
       "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nQuestion de recherche : peut-on abaisser la température de cuisson de notre peinture poudre PL-7 de 180 °C à 165 °C sans nuire à l'adhérence sur acier galvanisé ? L'objectif est d'économiser environ 10 % d'énergie au four.\n\nLes notes de l'essai préliminaire (quadrillage selon ISO 2409, 0 = meilleure adhérence) sont jointes en fichier CSV.\n\nContraintes : 40 plaques d'essai disponibles par semaine, four libre pour les essais deux jours par semaine."
+    },
+    "interview_study": {
+      "name": "Étude par entretiens sans mesures",
+      "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nQuestion de recherche : pourquoi les salariés de l'équipe de nuit de notre usine utilisent-ils si peu la nouvelle application de pause pour réserver des salles de repos, alors qu'ils l'avaient demandée ?\n\nCe que nous savons : 140 personnes travaillent de nuit ; au cours des deux premiers mois, 9 d'entre elles ont réservé une salle. Équipes de jour : 210 réservations pour 380 personnes. Certains chefs d'équipe disent que l'application exige la connexion d'entreprise, que beaucoup de salariés de nuit n'utilisent pas.\n\nContraintes : entretiens uniquement pendant les pauses (30 minutes), le comité social et économique doit donner son accord, aucun enregistrement sans consentement ; résultats d'ici la fin du trimestre."
+    }
+  },
+  "steps": {
+    "coordinator": {
+      "name": "Coordination de recherche",
+      "description": "Décide de quelles équipes méthodologiques la question a besoin et fixe les paramètres de l'équipe statistique.",
+      "instructions": "Commence toujours par l'équipe hypothèses. Décide ensuite d'après la question et les données : les critères mesurables et les données préliminaires demandent l'équipe statistique, dont tu fixes le plan d'étude comme paramètre (le seuil de signification ou la puissance seulement si la question exige d'autres valeurs que 0,05 et 0,8) ; les questions sur des expériences, des motifs ou des comportements qu'on ne peut pas compter demandent l'équipe méthodes qualitatives ; tout ce qui concerne des personnes, la santé ou des données personnelles demande l'équipe éthique et protection des données. Si l'équipe statistique ou qualitative juge une hypothèse non testable telle que formulée, confie à l'équipe hypothèses une mission de révision avec la critique. Les équipes ne voient pas les fichiers : mets les données pertinentes de l'analyse dans chaque mission. Termine avec les hypothèses finales et les résultats clés de chaque équipe sous le nom de l'équipe, et indique quelles équipes tu n'as pas impliquées et pourquoi.",
+      "task": "Planifie comment étudier cette question de recherche avec les équipes méthodologiques dont elle a besoin.\n\nAnalyse de la question et des données :\n{{node:framing}}"
     }
   }
 }

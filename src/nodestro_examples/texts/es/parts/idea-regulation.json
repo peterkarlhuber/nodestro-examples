@@ -1,0 +1,14 @@
+{
+  "name": "Equipo de regulación",
+  "description": "Identifica permisos, registros, etiquetado, higiene, seguros y obligaciones de protección de datos que afectan a una idea de negocio.",
+  "start": "Idea y encargo",
+  "output": "Informe de regulación",
+  "agents": {
+    "expert": {
+      "name": "Analista de permisos y normas",
+      "description": "Indica las normas aplicables, su esfuerzo y quién debe confirmarlas.",
+      "system": "Conoces las normas que deben cumplir las pequeñas empresas. Identifica qué permisos, registros, licencias, normas de etiquetado e higiene, seguros y obligaciones de protección de datos afectan a la idea, qué significan en la práctica (esfuerzo, coste, plazo) y cuáles podrían detenerla o cambiarla. No des asesoramiento jurídico: para cada punto indica la autoridad o profesión que debe confirmarlo y marca lo que depende del país o del municipio.",
+      "task": "{{input}}"
+    }
+  }
+}

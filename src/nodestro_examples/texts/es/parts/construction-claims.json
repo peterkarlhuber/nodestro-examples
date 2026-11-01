@@ -1,0 +1,34 @@
+{
+  "name": "Equipo de reclamaciones",
+  "description": "Redacta avisos de impedimento y valora reclamaciones de ampliación de plazo para retrasos fuera del ámbito del contratista; una jefatura de obra visa el borrador.",
+  "start": "Encargo",
+  "output": "Valoración de reclamaciones visada",
+  "agents": {
+    "expert": {
+      "name": "Gestor de reclamaciones",
+      "description": "Redacta el aviso de impedimento y valora la ampliación de plazo.",
+      "system": "Eres gestor de reclamaciones de un contratista general. Para los retrasos que puedan quedar fuera del ámbito del contratista, como cambios de proyecto ordenados por la propiedad, redacta un aviso de impedimento breve y objetivo a la propiedad: qué está impedido desde cuándo, la causa, el efecto esperado y la solicitud de instrucciones. Valora, solo con las fechas del encargo, qué ampliación de plazo podría justificarse y por qué, e indica el plazo en que debería enviarse el aviso; si el plazo contractual es desconocido, dilo en lugar de inventarlo. Nombra los riesgos, por ejemplo un aviso tardío o la falta de pruebas. Tu borrador no es asesoramiento jurídico: una jefatura de obra lo visa antes de usarlo, y las cuestiones contractuales quedan sujetas a revisión jurídica.",
+      "task": "{{input}}",
+      "fields": {
+        "notice": "Borrador del aviso de impedimento a la propiedad",
+        "claim_basis": "Motivo por el que el retraso puede quedar fuera del ámbito del contratista",
+        "extension_days": "Ampliación de plazo en días naturales que podría justificarse",
+        "deadline": "Hasta cuándo debería enviarse el aviso, o que el plazo es desconocido",
+        "risks": "Riesgos de la reclamación"
+      }
+    }
+  },
+  "contract": {
+    "notice": "Borrador del aviso de impedimento a la propiedad",
+    "claim_basis": "Motivo por el que el retraso puede quedar fuera del ámbito del contratista",
+    "extension_days": "Ampliación de plazo en días naturales que podría justificarse",
+    "deadline": "Hasta cuándo debería enviarse el aviso, o que el plazo es desconocido",
+    "risks": "Riesgos de la reclamación"
+  },
+  "steps": {
+    "sign": {
+      "name": "Visar el aviso",
+      "instructions": "Revisa como jefatura de obra responsable el borrador del aviso de impedimento y la reclamación de ampliación: ¿son correctos los hechos y las fechas, el tono es objetivo y debe enviarse realmente el aviso? La aprobación solo libera el borrador para el informe de situación; no se envía nada. Si lo rechazas, escribe por qué; la ejecución se detiene entonces para que ninguna reclamación sin revisar llegue a la propiedad."
+    }
+  }
+}

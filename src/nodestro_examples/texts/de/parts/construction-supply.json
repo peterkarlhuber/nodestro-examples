@@ -1,0 +1,28 @@
+{
+  "name": "Lieferkettenteam",
+  "description": "Untersucht Verzug durch Lieferanten, Materiallieferungen und die Besetzung von Nachunternehmern; ordnet Verzugstage mit Nachweisen zu.",
+  "start": "Auftrag",
+  "output": "Lieferkettenbewertung",
+  "agents": {
+    "expert": {
+      "name": "Einkaufs- und Nachunternehmermanager",
+      "description": "Bewertet verspätete Lieferungen und Personalengpässe, ordnet Verzugstage zu und nennt die Nachweise.",
+      "system": "Du bist Einkaufs- und Nachunternehmermanager im Bauwesen. Untersuche für die Verzüge in deinem Auftrag verspätete Materiallieferungen, Lieferzeiten und die Besetzung der Nachunternehmer im Vergleich zum Vereinbarten. Ordne Verzugstage nur zu, wo die Daten im Auftrag sie stützen. Unterscheide, was im eigenen Bereich des Auftragnehmers liegt (Auswahl und Steuerung von Lieferanten und Nachunternehmern), von äußeren Ereignissen, die niemand beeinflussen kann, und sage, welche schriftlichen Bestätigungen, Lieferscheine oder Personalnachweise gesammelt werden sollten. Schlage vor, wie der Nachunternehmer zur vereinbarten Besetzung angehalten werden kann. Triff keine rechtliche Bewertung und liste Unklares als offene Fragen.",
+      "task": "{{input}}",
+      "fields": {
+        "findings": "Bewertung der Liefer- und Personalursachen",
+        "attributed_delay_days": "Den untersuchten Ursachen zuzuordnende Verzugstage",
+        "responsibility": "Vermutlicher Verantwortungsbereich je Ursache mit Begründung",
+        "evidence": "Bestätigungen und Nachweise, die gesammelt werden sollten",
+        "open_questions": "Offene Fragen"
+      }
+    }
+  },
+  "contract": {
+    "findings": "Bewertung der Liefer- und Personalursachen",
+    "attributed_delay_days": "Den untersuchten Ursachen zuzuordnende Verzugstage",
+    "responsibility": "Vermutlicher Verantwortungsbereich je Ursache mit Begründung",
+    "evidence": "Bestätigungen und Nachweise, die gesammelt werden sollten",
+    "open_questions": "Offene Fragen"
+  }
+}

@@ -8,17 +8,19 @@
   "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nOrganização: Amigos da Leitura Cidade Exemplo (associação fictícia), 60 voluntários, uma funcionária em meio período\nProjeto: \"Padrinhos de leitura nas escolas\" – voluntários leem semanalmente durante um ano letivo com crianças que\nprecisam de apoio na leitura.\nAté agora: 2025/26 em 4 escolas com 48 crianças. Retorno dos professores: 31 das 48 crianças leem com mais fluência\n(uma avaliação, não uma medição padronizada).\nMeta: ampliação para 8 escolas e 100 crianças no ano letivo 2026/27\nNecessidade de recursos: 25.000 EUR (coordenação 15.000 EUR, livros e materiais 6.000 EUR, capacitações 4.000 EUR)\nPeríodo da campanha: 2026-09-01 a 2026-11-30\nCanais existentes: newsletter (1.200 destinatários), Instagram (900 seguidores), bons contatos com o jornal local",
   "guide": {
     "problem": "Campanhas de doação precisam de uma história tocante, mas também de afirmações honestas sobre impacto. O workflow desenvolve uma campanha, avalia o possível impacto e verifica se as promessas são críveis e eticamente corretas.",
-    "flow": "O desenvolvedor da campanha e o analista de impacto trabalham em paralelo: um concebe mensagem, públicos e ações, o outro constrói um modelo de impacto com indicadores e calcula o custo por criança com a calculadora. O revisor de credibilidade verifica os dois; o resultado contém as três partes.",
+    "flow": "O desenvolvedor da campanha e o analista de impacto trabalham em paralelo: um concebe mensagem, públicos e ações, o outro constrói um modelo de impacto com indicadores e calcula o custo por criança com a calculadora. O revisor de credibilidade verifica os dois. Se ele considerar a campanha não crível, uma condição a devolve ao desenvolvedor da campanha junto com as observações da revisão; a campanha revisada é verificada de novo, no máximo duas vezes. O resultado contém as três partes.",
     "input": "Organização, projeto, resultados até agora, meta, necessidade de recursos, período da campanha e canais existentes.",
     "result": "Um conceito de campanha com cronograma e rascunhos de textos, um modelo de impacto com indicadores e uma revisão estruturada de afirmações exageradas, observações éticas e um plano de medição de impacto, também como arquivo Word. O analista de impacto propõe o seu modelo de impacto para o conhecimento, por exemplo para futuros pedidos de financiamento; só é salvo o que você confirmar.",
-    "adapt": "Descreva seu projeto e seus resultados da forma mais honesta possível. Carregue relatórios anuais ou avaliações como conhecimento e atribua-os ao analista de impacto."
+    "adapt": "Descreva seu projeto e seus resultados da forma mais honesta possível. Carregue relatórios anuais ou avaliações como conhecimento e atribua-os ao analista de impacto.",
+    "control": "Automático: o parecer sim/não do revisor de credibilidade sobre a credibilidade decide se a campanha volta para revisão; a execução mostra qual ramo foi seguido. O desenvolvedor da campanha revisa no máximo duas vezes, cada vez com as observações da revisão e o seu rascunho anterior. Se depois disso a campanha ainda não for considerada crível, a execução segue mesmo assim para o resultado, e as observações da revisão mostram o que continua em aberto. Nenhuma etapa espera por uma pessoa: textos e números são rascunhos que a sua organização confere antes de publicar, principalmente as afirmações sobre impacto e as fotos de crianças. Modelos de impacto propostos só são salvos como conhecimento se você os confirmar.",
+    "why": "Problemas de credibilidade são mais bem corrigidos por quem escreveu o texto; por isso a revisão volta ao desenvolvedor da campanha em vez de apenas listar problemas. O ciclo é limitado a duas rodadas: uma campanha que ainda exagera depois disso precisa de evidências melhores da organização, não de mais reformulações. O modelo de impacto fica fora do ciclo porque se baseia nos dados do projeto, não nos textos da campanha. Não há etapa de aprovação, porque a campanha continua sendo um rascunho e é publicada de qualquer forma fora do workflow."
   },
   "agents": {
     "campaign": {
       "name": "Desenvolvedor da campanha",
       "description": "Concebe mensagem, públicos, canais e cronograma da campanha.",
-      "system": "Você é especialista em captação de recursos para organizações sem fins lucrativos. Desenvolva uma campanha de doações: mensagem central, públicos, apelos de doação como \"Com 50 euros …\", canais, um cronograma ao longo do período da campanha e três rascunhos de textos (newsletter, redes sociais, comunicado à imprensa). Conte a história com respeito e sem imagens de pena, e use apenas resultados informados na descrição.",
-      "task": "Desenvolva a campanha para este projeto:\n\n{{input}}"
+      "system": "Você é especialista em captação de recursos para organizações sem fins lucrativos. Desenvolva uma campanha de doações: mensagem central, públicos, apelos de doação como \"Com 50 euros …\", canais, um cronograma ao longo do período da campanha e três rascunhos de textos (newsletter, redes sociais, comunicado à imprensa). Conte a história com respeito e sem imagens de pena, e use apenas resultados informados na descrição. Se a tarefa trouxer retorno da revisão de credibilidade, revise o seu rascunho anterior ponto por ponto: reformule as afirmações exageradas como sugerido, leve em conta as observações éticas e mantenha o que não foi criticado.",
+      "task": "Desenvolva a campanha para este projeto:\n\n{{run.input}}\n\nRetorno da revisão de credibilidade (somente em revisões; caso contrário, “-”):\n{{feedback}}\n\nSeu rascunho anterior:\n{{previous}}"
     },
     "impact": {
       "name": "Analista de impacto",
@@ -29,7 +31,7 @@
     "integrity": {
       "name": "Revisor de credibilidade",
       "description": "Verifica afirmações quanto a exagero, ética e evidências.",
-      "system": "Você verifica materiais de captação quanto a credibilidade e ética. Compare as afirmações da campanha com o modelo de impacto: o que está comprovado, o que está exagerado, o que deveria ser formulado com mais cautela? Atente à dignidade das pessoas retratadas, à proteção de dados em fotos de crianças e à transparência sobre o uso dos recursos. Proponha um plano simples para medir o impacto.",
+      "system": "Você verifica materiais de captação de recursos quanto à credibilidade e à ética. Compare as afirmações da campanha com o modelo de impacto: o que está comprovado, o que é exagerado, o que deveria ser formulado com mais cautela? Preste atenção à dignidade das pessoas retratadas, à proteção de dados em fotos de crianças e à transparência sobre o uso dos recursos. Proponha um plano simples de medição de impacto. Avalie a campanha como não crível só se ela não puder ser usada sem mudanças, por exemplo por promessas de impacto sem base, números que não estão na descrição ou representações que ferem a dignidade; ela então volta ao desenvolvedor da campanha com as suas observações.",
       "task": "Revise a campanha e o modelo de impacto.\n\nCampanha:\n{{node:campaign}}\n\nModelo de impacto:\n{{node:impact}}",
       "fields": {
         "credible": "A campanha é crível na forma atual?",
@@ -43,6 +45,15 @@
   "tests": {
     "reading_mentors": {
       "name": "Padrinhos de leitura nas escolas"
+    }
+  },
+  "steps": {
+    "check": {
+      "name": "Crível?",
+      "branches": {
+        "credible": "Para o resultado"
+      },
+      "default": "Revisar a campanha"
     }
   }
 }

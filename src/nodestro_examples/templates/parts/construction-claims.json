@@ -1,0 +1,103 @@
+{
+  "id": "construction-claims",
+  "capabilities": [
+    "contract",
+    "claims",
+    "notice of obstruction"
+  ],
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160
+    },
+    {
+      "id": "expert",
+      "type": "agent",
+      "x": 340,
+      "y": 160,
+      "role": "review",
+      "icon": "scale",
+      "output_name": "TeamResult",
+      "output_fields": [
+        {
+          "name": "notice",
+          "type": "string"
+        },
+        {
+          "name": "claim_basis",
+          "type": "string"
+        },
+        {
+          "name": "extension_days",
+          "type": "number"
+        },
+        {
+          "name": "deadline",
+          "type": "string"
+        },
+        {
+          "name": "risks",
+          "type": "string_list"
+        }
+      ]
+    },
+    {
+      "id": "sign",
+      "type": "approval",
+      "x": 680,
+      "y": 160,
+      "approval": {
+        "on_reject": "stop",
+        "require_comment_on_reject": true,
+        "show": [
+          "expert"
+        ]
+      }
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1020,
+      "y": 160,
+      "contract": [
+        {
+          "name": "notice",
+          "type": "string"
+        },
+        {
+          "name": "claim_basis",
+          "type": "string"
+        },
+        {
+          "name": "extension_days",
+          "type": "number"
+        },
+        {
+          "name": "deadline",
+          "type": "string"
+        },
+        {
+          "name": "risks",
+          "type": "string_list"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "expert"
+    ],
+    [
+      "expert",
+      "sign"
+    ],
+    [
+      "sign",
+      "output",
+      "approved"
+    ]
+  ]
+}

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "nodestro-examples"
-version = "0.2.0"
+version = "0.3.0"
 description = "Nodestro Examples – the 24 example multi-agent workflows of Nodestro in six languages, with sample files and test cases."
 readme = "README.md"
 license = "MIT"
@@ -56,3 +56,12 @@ python_version = "3.10"
 strict = true
 packages = ["nodestro_examples"]
 mypy_path = "src"
+
+# The demo MCP server needs the MCP SDK (Python 3.11+, installed with the runtime there); on Python 3.10 it is absent.
+[[tool.mypy.overrides]]
+module = ["mcp.*", "mcp_types", "uvicorn"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = ["nodestro_examples.demo_mcp"]
+disable_error_code = ["untyped-decorator", "unused-ignore"]

@@ -1,0 +1,14 @@
+{
+  "name": "Equipe de rentabilidade",
+  "description": "Calcula margem de contribuição, ponto de equilíbrio, retorno e cenários de uma ideia de negócio com a calculadora.",
+  "start": "Ideia e tarefa",
+  "output": "Relatório de rentabilidade",
+  "agents": {
+    "expert": {
+      "name": "Calculista de rentabilidade",
+      "description": "Calcula margem de contribuição, ponto de equilíbrio e cenários com a calculadora.",
+      "system": "Você é consultor de empreendedorismo com foco em finanças. Use a calculadora para calcular a margem de contribuição por unidade ou serviço, a receita e o lucro mensais, o ponto de equilíbrio mensal (incluindo o pró-labore) e o retorno do investimento inicial. Calcule três cenários (cauteloso, esperado, otimista) e mostre quão sensível o resultado é ao volume e ao preço. Use apenas os números recebidos e marque cada premissa própria.",
+      "task": "{{input}}"
+    }
+  }
+}

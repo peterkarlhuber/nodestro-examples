@@ -1,0 +1,28 @@
+{
+  "name": "Equipe de recuperação",
+  "description": "Desenvolve medidas de aceleração para uma obra atrasada com dias recuperados, custo adicional e nova previsão de conclusão.",
+  "start": "Tarefa",
+  "output": "Plano de recuperação",
+  "agents": {
+    "expert": {
+      "name": "Controller de projetos",
+      "description": "Calcula medidas de aceleração com o tempo ganho e o custo.",
+      "system": "Você é controller de projetos. Desenvolva medidas para manter a data de conclusão ou limitar o atraso, por exemplo reordenar serviços, equipes adicionais, trabalho em turnos ou disciplinas em paralelo. Para cada medida, calcule com a ferramenta de cálculo os dias recuperados e o custo adicional usando os números da sua tarefa; se faltar uma taxa de custo, declare claramente a sua premissa. Use a ferramenta days_between para deduzir a nova previsão de conclusão. Recomende um pacote de medidas, indique seus riscos e diga quais decisões o contratante teria de tomar.",
+      "task": "{{input}}",
+      "fields": {
+        "measures": "Medidas recomendadas com os dias recuperados e o custo de cada uma",
+        "days_recovered": "Dias recuperados pelo pacote recomendado",
+        "extra_cost_eur": "Custo adicional do pacote recomendado em EUR",
+        "new_completion": "Nova previsão de conclusão como data",
+        "risks": "Riscos do pacote"
+      }
+    }
+  },
+  "contract": {
+    "measures": "Medidas recomendadas com os dias recuperados e o custo de cada uma",
+    "days_recovered": "Dias recuperados pelo pacote recomendado",
+    "extra_cost_eur": "Custo adicional do pacote recomendado em EUR",
+    "new_completion": "Nova previsão de conclusão como data",
+    "risks": "Riscos do pacote"
+  }
+}

@@ -1,42 +1,26 @@
 {
   "name": "Avaliar uma ideia de negócio",
   "field": "Autônomos e empreendedores",
-  "description": "Avaliar em paralelo o potencial de mercado, a rentabilidade e os riscos de uma ideia de negócio e chegar a um parecer.",
+  "description": "Fazer com que uma ideia de negócio seja examinada exatamente pelas equipes de especialistas de que precisa e chegar a um veredito fundamentado.",
   "start": "Ideia de negócio",
   "output": "Avaliação",
   "file_name": "Avaliacao_ideia_de_negocio",
   "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nIdeia: serviço móvel de conserto de bicicletas \"Socorro Bike\" em uma cidade de 180.000 habitantes.\nUma bicicleta de carga com ferramentas vai até os clientes em casa ou no escritório; agendamento por um site simples.\n\nPremissas do fundador:\n- Serviço médio 65 EUR líquidos, participação de material 30 %\n- Capacidade de 6 serviços por dia, 20 dias úteis por mês; em média 50 % de ocupação no primeiro ano\n- Investimento inicial 18.000 EUR (bicicleta de carga, ferramentas, site), financiado com recursos próprios\n- Custos fixos 1.400 EUR por mês (seguro, depósito, telefone, software, marketing)\n- Pró-labore desejado 2.500 EUR por mês\n- Públicos-alvo: quem vai de bicicleta ao trabalho, famílias com bicicletas de carga, empresas com leasing de bicicletas para funcionários\n- Conhecido: três lojas de bicicletas na cidade com espera de duas a três semanas na primavera",
   "guide": {
-    "problem": "Antes de abrir um negócio vale a pena olhar com sobriedade para o mercado, os números e os riscos. O workflow faz três especialistas examinarem a ideia ao mesmo tempo e um júri chegar a um parecer fundamentado.",
-    "flow": "Três agentes trabalham em paralelo: o analista de mercado estima públicos-alvo e concorrência, o calculista de rentabilidade determina o ponto de equilíbrio e cenários com a calculadora, o analista de riscos busca pontos fracos. O júri de investidores pondera tudo e entrega um parecer estruturado com nota.",
+    "problem": "Antes de abrir um negócio, vale olhar com sobriedade para mercado, números e riscos. Mas nem toda ideia precisa dos mesmos especialistas: um serviço de conserto de bicicletas não precisa de uma especialista em licenças, uma startup de bebidas precisa. O fluxo de trabalho deixa uma mentora de empreendedorismo montar as equipes de especialistas certas e um júri de investidores chegar a um veredito fundamentado.",
+    "flow": "A mentora de empreendedorismo é um orquestrador: ela lê a ideia e decide quais das cinco equipes de especialistas envolver. Mercado, rentabilidade e riscos trabalham em paralelo em toda ideia; regulação e operações entram apenas quando a ideia exige. Se os resultados se contradizem, a mentora faz a uma equipe uma pergunta de acompanhamento específica. Em seguida, o júri de investidores pondera todos os relatórios e dá um veredito estruturado com uma nota.",
     "input": "Uma descrição da ideia com oferta, públicos-alvo, preços, custos, capacidade e concorrentes conhecidos.",
-    "result": "Um veredito estruturado (seguir, ajustar ou descartar) com pontuação, pontos fortes, riscos, premissas a testar e próximos passos concretos para validar a ideia, também como relatório em PDF.",
-    "adapt": "Descreva sua ideia com seus números. Quanto mais honestas as premissas, mais útil o parecer. Carregue seus próprios dados de mercado ou resultados de pesquisas como conhecimento e atribua-os ao analista de mercado."
+    "result": "Um veredito estruturado (seguir em frente, adaptar ou descartar) com nota, pontos fortes, riscos, premissas a testar e próximos passos concretos, também como relatório em PDF. Na execução, a visão de orquestração mostra quais equipes a mentora escolheu, por quê, com qual tarefa e o que cada equipe entregou.",
+    "adapt": "Descreva sua ideia com seus próprios números. Para incluir outro especialista, por exemplo para questões tributárias, salve um fluxo de trabalho com descrição clara e capacidades e adicione-o às equipes da mentora; ela decide sozinha quando ele é necessário. Seus próprios dados de mercado podem ser enviados como conhecimento e atribuídos ao analista de mercado da equipe de mercado.",
+    "control": "Automático: a mentora decide quais equipes trabalham, em que ordem e com qual tarefa; cada decisão fica registrada com seu motivo. Limites mantêm isso sob controle: no máximo 6 decisões, cada equipe no máximo duas vezes, no máximo 3 equipes ao mesmo tempo e um orçamento de 3 USD por execução. Nenhuma etapa espera por uma pessoa; o veredito é a base para a sua própria decisão.",
+    "why": "Um fluxo de trabalho fixo rodaria sempre as cinco equipes e pagaria uma análise de licenças de que um serviço de bicicletas não precisa, ou as deixaria de fora quando importam. A mentora faz exatamente essa escolha, de forma rastreável e dentro de limites. O júri continua sendo uma etapa fixa, porque um veredito estruturado e comparável não deve depender de como a mentora dividiu o trabalho."
   },
   "agents": {
-    "market": {
-      "name": "Analista de mercado",
-      "description": "Estima públicos-alvo, demanda e concorrência.",
-      "system": "Você é analista de mercado para startups. Descreva os públicos-alvo, suas necessidades e disposição a pagar, estime o potencial de mercado com um cálculo aproximado transparente e cauteloso e analise a concorrência. Indique quais informações vêm da descrição e quais se baseiam em conhecimento geral e precisam ser verificadas localmente.",
-      "task": "Analise o mercado para esta ideia:\n\n{{input}}"
-    },
-    "economics": {
-      "name": "Calculista de rentabilidade",
-      "description": "Calcula margem de contribuição, ponto de equilíbrio e cenários com a calculadora.",
-      "system": "Você é consultor de empreendedorismo com foco em finanças. Use a calculadora para calcular a margem de contribuição por serviço, a receita e o lucro mensais, o ponto de equilíbrio em serviços por mês (incluindo o pró-labore) e o retorno do investimento inicial. Calcule três cenários (cauteloso, esperado, otimista) e mostre quão sensível o resultado é à ocupação e ao preço.",
-      "task": "Calcule a rentabilidade desta ideia:\n\n{{input}}"
-    },
-    "risks": {
-      "name": "Analista de riscos",
-      "description": "Busca pontos fracos e riscos da ideia.",
-      "system": "Você é um mentor de startups experiente e faz deliberadamente o papel de advogado do diabo. Busque os maiores riscos: demanda, sazonalidade, dependência de uma pessoa, concorrência, exigências legais, escalabilidade e financiamento. Avalie cada risco por probabilidade e impacto e proponha uma forma barata de testá-lo antes de abrir o negócio.",
-      "task": "Analise os riscos desta ideia:\n\n{{input}}"
-    },
     "jury": {
       "name": "Júri de investidores",
       "description": "Pondera mercado, números e riscos e chega a um parecer.",
       "system": "Você é um júri de fundadores e investidores experientes. Pondere mercado, rentabilidade e riscos entre si e chegue a um parecer: seguir, adaptar ou abandonar. Dê uma nota de 1 a 10 e justifique-a. Indique as premissas que precisam ser testadas primeiro e próximos passos concretos e baratos. Seja honesto, mas justo.",
-      "task": "Avalie a ideia.\n\nAnálise de mercado:\n{{node:market}}\n\nRentabilidade:\n{{node:economics}}\n\nRiscos:\n{{node:risks}}",
+      "task": "Avalie a ideia.\n\nIdeia:\n{{run.input}}\n\nRelatórios das equipes de especialistas:\n{{node:coach}}",
       "fields": {
         "verdict": "Parecer (seguir, adaptar ou abandonar) com justificativa",
         "score": "Nota de 1 a 10",
@@ -50,6 +34,18 @@
   "tests": {
     "idea": {
       "name": "Serviço móvel de conserto de bicicletas"
+    },
+    "regulated_idea": {
+      "name": "Fábrica de kombucha (alimento regulado)",
+      "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nIdeia: pequena fábrica de kombucha \"Fermento\" em uma cozinha industrial alugada; venda em garrafas de 0,33 l em feiras semanais e para 15 cafés da região.\n\nPremissas dos fundadores:\n- Preço para cafés EUR 2,20 por garrafa, na feira EUR 3,50; ingredientes e garrafa EUR 0,70\n- 2.000 garrafas por mês no primeiro ano, 60 % delas para cafés\n- Investimento inicial EUR 35.000 (tanques de fermentação, envasadora, rótulos, van), dos quais EUR 20.000 como empréstimo bancário\n- Custos fixos EUR 2.600 por mês (aluguel da cozinha, seguro, taxas das feiras, combustível)\n- Pró-labore 2 × EUR 2.000 por mês\n- A fermentação pode elevar o teor alcoólico acima de 0,5 % se as garrafas forem armazenadas em local quente\n- Conhecido: duas marcas de supermercado, nenhum produtor local"
+    }
+  },
+  "steps": {
+    "coach": {
+      "name": "Mentora de empreendedorismo",
+      "description": "Decide de quais equipes de especialistas a ideia precisa, faz com que trabalhem em paralelo e faz perguntas de acompanhamento.",
+      "instructions": "Toda ideia precisa das equipes de mercado, rentabilidade e riscos: inicie-as juntas com uma decisão em paralelo. Inclua a equipe de regulação apenas se a ideia envolver licenças, alimentos, saúde, álcool, finanças, dados pessoais, transporte de pessoas ou outras áreas reguladas. Inclua a equipe de operações apenas se a ideia depender de produção, tecnologia, logística ou fornecedores. Dê a cada equipe a ideia completa com todos os números e premissas e diga o que você precisa dela. Se os resultados se contradizem ou uma equipe aponta uma questão em aberto que outra equipe pode responder, delegue uma única pergunta de acompanhamento específica. Termine com os resultados das equipes lado a lado, cada um sob o nome de sua equipe, seguidos das contradições e questões em aberto. Não dê um veredito próprio; isso é tarefa do júri.",
+      "task": "Faça com que esta ideia de negócio seja examinada pelas equipes de especialistas de que precisa:\n\n{{run.input}}"
     }
   }
 }

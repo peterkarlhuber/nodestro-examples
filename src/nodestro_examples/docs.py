@@ -267,12 +267,148 @@ _LABELS: dict[str, dict[str, str]] = {
 }
 
 
+#: Labels of format 2 (teams, knowledge, integrations, loops, limits).
+_MORE: dict[str, dict[str, str]] = {
+    "de": {
+        "adaptive": "adaptiv (Orchestrierung)",
+        "orchestrator": "Orchestrator mit Teams",
+        "knowledge": "Wissensdateien",
+        "integration": "optionale MCP-Anbindung",
+        "loop": "Überarbeitungsschleife",
+        "budget": "Budget und Grenzen",
+        "contract": "Ausgabevertrag",
+        "control": "Was automatisch entschieden wird und wann ein Mensch eingreift",
+        "why": "Warum diese Architektur",
+        "teams": "Teams, die der Orchestrator einsetzen kann",
+        "team": "Team",
+        "capabilities": "Fähigkeiten",
+        "team_approval": "hält für eine Freigabe an",
+        "parameters": "Parameter",
+        "integrations": "Optionale Anbindung",
+        "offline": "Ohne Anbindung",
+        "setup": "Einrichtung",
+        "knowledge_files": "Wissensdateien (synthetisch, werden beim Kopieren angelegt)",
+        "orchestrator_kind": "Orchestrator",
+    },
+    "en": {
+        "adaptive": "adaptive (orchestration)",
+        "orchestrator": "orchestrator with teams",
+        "knowledge": "knowledge files",
+        "integration": "optional MCP connection",
+        "loop": "revision loop",
+        "budget": "budget and limits",
+        "contract": "output contract",
+        "control": "What is decided automatically and when a person steps in",
+        "why": "Why this architecture",
+        "teams": "Teams the orchestrator can deploy",
+        "team": "Team",
+        "capabilities": "Capabilities",
+        "team_approval": "stops for an approval",
+        "parameters": "Parameters",
+        "integrations": "Optional connection",
+        "offline": "Without a connection",
+        "setup": "Setup",
+        "knowledge_files": "Knowledge files (synthetic, created when copying)",
+        "orchestrator_kind": "Orchestrator",
+    },
+    "es": {
+        "adaptive": "adaptativo (orquestación)",
+        "orchestrator": "orquestador con equipos",
+        "knowledge": "archivos de conocimiento",
+        "integration": "conexión MCP opcional",
+        "loop": "bucle de revisión",
+        "budget": "presupuesto y límites",
+        "contract": "contrato de salida",
+        "control": "Qué se decide automáticamente y cuándo interviene una persona",
+        "why": "Por qué esta arquitectura",
+        "teams": "Equipos que el orquestador puede emplear",
+        "team": "Equipo",
+        "capabilities": "Capacidades",
+        "team_approval": "se detiene para una aprobación",
+        "parameters": "Parámetros",
+        "integrations": "Conexión opcional",
+        "offline": "Sin conexión",
+        "setup": "Configuración",
+        "knowledge_files": "Archivos de conocimiento (sintéticos, se crean al copiar)",
+        "orchestrator_kind": "Orquestador",
+    },
+    "fr": {
+        "adaptive": "adaptatif (orchestration)",
+        "orchestrator": "orchestrateur avec équipes",
+        "knowledge": "fichiers de connaissances",
+        "integration": "connexion MCP facultative",
+        "loop": "boucle de révision",
+        "budget": "budget et limites",
+        "contract": "contrat de sortie",
+        "control": "Ce qui est décidé automatiquement et quand une personne intervient",
+        "why": "Pourquoi cette architecture",
+        "teams": "Équipes que l'orchestrateur peut mobiliser",
+        "team": "Équipe",
+        "capabilities": "Capacités",
+        "team_approval": "s'arrête pour une validation",
+        "parameters": "Paramètres",
+        "integrations": "Connexion facultative",
+        "offline": "Sans connexion",
+        "setup": "Mise en place",
+        "knowledge_files": "Fichiers de connaissances (synthétiques, créés lors de la copie)",
+        "orchestrator_kind": "Orchestrateur",
+    },
+    "pt-BR": {
+        "adaptive": "adaptativo (orquestração)",
+        "orchestrator": "orquestrador com equipes",
+        "knowledge": "arquivos de conhecimento",
+        "integration": "conexão MCP opcional",
+        "loop": "ciclo de revisão",
+        "budget": "orçamento e limites",
+        "contract": "contrato de saída",
+        "control": "O que é decidido automaticamente e quando uma pessoa intervém",
+        "why": "Por que esta arquitetura",
+        "teams": "Equipes que o orquestrador pode acionar",
+        "team": "Equipe",
+        "capabilities": "Capacidades",
+        "team_approval": "para por uma liberação",
+        "parameters": "Parâmetros",
+        "integrations": "Conexão opcional",
+        "offline": "Sem conexão",
+        "setup": "Configuração",
+        "knowledge_files": "Arquivos de conhecimento (sintéticos, criados ao copiar)",
+        "orchestrator_kind": "Orquestrador",
+    },
+    "it": {
+        "adaptive": "adattivo (orchestrazione)",
+        "orchestrator": "orchestratore con team",
+        "knowledge": "file di conoscenza",
+        "integration": "collegamento MCP facoltativo",
+        "loop": "ciclo di revisione",
+        "budget": "budget e limiti",
+        "contract": "contratto di output",
+        "control": "Che cosa viene deciso automaticamente e quando interviene una persona",
+        "why": "Perché questa architettura",
+        "teams": "Team che l'orchestratore può impiegare",
+        "team": "Team",
+        "capabilities": "Capacità",
+        "team_approval": "si ferma per un'approvazione",
+        "parameters": "Parametri",
+        "integrations": "Collegamento facoltativo",
+        "offline": "Senza collegamento",
+        "setup": "Configurazione",
+        "knowledge_files": "File di conoscenza (sintetici, creati durante la copia)",
+        "orchestrator_kind": "Orchestratore",
+    },
+}
+for _language, _extra in _MORE.items():
+    _LABELS[_language].update(_extra)
+
+
 def _cell(text: str) -> str:
     return text.replace("|", "/").replace("\n", " ")
 
 
 #: Features shown as building blocks of an example (beyond agents and tools).
-_BLOCKS = ("decision", "approval", "form", "subworkflow", "files", "documents", "proposals", "memory")
+_BLOCKS = (
+    *("orchestrator", "decision", "approval", "loop", "form", "subworkflow", "files", "documents"),
+    *("proposals", "memory", "knowledge", "integration", "contract", "budget"),
+)
 
 
 def render(language: str) -> str:
@@ -315,13 +451,25 @@ def render(language: str) -> str:
         lines.append(f"| {labels['agent']} | {labels['task']} | {labels['receives']} |")
         lines.append("|---|---|---|")
         for agent in example.agent_details:
-            extras = [labels["judge"]] if agent.judge else []
+            extras = [labels["orchestrator_kind"]] if agent.kind == "orchestrator" else []
+            if agent.judge:
+                extras.append(labels["judge"])
             if agent.structured:
                 extras.append(labels["structured"])
             if agent.tools:
                 extras.append(f"{labels['tools']}: " + ", ".join(f"`{tool}`" for tool in agent.tools))
             task = agent.description + (f" ({'; '.join(extras)})" if extras else "")
             lines.append(f"| **{_cell(agent.name)}** | {_cell(task)} | {_cell(', '.join(agent.receives))} |")
+        if example.team_details:
+            lines += ["", f"**{labels['teams']}:**", ""]
+            lines.append(f"| {labels['team']} | {labels['task']} | {labels['capabilities']} |")
+            lines.append("|---|---|---|")
+            for team in example.team_details:
+                notes = [labels["team_approval"]] if team.approval else []
+                if team.parameters:
+                    notes.append(f"{labels['parameters']}: " + ", ".join(team.parameters))
+                task = team.description + (f" ({'; '.join(notes)})" if notes else "")
+                lines.append(f"| **{_cell(team.name)}** | {_cell(task)} | {_cell(', '.join(team.capabilities))} |")
         lines += [
             "",
             f"**{labels['input']}:** {example.guide.input}",
@@ -335,8 +483,25 @@ def render(language: str) -> str:
         lines += [
             f"**{labels['result']}:** {example.guide.result}",
             "",
-            f"**{labels['adapt']}:** {example.guide.adapt}",
+            f"**{labels['control']}:** {example.guide.control}",
+            "",
+            f"**{labels['why']}:** {example.guide.why}",
         ]
+        if example.knowledge:
+            names = "; ".join(f"{item.name}: {item.description}" for item in example.knowledge)
+            lines += ["", f"**{labels['knowledge_files']}:** {names}"]
+        for integration in example.integrations:
+            tools = ", ".join(f"`{tool}`" for tool in integration.tools)
+            lines += [
+                "",
+                f"**{labels['integrations']}: {integration.name}** ({labels['tools']}: {tools}). "
+                f"{integration.description}",
+                "",
+                f"**{labels['setup']}:** {integration.setup}",
+                "",
+                f"**{labels['offline']}:** {integration.offline}",
+            ]
+        lines += ["", f"**{labels['adapt']}:** {example.guide.adapt}"]
     lines += ["", END]
     return "\n".join(lines)
 

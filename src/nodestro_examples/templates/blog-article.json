@@ -12,24 +12,33 @@
       "y": 160
     },
     {
-      "id": "audience",
+      "id": "brief",
       "type": "agent",
-      "x": 320,
-      "y": 20,
-      "role": "research",
-      "icon": "users",
-      "model": "claude-haiku-5-5",
-      "effort": "low"
-    },
-    {
-      "id": "outline",
-      "type": "agent",
-      "x": 320,
-      "y": 300,
+      "x": 360,
+      "y": 180,
       "role": "planning",
       "icon": "list",
-      "model": "claude-haiku-5-5",
-      "effort": "low"
+      "tier": "fast",
+      "effort": "low",
+      "output_name": "Brief",
+      "output_fields": [
+        {
+          "name": "audience",
+          "type": "string"
+        },
+        {
+          "name": "angle",
+          "type": "string"
+        },
+        {
+          "name": "outline",
+          "type": "string_list"
+        },
+        {
+          "name": "key_messages",
+          "type": "string_list"
+        }
+      ]
     },
     {
       "id": "writer",
@@ -53,7 +62,8 @@
       "effort": "low",
       "tools": [
         "text_statistics"
-      ]
+      ],
+      "tier": "fast"
     },
     {
       "id": "output",
@@ -69,18 +79,10 @@
   "edges": [
     [
       "start",
-      "audience"
+      "brief"
     ],
     [
-      "start",
-      "outline"
-    ],
-    [
-      "audience",
-      "writer"
-    ],
-    [
-      "outline",
+      "brief",
       "writer"
     ],
     [

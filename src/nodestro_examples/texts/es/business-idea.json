@@ -1,42 +1,26 @@
 {
   "name": "Evaluar una idea de negocio",
   "field": "Autónomos y emprendedores",
-  "description": "Evaluar en paralelo una idea de negocio según potencial de mercado, rentabilidad y riesgos y emitir un veredicto.",
+  "description": "Hacer que una idea de negocio la examinen exactamente los equipos de expertos que necesita y llegar a un veredicto fundamentado.",
   "start": "Idea de negocio",
   "output": "Evaluación",
   "file_name": "Evaluacion_idea_de_negocio",
   "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nIdea: servicio móvil de reparación de bicicletas «Rescate Bici» en una ciudad de 180.000 habitantes.\nUna bicicleta de carga con herramientas va al domicilio o a la oficina del cliente; reserva a través de una web sencilla.\n\nSupuestos de la fundadora:\n- Trabajo medio de 65 EUR netos, coste de material del 30 %\n- Capacidad de 6 trabajos al día, 20 días laborables al mes; ocupación media del 50 % el primer año\n- Inversión inicial de 18.000 EUR (bicicleta de carga, herramientas, web), financiada con ahorros\n- Costes corrientes de 1.400 EUR al mes (seguro, almacén, teléfono, software, marketing)\n- Sueldo deseado para la emprendedora de 2.500 EUR al mes\n- Públicos objetivo: personas que se desplazan al trabajo, familias con bicicleta de carga, empresas con renting de bicicletas\n- Se sabe que: hay tres talleres fijos en la ciudad con esperas de dos a tres semanas en primavera",
   "guide": {
-    "problem": "Antes de emprender conviene mirar con objetividad el mercado, las cifras y los riesgos. El flujo hace que tres especialistas examinen la idea a la vez y que un jurado emita un veredicto razonado.",
-    "flow": "Tres agentes trabajan en paralelo: el analista de mercado estima públicos y competencia, el calculador de rentabilidad calcula el punto de equilibrio y escenarios con la calculadora y el analista de riesgos busca puntos débiles. El jurado inversor lo sopesa todo y entrega un veredicto estructurado con puntuación.",
+    "problem": "Antes de emprender, conviene mirar con serenidad el mercado, las cifras y los riesgos. Pero no todas las ideas necesitan a los mismos expertos: un servicio de reparación de bicicletas no necesita a una especialista en licencias, una empresa de bebidas sí. El flujo de trabajo deja que una mentora de emprendimiento reúna los equipos de expertos adecuados y que un jurado de inversores llegue a un veredicto fundamentado.",
+    "flow": "La mentora de emprendimiento es un orquestador: lee la idea y decide cuáles de los cinco equipos de expertos involucra. Mercado, rentabilidad y riesgos trabajan en paralelo en cada idea; regulación y operaciones solo se suman cuando la idea lo requiere. Si los resultados se contradicen, la mentora hace a un equipo una pregunta de seguimiento concreta. Después, el jurado de inversores pondera todos los informes y emite un veredicto estructurado con una puntuación.",
     "input": "Una descripción de la idea con oferta, públicos objetivo, precios, costes, capacidad y competidores conocidos.",
-    "result": "Un veredicto estructurado (seguir adelante, adaptar o descartar) con puntuación, fortalezas, riesgos, supuestos que comprobar y próximos pasos concretos para validar la idea, además como informe en PDF.",
-    "adapt": "Describe tu idea con tus cifras. Cuanto más honestos sean los supuestos, más útil será el veredicto. Sube tus propios datos de mercado o resultados de encuestas como conocimiento y asígnalos al analista de mercado."
+    "result": "Un veredicto estructurado (seguir adelante, adaptar o descartar) con puntuación, fortalezas, riesgos, supuestos que comprobar y próximos pasos concretos, también como informe PDF. En la ejecución, la vista de orquestación muestra qué equipos eligió la mentora, por qué, con qué encargo y qué entregó cada equipo.",
+    "adapt": "Describe tu idea con tus propias cifras. Para añadir otro experto, por ejemplo para cuestiones fiscales, guarda un flujo de trabajo con una descripción clara y capacidades y añádelo a los equipos de la mentora; ella decidirá sola cuándo hace falta. Tus propios datos de mercado puedes subirlos como conocimiento y asignarlos al analista de mercado del equipo de mercado.",
+    "control": "Automático: la mentora decide qué equipos trabajan, en qué orden y con qué encargo; cada decisión queda registrada con su motivo. Hay límites: como máximo 6 decisiones, cada equipo como máximo dos veces, como máximo 3 equipos a la vez y un presupuesto de 3 USD por ejecución. Ningún paso espera a una persona; el veredicto es la base de tu propia decisión.",
+    "why": "Un flujo de trabajo fijo ejecutaría siempre a los cinco equipos y pagaría un análisis de licencias que un servicio de bicicletas no necesita, o los dejaría fuera cuando importan. La mentora toma justamente esa decisión, de forma trazable y dentro de unos límites. El jurado sigue siendo un paso fijo, porque un veredicto estructurado y comparable no debe depender de cómo la mentora repartió el trabajo."
   },
   "agents": {
-    "market": {
-      "name": "Analista de mercado",
-      "description": "Estima públicos objetivo, demanda y competencia.",
-      "system": "Eres analista de mercado para nuevas empresas. Describe los públicos objetivo, sus necesidades y su disposición a pagar, estima el potencial de mercado con un cálculo aproximado transparente y prudente y analiza la competencia. Indica qué datos proceden de la descripción y cuáles se basan en conocimiento general y deben comprobarse en la zona.",
-      "task": "Analiza el mercado para esta idea:\n\n{{input}}"
-    },
-    "economics": {
-      "name": "Calculador de rentabilidad",
-      "description": "Calcula margen de contribución, punto de equilibrio y escenarios con la calculadora.",
-      "system": "Eres asesor de emprendimiento especializado en finanzas. Calcula con la calculadora el margen de contribución por trabajo, los ingresos y el resultado mensuales, el punto de equilibrio en trabajos al mes (incluido el sueldo de la emprendedora) y la recuperación de la inversión inicial. Calcula tres escenarios (prudente, esperado, optimista) y muestra lo sensible que es el resultado a la ocupación y al precio.",
-      "task": "Calcula la rentabilidad de esta idea:\n\n{{input}}"
-    },
-    "risks": {
-      "name": "Analista de riesgos",
-      "description": "Busca puntos débiles y riesgos de la idea.",
-      "system": "Eres un mentor de emprendedores con experiencia y haces conscientemente de abogado del diablo. Busca los mayores riesgos: demanda, estacionalidad, dependencia de una persona, competencia, requisitos legales, escalabilidad y financiación. Valora cada riesgo por probabilidad e impacto y propone una forma económica de comprobarlo antes de emprender.",
-      "task": "Analiza los riesgos de esta idea:\n\n{{input}}"
-    },
     "jury": {
       "name": "Jurado inversor",
       "description": "Sopesa mercado, cifras y riesgos y emite un veredicto.",
       "system": "Eres un jurado de emprendedoras e inversores con experiencia. Sopesa mercado, rentabilidad y riesgos y emite un veredicto: seguir adelante, adaptar o descartar. Asigna una puntuación de 1 a 10 y justifícala. Indica los supuestos que deben comprobarse primero y próximos pasos concretos y económicos. Sé honesto pero justo.",
-      "task": "Evalúa la idea.\n\nAnálisis de mercado:\n{{node:market}}\n\nRentabilidad:\n{{node:economics}}\n\nRiesgos:\n{{node:risks}}",
+      "task": "Evalúa la idea.\n\nIdea:\n{{run.input}}\n\nInformes de los equipos de expertos:\n{{node:coach}}",
       "fields": {
         "verdict": "Veredicto (seguir adelante, adaptar o descartar) con justificación",
         "score": "Puntuación de 1 a 10",
@@ -50,6 +34,18 @@
   "tests": {
     "idea": {
       "name": "Servicio móvil de reparación de bicicletas"
+    },
+    "regulated_idea": {
+      "name": "Fábrica de kombucha (alimento regulado)",
+      "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente ficticios, solo para probar.\n\nIdea: pequeña fábrica de kombucha «Fermento» en una cocina industrial alquilada; venta en botellas de 0,33 l en mercados semanales y a 15 cafeterías de la región.\n\nSupuestos de los fundadores:\n- Precio a cafeterías 2,20 EUR por botella, en el mercado 3,50 EUR; ingredientes y botella 0,70 EUR\n- 2.000 botellas al mes el primer año, el 60 % para cafeterías\n- Inversión inicial 35.000 EUR (tanques de fermentación, embotelladora, etiquetas, furgoneta), de ellos 20.000 EUR con un préstamo bancario\n- Costes corrientes 2.600 EUR al mes (alquiler de la cocina, seguro, tasas de mercado, combustible)\n- Sueldo de los fundadores 2 × 2.000 EUR al mes\n- La fermentación puede elevar el contenido de alcohol por encima del 0,5 % si las botellas se almacenan en caliente\n- Se sabe: dos marcas de supermercado, ningún productor local"
+    }
+  },
+  "steps": {
+    "coach": {
+      "name": "Mentora de emprendimiento",
+      "description": "Decide qué equipos de expertos necesita la idea, los hace trabajar en paralelo y plantea preguntas de seguimiento.",
+      "instructions": "Toda idea necesita los equipos de mercado, rentabilidad y riesgos: inícialos juntos con una decisión en paralelo. Añade el equipo de regulación solo si la idea toca permisos, alimentos, salud, alcohol, finanzas, datos personales, transporte de personas u otros ámbitos regulados. Añade el equipo de operaciones solo si la idea depende de producción, tecnología, logística o proveedores. Da a cada equipo la idea completa con todas las cifras y supuestos y di qué necesitas de él. Si los resultados se contradicen o un equipo menciona una pregunta abierta que otro equipo puede responder, encarga una única pregunta de seguimiento concreta. Termina con los resultados de los equipos uno junto a otro, cada uno bajo el nombre de su equipo, seguidos de las contradicciones y preguntas abiertas. No des un veredicto propio; de eso se encarga el jurado.",
+      "task": "Haz que examinen esta idea de negocio los equipos de expertos que necesita:\n\n{{run.input}}"
     }
   }
 }

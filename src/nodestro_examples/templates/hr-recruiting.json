@@ -87,9 +87,25 @@
       "icon": "pen"
     },
     {
+      "id": "release",
+      "type": "approval",
+      "x": 1360,
+      "y": 180,
+      "approval": {
+        "on_reject": "stop",
+        "require_comment_on_reject": true,
+        "show": [
+          "job_ad",
+          "interview",
+          "fairness",
+          "revise"
+        ]
+      }
+    },
+    {
       "id": "output",
       "type": "output",
-      "x": 1360,
+      "x": 1700,
       "y": 180,
       "files": [
         "docx"
@@ -119,15 +135,15 @@
     ],
     [
       "job_ad",
-      "output"
+      "release"
     ],
     [
       "interview",
-      "output"
+      "release"
     ],
     [
       "fairness",
-      "output"
+      "release"
     ],
     [
       "job_ad",
@@ -148,7 +164,12 @@
     ],
     [
       "revise",
-      "output"
+      "release"
+    ],
+    [
+      "release",
+      "output",
+      "approved"
     ]
   ],
   "tests": [

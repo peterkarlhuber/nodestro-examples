@@ -6,11 +6,13 @@
   "output": "Draft replies",
   "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nToday's date: 2026-03-20\n\nExtract from our service policy (sample online shop \"Sample Kitchen\"):\n- Returns: 30 days from delivery, goods unused in original packaging; returns are free of charge.\n- Warranty: 2 years; for defects, repair or replacement after inspection, a photo of the defect helps.\n- Delivery time: 2–4 working days; if delayed by more than 7 working days we offer free cancellation.\n- Vouchers and goodwill gestures above EUR 20 only after approval by the team lead.\n\nEnquiry 1 – Jonas Example, order 10442, delivered on 2026-02-27:\n\"The pan doesn't work on my induction hob. Can I return it? It's still in its original packaging.\"\n\nEnquiry 2 – Maria Sample, order 10518, delivered on 2026-01-15:\n\"The handle of my pot has come loose, after two months! That's really annoying. I want my money back.\"\n\nEnquiry 3 – Ali Instance, order 10603, ordered on 2026-03-09, not delivered yet:\n\"Where is my order? I need the knife set as a present at the weekend.\"\n\nEnquiry 4 – Sophie Test:\n\"Do you also have silicone baking moulds without plasticisers?\"",
   "guide": {
-    "problem": "In customer service many enquiries arrive at once, and each needs the right rule and the right tone. The workflow sorts the enquiries, checks policies and deadlines and prepares replies for approval.",
-    "flow": "A fast classifier sorts each enquiry by topic, urgency and mood. The policy checker applies the service policy and recalculates deadlines with the date tool. The reply writer drafts the replies; a quality check makes sure nothing is promised beyond the policy. A decision node sends escalations to a de-escalation agent first. Every draft waits for approval; a rejection with feedback sends the drafts back to the reply writer through a loop, who revises them and submits them for approval again (at most three rounds).",
-    "input": "Several customer enquiries with order and delivery data, today's date and your service policy, as an extract in the text or as a file (PDF, Word, Markdown); the sample file contains a more detailed policy.",
-    "result": "For each enquiry a classification, the applicable rule with a deadline check and a draft reply that a person approves before sending.",
-    "adapt": "Attach your complete policy and FAQ as a file, or upload them as knowledge and assign them to the policy checker if they apply permanently. Set your brand's tone (formal or informal, sign-off) in the system prompt of the reply writer. Use batch processing to handle many enquiries at once."
+    "problem": "In customer service many enquiries arrive at once, and each needs the right rule, the right order data and the right tone. The workflow sorts the enquiries, checks policies and deadlines against the order data and prepares replies for approval.",
+    "flow": "A fast classifier sorts each enquiry by topic, urgency and mood. The policy checker applies the service policy and recalculates deadlines with the date tool; if your copy is connected to the shop system, it looks up each order read-only with get_order, otherwise it uses the order data in the enquiries or an attached order export. The reply writer drafts the replies; a quality check makes sure nothing is promised beyond the policy. A decision node sends escalations to a de-escalation agent first. Every draft waits for approval; a rejection with a comment sends the drafts back to the reply writer through a loop, who revises them and submits them for approval again (at most three rounds).",
+    "input": "Several customer enquiries with order numbers, today's date and your service policy, as an extract in the text or as a file (PDF, Word, Markdown); the sample file contains a more detailed policy. Order and delivery dates come from the enquiries, from an attached order export of your shop system (JSON, CSV or Excel) or, when connected, directly from the shop system; the sample export contains the three orders of the sample enquiries.",
+    "result": "For each enquiry a classification, the applicable rule with a deadline check and a draft reply that a person approves before sending. The policy check states where the order data come from (shop system, export or enquiry) and which are missing.",
+    "adapt": "Attach your complete policy and FAQ as a file, or upload them as knowledge and assign them to the policy checker if they apply permanently. To check orders live, have the shop integration set up and choose the server when you copy the example. Set your brand's tone (formal or informal, sign-off) in the system prompt of the reply writer. Batch processing handles many enquiries at once, but runs without a person present may not use the shop connection, so give batches an order export.",
+    "control": "Automatic: classification, the escalation decision (to de-escalation when at least one customer is upset or asks for more than the policy allows), the policy check and the drafts; the date tool calculates deadlines, a quality check tests the drafts against three criteria (policy compliant, tone, no promises), and every step is recorded. A person approves every draft before anything is sent: a rejection needs a comment and sends the drafts back to the reply writer; after at most three rounds the run ends as failed if the drafts are still rejected. The replies remain drafts; nothing is sent automatically. The shop connection is optional and only reads: the copy gets get_order only if you connect it to an MCP server whose tool an administrator approved as read-only; otherwise it runs in a clearly labelled offline mode. Runs without a person present (schedules, test series, batch processing) may not use MCP tools unless an administrator explicitly allows unattended MCP.",
+    "why": "The steps build on each other (sort, check, write), so a fixed chain with one branch for escalations is enough; an orchestrator would add cost without benefit, and a fast model suffices for sorting. Order data come through an integration because they live in the shop system and change by the hour; the offline mode with an export keeps the example usable without a connection. The approval with a revision loop stays because the replies go to customers: a person has the last word."
   },
   "agents": {
     "triage": {
@@ -27,7 +29,9 @@
       "name": "Policy checker",
       "description": "Applies the service policy and checks deadlines with the date tool.",
       "system": "You are a team lead in customer service. Determine for each enquiry which rule of the service policy applies. Calculate deadlines with the days_between tool instead of estimating them. Decide what may be promised, what needs approval and which information is missing from the customer. If the policy does not cover an answer, say so clearly.",
-      "task": "Check the policy for these enquiries.\n\nEnquiries and policy:\n{{run.input}}\n\nClassification:\n{{node:triage}}"
+      "task": "Check the policy for these enquiries.\n\nEnquiries and policy:\n{{run.input}}\n\nClassification:\n{{node:triage}}",
+      "online": "You are connected to the shop system (read-only). Look up every order number in the enquiries with get_order: order and delivery dates, status, items and the carrier's latest note. The shop data are authoritative over the customers' statements; if they differ, say so and base deadlines on the shop data. If an enquiry has no order number or an order is not found, say so and list what has to be asked. Never guess order data.",
+      "offline": "No shop system is connected (offline mode). Use only the order data in the enquiries or in an attached order export from the shop system; the export is authoritative over what customers say about their order. For each enquiry, list which order data are missing (order date, delivery date, status, items) and must be checked in the shop system or asked from the customer. Never invent order data or deadlines."
     },
     "reply": {
       "name": "Reply writer",
@@ -64,6 +68,10 @@
     "policies": {
       "label": "Service policy as a file",
       "description": "Optional: your policies or FAQ as PDF, Word, Markdown or text, up to 5 files. Without a file, the extract in the text applies."
+    },
+    "orders": {
+      "label": "Order export (shop system)",
+      "description": "Optional: one export of the relevant orders from your shop system as JSON, CSV or Excel. Not needed if your copy is connected to the shop system; without either, only the order data in the enquiries apply."
     }
   },
   "samples": {
@@ -71,6 +79,45 @@
       "name": "Service_policy_Sample_Kitchen",
       "description": "A more complete, fictional service policy as a PDF.",
       "content": "# Service policy of the online shop “Sample Kitchen” (fictional)\n\nAs of: 1 January 2026\n\n## 1. Returns\n\n- 30 days from delivery, goods unused in original packaging.\n- Returns are free of charge; we send the return label by email.\n- Refund within 5 working days after the goods arrive.\n\n## 2. Warranty\n\n- 2 years from delivery.\n- For defects, repair or replacement first, after inspection; a photo of the defect speeds up the inspection.\n- A refund of the purchase price is only possible if repair or replacement fails.\n\n## 3. Delivery\n\n- Delivery time 2–4 working days.\n- If delayed by more than 7 working days, we offer free cancellation.\n- Express shipping is available for orders placed by 2 pm for EUR 9.90.\n\n## 4. Goodwill\n\n- The service team may grant vouchers and goodwill gestures up to EUR 20 on its own.\n- Anything above EUR 20 only after approval by the team lead.\n\n## 5. Product questions\n\n- Information on materials only from the product data sheets; if in doubt, ask instead of guessing."
+    },
+    "orders": {
+      "name": "Shop_orders_Sample_Kitchen",
+      "description": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only. Three orders of the sample shop as a JSON export: order and delivery dates, status, items and the carrier's note.",
+      "content": [
+        {
+          "order": "10442",
+          "customer": "Jonas Example",
+          "ordered": "2026-02-24",
+          "delivered": "2026-02-27",
+          "status": "delivered",
+          "items": [
+            "Aluminium frying pan 28 cm (product data: not suitable for induction hobs)"
+          ],
+          "carrier_note": "Delivered, handed to the customer."
+        },
+        {
+          "order": "10518",
+          "customer": "Maria Sample",
+          "ordered": "2026-01-12",
+          "delivered": "2026-01-15",
+          "status": "delivered",
+          "items": [
+            "Stainless steel saucepan 20 cm with lid"
+          ],
+          "carrier_note": "Delivered, left with a neighbour."
+        },
+        {
+          "order": "10603",
+          "customer": "Ali Instance",
+          "ordered": "2026-03-09",
+          "delivered": null,
+          "status": "delayed",
+          "items": [
+            "Knife set, 5 pieces, with block"
+          ],
+          "carrier_note": "Delayed at the parcel hub; new delivery date 2026-03-23."
+        }
+      ]
     }
   },
   "tests": {
@@ -84,6 +131,19 @@
     "policies_file": {
       "name": "Policy as a PDF file",
       "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nToday's date: 2026-03-20\nOur service policy is attached as a file.\n\nEnquiry 1 – Jonas Example, order 10442, delivered on 2026-02-27:\n\"The pan doesn't work on my induction hob. Can I return it? It's still in its original packaging.\"\n\nEnquiry 2 – Maria Sample, order 10518, delivered on 2026-01-15:\n\"The handle of my pot has come loose, after two months! That's really annoying. I want my money back.\""
+    },
+    "order_lookup": {
+      "name": "Order numbers only, order export attached",
+      "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nToday's date: 2026-03-20\n\nExtract from our service policy (sample online shop \"Sample Kitchen\"):\n- Returns: 30 days from delivery, goods unused in original packaging; returns are free of charge.\n- Warranty: 2 years; for defects, repair or replacement after inspection, a photo of the defect helps.\n- Delivery time: 2–4 working days; if delayed by more than 7 working days we offer free cancellation.\n- Vouchers and goodwill gestures above EUR 20 only after approval by the team lead.\n\nThe order export from our shop system is attached as a file.\n\nEnquiry 1 – Jonas Example, order 10442:\n\"The pan doesn't work on my induction hob. Can I return it? It's still in its original packaging.\"\n\nEnquiry 2 – Maria Sample, order 10518:\n\"The handle of my pot has come loose, after two months! That's really annoying. I want my money back.\"\n\nEnquiry 3 – Ali Instance, order 10603:\n\"Where is my order? I need the knife set as a present at the weekend.\""
+    }
+  },
+  "integrations": {
+    "shop": {
+      "name": "Shop system (orders)",
+      "description": "Read-only order lookup in your shop system through MCP: get_order returns an order's order and delivery dates, status, items and the carrier's latest note. The policy checker uses it to check deadlines against real order data instead of the customers' statements.",
+      "setup": "An administrator adds your shop system's MCP server under Tools → Connected services and approves its tool get_order as read-only. When you copy the example, pick that server as the connection; without one, the copy runs in offline mode. To try it without a shop system, run `python -m nodestro_examples.demo_mcp --language en` on the computer with the Nodestro desktop app, add http://127.0.0.1:8765/mcp under Tools → Connected services with the consent for a local development server, approve its tools as read-only and pick it when copying. The demo server only reads and serves the synthetic orders of the sample export, never real customer data. Runs without a person present (schedules, test series, batch processing) may not use MCP tools unless an administrator explicitly allows unattended MCP.",
+      "online": "Connected to the shop system: the policy checker looks up orders read-only with get_order; the shop data are authoritative over the customers' statements.",
+      "offline": "Offline mode: no shop system is connected. The policy checker uses only the order data in the enquiries or in an attached order export and lists missing order data; it does not look anything up."
     }
   }
 }

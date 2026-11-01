@@ -33,32 +33,33 @@
       "x": 340,
       "y": 160,
       "role": "analysis",
-      "icon": "search"
+      "icon": "search",
+      "tier": "fast",
+      "effort": "low"
     },
     {
-      "id": "hypotheses",
-      "type": "agent",
+      "id": "coordinator",
+      "type": "orchestrator",
       "x": 680,
       "y": 160,
       "role": "planning",
-      "icon": "idea"
-    },
-    {
-      "id": "critic",
-      "type": "agent",
-      "x": 1020,
-      "y": 40,
-      "role": "review",
-      "icon": "scale",
-      "tools": [
-        "calculator"
-      ],
-      "effort": "high"
+      "icon": "brain",
+      "orchestrator": {
+        "members": [
+          "research-hypothesis-team",
+          "research-statistics",
+          "research-qualitative",
+          "research-ethics"
+        ],
+        "max_decisions": 7,
+        "max_per_member": 2,
+        "allow_values": true
+      }
     },
     {
       "id": "design",
       "type": "agent",
-      "x": 1360,
+      "x": 1020,
       "y": 160,
       "role": "planning",
       "icon": "list",
@@ -67,7 +68,7 @@
     {
       "id": "output",
       "type": "output",
-      "x": 1700,
+      "x": 1360,
       "y": 160,
       "files": [
         "docx"
@@ -81,27 +82,19 @@
     ],
     [
       "framing",
-      "hypotheses"
+      "coordinator"
     ],
     [
-      "hypotheses",
-      "critic"
-    ],
-    [
-      "hypotheses",
+      "framing",
       "design"
     ],
     [
-      "critic",
+      "coordinator",
       "design"
     ],
     [
       "design",
       "output"
-    ],
-    [
-      "start",
-      "critic"
     ]
   ],
   "samples": [
@@ -131,6 +124,20 @@
           "operator": "is_not_empty"
         }
       ]
+    },
+    {
+      "id": "interview_study",
+      "input": "own",
+      "checks": [
+        {
+          "operator": "is_not_empty"
+        }
+      ]
     }
-  ]
+  ],
+  "budget_usd": 4.0,
+  "limits": {
+    "max_steps": 40,
+    "max_duration_s": 2400
+  }
 }

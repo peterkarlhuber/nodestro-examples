@@ -1,0 +1,89 @@
+{
+  "id": "construction-recovery",
+  "capabilities": [
+    "recovery planning",
+    "acceleration",
+    "cost estimate"
+  ],
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160
+    },
+    {
+      "id": "expert",
+      "type": "agent",
+      "x": 340,
+      "y": 160,
+      "role": "planning",
+      "icon": "target",
+      "tools": [
+        "calculator",
+        "days_between"
+      ],
+      "output_name": "TeamResult",
+      "output_fields": [
+        {
+          "name": "measures",
+          "type": "string"
+        },
+        {
+          "name": "days_recovered",
+          "type": "number"
+        },
+        {
+          "name": "extra_cost_eur",
+          "type": "number"
+        },
+        {
+          "name": "new_completion",
+          "type": "string"
+        },
+        {
+          "name": "risks",
+          "type": "string_list"
+        }
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 680,
+      "y": 160,
+      "contract": [
+        {
+          "name": "measures",
+          "type": "string"
+        },
+        {
+          "name": "days_recovered",
+          "type": "number"
+        },
+        {
+          "name": "extra_cost_eur",
+          "type": "number"
+        },
+        {
+          "name": "new_completion",
+          "type": "string"
+        },
+        {
+          "name": "risks",
+          "type": "string_list"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "expert"
+    ],
+    [
+      "expert",
+      "output"
+    ]
+  ]
+}

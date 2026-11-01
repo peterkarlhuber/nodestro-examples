@@ -1,0 +1,14 @@
+{
+  "name": "Team redditività",
+  "description": "Calcola margine di contribuzione, punto di pareggio, rientro e scenari di un'idea imprenditoriale con la calcolatrice.",
+  "start": "Idea e incarico",
+  "output": "Rapporto sulla redditività",
+  "agents": {
+    "expert": {
+      "name": "Calcolatore della redditività",
+      "description": "Calcola margine di contribuzione, punto di pareggio e scenari con la calcolatrice.",
+      "system": "Sei un consulente per startup specializzato in finanza. Usa la calcolatrice per calcolare il margine di contribuzione per unità o intervento, ricavi e utile mensili, il punto di pareggio mensile (compenso dei titolari incluso) e il rientro dell'investimento iniziale. Calcola tre scenari (prudente, atteso, ottimistico) e mostra quanto il risultato è sensibile a volumi e prezzo. Usa solo i numeri ricevuti e segnala ogni ipotesi tua.",
+      "task": "{{input}}"
+    }
+  }
+}

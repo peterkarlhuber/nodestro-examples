@@ -8,17 +8,19 @@
   "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nOrganisation: Lesefreunde Beispielstadt e. V. (fiktiv), 60 Ehrenamtliche, eine Teilzeitkraft\nProjekt: „Lesepaten an Grundschulen“ – Ehrenamtliche lesen ein Schuljahr lang wöchentlich mit Kindern, die\nbeim Lesen Unterstützung brauchen.\nBisher: 2025/26 an 4 Schulen mit 48 Kindern. Rückmeldung der Lehrkräfte: 31 von 48 Kindern lesen flüssiger\n(Einschätzung, keine standardisierte Messung).\nZiel: Ausweitung auf 8 Schulen und 100 Kinder im Schuljahr 2026/27\nFinanzbedarf: 25.000 EUR (Koordination 15.000 EUR, Bücher und Material 6.000 EUR, Schulungen 4.000 EUR)\nZeitraum der Kampagne: 2026-09-01 bis 2026-11-30\nVorhandene Kanäle: Newsletter (1.200 Empfänger), Instagram (900 Follower), gute Kontakte zur Lokalzeitung",
   "guide": {
     "problem": "Spendenkampagnen brauchen eine bewegende Geschichte, aber auch ehrliche Aussagen zur Wirkung. Der Workflow entwickelt eine Kampagne, bewertet die mögliche Wirkung und prüft, ob Versprechen glaubwürdig und ethisch vertretbar sind.",
-    "flow": "Kampagnenentwickler und Wirkungsanalyst arbeiten parallel: Der eine entwirft Botschaft, Zielgruppen und Maßnahmen, der andere erstellt ein Wirkungsmodell mit Indikatoren und rechnet Kosten pro Kind mit dem Rechner-Tool. Der Glaubwürdigkeitsprüfer kontrolliert beides; das Ergebnis enthält alle drei Teile.",
+    "flow": "Kampagnenentwickler und Wirkungsanalyst arbeiten parallel: Der eine entwirft Botschaft, Zielgruppen und Maßnahmen, der andere erstellt ein Wirkungsmodell mit Indikatoren und rechnet Kosten pro Kind mit dem Rechner-Tool. Der Glaubwürdigkeitsprüfer kontrolliert beides. Hält er die Kampagne nicht für glaubwürdig, schickt eine Bedingung sie mit seinen Hinweisen an den Kampagnenentwickler zurück; die überarbeitete Kampagne wird erneut geprüft, höchstens zweimal. Das Ergebnis enthält alle drei Teile.",
     "input": "Organisation, Projekt, bisherige Ergebnisse, Ziel, Finanzbedarf, Kampagnenzeitraum und vorhandene Kanäle.",
     "result": "Ein Kampagnenkonzept mit Zeitplan und Textentwürfen, ein Wirkungsmodell mit Indikatoren und eine strukturierte Prüfung auf übertriebene Aussagen, ethische Hinweise und einen Plan zur Wirkungsmessung, zusätzlich als Word-Datei. Der Wirkungsanalyst schlägt sein Wirkungsmodell für das Wissen vor, etwa für spätere Förderanträge; gespeichert wird nur, was du bestätigst.",
-    "adapt": "Beschreibe dein Projekt und deine bisherigen Ergebnisse so ehrlich wie möglich. Jahresberichte oder Evaluationen lädst du als Wissen hoch und weist sie dem Wirkungsanalysten zu."
+    "adapt": "Beschreibe dein Projekt und deine bisherigen Ergebnisse so ehrlich wie möglich. Jahresberichte oder Evaluationen lädst du als Wissen hoch und weist sie dem Wirkungsanalysten zu.",
+    "control": "Automatisch: Das Ja/Nein-Urteil des Glaubwürdigkeitsprüfers zur Glaubwürdigkeit entscheidet, ob die Kampagne zur Überarbeitung zurückgeht; der Lauf zeigt, welcher Zweig genommen wurde. Der Kampagnenentwickler überarbeitet höchstens zweimal, jeweils mit den Hinweisen der Prüfung und seinem vorherigen Entwurf. Gilt die Kampagne danach immer noch nicht als glaubwürdig, läuft der Workflow trotzdem zum Ergebnis weiter, und die Hinweise der Prüfung zeigen, was noch offen ist. Kein Schritt wartet auf eine Person: Texte und Zahlen sind Entwürfe, die deine Organisation vor der Veröffentlichung prüft, besonders Aussagen zur Wirkung und Fotos von Kindern. Vorgeschlagene Wirkungsmodelle werden nur ins Wissen übernommen, wenn du sie bestätigst.",
+    "why": "Glaubwürdigkeitsprobleme behebt am besten, wer den Text geschrieben hat; deshalb führt die Prüfung zum Kampagnenentwickler zurück, statt Probleme nur aufzulisten. Die Schleife ist auf zwei Runden begrenzt: Eine Kampagne, die danach noch übertreibt, braucht bessere Belege der Organisation, keine weiteren Umformulierungen. Das Wirkungsmodell bleibt außerhalb der Schleife, weil es auf den Projektdaten beruht, nicht auf den Kampagnentexten. Eine Freigabe ist nicht eingebaut, weil die Kampagne ein Entwurf bleibt und ohnehin außerhalb des Workflows veröffentlicht wird."
   },
   "agents": {
     "campaign": {
       "name": "Kampagnenentwickler",
       "description": "Entwirft Botschaft, Zielgruppen, Kanäle und Zeitplan der Kampagne.",
-      "system": "Du bist Fundraising-Expertin für gemeinnützige Organisationen. Entwickle eine Spendenkampagne: Kernbotschaft, Zielgruppen, Spendenanreize wie „Mit 50 Euro …“, Kanäle, Zeitplan über den Kampagnenzeitraum und drei Textentwürfe (Newsletter, Social Media, Pressemitteilung). Erzähle respektvoll und ohne Mitleidsbilder, und verwende nur Ergebnisse, die in der Beschreibung stehen.",
-      "task": "Entwickle die Kampagne für dieses Projekt:\n\n{{input}}"
+      "system": "Du bist Fundraising-Expertin für gemeinnützige Organisationen. Entwickle eine Spendenkampagne: Kernbotschaft, Zielgruppen, Spendenanreize wie „Mit 50 Euro …“, Kanäle, Zeitplan über den Kampagnenzeitraum und drei Textentwürfe (Newsletter, Social Media, Pressemitteilung). Erzähle respektvoll und ohne Mitleidsbilder, und verwende nur Ergebnisse, die in der Beschreibung stehen. Enthält die Aufgabe eine Rückmeldung der Glaubwürdigkeitsprüfung, überarbeite deinen vorherigen Entwurf Punkt für Punkt: Formuliere übertriebene Aussagen wie vorgeschlagen um, berücksichtige die ethischen Hinweise und behalte bei, was nicht kritisiert wurde.",
+      "task": "Entwickle die Kampagne für dieses Projekt:\n\n{{run.input}}\n\nRückmeldung der Glaubwürdigkeitsprüfung (nur bei Überarbeitung, sonst „-“):\n{{feedback}}\n\nDein vorheriger Entwurf:\n{{previous}}"
     },
     "impact": {
       "name": "Wirkungsanalyst",
@@ -29,7 +31,7 @@
     "integrity": {
       "name": "Glaubwürdigkeitsprüfer",
       "description": "Prüft Aussagen auf Übertreibung, Ethik und Belegbarkeit.",
-      "system": "Du prüfst Fundraising-Material auf Glaubwürdigkeit und Ethik. Vergleiche die Aussagen der Kampagne mit dem Wirkungsmodell: Was ist belegt, was übertrieben, was müsste vorsichtiger formuliert werden? Achte auf die Würde der dargestellten Menschen, Datenschutz bei Fotos von Kindern und Transparenz über die Mittelverwendung. Schlage einen einfachen Plan zur Wirkungsmessung vor.",
+      "system": "Du prüfst Fundraising-Material auf Glaubwürdigkeit und Ethik. Vergleiche die Aussagen der Kampagne mit dem Wirkungsmodell: Was ist belegt, was übertrieben, was sollte vorsichtiger formuliert werden? Achte auf die Würde der dargestellten Menschen, Datenschutz bei Fotos von Kindern und Transparenz über die Mittelverwendung. Schlage einen einfachen Plan zur Wirkungsmessung vor. Bewerte die Kampagne nur dann als nicht glaubwürdig, wenn sie ohne Änderungen nicht verwendbar ist, etwa wegen unbelegter Wirkungsversprechen, Zahlen, die nicht in der Beschreibung stehen, oder entwürdigender Darstellungen; sie geht dann mit deinen Hinweisen an den Kampagnenentwickler zurück.",
       "task": "Prüfe Kampagne und Wirkungsmodell.\n\nKampagne:\n{{node:campaign}}\n\nWirkungsmodell:\n{{node:impact}}",
       "fields": {
         "credible": "Ist die Kampagne in ihrer jetzigen Form glaubwürdig?",
@@ -43,6 +45,15 @@
   "tests": {
     "reading_mentors": {
       "name": "Lesepaten an Grundschulen"
+    }
+  },
+  "steps": {
+    "check": {
+      "name": "Glaubwürdig?",
+      "branches": {
+        "credible": "Zum Ergebnis"
+      },
+      "default": "Kampagne überarbeiten"
     }
   }
 }

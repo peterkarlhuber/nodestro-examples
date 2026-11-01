@@ -7,11 +7,13 @@
   "file_name": "Confronto fornitori",
   "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nFabbisogno: pezzo tornito in acciaio inox DT-40, 24.000 pezzi all'anno, richiamo di 2.000 pezzi al mese\nPrezzo obiettivo: 2,10 EUR al pezzo franco stabilimento\n\nOfferta A – Esempio Precisione GmbH (Germania, a 80 km)\n- Prezzo 2,35 EUR/pezzo, franco stabilimento, tempo di consegna 2 settimane\n- Ordine minimo 1.000 pezzi, termini di pagamento 30 giorni\n- Tasso di reclami lo scorso anno 0,4 %, certificazione IATF 16949\n\nOfferta B – Esempio Componenti Ltd. (Estremo Oriente, trasporto via mare)\n- Prezzo 1,62 EUR/pezzo franco fabbrica, trasporto e dazi stimati 0,28 EUR/pezzo, tempo di consegna 10 settimane\n- Ordine minimo 12.000 pezzi, pagamento 30 % anticipato, saldo alla spedizione\n- Nessuno storico di forniture, ISO 9001, campioni approvati\n\nOfferta C – Campione Parti Metalliche s.r.o. (Repubblica Ceca, a 450 km)\n- Prezzo 1,98 EUR/pezzo, trasporto 0,07 EUR/pezzo, tempo di consegna 4 settimane\n- Ordine minimo 4.000 pezzi, termini di pagamento 45 giorni\n- Tasso di reclami lo scorso anno 1,1 %, ISO 9001, capacità utilizzata al 90 % secondo il fornitore\n\nIpotesi interne: costo del capitale 8 % annuo, costo di magazzino 0,03 EUR per pezzo al mese,\ncosto per reclamo (controllo, selezione) 0,90 EUR per pezzo difettoso.",
   "guide": {
-    "problem": "Il prezzo unitario più basso raramente è l'offerta più conveniente. Il workflow confronta le offerte per costo totale e rischio di fornitura e motiva una raccomandazione per gli acquisti.",
-    "flow": "L'analista dei costi e l'analista dei rischi lavorano in parallelo. Uno calcola il costo totale di possesso per offerta con la calcolatrice, l'altro valuta tempi di consegna, dipendenze e qualità. La raccomandazione di acquisto mette a confronto i due risultati e fornisce un esito strutturato.",
-    "input": "Più offerte con prezzo, trasporto, tempo di consegna, quantità minima, condizioni di pagamento e dati di qualità, più i vostri costi interni. Puoi scrivere le offerte nel testo o allegarle come file, anche miste in PDF, Word ed Excel; i tre file di esempio mostrano proprio questo.",
-    "result": "Una raccomandazione strutturata con classifica, motivazioni, rischi, punti di negoziazione e ipotesi adottate. L'esecuzione la salva inoltre come rapporto PDF e come file Excel con un foglio per elenco.",
-    "adapt": "Allega le vostre offerte come file e indica fabbisogno e costi nel testo. Se avete pesi fissi (per esempio 50 % costo, 30 % rischio, 20 % qualità), aggiungili nel prompt di sistema della raccomandazione di acquisto. Contratti quadro o valutazioni dei fornitori puoi salvarli come conoscenza e assegnarli all'analista dei rischi."
+    "problem": "Il prezzo unitario più basso raramente è l'offerta più conveniente, e le promesse di un fornitore non sono il suo storico. Il workflow confronta le offerte per costo totale e rischio di fornitura, verifica lo storico dei fornitori quando è disponibile e motiva una raccomandazione per gli acquisti.",
+    "flow": "L'analista dei costi e l'analista dei rischi lavorano in parallelo. Uno calcola il costo totale di possesso per offerta con la calcolatrice, l'altro valuta tempi di consegna, dipendenze, capacità e qualità. Se la tua copia è collegata all'ERP, l'analista dei rischi legge la valutazione di ogni fornitore, in sola lettura, con list_suppliers e supplier_scorecard; senza collegamento usa un export ERP allegato o solo le offerte e dice quale storico manca. La raccomandazione di acquisto mette a confronto i due risultati e fornisce un esito strutturato.",
+    "input": "Più offerte con prezzo, trasporto, tempo di consegna, quantità minima, condizioni di pagamento e dati di qualità, più i vostri costi interni. Puoi scrivere le offerte nel testo o allegarle come file, anche miste in PDF, Word ed Excel; i tre file di esempio mostrano proprio questo. Facoltativamente alleghi un export ERP della valutazione fornitori (Excel o CSV); nell'export di esempio manca di proposito il fornitore dell'offerta B, che è nuovo e non ha ancora uno storico.",
+    "result": "Una raccomandazione strutturata con classifica, motivazioni, rischi, punti di negoziazione e ipotesi adottate. La valutazione dei rischi indica per ogni fornitore da dove viene il suo storico: dall'ERP, dall'export allegato o solo dall'offerta. L'esecuzione salva inoltre la raccomandazione come rapporto PDF e come file Excel con un foglio per elenco.",
+    "adapt": "Allega le vostre offerte come file e indica fabbisogno e costi nel testo. Per usare lo storico reale dei fornitori, fai configurare l'integrazione ERP e scegli il server quando copi l'esempio; altrimenti allega un export della valutazione fornitori. Se avete pesi fissi (per esempio 50 % costo, 30 % rischio, 20 % qualità), aggiungili nel prompt di sistema della raccomandazione di acquisto. I contratti quadro puoi salvarli come conoscenza e assegnarli all'analista dei rischi.",
+    "control": "Automatico: le due analisi e la ponderazione procedono senza pause; i calcoli li fa la calcolatrice e l'esecuzione registra ogni passo e ogni chiamata a strumenti. Il collegamento all'ERP è facoltativo e legge soltanto: la copia riceve gli strumenti list_suppliers e supplier_scorecard solo se la colleghi a un server MCP i cui strumenti un amministratore ha approvato in sola lettura; altrimenti funziona in una modalità offline chiaramente indicata e non finge mai di avere dati ERP. Le esecuzioni senza una persona presente (pianificazioni, serie di test, elaborazione in batch) non possono usare strumenti MCP, a meno che un amministratore non consenta espressamente l'MCP non presidiato; usa quindi una copia collegata in modo interattivo. Nessun passo attende un'approvazione: la raccomandazione è una bozza e la decisione di acquisto resta a te.",
+    "why": "Costo e rischio sono domande indipendenti, perciò due specialisti lavorano in parallelo e un terzo ne pondera i risultati; è più veloce e più facile da verificare di un unico agente per tutto. Lo storico dei fornitori arriva tramite un'integrazione perché si trova nell'ERP e cambia di continuo; un file di conoscenza diventerebbe presto obsoleto, e la modalità offline con un export mantiene l'esempio utilizzabile anche senza collegamento. Mancano di proposito ciclo e approvazione, perché il risultato è una raccomandazione, non un'azione."
   },
   "agents": {
     "cost": {
@@ -23,8 +25,10 @@
     "risk": {
       "name": "Analista dei rischi",
       "description": "Valuta i rischi di tempi di consegna, dipendenza, capacità e qualità.",
-      "system": "Sei un risk manager della supply chain. Valuta i rischi di fornitura di ogni offerta: tempi di consegna e flessibilità, via di trasporto, utilizzo della capacità, storico della qualità e certificazione, impegno finanziario e dipendenza. Valuta ogni rischio per probabilità e impatto (alto, medio, basso) e proponi misure di protezione, per esempio scorte di sicurezza o una seconda fonte.",
-      "task": "Valuta i rischi di fornitura di queste offerte:\n\n{{run.input}}"
+      "system": "Sei un risk manager della supply chain. Valuta i rischi di fornitura di ogni offerta: tempi di consegna e flessibilità, via di trasporto, utilizzo della capacità, storico della qualità e certificazione, impegno finanziario e dipendenza. Tieni separate le dichiarazioni dei fornitori dallo storico registrato dall'azienda e indica su cosa si basa ogni affermazione. Valuta ogni rischio per probabilità e impatto (alto, medio, basso) e proponi misure di protezione, per esempio scorte di sicurezza o una seconda fonte.",
+      "task": "Valuta i rischi di fornitura di queste offerte, compreso lo storico di consegne e qualità di ogni fornitore:\n\n{{run.input}}",
+      "online": "Sei collegato all'ERP dell'azienda (sola lettura). Per ogni offerta cerca il fornitore con list_suppliers e leggi la sua valutazione con supplier_scorecard: puntualità di consegna, qualità in ppm, reclami, rapporti 8D aperti, ultimo audit e note. I dati ERP prevalgono sulle dichiarazioni delle offerte; segnala dove differiscono. Se un fornitore non è nell'ERP, di' chiaramente che non c'è alcuno storico di forniture con lui e trattalo come un rischio a sé. Non inventare valori che gli strumenti non hanno restituito.",
+      "offline": "Nessun ERP è collegato (modalità offline). Usa solo un export ERP della valutazione fornitori, se allegato, e altrimenti solo le offerte. Indica per ogni fornitore quale storico manca (per esempio puntualità, reclami, rapporti 8D aperti, audit) e che va verificato nell'ERP. Non inventare mai uno storico; se un fornitore non è nell'export, non ha uno storico registrato."
     },
     "recommendation": {
       "name": "Raccomandazione di acquisto",
@@ -45,6 +49,10 @@
     "offers": {
       "label": "File delle offerte",
       "description": "Facoltativo: le offerte in PDF, Word, Excel o CSV, fino a 10 file. Senza file valgono le offerte nel testo; con i file, nel testo bastano fabbisogno, prezzo obiettivo e ipotesi interne."
+    },
+    "history": {
+      "label": "Export ERP (storico fornitori)",
+      "description": "Facoltativo: un export della valutazione fornitori dal vostro ERP in Excel o CSV, con puntualità di consegna, qualità, reclami e audit. Non serve se la tua copia è collegata all'ERP."
     }
   },
   "samples": {
@@ -115,6 +123,54 @@
           ]
         ]
       }
+    },
+    "history": {
+      "name": "ERP_valutazione_fornitori",
+      "description": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare. Valutazione fornitori degli ultimi 12 mesi come export Excel dall'ERP; il fornitore dell'offerta B non c'è perché non ha mai consegnato.",
+      "content": {
+        "Valutazione fornitori": [
+          [
+            "N. fornitore",
+            "Fornitore",
+            "Puntualità di consegna (%)",
+            "Qualità (ppm)",
+            "Reclami (12 mesi)",
+            "Rapporti 8D aperti",
+            "Ultimo audit",
+            "Note"
+          ],
+          [
+            "S-1001",
+            "Esempio Precisione GmbH",
+            98.4,
+            120,
+            1,
+            0,
+            "2026-04-14: superato (A)",
+            "Affidabile; le variazioni di richiamo a breve termine sono state consegnate puntualmente."
+          ],
+          [
+            "S-1027",
+            "Campione Parti Metalliche s.r.o.",
+            84.0,
+            1450,
+            7,
+            1,
+            "2026-02-03: superato con riserva (B), piano d'azione sulla finitura superficiale concordato",
+            "Il fornitore segnala un collo di bottiglia di capacità in tornitura dal 3° trimestre 2026; 3 consegne in ritardo negli ultimi 6 mesi. Rapporto 8D aperto 8D-2026-031: bave nel foro."
+          ],
+          [
+            "S-1033",
+            "Demo Rivestimenti S.r.l.",
+            95.1,
+            380,
+            2,
+            0,
+            "2025-11-20: superato (A)",
+            "Solo rivestimenti, non fornisce pezzi torniti."
+          ]
+        ]
+      }
     }
   },
   "tests": {
@@ -124,6 +180,19 @@
     "offers_files": {
       "name": "Tre offerte in PDF, Word ed Excel",
       "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nFabbisogno: pezzo tornito in acciaio inox DT-40, 24.000 pezzi all'anno, richiamo di 2.000 pezzi al mese\nPrezzo obiettivo: 2,10 EUR al pezzo franco stabilimento\n\nLe tre offerte sono allegate come file.\n\nIpotesi interne: costo del capitale 8 % annuo, costo di magazzino 0,03 EUR per pezzo al mese,\ncosto per reclamo (controllo, selezione) 0,90 EUR per pezzo difettoso."
+    },
+    "with_history": {
+      "name": "Tre offerte come file più export ERP",
+      "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nFabbisogno: pezzo tornito in acciaio inox DT-40, 24.000 pezzi all'anno, richiamo di 2.000 pezzi al mese\nPrezzo obiettivo: 2,10 EUR al pezzo franco stabilimento\n\nLe tre offerte sono allegate come file, insieme all'export ERP della nostra valutazione fornitori.\n\nIpotesi interne: costo del capitale 8 % annuo, costo di magazzino 0,03 EUR per pezzo al mese,\ncosto per reclamo (controllo, selezione) 0,90 EUR per pezzo difettoso."
+    }
+  },
+  "integrations": {
+    "erp": {
+      "name": "ERP (valutazione fornitori)",
+      "description": "Accesso in sola lettura tramite MCP ai dati fornitori del vostro ERP: list_suppliers elenca i fornitori, supplier_scorecard restituisce la valutazione di un fornitore degli ultimi 12 mesi (puntualità, qualità in ppm, reclami, rapporti 8D aperti, ultimo audit). L'analista dei rischi la usa per confrontare le offerte con lo storico registrato.",
+      "setup": "Un amministratore aggiunge il server MCP dell'ERP della tua azienda in Strumenti → Servizi collegati e approva i due strumenti list_suppliers e supplier_scorecard in sola lettura. Quando copi l'esempio scegli quel server come collegamento; senza collegamento la copia funziona in modalità offline. Per provarlo senza ERP, avvia `python -m nodestro_examples.demo_mcp --language it` sul computer con l'app desktop di Nodestro, aggiungi http://127.0.0.1:8765/mcp in Strumenti → Servizi collegati con il consenso per un server di sviluppo locale, approva i suoi strumenti in sola lettura e sceglilo quando copi. Il server demo legge soltanto e fornisce i dati sintetici dell'export di esempio, mai dati aziendali reali. Le esecuzioni senza una persona presente (pianificazioni, serie di test, elaborazione in batch) non possono usare strumenti MCP, a meno che un amministratore non consenta espressamente l'MCP non presidiato.",
+      "online": "Collegato all'ERP: l'analista dei rischi legge le valutazioni dei fornitori in sola lettura (list_suppliers, supplier_scorecard); i dati ERP prevalgono sulle dichiarazioni delle offerte.",
+      "offline": "Modalità offline: nessun ERP è collegato. L'analista dei rischi usa solo un export ERP allegato o le offerte e indica lo storico fornitori mancante; non consulta nulla."
     }
   }
 }

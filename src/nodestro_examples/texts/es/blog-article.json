@@ -1,39 +1,29 @@
 {
   "name": "Artículo de blog",
   "field": "Marketing y contenidos",
-  "description": "Investigar el público, esbozar la estructura, escribir el artículo y revisarlo editorialmente.",
+  "description": "Preparar un briefing con público, enfoque y esquema, escribir el artículo y revisarlo editorialmente.",
   "start": "Tema",
   "output": "Artículo",
   "file_name": "Artículo de blog",
   "input": "Por qué los editores visuales de flujos de trabajo hacen más accesibles los agentes de IA",
   "guide": {
-    "problem": "Los buenos artículos nacen de un público claro y de un esquema bien pensado. El flujo reparte el trabajo como en una redacción y revisa el resultado antes de publicarlo.",
-    "flow": "El público y el esquema se crean en paralelo con un modelo rápido. El redactor escribe el artículo a partir de ellos; una revisión de calidad integrada comprueba que siga el esquema y responda a las preguntas de los lectores. La corrección revisa extensión y legibilidad con la herramienta de estadísticas de texto y marca las afirmaciones sin verificar.",
+    "problem": "Los buenos artículos nacen de un briefing claro: quién los lee, desde qué enfoque y con qué mensajes clave. El flujo trabaja como una pequeña redacción y revisa el resultado antes de publicarlo.",
+    "flow": "Un modelo rápido prepara un briefing estructurado con público, enfoque, esquema y mensajes clave. El redactor escribe el artículo a partir de él; una revisión de calidad integrada comprueba que siga el esquema y responda a las preguntas de los lectores y, si no, lo devuelve una vez para revisarlo. Una corrección rápida revisa extensión y legibilidad con la herramienta de estadísticas de texto y marca las afirmaciones sin verificar.",
     "input": "Un tema en una frase. Opcionalmente puedes añadir el público, el tono o la extensión deseada en la propia entrada.",
     "result": "Un artículo terminado en Markdown con títulos, una meta descripción y breves notas de corrección con el número de palabras y avisos sobre afirmaciones que conviene respaldar antes de publicar. La ejecución guarda además el resultado como archivo Markdown y HTML que puedes llevar a tu CMS.",
-    "adapt": "Cambia el tema en la entrada. Puedes subir vuestra guía de estilo como conocimiento y asignarla al redactor y a la corrección. La extensión deseada se ajusta en el prompt de sistema del redactor."
+    "adapt": "Cambia el tema en la entrada. Puedes subir vuestra guía de estilo como conocimiento y asignarla al redactor y a la corrección. La extensión deseada se ajusta en el prompt de sistema del redactor; el número de secciones o de mensajes clave, en el prompt de sistema del briefing.",
+    "control": "Automático: briefing, artículo y corrección se ejecutan uno tras otro; ningún paso espera a una persona. Una revisión de calidad aparte evalúa el artículo según dos criterios (sigue el esquema, responde a las preguntas de los lectores) y, si uno no se cumple, hace que el redactor lo revise una vez. La corrección no cambia el contenido, sino que marca las afirmaciones que necesitan una fuente. El artículo es un borrador: tú decides si se publica y dónde.",
+    "why": "Un único briefing estructurado sustituye a dos planificadores en paralelo cuyos resultados el redactor tenía que conciliar: antes, el esquema se creaba sin conocer al público. Ahora público, enfoque, esquema y mensajes clave salen de una misma idea y llegan al redactor como campos bien separados. El redactor tiene una revisión de calidad con revisión automática porque es ahí donde surgen la mayoría de los fallos. Como ejemplo para principiantes, el flujo sigue siendo a propósito una cadena corta sin bifurcaciones, bucles ni aprobaciones, para que cada paso se pueda seguir en la ejecución."
   },
   "agents": {
-    "audience": {
-      "name": "Público",
-      "description": "Describe a los lectores, sus preguntas y lo que ya saben.",
-      "system": "Describes el público de un artículo: quiénes son los lectores, qué saben ya y qué tres preguntas traen. Sé conciso.",
-      "task": "{{input}}"
-    },
-    "outline": {
-      "name": "Esquema",
-      "description": "Redacta el título y el esquema.",
-      "system": "Redactas un título atractivo y un esquema de cinco partes para un artículo. Indica en una frase qué debe conseguir cada sección.",
-      "task": "{{input}}"
-    },
     "writer": {
       "name": "Redactor",
-      "description": "Escribe el artículo a partir del esquema y del público.",
+      "description": "Escribe el artículo a partir del briefing.",
       "system": "Eres una periodista tecnológica con experiencia. Escribe un artículo claro y vivo de unas 700 palabras con títulos en Markdown. Explica los términos técnicos la primera vez que aparezcan y usa ejemplos concretos. No inventes estudios, cifras ni citas.",
-      "task": "Escribe el artículo sobre «{{run.input}}».\n\nPúblico:\n{{node:audience}}\n\nEsquema:\n{{node:outline}}",
+      "task": "Escribe el artículo sobre «{{run.input}}».\n\nBriefing (público, enfoque, esquema, mensajes clave):\n{{node:brief}}",
       "criteria": {
-        "follows_outline": "El artículo sigue el esquema.",
-        "audience": "El artículo responde a las preguntas del público."
+        "follows_outline": "El artículo sigue el esquema del briefing.",
+        "audience": "El artículo responde a las preguntas del público indicadas en el briefing."
       }
     },
     "editor": {
@@ -41,6 +31,18 @@
       "description": "Revisa extensión y legibilidad y entrega la versión final.",
       "system": "Eres corrector. Determina el número de palabras y de frases del artículo con la herramienta de estadísticas de texto. Mejora la claridad, la ortografía y la fluidez sin cambiar el contenido ni la estructura. Entrega primero la versión final revisada en Markdown, después una meta descripción de 155 caracteres como máximo y por último notas de corrección: número de palabras, cambios principales y afirmaciones que conviene respaldar antes de publicar.",
       "task": "Corrige este artículo:\n\n{{input}}"
+    },
+    "brief": {
+      "name": "Briefing",
+      "description": "Define público, enfoque, esquema y mensajes clave en un briefing estructurado.",
+      "system": "Eres jefa de redacción y preparas el briefing de un artículo. Determina el público (quiénes son los lectores, qué saben ya y qué tres preguntas traen), el enfoque que hace que valga la pena leer el artículo, con un título provisional, un esquema de cinco partes con una frase sobre lo que debe conseguir cada sección y de tres a cinco mensajes clave que los lectores deben llevarse. Sé conciso y no inventes hechos, cifras ni fuentes.",
+      "task": "Prepara el briefing de un artículo sobre este tema:\n\n{{input}}",
+      "fields": {
+        "audience": "Público: quiénes son los lectores, qué saben ya y qué preguntas traen",
+        "angle": "Enfoque y título provisional del artículo",
+        "outline": "Secciones en orden, cada una con una frase sobre lo que debe conseguir",
+        "key_messages": "Mensajes clave que los lectores deben llevarse"
+      }
     }
   },
   "tests": {

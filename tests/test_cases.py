@@ -17,6 +17,7 @@ from nodestro_runtime.conditions import evaluate, parse_result
 from nodestro_runtime.graph import data_sources
 from nodestro_runtime.problems import NodestroError
 from nodestro_runtime.reports import file_name
+from nodestro_runtime.run_views import approvals_of_tree
 from nodestro_runtime.schemas import LANGUAGES, ConditionRule, RunIn, Workflow
 from nodestro_runtime.workspace import Workspace
 import pytest
@@ -43,6 +44,7 @@ SCENARIOS: dict[tuple[str, str], dict[str, Any]] = {
     ("household-budget", "budget_text"): {"check": {"monthly_surplus": 463, "savings_potential": 150}},
     ("household-budget", "transactions_file"): {"check": {"monthly_surplus": 460, "savings_potential": 150}},
     ("business-idea", "idea"): {"jury": {"score": 6}},
+    ("business-idea", "regulated_idea"): {"jury": {"score": 4}},
     ("farm-planning", "farm_text"): {"review": {"total_margin_eur": 41210}},
     ("farm-planning", "field_file"): {"review": {"total_margin_eur": 41210}},
 }
@@ -53,6 +55,18 @@ def stored_cases(workspace: Workspace, template_id: str, language: str, workflow
         return workspace.inputs.add(data, name=name, media_type=media_type, origin="test").id
 
     return samples.suite_cases(template_id, language, workflow, store)
+
+
+async def until(workspace: Workspace, run: Any, node_id: str) -> Any:
+    """Wait until the run's own approval ``node_id`` waits; approvals inside teams before it are approved."""
+    paused = await workspace.wait(run.id, timeout=60)
+    for _ in range(10):
+        if paused.status != "paused" or paused.nodes[node_id].status == "awaiting_approval":
+            break
+        for pending in approvals_of_tree(workspace.runs, paused):
+            workspace.decide(pending.run_id, pending.node_id, "approved", "")
+        paused = await workspace.wait(run.id, timeout=60)
+    return paused
 
 
 async def run_case(workspace: Workspace, workflow: Workflow, case: dict[str, Any]) -> Any:
@@ -175,8 +189,10 @@ async def test_every_decision_opens_its_branch_and_its_default(
     decision = next(node for node in spec.nodes if node.id == node_id).condition
     assert decision is not None and len(decision.rules) == 1 and decision.source
     rule = decision.rules[0]
-    branch = [edge[1] for edge in spec.edges if edge[0] == node_id and edge[2:] == (rule.id,)]
+    branch = [edge[1] for edge in spec.edges if edge[0] == node_id and edge[2:3] == (rule.id,)]
     assert branch, (template_id, node_id)
+    # A branch that leads back (a loop) repeats steps that already ran instead of opening new ones.
+    loop = any(len(edge) == 4 for edge in spec.edges if edge[0] == node_id and edge[2:3] == (rule.id,))
     for value, expected in zip(_hit_and_miss(rule.operator, rule.value), (rule.id, "default"), strict=True):
         answers = {} if decision.source == "start" else {decision.source: {rule.field: value}}
         workspace = make_workspace(Scenario(answers))
@@ -189,8 +205,17 @@ async def test_every_decision_opens_its_branch_and_its_default(
         assert done.status == "succeeded", (template_id, language, expected, done.error)
         record = done.nodes[node_id].decision
         assert record is not None and record.branches == [expected], (template_id, language, record)
-        statuses = {done.nodes[target].status for target in branch}
-        assert statuses == ({"succeeded"} if expected == rule.id else {"skipped"}), (template_id, expected)
+        back = [edge[1] for edge in spec.edges if edge[0] == node_id and edge[2:3] == ("default",) and len(edge) == 4]
+        if loop:
+            rounds = {len(done.nodes[target].iteration or []) for target in branch}
+            assert (rounds != {0}) == (expected == rule.id), (template_id, expected, rounds)
+        elif back:
+            # The default leads back for a revision; when the rounds are used up the run still ends.
+            rounds = {max(done.nodes[target].iteration or [0]) for target in back}
+            assert (rounds != {0}) == (expected == "default"), (template_id, expected, rounds)
+        else:
+            statuses = {done.nodes[target].status for target in branch}
+            assert statuses == ({"succeeded"} if expected == rule.id else {"skipped"}), (template_id, expected)
         # Agents after the branch are told when it did not run, instead of seeing a placeholder.
         for node in workflow.nodes:
             if node.agent is not None and done.nodes[node.id].status == "succeeded":
@@ -212,7 +237,7 @@ async def test_an_approval_releases_the_result_files(make_workspace: Any, templa
     workspace = make_workspace()
     workflow = copy(workspace, template_id, "en")
     run = await workspace.run(workflow, start_request(workflow))
-    paused = await workspace.wait(run.id, timeout=60)
+    paused = await until(workspace, run, node_id)
     assert paused.status == "paused" and paused.nodes[node_id].status == "awaiting_approval"
     # Nothing is written while the result waits for a person.
     assert workspace.files.list(run.id) == []
@@ -235,7 +260,7 @@ async def test_a_rejection_stops_or_revises_as_configured(
     workspace = make_workspace()
     workflow = copy(workspace, template_id, language)
     run = await workspace.run(workflow, start_request(workflow))
-    paused = await workspace.wait(run.id, timeout=60)
+    paused = await until(workspace, run, node_id)
     assert paused.nodes[node_id].status == "awaiting_approval"
     if spec.require_comment_on_reject:
         with pytest.raises(NodestroError) as refused:

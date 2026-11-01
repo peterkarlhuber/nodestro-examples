@@ -1,34 +1,47 @@
 """The example library: multi-agent workflow templates in every interface language.
 
 This is the package ``nodestro-examples``. Nodestro reads the library only through the
-functions of this module (:func:`summaries`, :func:`detail`, :func:`build`, :func:`build_part`,
-:func:`link_parts`, :func:`structure`, :func:`texts` and :mod:`.samples`); the files are package
-data of the installed package, never a path into a source checkout.
+functions of this module (:func:`summaries`, :func:`detail`, :func:`build`, :func:`instantiate`,
+:func:`build_part`, :func:`link_parts`, :func:`structure`, :func:`texts` and :mod:`.samples`); the files are
+package data of the installed package, never a path into a source checkout.
 
 A template is data, kept in two kinds of files in this package:
 
-- ``templates/<id>.json`` holds the language-neutral structure: nodes, models, tools,
-  connections, output fields and quality criteria.
+- ``templates/<id>.json`` holds the language-neutral structure: nodes, model tiers, tools,
+  connections, output fields, quality criteria, teams, knowledge files and integrations.
 - ``texts/<language>/<id>.json`` holds everything a person reads: name, description,
   agent names, system prompts, tasks, the prepared test input and the guide.
   ``texts/<language>/_common.json`` adds the rules every system prompt ends with.
 
 Templates are never changed at runtime and never installed on their own. Copying one
-(``POST /api/library/{id}/copy``) builds an ordinary workflow in the chosen language;
-the copy has its own id and is saved, versioned and edited like any other workflow, so
+(``POST /api/library/{id}/copy``, :func:`instantiate`) builds an ordinary workflow in the chosen
+language; the copy has its own id and is saved, versioned and edited like any other workflow, so
 later changes or language switches never touch the template or other copies.
 
 In a task text ``{{node:<id>}}`` names the result of another node; it becomes the
 placeholder of that node's name in the respective language (``{{Root cause analyst}}``).
 
-Templates can use every kind of node: decisions (``condition``), approvals, input forms on
-the start node (file fields with accepted formats, limits and delivery mode), result files on
-the result node, knowledge proposals and memory on agents, and sub-workflows. Every setting is
-an ordinary workflow setting: a copy needs nothing that exists only for the gallery. A sub-workflow node
-names a *part* (``templates/parts/<id>.json`` with texts in ``texts/<language>/parts``):
-a small workflow that is not an example of its own. Copying the template copies the
-part as a separate workflow first and pins the sub-workflow node to that copy's first
-version, so the copy works on its own and the template stays untouched.
+Templates can use every kind of node: decisions (``condition``), approvals, loops, input forms on
+the start node (file fields with accepted formats, limits and delivery mode), result files and an
+output contract on the result node, knowledge, proposals and memory on agents, sub-workflows and
+orchestrators. Every setting is an ordinary workflow setting: a copy needs nothing that exists only
+for the gallery.
+
+Format 2 adds, without changing how format 1 templates are read:
+
+- *Parts as teams*: a part (``templates/parts/<id>.json``, texts in ``texts/<language>/parts``) is a small
+  workflow that is not an example of its own. A sub-workflow node runs one; an orchestrator node
+  (``orchestrator``) delegates to several parts as its team pool. Parts carry capabilities, an output contract,
+  an input form and approval steps like any workflow. Copying a template copies its parts first (parts used by
+  other parts before those), as workflows of their own, and pins every reference to the copy's first version.
+- *Model tiers*: agents name a tier (``fast``, ``standard``, ``strong``) instead of a model; :func:`model_choice`
+  maps the tiers to the models of the workspace's provider, so the examples are not bound to one provider.
+- *Knowledge files* (``knowledge``): synthetic reference documents a copy stores in the knowledge base and
+  gives to agents (search with citations by default).
+- *Integrations* (``integrations``): optional MCP tools. A copy is either connected to an MCP server the
+  person chose (only approved read-only tools are bound) or works in an explicitly labelled offline mode
+  with the example's sample files; the template never pretends a connection that does not exist.
+- *Budget and limits* of the copy (``budget_usd``, ``limits``).
 
 Sample files (``samples``) are small synthetic files for the file fields of a template. They
 are built on request from the texts of a language with the writers result files use
@@ -40,15 +53,19 @@ create it for the copy, with the sample files stored as the copy's input files.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
+from dataclasses import dataclass, field
 from functools import cache
 from importlib.metadata import PackageNotFoundError, version
 import json
 from pathlib import Path
 import re
-from typing import Any, Literal
+from typing import Any, Literal, Protocol
 
+from nodestro_runtime.providers import provider_of
 from nodestro_runtime.schemas import (
     LANGUAGES,
+    MAX_CAPABILITIES,
     AgentConfig,
     ApprovalConfig,
     ConditionConfig,
@@ -60,9 +77,12 @@ from nodestro_runtime.schemas import (
     Effort,
     InputField,
     InputFieldType,
+    KnowledgeConfig,
     KnowledgeProposalConfig,
     MemoryConfig,
     Node,
+    OrchestratorConfig,
+    OrchestratorMember,
     OutputConfig,
     OutputField,
     OutputFieldType,
@@ -75,6 +95,7 @@ from nodestro_runtime.schemas import (
     StartConfig,
     SubworkflowConfig,
     WorkflowIn,
+    WorkflowLimits,
 )
 from pydantic import BaseModel, Field, model_validator
 
@@ -83,9 +104,10 @@ try:
 except PackageNotFoundError:  # pragma: no cover - running from a source checkout
     __version__ = "0.0.0"
 
-#: The version of the template format (``templates/``, ``texts/``); it changes only when existing
-#: templates would no longer be read correctly. The studio refuses a library with another format.
-FORMAT_VERSION = 1
+#: The version of the template format (``templates/``, ``texts/``). Format 2 adds teams (orchestrators over
+#: parts), model tiers, knowledge files, integrations, contracts, budgets and limits; every format 1 template
+#: is still read the same way (the new settings are optional and default to format 1's behaviour).
+FORMAT_VERSION = 2
 #: The package data (templates, texts, sample files) inside the installed package.
 _ROOT = Path(__file__).parent
 _NODE_REF = re.compile(r"\{\{\s*node:([a-z0-9_]+)\s*\}\}")
@@ -96,7 +118,8 @@ Category = Literal["industry", "business", "customers", "knowledge", "administra
 CATEGORIES: tuple[str, ...] = ("industry", "business", "customers", "knowledge", "administration", "private")
 Role = Literal["research", "analysis", "planning", "review", "writing"]
 Level = Literal["beginner", "advanced"]
-Pattern = Literal["sequential", "parallel", "branching"]
+#: ``adaptive``: an orchestrator decides at run time which teams work on the task.
+Pattern = Literal["sequential", "parallel", "branching", "adaptive"]
 Feature = Literal[
     "tools",
     "structured",
@@ -110,12 +133,55 @@ Feature = Literal[
     "documents",
     "proposals",
     "memory",
+    "orchestrator",
+    "knowledge",
+    "integration",
+    "loop",
+    "budget",
+    "contract",
 ]
-#: The prefix of a sub-workflow id that names a part of the library (resolved when copying).
+#: The prefix of a sub-workflow or team id that names a part of the library (resolved when copying).
 PART_PREFIX = "library-part:"
+#: The prefix of a knowledge file id that names a knowledge file of the template (resolved when copying).
+KNOWLEDGE_PREFIX = "library-knowledge:"
 
-#: The judge of the built-in quality check; Sonnet keeps the examples affordable.
-JUDGE_MODEL = "claude-sonnet-5-5"
+Tier = Literal["fast", "standard", "strong"]
+#: The models of the tiers in a workspace whose default model is Anthropic's (the default of Nodestro).
+DEFAULT_MODELS: dict[str, str] = {
+    "fast": "anthropic:claude-haiku-5-5",
+    "standard": "anthropic:claude-sonnet-5-5",
+    "strong": "anthropic:claude-opus-5-5",
+}
+#: The tier of the built-in quality check's judge; the standard tier keeps the examples affordable.
+JUDGE_TIER: Tier = "standard"
+#: Server tools run on Anthropic's side; with another provider they are left out (see :func:`build`).
+_SERVER_TOOL_PROVIDER = "anthropic"
+
+
+class ModelChoice(BaseModel):
+    """The model of each tier in a copy (``provider:model``)."""
+
+    fast: str = DEFAULT_MODELS["fast"]
+    standard: str = DEFAULT_MODELS["standard"]
+    strong: str = DEFAULT_MODELS["strong"]
+
+    def of(self, tier: Tier) -> str:
+        return str(getattr(self, tier))
+
+
+def model_choice(default_model: str | None = None, assistant_model: str | None = None) -> ModelChoice:
+    """The models a copy gets in a workspace with these default models.
+
+    With Anthropic (or no setting) the curated tiers: Haiku for fast extraction and classification, Sonnet for
+    everyday agent work, Opus for demanding analysis. With another provider every tier uses the workspace's
+    default model, and the strong tier the assistant model when it belongs to the same provider: Nodestro knows
+    no tiers of other providers, so it never guesses a model id that might not exist there.
+    """
+    if not default_model or provider_of(default_model) == "anthropic":
+        return ModelChoice()
+    provider = provider_of(default_model)
+    strong = assistant_model if assistant_model and provider_of(assistant_model) == provider else default_model
+    return ModelChoice(fast=default_model, standard=default_model, strong=strong)
 
 
 # ---- the files ------------------------------------------------------------------
@@ -182,16 +248,61 @@ class MemorySpec(_Strict):
     space: str
 
 
+class KnowledgeUse(_Strict):
+    """Knowledge files of the template an agent gets (:class:`~nodestro_runtime.schemas.KnowledgeConfig`)."""
+
+    files: list[str] = Field(min_length=1)
+    #: ``search``: the search tool over the files' text (with ``citations`` the answer names its sources).
+    mode: Literal["context", "on_demand", "search"] = "search"
+    citations: bool = True
+
+
+class McpUse(_Strict):
+    """Tools of an integration an agent gets while the copy is connected to it."""
+
+    integration: str
+    tools: list[str] = Field(min_length=1)
+
+
+class OrchestratorSpec(_Strict):
+    """An orchestrator over parts of the library (:class:`~nodestro_runtime.schemas.OrchestratorConfig`).
+
+    Name, instructions and task are texts (``steps``); the members are part ids, pinned to the copies' first
+    version when the template is copied.
+    """
+
+    members: list[str] = Field(min_length=1)
+    max_decisions: int = Field(default=8, ge=1, le=50)
+    max_per_member: int | None = Field(default=None, ge=1, le=50)
+    max_parallel: int = Field(default=1, ge=1, le=5)
+    staffing: bool = False
+    max_team: int = Field(default=5, ge=1, le=20)
+    allow_values: bool = False
+
+
+class LimitsSpec(_Strict):
+    """Execution limits of a copy (:class:`~nodestro_runtime.schemas.WorkflowLimits`)."""
+
+    max_parallel: int | None = Field(default=None, ge=1, le=32)
+    max_duration_s: float | None = Field(default=None, gt=0)
+    max_steps: int | None = Field(default=None, ge=1)
+
+
 class NodeSpec(_Strict):
     id: str
-    type: Literal["start", "agent", "output", "condition", "approval", "subworkflow"]
+    type: Literal["start", "agent", "output", "condition", "approval", "subworkflow", "orchestrator"]
     x: float
     y: float
     role: Role | None = None
     icon: str = "bot"
-    model: str = "claude-sonnet-5-5"
+    #: The model tier (agents and orchestrators); see :func:`model_choice`.
+    tier: Tier | None = None
+    #: A fixed model instead of a tier (format 1); a tier keeps a copy usable with other providers.
+    model: str | None = None
     effort: Effort | None = "medium"
     tools: list[str] = Field(default_factory=list)
+    #: Tools that run on the provider's side (Anthropic only; left out with other providers).
+    server_tools: list[str] = Field(default_factory=list)
     max_tokens: int = 8000
     output_name: str = "Result"
     output_fields: list[FieldSpec] = Field(default_factory=list)
@@ -201,14 +312,22 @@ class NodeSpec(_Strict):
     approval: ApprovalSpec | None = None
     #: The part this sub-workflow node runs.
     part: str | None = None
+    #: The orchestrator's team pool and limits.
+    orchestrator: OrchestratorSpec | None = None
     #: Start node: the input form.
     form: list[InputSpec] = Field(default_factory=list)
     #: Result node: the files it writes.
     files: list[ReportFormat | FileSpec] = Field(default_factory=list)
+    #: Result node: the fields the workflow promises (an output contract; descriptions are texts).
+    contract: list[FieldSpec] = Field(default_factory=list)
     #: Agents: propose the result for knowledge (what it is); a person always decides.
     proposals: ContentKind | None = None
     #: Agents: persistent memory.
     memory: MemorySpec | None = None
+    #: Agents: knowledge files of the template.
+    knowledge: KnowledgeUse | None = None
+    #: Agents: tools of integrations, bound only while a copy is connected.
+    mcp: list[McpUse] = Field(default_factory=list)
 
 
 #: ``[source, target]``, ``[source, target, branch]`` or ``[source, target, branch, loop]``: a loop
@@ -234,6 +353,16 @@ def _graph_problems(nodes: list[NodeSpec], edges: list[Connection]) -> list[str]
             found.append(f"decision {node.id} has no rules")
         if node.type == "subworkflow" and not node.part:
             found.append(f"sub-workflow {node.id} names no part")
+        if node.type == "orchestrator" and not node.orchestrator:
+            found.append(f"orchestrator {node.id} has no teams")
+        if node.orchestrator is not None and node.type != "orchestrator":
+            found.append(f"{node.id} has teams but is no orchestrator")
+        if node.orchestrator is not None and len(set(node.orchestrator.members)) != len(node.orchestrator.members):
+            found.append(f"orchestrator {node.id} names a team twice")
+        if node.contract and node.type != "output":
+            found.append(f"{node.id} has a contract but is no result node")
+        if (node.knowledge or node.mcp or node.server_tools) and node.type != "agent":
+            found.append(f"{node.id} has agent settings but is no agent")
     if len({edge[:3] for edge in edges}) != len(edges):
         found.append("a connection is listed twice")
     successors: dict[str, list[str]] = {}
@@ -284,16 +413,33 @@ def _graph_problems(nodes: list[NodeSpec], edges: list[Connection]) -> list[str]
     return found
 
 
+def _referenced_parts(nodes: list[NodeSpec]) -> list[str]:
+    """The parts the nodes run (sub-workflows) or delegate to (orchestrators), in order of appearance."""
+    found: list[str] = []
+    for node in nodes:
+        if node.part:
+            found.append(node.part)
+        if node.orchestrator is not None:
+            found += node.orchestrator.members
+    return list(dict.fromkeys(found))
+
+
 class PartSpec(_Strict):
-    """A small workflow used as a sub-workflow by templates; not an example of its own."""
+    """A small workflow used as a sub-workflow or a team by templates; not an example of its own."""
 
     id: str
+    #: What the part can do as a team (tags the orchestrator sees, also used for capability selection).
+    capabilities: list[str] = Field(default_factory=list, max_length=MAX_CAPABILITIES)
+    budget_usd: float | None = Field(default=None, gt=0)
+    limits: LimitsSpec | None = None
     nodes: list[NodeSpec]
     edges: list[Connection]
 
     @model_validator(mode="after")
     def _valid_graph(self) -> PartSpec:
         problems = _graph_problems(self.nodes, self.edges)
+        if any(node.knowledge or node.mcp for node in self.nodes):
+            problems.append("parts use no knowledge files or integrations (they belong to the template)")
         if problems:
             raise ValueError("; ".join(problems))
         return self
@@ -311,6 +457,25 @@ class SampleSpec(_Strict):
     field: str
     #: A language-neutral file in ``samples/`` (e.g. an image); otherwise it is built from the texts.
     file: str | None = None
+
+
+class KnowledgeSpec(_Strict):
+    """A synthetic reference document a copy stores in the knowledge base (name and content are texts)."""
+
+    id: str
+    format: Literal["md", "pdf", "docx"] = "md"
+
+
+class IntegrationSpec(_Strict):
+    """An optional connection to an MCP server; the tools are the server's own tool names.
+
+    A copy binds the tools only when the person connects the integration to a server whose tools an
+    administrator approved as read-only; otherwise the copy works in the labelled offline mode.
+    """
+
+    id: str
+    kind: Literal["mcp"] = "mcp"
+    tools: list[str] = Field(min_length=1)
 
 
 class CheckSpec(_Strict):
@@ -346,9 +511,14 @@ class TemplateSpec(_Strict):
     sensitive: bool = False
     #: The example accepts documents (PDF, DOCX, XLSX) as input (also shown for every file field).
     documents: bool = False
+    #: The copy's budget in USD (``None``: the workspace's default budget).
+    budget_usd: float | None = Field(default=None, gt=0)
+    limits: LimitsSpec | None = None
     nodes: list[NodeSpec]
     edges: list[Connection]
     samples: list[SampleSpec] = Field(default_factory=list)
+    knowledge: list[KnowledgeSpec] = Field(default_factory=list)
+    integrations: list[IntegrationSpec] = Field(default_factory=list)
     tests: list[CaseSpec] = Field(default_factory=list)
 
     @model_validator(mode="after")
@@ -357,11 +527,49 @@ class TemplateSpec(_Strict):
         fields = {field.name: field for node in self.nodes for field in node.form}
         nodes = {node.id for node in self.nodes}
         samples = {sample.id for sample in self.samples}
+        knowledge = {item.id for item in self.knowledge}
+        integrations = {item.id: set(item.tools) for item in self.integrations}
         for sample in self.samples:
             if sample.field not in fields or fields[sample.field].type != "file":
                 problems.append(f"sample {sample.id} names no file field ({sample.field})")
-        if len(samples) != len(self.samples) or len({case.id for case in self.tests}) != len(self.tests):
-            problems.append("sample or test case ids are not unique")
+        unique: list[list[str]] = [
+            [item.id for item in self.samples],
+            [item.id for item in self.tests],
+            [item.id for item in self.knowledge],
+            [item.id for item in self.integrations],
+        ]
+        if any(len(set(group)) != len(group) for group in unique):
+            problems.append("sample, knowledge, integration or test case ids are not unique")
+        used_knowledge: set[str] = set()
+        used_integrations: set[str] = set()
+        for node in self.nodes:
+            if node.knowledge is not None:
+                used_knowledge |= set(node.knowledge.files)
+                if node.knowledge.citations and node.output_fields:
+                    # The runtime cannot attach citations to a structured answer (pre-check error).
+                    problems.append(f"{node.id} combines citations with structured output fields")
+                problems += [
+                    f"{node.id} uses the unknown knowledge file {item}"
+                    for item in node.knowledge.files
+                    if item not in knowledge
+                ]
+            for use in node.mcp:
+                used_integrations.add(use.integration)
+                if use.integration not in integrations:
+                    problems.append(f"{node.id} uses the unknown integration {use.integration}")
+                    continue
+                problems += [
+                    f"{node.id} uses {tool}, which the integration {use.integration} does not offer"
+                    for tool in use.tools
+                    if tool not in integrations[use.integration]
+                ]
+        problems += [f"knowledge file {item} is not used" for item in sorted(knowledge - used_knowledge)]
+        problems += [f"integration {item} is not used" for item in sorted(set(integrations) - used_integrations)]
+        for part_id in _referenced_parts(self.nodes):
+            try:
+                part(part_id)
+            except KeyError:
+                problems.append(f"the part {part_id} does not exist")
         for case in self.tests:
             name = f"test case {case.id}"
             problems += [f"{name} uses the unknown sample {item}" for item in case.samples if item not in samples]
@@ -383,6 +591,10 @@ class NodeTexts(_Strict):
     task: str
     fields: dict[str, str] = Field(default_factory=dict)
     criteria: dict[str, str] = Field(default_factory=dict)
+    #: Added to the system prompt while the agent's integrations are connected (how to use the tools).
+    online: str = ""
+    #: Added to the system prompt in offline mode (where the same data comes from instead).
+    offline: str = ""
 
 
 class Guide(BaseModel):
@@ -393,13 +605,22 @@ class Guide(BaseModel):
     input: str
     result: str
     adapt: str
+    #: What is decided automatically, and when and why a person decides.
+    control: str
+    #: Why this architecture fits the task (and what a simpler or more complex one would cost).
+    why: str
 
 
 class StepTexts(_Strict):
-    """Texts of a decision, approval or sub-workflow node."""
+    """Texts of a decision, approval, sub-workflow or orchestrator node."""
 
     name: str
+    #: Approval: what the person checks; orchestrator: how it splits the work.
     instructions: str = ""
+    #: Orchestrator: its task (placeholders as in an agent's task).
+    task: str = ""
+    #: Orchestrator: what it does, shown in the gallery.
+    description: str = ""
     #: Decision: the name of each branch (rule id -> label).
     branches: dict[str, str] = Field(default_factory=dict)
     #: Decision: the name of the default branch.
@@ -427,6 +648,19 @@ class SampleTexts(_Strict):
     content: Any = None
 
 
+class IntegrationTexts(_Strict):
+    """An integration in one language: what it connects and what the person must set up."""
+
+    name: str
+    description: str
+    #: The steps to connect it (server, approval of the tools as read-only).
+    setup: str
+    #: Added to the copy's description while it is connected.
+    online: str
+    #: Added to the copy's description in offline mode.
+    offline: str
+
+
 class CaseTexts(_Strict):
     name: str
     #: The free text of a case with ``input: own``.
@@ -448,7 +682,11 @@ class TemplateTexts(_Strict):
     form: dict[str, FieldTexts] = Field(default_factory=dict)
     #: The name of the result files (without extension); the workflow name when empty.
     file_name: str = ""
+    #: The descriptions of the output contract's fields.
+    contract: dict[str, str] = Field(default_factory=dict)
     samples: dict[str, SampleTexts] = Field(default_factory=dict)
+    knowledge: dict[str, SampleTexts] = Field(default_factory=dict)
+    integrations: dict[str, IntegrationTexts] = Field(default_factory=dict)
     tests: dict[str, CaseTexts] = Field(default_factory=dict)
 
 
@@ -458,6 +696,9 @@ class PartTexts(_Strict):
     start: str
     output: str
     agents: dict[str, NodeTexts]
+    steps: dict[str, StepTexts] = Field(default_factory=dict)
+    form: dict[str, FieldTexts] = Field(default_factory=dict)
+    contract: dict[str, str] = Field(default_factory=dict)
 
 
 class CommonTexts(_Strict):
@@ -467,6 +708,8 @@ class CommonTexts(_Strict):
     caution: str
     #: For agents that receive the files of a form's file fields.
     files: str
+    #: The knowledge collection of an example's knowledge files (``{name}``: the example's name).
+    collection: str
 
 
 @cache
@@ -546,6 +789,24 @@ def _value(raw: str, kind: InputFieldType) -> Any:
     return raw
 
 
+def _limits(spec: LimitsSpec | None) -> WorkflowLimits:
+    return WorkflowLimits(**spec.model_dump()) if spec is not None else WorkflowLimits()
+
+
+@dataclass
+class _Context:
+    """How one build resolves models, connections and knowledge files."""
+
+    models: ModelChoice
+    #: integration id -> server tool name -> the agent tool name (``mcp__<slug>__<tool>``).
+    connections: Mapping[str, Mapping[str, str]]
+    #: knowledge id -> knowledge file id.
+    knowledge: Mapping[str, str]
+
+    def model(self, node: NodeSpec) -> str:
+        return node.model if node.model else self.models.of(node.tier or "standard")
+
+
 def _build_nodes(
     spec_nodes: list[NodeSpec],
     edges: list[Connection],
@@ -556,8 +817,10 @@ def _build_nodes(
     agents: dict[str, NodeTexts],
     steps: dict[str, StepTexts],
     form: dict[str, FieldTexts],
+    contract: dict[str, str],
     rules: CommonTexts,
     sensitive: bool,
+    context: _Context,
     file_name: str = "",
 ) -> tuple[list[Node], list[Edge]]:
     names = {node_id: agent.name for node_id, agent in agents.items()}
@@ -598,14 +861,13 @@ def _build_nodes(
             continue
         if item.type == "output":
             specs = [FileSpec(format=entry) if isinstance(entry, str) else entry for entry in item.files]
-            files = (
-                OutputNodeConfig(
-                    files=[ResultFileSpec(format=spec.format, name=file_name, sanitize=spec.sanitize) for spec in specs]
-                )
-                if specs
-                else None
-            )
-            nodes.append(Node(id=item.id, type="output", label=output_label, position=position, output=files))
+            files = [ResultFileSpec(format=spec.format, name=file_name, sanitize=spec.sanitize) for spec in specs]
+            promised = [
+                OutputField(name=f.name, type=f.type, required=f.required, description=contract[f.name])
+                for f in item.contract
+            ]
+            output_config = OutputNodeConfig(files=files, contract=promised) if files or promised else None
+            nodes.append(Node(id=item.id, type="output", label=output_label, position=position, output=output_config))
             continue
         if item.type == "condition":
             assert item.condition is not None
@@ -648,6 +910,28 @@ def _build_nodes(
                 )
             )
             continue
+        if item.type == "orchestrator":
+            assert item.orchestrator is not None
+            step = steps[item.id]
+            team = item.orchestrator
+            orchestrator = OrchestratorConfig(
+                members=[
+                    OrchestratorMember(workflow_id=f"{PART_PREFIX}{member}", version=1) for member in team.members
+                ],
+                task_template=task(step.task),
+                instructions=step.instructions,
+                model=context.model(item),
+                max_decisions=team.max_decisions,
+                max_per_member=team.max_per_member,
+                max_parallel=team.max_parallel,
+                staffing=team.staffing,
+                max_team=team.max_team,
+                allow_values=team.allow_values,
+            )
+            nodes.append(
+                Node(id=item.id, type="orchestrator", label=step.name, position=position, orchestrator=orchestrator)
+            )
+            continue
         own = agents[item.id]
         output = OutputConfig()
         if item.output_fields:
@@ -665,8 +949,25 @@ def _build_nodes(
                 enabled=True,
                 criteria=[QualityCriterion(name=name, description=own.criteria[name]) for name in item.criteria],
                 max_revisions=item.max_revisions,
-                judge_model=JUDGE_MODEL,
+                judge_model=context.models.of(JUDGE_TIER),
             )
+        model = context.model(item)
+        tools = list(item.tools)
+        connected = bool(item.mcp) and all(use.integration in context.connections for use in item.mcp)
+        if connected:
+            tools += [context.connections[use.integration][tool] for use in item.mcp for tool in use.tools]
+        system = own.system
+        if item.mcp:
+            extra = own.online if connected else own.offline
+            system = f"{system.strip()}\n\n{extra.strip()}" if extra.strip() else system
+        knowledge = KnowledgeConfig()
+        if item.knowledge is not None:
+            knowledge = KnowledgeConfig(
+                file_ids=[context.knowledge.get(ref, f"{KNOWLEDGE_PREFIX}{ref}") for ref in item.knowledge.files],
+                mode=item.knowledge.mode,
+                citations=item.knowledge.citations,
+            )
+        server_tools = list(item.server_tools) if provider_of(model) == _SERVER_TOOL_PROVIDER else []
         nodes.append(
             Node(
                 id=item.id,
@@ -677,14 +978,16 @@ def _build_nodes(
                     name=own.name,
                     description=own.description,
                     icon=item.icon,
-                    model=item.model,
-                    system_prompt=_system_prompt(own.system, rules, sensitive=sensitive, files=item.id in with_files),
+                    model=model,
+                    system_prompt=_system_prompt(system, rules, sensitive=sensitive, files=item.id in with_files),
                     task_template=task(own.task),
-                    tools=list(item.tools),
+                    tools=tools,
+                    server_tools=server_tools,
                     effort=item.effort,
                     max_tokens=item.max_tokens,
                     output=output,
                     quality=quality,
+                    knowledge=knowledge,
                     knowledge_proposals=KnowledgeProposalConfig(
                         enabled=item.proposals is not None, content_kind=item.proposals or "generated"
                     ),
@@ -702,13 +1005,33 @@ def _build_nodes(
     return nodes, built_edges
 
 
-def build(template_id: str, language: str) -> WorkflowIn:
+def _context(
+    models: ModelChoice | None,
+    connections: Mapping[str, Mapping[str, str]] | None,
+    knowledge: Mapping[str, str] | None,
+) -> _Context:
+    return _Context(models=models or ModelChoice(), connections=connections or {}, knowledge=knowledge or {})
+
+
+def build(
+    template_id: str,
+    language: str,
+    *,
+    models: ModelChoice | None = None,
+    connections: Mapping[str, Mapping[str, str]] | None = None,
+    knowledge: Mapping[str, str] | None = None,
+) -> WorkflowIn:
     """The workflow a template describes, in one language (a fresh object every time).
 
-    Sub-workflow nodes name their part as ``library-part:<id>`` until a copy resolves them.
+    ``models`` maps the tiers to models (default: :data:`DEFAULT_MODELS`). ``connections`` names, per connected
+    integration, the agent tool name of each of its server tools (:func:`connect`); integrations without one run
+    in offline mode. ``knowledge`` maps the template's knowledge files to stored knowledge file ids. Until a copy
+    resolves them, sub-workflow and team references read ``library-part:<id>`` and knowledge files
+    ``library-knowledge:<id>``.
     """
     spec = structure(template_id)
     text = texts(template_id, language)
+    context = _context(models, connections, knowledge)
     nodes, edges = _build_nodes(
         spec.nodes,
         spec.edges,
@@ -718,11 +1041,24 @@ def build(template_id: str, language: str) -> WorkflowIn:
         agents=text.agents,
         steps=text.steps,
         form=text.form,
+        contract=text.contract,
         rules=common(language),
         sensitive=spec.sensitive,
+        context=context,
         file_name=text.file_name,
     )
-    return WorkflowIn(name=text.name, description=text.description, nodes=nodes, edges=edges)
+    description = text.description
+    for integration in spec.integrations:
+        note = text.integrations[integration.id]
+        description += "\n\n" + (note.online if integration.id in context.connections else note.offline)
+    return WorkflowIn(
+        name=text.name,
+        description=description,
+        nodes=nodes,
+        edges=edges,
+        budget_usd=spec.budget_usd,
+        limits=_limits(spec.limits),
+    )
 
 
 @cache
@@ -740,11 +1076,33 @@ def part_texts(part_id: str, language: str) -> PartTexts:
 
 
 def part_ids(template_id: str) -> list[str]:
-    """The parts a template's sub-workflow nodes run."""
-    return list(dict.fromkeys(node.part for node in structure(template_id).nodes if node.part))
+    """Every part a template needs, the parts used by other parts first (the order a copy saves them in)."""
+    ordered: list[str] = []
+    visiting: set[str] = set()
+
+    def add(part_id: str) -> None:
+        if part_id in ordered:
+            return
+        if part_id in visiting:
+            raise ValueError(f"the parts call each other in a cycle at {part_id}")
+        visiting.add(part_id)
+        for inner in _referenced_parts(part(part_id).nodes):
+            add(inner)
+        visiting.discard(part_id)
+        ordered.append(part_id)
+
+    for part_id in _referenced_parts(structure(template_id).nodes):
+        add(part_id)
+    return ordered
 
 
-def build_part(part_id: str, language: str, *, sensitive: bool = False) -> WorkflowIn:
+def build_part(
+    part_id: str,
+    language: str,
+    *,
+    sensitive: bool = False,
+    models: ModelChoice | None = None,
+) -> WorkflowIn:
     spec = part(part_id)
     text = part_texts(part_id, language)
     nodes, edges = _build_nodes(
@@ -754,22 +1112,157 @@ def build_part(part_id: str, language: str, *, sensitive: bool = False) -> Workf
         output_label=text.output,
         default_input="",
         agents=text.agents,
-        steps={},
-        form={},
+        steps=text.steps,
+        form=text.form,
+        contract=text.contract,
         rules=common(language),
         sensitive=sensitive,
+        context=_context(models, None, None),
     )
-    return WorkflowIn(name=text.name, description=text.description, nodes=nodes, edges=edges)
+    return WorkflowIn(
+        name=text.name,
+        description=text.description,
+        nodes=nodes,
+        edges=edges,
+        capabilities=list(spec.capabilities),
+        budget_usd=spec.budget_usd,
+        limits=_limits(spec.limits),
+    )
 
 
-def link_parts(workflow: WorkflowIn, copies: dict[str, tuple[str, int | None]]) -> WorkflowIn:
-    """Point the sub-workflow nodes at the copies of their parts (part id -> workflow id, version)."""
+def link_parts(workflow: WorkflowIn, copies: Mapping[str, tuple[str, int | None]]) -> WorkflowIn:
+    """Point sub-workflow nodes and orchestrator teams at the copies of their parts (part id -> id, version)."""
     for node in workflow.nodes:
         if node.subworkflow is not None and node.subworkflow.workflow_id.startswith(PART_PREFIX):
             workflow_id, version = copies[node.subworkflow.workflow_id[len(PART_PREFIX) :]]
             node.subworkflow.workflow_id = workflow_id
             node.subworkflow.version = version
+        if node.orchestrator is not None:
+            for member in node.orchestrator.members:
+                if member.workflow_id.startswith(PART_PREFIX):
+                    workflow_id, version = copies[member.workflow_id[len(PART_PREFIX) :]]
+                    member.workflow_id = workflow_id
+                    member.version = version
     return workflow
+
+
+# ---- integrations and copies -------------------------------------------------------
+
+
+class IntegrationProblem(Exception):
+    """The chosen MCP server does not offer an integration's tools as approved read-only tools."""
+
+    def __init__(self, integration: str, missing: list[str], not_read_only: list[str]) -> None:
+        self.integration = integration
+        self.missing = missing
+        self.not_read_only = not_read_only
+        parts = []
+        if missing:
+            parts.append(f"missing or not approved: {', '.join(missing)}")
+        if not_read_only:
+            parts.append(f"not approved as read-only: {', '.join(not_read_only)}")
+        super().__init__(f"the server cannot serve the integration {integration} ({'; '.join(parts)})")
+
+
+@dataclass(frozen=True)
+class ServerTool:
+    """A tool of an MCP server as the copy sees it: the name agents use, approval and classification."""
+
+    agent_name: str
+    approved: bool
+    access: str
+
+
+def connect(template_id: str, integration_id: str, offered: Mapping[str, ServerTool]) -> dict[str, str]:
+    """The agent tool names for an integration on a server that offers ``offered`` (server tool name -> tool).
+
+    Every tool of the integration must be approved by an administrator and classified as read-only: the
+    examples never get tools that change data, whatever the per-call approval settings are. Raises
+    :class:`IntegrationProblem` (nothing is copied) when the server cannot serve the integration.
+    """
+    spec = next((item for item in structure(template_id).integrations if item.id == integration_id), None)
+    if spec is None:
+        raise KeyError(integration_id)
+    missing = [tool for tool in spec.tools if tool not in offered or not offered[tool].approved]
+    not_read_only = [
+        tool for tool in spec.tools if tool in offered and offered[tool].approved and offered[tool].access != "read"
+    ]
+    if missing or not_read_only:
+        raise IntegrationProblem(integration_id, missing, not_read_only)
+    return {tool: offered[tool].agent_name for tool in spec.tools}
+
+
+class CopyHost(Protocol):
+    """Where a copy is stored: the API's workspace context, or a :class:`~nodestro_runtime.workspace.Workspace`."""
+
+    def save_workflow(self, workflow: WorkflowIn) -> tuple[str, int | None]:
+        """Save a new workflow; its id and version."""
+        ...
+
+    def add_knowledge(self, data: bytes, *, name: str, media_type: str, description: str, collection: str) -> str:
+        """Store a knowledge file; its id."""
+        ...
+
+
+@dataclass
+class Copy:
+    """A template instantiated for one workspace: the workflow (not saved yet) and what was created for it."""
+
+    workflow: WorkflowIn
+    #: part id -> (workflow id, version) of the saved parts.
+    parts: dict[str, tuple[str, int | None]] = field(default_factory=dict)
+    #: knowledge id -> knowledge file id.
+    knowledge: dict[str, str] = field(default_factory=dict)
+    #: The integrations that are connected; every other integration runs in offline mode.
+    connected: list[str] = field(default_factory=list)
+    offline: list[str] = field(default_factory=list)
+
+
+def instantiate(
+    template_id: str,
+    language: str,
+    host: CopyHost,
+    *,
+    models: ModelChoice | None = None,
+    connections: Mapping[str, Mapping[str, str]] | None = None,
+) -> Copy:
+    """Everything a copy of a template needs, created through ``host``; the copy itself is returned unsaved.
+
+    Knowledge files are stored (identical content keeps one file), the parts are saved as workflows of their
+    own (parts used by other parts first) and every reference is pinned to the saved version. ``connections``
+    comes from :func:`connect`; integrations without a connection run in offline mode.
+    """
+    from .samples import render_knowledge
+
+    spec = structure(template_id)
+    text = texts(template_id, language)
+    connections = dict(connections or {})
+    unknown = set(connections) - {item.id for item in spec.integrations}
+    if unknown:
+        raise KeyError(", ".join(sorted(unknown)))
+    stored: dict[str, str] = {}
+    collection = common(language).collection.replace("{name}", text.name)
+    for item in spec.knowledge:
+        name, media_type, data = render_knowledge(template_id, item.id, language)
+        stored[item.id] = host.add_knowledge(
+            data,
+            name=name,
+            media_type=media_type,
+            description=text.knowledge[item.id].description,
+            collection=collection,
+        )
+    copies: dict[str, tuple[str, int | None]] = {}
+    for part_id in part_ids(template_id):
+        built = build_part(part_id, language, sensitive=spec.sensitive, models=models)
+        copies[part_id] = host.save_workflow(link_parts(built, copies))
+    workflow = build(template_id, language, models=models, connections=connections, knowledge=stored)
+    return Copy(
+        workflow=link_parts(workflow, copies),
+        parts=copies,
+        knowledge=stored,
+        connected=[item.id for item in spec.integrations if item.id in connections],
+        offline=[item.id for item in spec.integrations if item.id not in connections],
+    )
 
 
 # ---- what the API returns ---------------------------------------------------------
@@ -786,6 +1279,47 @@ class TemplateAgent(BaseModel):
     judge: bool
     #: Names of the nodes whose results this agent receives ("start" for the input).
     receives: list[str]
+    #: ``orchestrator``: an AI model that delegates to teams instead of working itself.
+    kind: Literal["agent", "orchestrator"] = "agent"
+    #: The names of the knowledge files the agent searches.
+    knowledge: list[str] = Field(default_factory=list)
+    #: The integrations whose tools the agent gets while connected.
+    integrations: list[str] = Field(default_factory=list)
+    memory: bool = False
+
+
+class TemplateTeam(BaseModel):
+    """A team an orchestrator of the template can delegate to (a part, copied as a workflow of its own)."""
+
+    part_id: str
+    name: str
+    description: str
+    capabilities: list[str]
+    agents: list[TemplateAgent]
+    #: The team stops for a person's approval; the orchestrator waits for the decision.
+    approval: bool
+    #: The fields the team promises to deliver (its output contract).
+    contract: list[str]
+    #: The start form fields an orchestrator may fill when it delegates.
+    parameters: list[str]
+
+
+class TemplateIntegration(BaseModel):
+    id: str
+    kind: str
+    name: str
+    description: str
+    setup: str
+    #: The server's tool names the integration needs (approved, read-only).
+    tools: list[str]
+    #: What the copy says in offline mode.
+    offline: str
+
+
+class TemplateKnowledge(BaseModel):
+    id: str
+    name: str
+    description: str
 
 
 class TemplateSummary(BaseModel):
@@ -803,6 +1337,8 @@ class TemplateSummary(BaseModel):
     agents: int
     features: list[Feature]
     tools: list[str]
+    #: Teams the orchestrators delegate to (0 without orchestrator).
+    teams: int = 0
 
 
 class SampleInfo(BaseModel):
@@ -823,19 +1359,30 @@ class TemplateDetail(TemplateSummary):
     samples: list[SampleInfo] = Field(default_factory=list)
     #: The names of the test cases a copy can take over as a test series.
     tests: list[str] = Field(default_factory=list)
-    #: The workflow exactly as a copy would get it; shown read-only.
+    team_details: list[TemplateTeam] = Field(default_factory=list)
+    integrations: list[TemplateIntegration] = Field(default_factory=list)
+    knowledge: list[TemplateKnowledge] = Field(default_factory=list)
+    budget_usd: float | None = None
+    #: The workflow exactly as a copy would get it (offline, with Nodestro's default models); shown read-only.
     workflow: WorkflowIn
 
 
+def _successors(edges: list[Connection]) -> dict[str, list[str]]:
+    successors: dict[str, list[str]] = {}
+    for edge in edges:
+        if not _is_loop(edge):
+            successors.setdefault(edge[0], []).append(edge[1])
+    return successors
+
+
 def _pattern(spec: TemplateSpec) -> Pattern:
-    """Parallel when two agents can work at the same time: neither depends on the other."""
+    """Adaptive with an orchestrator; branching with a decision; parallel when two agents can work at once."""
+    if any(node.type == "orchestrator" for node in spec.nodes):
+        return "adaptive"
     if any(node.type == "condition" for node in spec.nodes):
         return "branching"
     agents = [node.id for node in spec.nodes if node.type == "agent"]
-    successors: dict[str, list[str]] = {}
-    for edge in spec.edges:
-        if not _is_loop(edge):
-            successors.setdefault(edge[0], []).append(edge[1])
+    successors = _successors(spec.edges)
 
     def reachable(start: str) -> set[str]:
         seen: set[str] = set()
@@ -852,10 +1399,16 @@ def _pattern(spec: TemplateSpec) -> Pattern:
     return "parallel" if independent else "sequential"
 
 
+def _all_nodes(spec: TemplateSpec) -> list[NodeSpec]:
+    """The template's nodes and those of every part it uses."""
+    return [*spec.nodes, *(node for part_id in part_ids(spec.id) for node in part(part_id).nodes)]
+
+
 def _features(spec: TemplateSpec) -> list[Feature]:
-    agents = [node for node in spec.nodes if node.type == "agent"]
+    nodes = _all_nodes(spec)
+    agents = [node for node in nodes if node.type == "agent"]
     found: list[Feature] = []
-    if any(node.tools for node in agents):
+    if any(node.tools for node in agents) or spec.integrations:
         found.append("tools")
     if any(node.output_fields for node in agents):
         found.append("structured")
@@ -863,7 +1416,7 @@ def _features(spec: TemplateSpec) -> list[Feature]:
         found.append("judge")
     if any(node.role == "review" for node in agents):
         found.append("review")
-    types = {node.type for node in spec.nodes}
+    types = {node.type for node in nodes}
     if "condition" in types:
         found.append("decision")
     if "approval" in types:
@@ -880,6 +1433,20 @@ def _features(spec: TemplateSpec) -> list[Feature]:
         found.append("proposals")
     if any(node.memory for node in agents):
         found.append("memory")
+    if "orchestrator" in types:
+        found.append("orchestrator")
+    if spec.knowledge:
+        found.append("knowledge")
+    if spec.integrations:
+        found.append("integration")
+    if any(_is_loop(edge) for edge in spec.edges) or any(
+        _is_loop(edge) for part_id in part_ids(spec.id) for edge in part(part_id).edges
+    ):
+        found.append("loop")
+    if spec.budget_usd is not None or spec.limits is not None:
+        found.append("budget")
+    if any(node.contract for node in nodes):
+        found.append("contract")
     return found
 
 
@@ -887,6 +1454,8 @@ def summary(template_id: str, language: str) -> TemplateSummary:
     spec = structure(template_id)
     text = texts(template_id, language)
     agents = [node for node in spec.nodes if node.type == "agent"]
+    tools = {tool for node in _all_nodes(spec) if node.type == "agent" for tool in node.tools}
+    teams = {member for node in spec.nodes if node.orchestrator for member in node.orchestrator.members}
     return TemplateSummary(
         id=spec.id,
         number=spec.number,
@@ -899,9 +1468,10 @@ def summary(template_id: str, language: str) -> TemplateSummary:
         pattern=_pattern(spec),
         featured=spec.featured,
         sensitive=spec.sensitive,
-        agents=len(agents),
+        agents=len(agents) + sum(node.type == "orchestrator" for node in spec.nodes),
         features=_features(spec),
-        tools=sorted({tool for node in agents for tool in node.tools}),
+        tools=sorted(tools),
+        teams=len(teams),
     )
 
 
@@ -909,27 +1479,83 @@ def summaries(language: str) -> list[TemplateSummary]:
     return [summary(template_id, language) for template_id in template_ids()]
 
 
-def detail(template_id: str, language: str) -> TemplateDetail:
-    spec = structure(template_id)
-    text = texts(template_id, language)
-    workflow = build(template_id, language)
+def _agents_of(
+    nodes: list[NodeSpec],
+    edges: list[Connection],
+    workflow: WorkflowIn,
+    agents: dict[str, NodeTexts],
+    steps: dict[str, StepTexts],
+    knowledge: dict[str, SampleTexts],
+    integrations: dict[str, IntegrationTexts],
+) -> list[TemplateAgent]:
     labels = {node.id: node.label for node in workflow.nodes}
-    agents = []
-    for item in spec.nodes:
+    models = {node.id: node.agent.model for node in workflow.nodes if node.agent is not None}
+    models.update({node.id: node.orchestrator.model for node in workflow.nodes if node.orchestrator is not None})
+    found = []
+    for item in nodes:
+        receives = [labels[edge[0]] for edge in edges if edge[1] == item.id and not _is_loop(edge)]
+        if item.type == "orchestrator":
+            step = steps[item.id]
+            found.append(
+                TemplateAgent(
+                    node_id=item.id,
+                    name=step.name,
+                    description=step.description,
+                    role=item.role,
+                    model=models[item.id],
+                    tools=[],
+                    structured=False,
+                    judge=False,
+                    receives=receives,
+                    kind="orchestrator",
+                )
+            )
+            continue
         if item.type != "agent":
             continue
-        own = text.agents[item.id]
-        agents.append(
+        own = agents[item.id]
+        found.append(
             TemplateAgent(
                 node_id=item.id,
                 name=own.name,
                 description=own.description,
                 role=item.role,
-                model=item.model,
+                model=models[item.id],
                 tools=list(item.tools),
                 structured=bool(item.output_fields),
                 judge=bool(item.criteria),
-                receives=[labels[edge[0]] for edge in spec.edges if edge[1] == item.id],
+                receives=receives,
+                knowledge=[knowledge[ref].name for ref in item.knowledge.files] if item.knowledge else [],
+                integrations=[integrations[use.integration].name for use in item.mcp],
+                memory=item.memory is not None,
+            )
+        )
+    return found
+
+
+def detail(template_id: str, language: str) -> TemplateDetail:
+    spec = structure(template_id)
+    text = texts(template_id, language)
+    workflow = build(template_id, language)
+    agents = _agents_of(spec.nodes, spec.edges, workflow, text.agents, text.steps, text.knowledge, text.integrations)
+    teams = []
+    for part_id in dict.fromkeys(
+        member for node in spec.nodes if node.orchestrator for member in node.orchestrator.members
+    ):
+        part_spec = part(part_id)
+        own = part_texts(part_id, language)
+        built = build_part(part_id, language, sensitive=spec.sensitive)
+        output = next(node for node in part_spec.nodes if node.type == "output")
+        teams.append(
+            TemplateTeam(
+                part_id=part_id,
+                name=own.name,
+                description=own.description,
+                capabilities=list(part_spec.capabilities),
+                agents=_agents_of(part_spec.nodes, part_spec.edges, built, own.agents, own.steps, {}, {}),
+                approval=any(node.type == "approval" for node in part_spec.nodes),
+                contract=[item.name for item in output.contract],
+                parameters=[own.form[field.name].label for node in part_spec.nodes for field in node.form],
             )
         )
     from .samples import file_name
@@ -951,6 +1577,26 @@ def detail(template_id: str, language: str) -> TemplateDetail:
             for sample in spec.samples
         ],
         tests=[text.tests[case.id].name for case in spec.tests],
+        team_details=teams,
+        integrations=[
+            TemplateIntegration(
+                id=item.id,
+                kind=item.kind,
+                name=text.integrations[item.id].name,
+                description=text.integrations[item.id].description,
+                setup=text.integrations[item.id].setup,
+                tools=list(item.tools),
+                offline=text.integrations[item.id].offline,
+            )
+            for item in spec.integrations
+        ],
+        knowledge=[
+            TemplateKnowledge(
+                id=item.id, name=text.knowledge[item.id].name, description=text.knowledge[item.id].description
+            )
+            for item in spec.knowledge
+        ],
+        budget_usd=spec.budget_usd,
         workflow=workflow,
     )
 
@@ -965,4 +1611,10 @@ def search_fields(template_id: str, language: str) -> list[tuple[str, float]]:
 def raw_texts(template_id: str, language: str) -> dict[str, Any]:
     """The text file as stored (used by tests to compare languages)."""
     path = _ROOT / "texts" / language_of(language) / f"{template_id}.json"
+    return json.loads(path.read_text("utf-8"))  # type: ignore[no-any-return]
+
+
+def raw_part_texts(part_id: str, language: str) -> dict[str, Any]:
+    """A part's text file as stored (used by tests to compare languages)."""
+    path = _ROOT / "texts" / language_of(language) / "parts" / f"{part_id}.json"
     return json.loads(path.read_text("utf-8"))  # type: ignore[no-any-return]
