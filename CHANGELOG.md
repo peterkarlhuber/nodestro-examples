@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+### Runtime pin: live run chat fix (LRC-1, 2026-11-01)
+
+- Pins `nodestro-runtime` `b5b765f` (before `d20991f`): questions to a team leader are answered with any provider.
+
 ### Runtime pin: live run chat and steering (LRC-1, 2026-11-01)
 
 - Pins `nodestro-runtime` `d20991f` (master merge of runtime #67; before `ac96c6f`): `nodestro_runtime.run_chat` (questions and instructions to
