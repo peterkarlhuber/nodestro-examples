@@ -1,42 +1,32 @@
 {
   "name": "Transformar uma pergunta de pesquisa em hipóteses",
   "field": "Pesquisa e desenvolvimento",
-  "description": "Analisar uma pergunta de pesquisa, desenvolver hipóteses testáveis, revisá-las criticamente e derivar um plano de experimentos.",
+  "description": "Analisar uma pergunta de pesquisa e deixar que uma coordenação envolva exatamente as equipes de métodos de que ela precisa – das hipóteses à estatística, aos métodos qualitativos e à ética – para derivar um plano de estudo.",
   "start": "Pergunta de pesquisa",
   "output": "Plano de experimentos",
   "file_name": "Plano de experimentos",
   "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nPergunta de pesquisa: é possível reduzir a temperatura de cura da nossa tinta em pó PL-7 de 180 °C para 165 °C\nsem prejudicar a aderência em aço galvanizado? O objetivo é economizar cerca de 10 % de energia no forno.\n\nEnsaio preliminar (5 chapas cada, teste de corte em grade conforme ISO 2409, 0 = melhor aderência, 5 = pior):\n- 180 °C, 15 min: 0, 0, 1, 0, 1\n- 165 °C, 15 min: 1, 0, 2, 1, 1\n- 165 °C, 20 min: 0, 1, 0, 1, 0\n\nRestrições: 40 chapas de teste disponíveis por semana, forno livre para ensaios dois dias por semana,\no pré-tratamento das chapas até agora foi feito em dois dias diferentes.",
   "guide": {
-    "problem": "Uma boa pesquisa começa com uma pergunta precisa e testável. O workflow decompõe uma pergunta de pesquisa, formula hipóteses, submete-as a uma crítica metodológica e deriva um plano de experimentos realista.",
-    "flow": "Uma cadeia sequencial com retorno: o analista esclarece variáveis e premissas, o agente de hipóteses formula hipóteses testáveis com hipóteses nulas, o crítico metodológico as confronta com os dados preliminares usando a calculadora e aponta fatores de confusão. O planejador de experimentos usa hipóteses e crítica em conjunto.",
-    "input": "Uma pergunta de pesquisa com objetivo, dados de ensaios preliminares e restrições como material, tempo e equipamentos. Você pode anexar dados de medição e documentos como arquivos; o arquivo de exemplo contém os valores do ensaio preliminar por chapa.",
-    "result": "Um plano de experimentos com hipóteses, fatores e níveis, tamanho da amostra, método de medição, análise e critérios de interrupção, além dos riscos em aberto, também como arquivo Word. O planejador de experimentos propõe o plano para o conhecimento; você decide se ele é salvo.",
-    "adapt": "Substitua a pergunta e o ensaio preliminar pelos seus e anexe os dados de medição diretamente. A literatura de que você precisa com frequência pode ser carregada como conhecimento no modo \"Pesquisa\" e atribuída ao analista da pergunta, para que ele trabalhe com citações. Acrescente as suas diretrizes estatísticas no crítico metodológico."
+    "problem": "Boa pesquisa começa com uma pergunta precisa e testável e com os métodos certos. Um ensaio de materiais precisa de uma análise de poder, um estudo com entrevistas precisa de um plano de amostragem e de um termo de consentimento, e muitas perguntas precisam de ambos. O fluxo de trabalho analisa a pergunta e deixa uma coordenação de pesquisa envolver exatamente as equipes de métodos de que a pergunta precisa.",
+    "flow": "O analista da pergunta a estrutura e resume os dados anexados, porque as equipes trabalham sem os arquivos. A coordenação de pesquisa, um orquestrador, sempre começa com a equipe de hipóteses e então decide: desfechos mensuráveis vão para a equipe de estatística, cujo desenho de estudo e nível de significância ela define como parâmetros; experiências e motivos vão para a equipe de métodos qualitativos; pessoas ou dados pessoais trazem a equipe de ética e proteção de dados. Se uma equipe considera uma hipótese não testável, a coordenação a devolve uma vez à equipe de hipóteses. O planejador do estudo transforma tudo em um plano.",
+    "input": "Uma pergunta de pesquisa com seu objetivo, dados existentes de ensaios preliminares e restrições como material, tempo e equipamentos. Você pode anexar dados de medição e documentos como arquivos; o arquivo de exemplo contém as notas do ensaio preliminar por painel.",
+    "result": "Um plano de estudo com hipóteses, desenho, tamanho da amostra, método de medição ou de entrevista, análise, critérios de parada e riscos em aberto, também como arquivo Word. A visão de orquestração da execução mostra quais equipes de métodos participaram, com quais parâmetros, e quais ficaram de fora e por quê. O planejador propõe o plano para o conhecimento; você decide se ele é salvo.",
+    "adapt": "Substitua a pergunta e o ensaio preliminar pelos seus e anexe diretamente os dados de medição. Acrescente suas diretrizes estatísticas ao agente da equipe de estatística. Se sua área precisar de outra equipe de métodos, por exemplo uma equipe de laboratório, salve-a como fluxo de trabalho com descrição clara e adicione-a às equipes da coordenação.",
+    "control": "Automático: a coordenação decide quais equipes de métodos trabalham e preenche o formulário da equipe de estatística (desenho, nível de significância, poder); cada decisão fica registrada com seu motivo. Limites: no máximo 7 decisões, cada equipe no máximo duas vezes, um orçamento de 4 USD por execução. Nenhuma etapa espera por uma pessoa; o plano é um rascunho para a pessoa pesquisadora responsável.",
+    "why": "Uma cadeia fixa sempre executaria uma crítica estatística, mesmo em um estudo com entrevistas em que não há nada a calcular, e só incluiria a ética se alguém se lembrasse. A coordenação escolhe por pergunta e passa à equipe de estatística parâmetros estruturados em vez de texto livre, de modo que a análise de poder calcula com um desenho definido. A análise e o plano final continuam sendo etapas fixas: todo estudo precisa deles."
   },
   "agents": {
     "framing": {
       "name": "Analista da pergunta",
       "description": "Esclarece objetivo, variáveis, restrições e lacunas de conhecimento.",
-      "system": "Você é pesquisador e estrutura perguntas de pesquisa. Decomponha a pergunta em objetivo, variáveis independentes e dependentes, possíveis fatores de confusão e restrições. Resuma o que os dados existentes mostram e o que não mostram, e separe o conhecimento estabelecido de suposições.",
+      "system": "Você é pesquisador e estrutura perguntas de pesquisa. Decomponha a pergunta em objetivo, variáveis independentes e dependentes, possíveis fatores de confusão e restrições. Resuma o que os dados existentes mostram e o que não mostram, e separe o conhecimento estabelecido de suposições. As equipes de métodos trabalham depois sem os arquivos: resuma os dados dos arquivos anexados com seus números principais (quantidade de medições, valores por grupo, condições) para que nada importante se perca.",
       "task": "Analise esta pergunta de pesquisa:\n\n{{run.input}}"
     },
-    "hypotheses": {
-      "name": "Desenvolvedor de hipóteses",
-      "description": "Formula hipóteses testáveis com previsões e hipóteses nulas.",
-      "system": "Você formula hipóteses científicas. Derive da análise três a cinco hipóteses testáveis. Para cada uma, indique a hipótese nula, uma previsão mensurável, o método de medição e o que conta como confirmação ou refutação. Ordene-as pela relevância para o objetivo.",
-      "task": "Desenvolva hipóteses com base nesta análise:\n\n{{node:framing}}"
-    },
-    "critic": {
-      "name": "Crítico metodológico",
-      "description": "Verifica testabilidade das hipóteses, fatores de confusão e dados disponíveis.",
-      "system": "Você é um metodólogo e revisor rigoroso. Verifique em cada hipótese a falseabilidade, a mensurabilidade, os fatores de confusão e os vieses. Avalie os dados preliminares disponíveis com a calculadora (por exemplo médias e amplitudes) e julgue se os dados permitem uma conclusão. Indique quais hipóteses devem ser rejeitadas, refinadas ou mantidas.",
-      "task": "Revise estas hipóteses criticamente.\n\nPergunta de pesquisa e dados:\n{{run.input}}\n\nHipóteses:\n{{node:hypotheses}}"
-    },
     "design": {
-      "name": "Planejador de experimentos",
-      "description": "Deriva um plano de experimentos das hipóteses e da crítica.",
-      "system": "Você planeja experimentos segundo os princípios do planejamento de experimentos. Para as hipóteses mantidas, elabore um plano: fatores e níveis, repetições, aleatorização e blocagem contra fatores de confusão, método de medição, método de análise, critérios de parada e de sucesso e um cronograma compatível com as restrições. Termine com os riscos em aberto.",
-      "task": "Elabore o plano de experimentos.\n\nHipóteses:\n{{node:hypotheses}}\n\nCrítica metodológica:\n{{node:critic}}"
+      "name": "Planejador do estudo",
+      "description": "Deriva o plano de estudo da análise e dos resultados das equipes de métodos.",
+      "system": "Você planeja estudos. Para as hipóteses mantidas, elabore o plano de estudo: em experimentos, fatores e níveis, repetições, aleatorização e blocagem contra fatores de confusão, método de medição e análise; em partes qualitativas, a amostra, o roteiro de entrevista e o método de análise; em estudos com pessoas, as medidas de consentimento e proteção de dados. Acrescente critérios de parada e de sucesso e um cronograma compatível com as restrições. Use os tamanhos de amostra e as decisões das equipes de métodos e não invente números novos. Termine com os riscos em aberto.",
+      "task": "Elabore o plano de estudo.\n\nAnálise da pergunta:\n{{node:framing}}\n\nResultados das equipes de métodos:\n{{node:coordinator}}"
     }
   },
   "form": {
@@ -172,6 +162,18 @@
     "pretest_file": {
       "name": "Dados do ensaio preliminar em CSV",
       "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nPergunta de pesquisa: é possível reduzir a temperatura de cura da nossa tinta em pó PL-7 de 180 °C para 165 °C sem prejudicar a aderência em aço galvanizado? O objetivo é economizar cerca de 10 % de energia no forno.\n\nOs valores do ensaio preliminar (corte em grade conforme ISO 2409, 0 = melhor aderência) estão anexados como arquivo CSV.\n\nRestrições: 40 chapas de teste disponíveis por semana, forno livre para ensaios dois dias por semana."
+    },
+    "interview_study": {
+      "name": "Estudo com entrevistas sem medições",
+      "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nPergunta de pesquisa: por que as pessoas do turno da noite da nossa fábrica quase não usam o novo app de pausas para reservar salas de descanso, embora o tenham pedido?\n\nO que sabemos: 140 pessoas trabalham no turno da noite; nos dois primeiros meses, 9 delas reservaram uma sala. Turnos do dia: 210 reservas de 380 pessoas. Alguns líderes de equipe dizem que o app exige o login corporativo, que muitas pessoas do turno da noite não usam.\n\nRestrições: entrevistas apenas nos intervalos (30 minutos), a comissão de funcionários precisa concordar, nenhuma gravação sem consentimento; resultados até o fim do trimestre."
+    }
+  },
+  "steps": {
+    "coordinator": {
+      "name": "Coordenação de pesquisa",
+      "description": "Decide de quais equipes de métodos a pergunta precisa e define os parâmetros da equipe de estatística.",
+      "instructions": "Comece sempre com a equipe de hipóteses. Depois decida com base na pergunta e nos dados: desfechos mensuráveis e dados preliminares precisam da equipe de estatística, cujo desenho de estudo você define como parâmetro (nível de significância ou poder apenas se a pergunta exigir valores diferentes de 0,05 e 0,8); perguntas sobre experiências, motivos ou comportamentos que não podem ser contados precisam da equipe de métodos qualitativos; tudo o que envolve pessoas, saúde ou dados pessoais precisa da equipe de ética e proteção de dados. Se a equipe de estatística ou a qualitativa considerar uma hipótese não testável na forma atual, dê à equipe de hipóteses uma tarefa de revisão com a crítica. As equipes não veem os arquivos: inclua em cada tarefa os dados relevantes da análise. Termine com as hipóteses finais e os principais resultados de cada equipe sob o nome da equipe, e diga quais equipes você não envolveu e por quê.",
+      "task": "Planeje como investigar esta pergunta de pesquisa com as equipes de métodos de que ela precisa.\n\nAnálise da pergunta e dos dados:\n{{node:framing}}"
     }
   }
 }

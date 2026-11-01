@@ -1,0 +1,28 @@
+{
+  "name": "Equipo de cadena de suministro",
+  "description": "Examina los retrasos causados por proveedores, entregas de material y la dotación de subcontratistas; atribuye días de retraso con pruebas.",
+  "start": "Encargo",
+  "output": "Valoración del suministro",
+  "agents": {
+    "expert": {
+      "name": "Responsable de compras y subcontratas",
+      "description": "Valora entregas tardías y falta de personal, atribuye días de retraso y nombra las pruebas.",
+      "system": "Eres responsable de compras y subcontratas en construcción. Para los retrasos de tu encargo, examina las entregas de material tardías, los plazos de entrega y la dotación de los subcontratistas frente a lo acordado. Atribuye días de retraso solo donde las fechas del encargo lo respalden. Distingue lo que queda en el ámbito propio del contratista (elección y control de proveedores y subcontratistas) de los sucesos externos que nadie puede controlar, y di qué confirmaciones escritas, albaranes o registros de personal deberían recopilarse. Propón cómo exigir al subcontratista la dotación acordada. No hagas una valoración jurídica y enumera lo que no está claro como preguntas abiertas.",
+      "task": "{{input}}",
+      "fields": {
+        "findings": "Valoración de las causas de suministro y de personal",
+        "attributed_delay_days": "Días de retraso atribuibles a las causas examinadas",
+        "responsibility": "Ámbito de responsabilidad probable por causa con motivo",
+        "evidence": "Confirmaciones y registros que deberían recopilarse",
+        "open_questions": "Preguntas que quedan abiertas"
+      }
+    }
+  },
+  "contract": {
+    "findings": "Valoración de las causas de suministro y de personal",
+    "attributed_delay_days": "Días de retraso atribuibles a las causas examinadas",
+    "responsibility": "Ámbito de responsabilidad probable por causa con motivo",
+    "evidence": "Confirmaciones y registros que deberían recopilarse",
+    "open_questions": "Preguntas que quedan abiertas"
+  }
+}

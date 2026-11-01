@@ -1,39 +1,29 @@
 {
   "name": "Artigo de blog",
   "field": "Marketing e conteúdo",
-  "description": "Pesquisar o público, criar uma estrutura, escrever o artigo e revisá-lo.",
+  "description": "Criar um briefing com público, abordagem e estrutura, escrever o artigo e revisá-lo.",
   "start": "Tema",
   "output": "Artigo",
   "file_name": "Artigo de blog",
   "input": "Por que editores visuais de workflows tornam os agentes de IA mais acessíveis",
   "guide": {
-    "problem": "Bons artigos nascem de um público claro e de uma estrutura bem pensada. O workflow divide o trabalho como uma redação e verifica o resultado antes da publicação.",
-    "flow": "Público e estrutura são criados em paralelo com um modelo rápido. O redator transforma os dois no artigo; uma verificação de qualidade integrada garante que ele siga a estrutura e responda às perguntas dos leitores. A revisão verifica extensão e legibilidade com a ferramenta de estatísticas de texto e marca afirmações não verificadas.",
+    "problem": "Bons artigos nascem de um briefing claro: quem vai ler, de qual ângulo e com quais mensagens-chave. O workflow trabalha como uma pequena redação e verifica o resultado antes da publicação.",
+    "flow": "Um modelo rápido cria um briefing estruturado com público, abordagem, estrutura e mensagens-chave. O redator transforma o briefing no artigo; uma verificação de qualidade integrada garante que ele siga a estrutura e responda às perguntas dos leitores e, caso contrário, o devolve uma vez para revisão. Uma revisão rápida verifica extensão e legibilidade com a ferramenta de estatísticas de texto e marca afirmações não verificadas.",
     "input": "Um tema em uma frase. Opcionalmente, acrescente o público, o tom ou a extensão desejada diretamente na entrada.",
     "result": "Um artigo pronto em Markdown com títulos, uma meta descrição e breves notas de revisão com a contagem de palavras e indicações de afirmações que devem ser comprovadas antes da publicação. A execução também salva o resultado como arquivo Markdown e HTML, que você pode levar para o seu CMS.",
-    "adapt": "Mude o tema na entrada. Você pode carregar seu guia de estilo como conhecimento e atribuí-lo ao redator e à revisão. Defina a extensão desejada no prompt de sistema do redator."
+    "adapt": "Mude o tema na entrada. Você pode carregar seu guia de estilo como conhecimento e atribuí-lo ao redator e à revisão. Defina a extensão desejada no prompt de sistema do redator e o número de seções ou de mensagens-chave no prompt de sistema do briefing.",
+    "control": "Automático: briefing, artigo e revisão rodam um após o outro; nenhuma etapa espera por uma pessoa. Uma verificação de qualidade separada avalia o artigo por dois critérios (segue a estrutura, responde às perguntas dos leitores) e, se um deles não for atendido, faz o redator revisá-lo uma vez. A revisão não muda o conteúdo; ela marca as afirmações que precisam de fonte. O artigo é um rascunho: você decide se e onde ele será publicado.",
+    "why": "Um único briefing estruturado substitui dois planejadores em paralelo cujos resultados o redator precisava conciliar: antes, a estrutura era criada sem conhecer o público. Agora público, abordagem, estrutura e mensagens-chave vêm da mesma ideia e chegam ao redator como campos bem separados. O redator tem uma verificação de qualidade com revisão automática porque é ali que surge a maioria das falhas. Como exemplo para iniciantes, o workflow continua sendo de propósito uma cadeia curta, sem ramificações, loops ou aprovações, para que cada etapa possa ser acompanhada na execução."
   },
   "agents": {
-    "audience": {
-      "name": "Público",
-      "description": "Descreve os leitores, suas perguntas e o que já sabem.",
-      "system": "Você descreve os leitores-alvo de um artigo: quem são, o que já sabem e quais três perguntas trazem. Seja conciso.",
-      "task": "{{input}}"
-    },
-    "outline": {
-      "name": "Estrutura",
-      "description": "Cria o título e a estrutura.",
-      "system": "Você cria um título atraente e uma estrutura em cinco partes para um artigo. Indique em uma frase o que cada seção deve alcançar.",
-      "task": "{{input}}"
-    },
     "writer": {
       "name": "Redator",
-      "description": "Escreve o artigo a partir da estrutura e do público.",
+      "description": "Escreve o artigo a partir do briefing.",
       "system": "Você é um jornalista de tecnologia experiente. Escreva um artigo claro e vivo com cerca de 700 palavras e títulos em Markdown. Explique termos técnicos na primeira vez que aparecem e use exemplos concretos. Não invente estudos, números ou citações.",
-      "task": "Escreva o artigo sobre “{{run.input}}”.\n\nPúblico:\n{{node:audience}}\n\nEstrutura:\n{{node:outline}}",
+      "task": "Escreva o artigo sobre “{{run.input}}”.\n\nBriefing (público, abordagem, estrutura, mensagens-chave):\n{{node:brief}}",
       "criteria": {
-        "follows_outline": "O artigo segue a estrutura.",
-        "audience": "O artigo responde às perguntas do público."
+        "follows_outline": "O artigo segue a estrutura do briefing.",
+        "audience": "O artigo responde às perguntas do público indicadas no briefing."
       }
     },
     "editor": {
@@ -41,6 +31,18 @@
       "description": "Verifica extensão e legibilidade e entrega a versão final.",
       "system": "Você é revisor de textos. Determine a contagem de palavras e frases do artigo com a ferramenta de estatísticas de texto. Melhore clareza, ortografia e fluidez sem mudar o conteúdo ou a estrutura. Entregue primeiro a versão final revisada em Markdown, depois uma meta description de no máximo 155 caracteres e por fim as notas de revisão: contagem de palavras, principais mudanças e afirmações que devem ser comprovadas antes da publicação.",
       "task": "Revise este artigo:\n\n{{input}}"
+    },
+    "brief": {
+      "name": "Briefing",
+      "description": "Define público, abordagem, estrutura e mensagens-chave em um briefing estruturado.",
+      "system": "Você é editor-chefe e prepara o briefing de um artigo. Defina o público (quem são os leitores, o que já sabem e quais três perguntas trazem), a abordagem que torna o artigo digno de leitura, com um título provisório, uma estrutura em cinco partes com uma frase sobre o que cada seção deve alcançar e de três a cinco mensagens-chave que os leitores devem levar consigo. Seja conciso e não invente fatos, números ou fontes.",
+      "task": "Prepare o briefing de um artigo sobre este tema:\n\n{{input}}",
+      "fields": {
+        "audience": "Público: quem são os leitores, o que já sabem e quais perguntas trazem",
+        "angle": "Abordagem e título provisório do artigo",
+        "outline": "Seções em ordem, cada uma com uma frase sobre o que deve alcançar",
+        "key_messages": "Mensagens-chave que os leitores devem levar consigo"
+      }
     }
   },
   "tests": {

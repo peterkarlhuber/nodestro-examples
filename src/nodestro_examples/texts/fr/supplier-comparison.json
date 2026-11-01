@@ -7,11 +7,13 @@
   "file_name": "Comparaison fournisseurs",
   "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nBesoin : pièce décolletée en inox DT-40, 24 000 pièces par an, appel de 2 000 pièces par mois\nPrix cible : 2,10 EUR par pièce rendu usine\n\nOffre A – Exemple Précision GmbH (Allemagne, à 80 km)\n- Prix 2,35 EUR/pièce, rendu usine, délai 2 semaines\n- Quantité minimale 1 000 pièces, paiement à 30 jours\n- Taux de réclamation l'an dernier 0,4 %, certifié IATF 16949\n\nOffre B – Example Components Ltd. (Extrême-Orient, fret maritime)\n- Prix 1,62 EUR/pièce départ usine, fret et droits de douane estimés à 0,28 EUR/pièce, délai 10 semaines\n- Quantité minimale 12 000 pièces, paiement 30 % d'acompte, solde à l'expédition\n- Pas encore d'historique de livraison, ISO 9001, échantillons validés\n\nOffre C – Modèle Pièces Métalliques s.r.o. (Tchéquie, à 450 km)\n- Prix 1,98 EUR/pièce, fret 0,07 EUR/pièce, délai 4 semaines\n- Quantité minimale 4 000 pièces, paiement à 45 jours\n- Taux de réclamation l'an dernier 1,1 %, ISO 9001, capacité occupée à 90 % selon le fournisseur\n\nHypothèses internes : coût du capital 8 % par an, coût de stockage 0,03 EUR par pièce et par mois,\ncoût par réclamation (contrôle, tri) 0,90 EUR par pièce défectueuse.",
   "guide": {
-    "problem": "Le prix unitaire le plus bas est rarement l'offre la moins chère. Le workflow compare les offres selon le coût total et le risque d'approvisionnement et justifie une recommandation pour les achats.",
-    "flow": "L'analyste des coûts et l'analyste des risques travaillent en parallèle. L'un calcule avec la calculatrice le coût total de possession de chaque offre, l'autre évalue délai, dépendances et qualité. La recommandation d'achat pèse les deux et fournit un résultat structuré.",
-    "input": "Plusieurs offres avec prix, fret, délai, quantité minimale, conditions de paiement et données qualité, ainsi que vos coûts internes. Vous pouvez écrire les offres dans le texte ou les joindre en fichiers, même mélangées en PDF, Word et Excel ; les trois fichiers d'exemple montrent exactement cela.",
-    "result": "Une recommandation structurée avec classement, justifications, risques, points de négociation et hypothèses retenues. L'exécution l'enregistre aussi en rapport PDF et en fichier Excel avec une feuille par liste.",
-    "adapt": "Joignez vos offres en fichiers et indiquez le besoin et les coûts dans le texte. Si vous avez des pondérations fixes (par exemple 50 % coût, 30 % risque, 20 % qualité), ajoutez-les dans le prompt système de la recommandation d'achat. Les contrats-cadres ou évaluations fournisseurs peuvent être enregistrés comme connaissance et attribués à l'analyste des risques."
+    "problem": "Le prix unitaire le plus bas est rarement l'offre la moins chère, et les promesses d'un fournisseur ne sont pas son historique. Le workflow compare les offres selon le coût total et le risque d'approvisionnement, vérifie l'historique des fournisseurs lorsqu'il est disponible et justifie une recommandation pour les achats.",
+    "flow": "L'analyste des coûts et l'analyste des risques travaillent en parallèle. L'un calcule avec la calculatrice le coût total de possession de chaque offre, l'autre évalue délai, dépendances, capacité et qualité. Si votre copie est connectée à l'ERP, l'analyste des risques lit l'évaluation de chaque fournisseur, en lecture seule, avec list_suppliers et supplier_scorecard ; sans connexion, il utilise un export ERP joint ou seulement les offres et indique quel historique manque. La recommandation d'achat pèse les deux et fournit un résultat structuré.",
+    "input": "Plusieurs offres avec prix, fret, délai, quantité minimale, conditions de paiement et données qualité, ainsi que vos coûts internes. Vous pouvez écrire les offres dans le texte ou les joindre en fichiers, même mélangées en PDF, Word et Excel ; les trois fichiers d'exemple montrent exactement cela. Vous pouvez aussi joindre un export ERP des évaluations fournisseurs (Excel ou CSV) ; dans l'export d'exemple, le fournisseur de l'offre B manque volontairement, car il est nouveau et n'a pas encore d'historique.",
+    "result": "Une recommandation structurée avec classement, justifications, risques, points de négociation et hypothèses retenues. L'évaluation des risques indique pour chaque fournisseur d'où vient son historique : de l'ERP, de l'export joint ou seulement de l'offre. L'exécution enregistre aussi la recommandation en rapport PDF et en fichier Excel avec une feuille par liste.",
+    "adapt": "Joignez vos offres en fichiers et indiquez le besoin et les coûts dans le texte. Pour utiliser l'historique réel des fournisseurs, faites configurer l'intégration ERP et choisissez le serveur en copiant l'exemple ; sinon, joignez un export des évaluations fournisseurs. Si vous avez des pondérations fixes (par exemple 50 % coût, 30 % risque, 20 % qualité), ajoutez-les dans le prompt système de la recommandation d'achat. Les contrats-cadres peuvent être enregistrés comme connaissance et attribués à l'analyste des risques.",
+    "control": "Automatique : les deux analyses et la pondération s'enchaînent sans arrêt ; la calculatrice fait les calculs et l'exécution consigne chaque étape et chaque appel d'outil. La connexion ERP est facultative et ne fait que lire : la copie ne reçoit les outils list_suppliers et supplier_scorecard que si vous la connectez à un serveur MCP dont un administrateur a approuvé les outils en lecture seule ; sinon, elle fonctionne dans un mode hors ligne clairement signalé et ne prétend jamais disposer de données ERP. Les exécutions sans personne présente (planifications, séries de tests, traitement par lots) ne peuvent pas utiliser d'outils MCP, sauf si un administrateur autorise expressément le MCP sans surveillance ; utilisez donc une copie connectée de manière interactive. Aucune étape n'attend de validation : la recommandation est un projet, la décision d'attribution vous appartient.",
+    "why": "Coût et risque sont des questions indépendantes : deux spécialistes travaillent donc en parallèle et un troisième pèse leurs résultats, ce qui est plus rapide et plus facile à vérifier qu'un seul agent pour tout. L'historique des fournisseurs passe par une intégration, car il se trouve dans l'ERP et change en permanence ; un fichier de connaissance serait vite périmé, et le mode hors ligne avec un export garde l'exemple utilisable sans connexion. Il n'y a ni boucle ni étape de validation, car le résultat est une recommandation, pas une action."
   },
   "agents": {
     "cost": {
@@ -23,8 +25,10 @@
     "risk": {
       "name": "Analyste des risques",
       "description": "Évalue délais, dépendances, capacité et risques qualité.",
-      "system": "Tu es responsable des risques de la chaîne d'approvisionnement. Évalue les risques de chaque offre : délai et flexibilité, trajet de transport, taux d'occupation, historique qualité et certification, engagement financier et dépendance. Évalue chaque risque selon sa probabilité et son impact (élevé, moyen, faible) et propose des protections, par exemple un stock de sécurité ou une deuxième source.",
-      "task": "Évalue les risques d'approvisionnement de ces offres :\n\n{{run.input}}"
+      "system": "Tu es responsable des risques de la chaîne d'approvisionnement. Évalue les risques de chaque offre : délai et flexibilité, trajet de transport, taux d'occupation, historique qualité et certification, engagement financier et dépendance. Sépare les déclarations des fournisseurs de l'historique enregistré par l'entreprise et indique sur quoi repose chaque affirmation. Évalue chaque risque selon sa probabilité et son impact (élevé, moyen, faible) et propose des protections, par exemple un stock de sécurité ou une deuxième source.",
+      "task": "Évalue les risques d'approvisionnement de ces offres, y compris l'historique de livraison et de qualité de chaque fournisseur :\n\n{{run.input}}",
+      "online": "Tu es connecté à l'ERP de l'entreprise (lecture seule). Pour chaque offre, cherche le fournisseur avec list_suppliers et lis son évaluation avec supplier_scorecard : respect des délais, qualité en ppm, réclamations, rapports 8D ouverts, dernier audit et remarques. Les données ERP priment sur les déclarations des offres ; signale les écarts. Si un fournisseur ne figure pas dans l'ERP, dis clairement qu'il n'existe aucun historique de livraison avec lui et traite-le comme un risque à part entière. N'invente aucune valeur que les outils n'ont pas renvoyée.",
+      "offline": "Aucun ERP n'est connecté (mode hors ligne). Utilise uniquement un export ERP des évaluations fournisseurs s'il est joint, sinon uniquement les offres. Indique pour chaque fournisseur quel historique manque (par exemple respect des délais, réclamations, rapports 8D ouverts, audits) et qu'il faut le vérifier dans l'ERP. N'invente jamais d'historique ; si un fournisseur ne figure pas dans l'export, il n'a pas d'historique enregistré."
     },
     "recommendation": {
       "name": "Recommandation d'achat",
@@ -45,6 +49,10 @@
     "offers": {
       "label": "Fichiers des offres",
       "description": "Facultatif : les offres en PDF, Word, Excel ou CSV, jusqu'à 10 fichiers. Sans fichier, les offres du texte font foi ; avec des fichiers, le texte n'a besoin que du besoin, du prix cible et des hypothèses internes."
+    },
+    "history": {
+      "label": "Export ERP (historique fournisseurs)",
+      "description": "Facultatif : un export des évaluations fournisseurs de votre ERP en Excel ou CSV, avec respect des délais, qualité, réclamations et audits. Inutile si votre copie est connectée à l'ERP."
     }
   },
   "samples": {
@@ -115,6 +123,54 @@
           ]
         ]
       }
+    },
+    "history": {
+      "name": "ERP_evaluation_fournisseurs",
+      "description": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer. Évaluations fournisseurs des 12 derniers mois en export Excel de l'ERP ; le fournisseur de l'offre B n'y figure pas, car il n'a jamais livré.",
+      "content": {
+        "Évaluation fournisseurs": [
+          [
+            "N° fournisseur",
+            "Fournisseur",
+            "Respect des délais (%)",
+            "Qualité (ppm)",
+            "Réclamations (12 mois)",
+            "Rapports 8D ouverts",
+            "Dernier audit",
+            "Remarques"
+          ],
+          [
+            "S-1001",
+            "Exemple Précision GmbH",
+            98.4,
+            120,
+            1,
+            0,
+            "2026-04-14 : réussi (A)",
+            "Fiable ; les modifications d'appel à court terme ont été livrées à temps."
+          ],
+          [
+            "S-1027",
+            "Modèle Pièces Métalliques s.r.o.",
+            84.0,
+            1450,
+            7,
+            1,
+            "2026-02-03 : réussi sous conditions (B), plan d'action sur l'état de surface convenu",
+            "Le fournisseur signale un goulot de capacité en décolletage depuis le T3 2026 ; 3 livraisons en retard sur les 6 derniers mois. Rapport 8D ouvert 8D-2026-031 : bavures dans l'alésage."
+          ],
+          [
+            "S-1033",
+            "Démo Revêtements SARL",
+            95.1,
+            380,
+            2,
+            0,
+            "2025-11-20 : réussi (A)",
+            "Revêtement uniquement, ne livre pas de pièces décolletées."
+          ]
+        ]
+      }
     }
   },
   "tests": {
@@ -124,6 +180,19 @@
     "offers_files": {
       "name": "Trois offres en PDF, Word et Excel",
       "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nBesoin : pièce décolletée en inox DT-40, 24 000 pièces par an, appel de 2 000 pièces par mois\nPrix cible : 2,10 EUR par pièce rendu usine\n\nLes trois offres sont jointes en fichiers.\n\nHypothèses internes : coût du capital 8 % par an, coût de stockage 0,03 EUR par pièce et par mois,\ncoût par réclamation (contrôle, tri) 0,90 EUR par pièce défectueuse."
+    },
+    "with_history": {
+      "name": "Trois offres en fichiers et export ERP",
+      "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nBesoin : pièce décolletée en inox DT-40, 24 000 pièces par an, appel de 2 000 pièces par mois\nPrix cible : 2,10 EUR par pièce rendu usine\n\nLes trois offres sont jointes en fichiers, avec l'export ERP de nos évaluations fournisseurs.\n\nHypothèses internes : coût du capital 8 % par an, coût de stockage 0,03 EUR par pièce et par mois,\ncoût par réclamation (contrôle, tri) 0,90 EUR par pièce défectueuse."
+    }
+  },
+  "integrations": {
+    "erp": {
+      "name": "ERP (évaluation fournisseurs)",
+      "description": "Accès en lecture seule via MCP aux données fournisseurs de votre ERP : list_suppliers liste les fournisseurs, supplier_scorecard renvoie l'évaluation d'un fournisseur sur les 12 derniers mois (respect des délais, qualité en ppm, réclamations, rapports 8D ouverts, dernier audit). L'analyste des risques s'en sert pour confronter les offres à l'historique enregistré.",
+      "setup": "Un administrateur ajoute le serveur MCP de l'ERP de votre entreprise sous Outils → Services connectés et approuve les deux outils list_suppliers et supplier_scorecard en lecture seule. En copiant l'exemple, vous choisissez ce serveur comme connexion ; sans connexion, la copie fonctionne en mode hors ligne. Pour essayer sans ERP, lancez `python -m nodestro_examples.demo_mcp --language fr` sur l'ordinateur où tourne l'application de bureau Nodestro, ajoutez http://127.0.0.1:8765/mcp sous Outils → Services connectés avec le consentement pour un serveur de développement local, approuvez ses outils en lecture seule et choisissez-le en copiant. Le serveur de démonstration ne fait que lire et sert les données synthétiques de l'export d'exemple, jamais de vraies données d'entreprise. Les exécutions sans personne présente (planifications, séries de tests, traitement par lots) ne peuvent pas utiliser d'outils MCP, sauf si un administrateur autorise expressément le MCP sans surveillance.",
+      "online": "Connecté à l'ERP : l'analyste des risques lit les évaluations fournisseurs en lecture seule (list_suppliers, supplier_scorecard) ; les données ERP priment sur les déclarations des offres.",
+      "offline": "Mode hors ligne : aucun ERP n'est connecté. L'analyste des risques utilise uniquement un export ERP joint ou les offres et signale l'historique fournisseur manquant ; il ne consulte rien."
     }
   }
 }

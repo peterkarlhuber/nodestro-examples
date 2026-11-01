@@ -1,0 +1,86 @@
+{
+  "id": "construction-site",
+  "capabilities": [
+    "technical causes",
+    "design changes",
+    "ground conditions",
+    "weather"
+  ],
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160
+    },
+    {
+      "id": "expert",
+      "type": "agent",
+      "x": 340,
+      "y": 160,
+      "role": "analysis",
+      "icon": "search",
+      "output_name": "TeamResult",
+      "output_fields": [
+        {
+          "name": "findings",
+          "type": "string"
+        },
+        {
+          "name": "attributed_delay_days",
+          "type": "number"
+        },
+        {
+          "name": "responsibility",
+          "type": "string"
+        },
+        {
+          "name": "evidence",
+          "type": "string_list"
+        },
+        {
+          "name": "open_questions",
+          "type": "string_list"
+        }
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 680,
+      "y": 160,
+      "contract": [
+        {
+          "name": "findings",
+          "type": "string"
+        },
+        {
+          "name": "attributed_delay_days",
+          "type": "number"
+        },
+        {
+          "name": "responsibility",
+          "type": "string"
+        },
+        {
+          "name": "evidence",
+          "type": "string_list"
+        },
+        {
+          "name": "open_questions",
+          "type": "string_list"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "expert"
+    ],
+    [
+      "expert",
+      "output"
+    ]
+  ]
+}

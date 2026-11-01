@@ -6,11 +6,13 @@
   "output": "Rascunhos de resposta",
   "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nData de hoje: 2026-03-20\n\nTrecho da nossa política de atendimento (loja online de exemplo \"Cozinha Amostra\"):\n- Devoluções: 30 dias a partir da entrega, produto sem uso na embalagem original; a devolução é gratuita.\n- Garantia: 2 anos; em caso de defeito, reparo ou troca após análise, uma foto do defeito ajuda.\n- Prazo de entrega: 2–4 dias úteis; em caso de atraso de mais de 7 dias úteis oferecemos cancelamento gratuito.\n- Vales e gestos de cortesia acima de 20 EUR somente após aprovação da liderança da equipe.\n\nSolicitação 1 – Jonas Exemplo, pedido 10442, entregue em 2026-02-27:\n\"A frigideira não funciona no meu cooktop de indução. Posso devolver? Ainda está na embalagem original.\"\n\nSolicitação 2 – Maria Amostra, pedido 10518, entregue em 2026-01-15:\n\"O cabo da minha panela soltou, depois de dois meses! Isso é muito chato. Quero meu dinheiro de volta.\"\n\nSolicitação 3 – Ali Instância, pedido 10603, feito em 2026-03-09, ainda não entregue:\n\"Onde está meu pedido? Preciso do jogo de facas como presente no fim de semana.\"\n\nSolicitação 4 – Sofia Teste:\n\"Vocês também têm formas de silicone para assar sem plastificantes?\"",
   "guide": {
-    "problem": "No atendimento ao cliente muitas solicitações chegam ao mesmo tempo, e cada uma precisa da regra certa e do tom certo. O workflow classifica as solicitações, verifica políticas e prazos e prepara respostas para aprovação.",
-    "flow": "Um classificador rápido organiza cada solicitação por assunto, urgência e humor. O verificador de políticas aplica a política de atendimento e recalcula prazos com a ferramenta de datas. O redator de respostas redige as respostas; uma verificação de qualidade garante que nada seja prometido além da política. Um nó de decisão envia os escalonamentos primeiro a um agente de desescalada. Cada rascunho aguarda aprovação; uma rejeição com retorno devolve os rascunhos, por um laço, ao redator de respostas, que os revisa e os envia de novo para aprovação (no máximo três rodadas).",
-    "input": "Várias solicitações de clientes com dados de pedido e entrega, a data de hoje e a sua política de atendimento, como trecho no texto ou como arquivo (PDF, Word, Markdown); o arquivo de exemplo contém uma política mais detalhada.",
-    "result": "Para cada solicitação, uma classificação, a regra aplicável com verificação de prazo e um rascunho de resposta que uma pessoa aprova antes do envio.",
-    "adapt": "Anexe a sua política completa e as perguntas frequentes como arquivo, ou carregue-as como conhecimento e atribua-as ao verificador de políticas se valerem de forma permanente. O tom da sua marca (você ou senhor/senhora, despedida) é definido no prompt de sistema do redator de respostas. Para muitas solicitações de uma vez, use o processamento em lote."
+    "problem": "No atendimento ao cliente muitas solicitações chegam ao mesmo tempo, e cada uma precisa da regra certa, dos dados de pedido certos e do tom certo. O workflow classifica as solicitações, verifica políticas e prazos com base nos dados do pedido e prepara respostas para aprovação.",
+    "flow": "Um classificador rápido organiza cada solicitação por assunto, urgência e humor. O verificador de políticas aplica a política de atendimento e recalcula prazos com a ferramenta de datas; se a sua cópia estiver conectada à loja, ele consulta cada pedido, somente para leitura, com get_order, caso contrário usa os dados de pedido das solicitações ou uma exportação de pedidos anexada. O redator de respostas redige as respostas; uma verificação de qualidade garante que nada seja prometido além da política. Um nó de decisão envia os escalonamentos primeiro a um agente de desescalada. Cada rascunho aguarda aprovação; uma rejeição com comentário devolve os rascunhos, por um laço, ao redator de respostas, que os revisa e os envia de novo para aprovação (no máximo três rodadas).",
+    "input": "Várias solicitações de clientes com números de pedido, a data de hoje e a sua política de atendimento, como trecho no texto ou como arquivo (PDF, Word, Markdown); o arquivo de exemplo contém uma política mais detalhada. As datas de pedido e entrega vêm das solicitações, de uma exportação de pedidos da sua loja anexada (JSON, CSV ou Excel) ou, com conexão, diretamente da loja; a exportação de exemplo contém os três pedidos das solicitações de exemplo.",
+    "result": "Para cada solicitação, uma classificação, a regra aplicável com verificação de prazo e um rascunho de resposta que uma pessoa aprova antes do envio. A verificação de políticas informa de onde vêm os dados do pedido (loja, exportação ou solicitação) e quais faltam.",
+    "adapt": "Anexe a sua política completa e as perguntas frequentes como arquivo, ou carregue-as como conhecimento e atribua-as ao verificador de políticas se valerem de forma permanente. Para verificar pedidos ao vivo, peça a configuração da integração com a loja e escolha o servidor ao copiar o exemplo. O tom da sua marca (você ou senhor/senhora, despedida) é definido no prompt de sistema do redator de respostas. O processamento em lote atende muitas solicitações de uma vez, mas execuções sem uma pessoa presente não podem usar a conexão com a loja; por isso, anexe uma exportação de pedidos aos lotes.",
+    "control": "Automático: a classificação, a decisão de escalonamento (para a desescalada quando pelo menos um cliente está irritado ou pede mais do que a política permite), a verificação de políticas e os rascunhos; a ferramenta de datas calcula os prazos, uma verificação de qualidade testa os rascunhos com três critérios (conforme a política, tom, sem promessas) e cada etapa é registrada. Uma pessoa aprova cada rascunho antes de qualquer envio: uma rejeição exige um comentário e devolve os rascunhos ao redator de respostas; se continuarem rejeitados depois de no máximo três rodadas, a execução termina como falha. As respostas continuam sendo rascunhos; nada é enviado automaticamente. A conexão com a loja é opcional e só lê: a cópia recebe get_order somente se você a conectar a um servidor MCP cuja ferramenta um administrador aprovou como somente leitura; caso contrário, ela roda em um modo offline claramente identificado. Execuções sem uma pessoa presente (agendamentos, séries de testes, processamento em lote) não podem usar ferramentas MCP, a menos que um administrador permita expressamente o MCP sem supervisão.",
+    "why": "As etapas dependem umas das outras (classificar, verificar, redigir), então basta uma cadeia fixa com um desvio para escalonamentos; um orquestrador traria custo sem benefício, e para classificar basta um modelo rápido. Os dados de pedido vêm por uma integração porque estão na loja e mudam a cada hora; o modo offline com uma exportação mantém o exemplo utilizável sem conexão. A aprovação com laço de revisão permanece porque as respostas vão para clientes: a última palavra é de uma pessoa."
   },
   "agents": {
     "triage": {
@@ -27,7 +29,9 @@
       "name": "Verificador de políticas",
       "description": "Aplica a política de atendimento e verifica prazos com a ferramenta de datas.",
       "system": "Você é líder de equipe no atendimento ao cliente. Determine para cada solicitação qual regra da política de atendimento se aplica. Calcule prazos com a ferramenta days_between em vez de estimá-los. Decida o que pode ser prometido, o que precisa de aprovação e quais informações faltam do cliente. Se a política não cobrir uma resposta, diga isso com clareza.",
-      "task": "Verifique a política para estas solicitações.\n\nSolicitações e política:\n{{run.input}}\n\nClassificação:\n{{node:triage}}"
+      "task": "Verifique a política para estas solicitações.\n\nSolicitações e política:\n{{run.input}}\n\nClassificação:\n{{node:triage}}",
+      "online": "Você está conectado à loja (somente leitura). Consulte cada número de pedido das solicitações com get_order: datas de pedido e entrega, status, itens e a última nota da transportadora. Os dados da loja prevalecem sobre o que os clientes dizem; se houver diferença, diga isso e calcule os prazos com os dados da loja. Se uma solicitação não tiver número de pedido ou um pedido não for encontrado, diga isso e informe o que precisa ser perguntado. Nunca adivinhe dados de pedido.",
+      "offline": "Nenhuma loja está conectada (modo offline). Use somente os dados de pedido das solicitações ou de uma exportação de pedidos da loja anexada; a exportação prevalece sobre o que os clientes dizem do próprio pedido. Informe, para cada solicitação, quais dados de pedido faltam (data do pedido, data de entrega, status, itens) e precisam ser verificados na loja ou perguntados ao cliente. Nunca invente dados de pedido nem prazos."
     },
     "reply": {
       "name": "Redator de respostas",
@@ -64,6 +68,10 @@
     "policies": {
       "label": "Política de atendimento como arquivo",
       "description": "Opcional: as suas políticas ou perguntas frequentes em PDF, Word, Markdown ou texto, até 5 arquivos. Sem arquivo vale o trecho do texto."
+    },
+    "orders": {
+      "label": "Exportação de pedidos (loja)",
+      "description": "Opcional: uma exportação dos pedidos em questão da sua loja em JSON, CSV ou Excel. Não é necessária se a sua cópia estiver conectada à loja; sem nenhuma das duas, valem somente os dados de pedido das solicitações."
     }
   },
   "samples": {
@@ -71,6 +79,45 @@
       "name": "Politica_atendimento_Cozinha_Amostra",
       "description": "Uma política de atendimento fictícia mais completa, em PDF.",
       "content": "# Política de atendimento da loja online \"Cozinha Amostra\" (fictícia)\n\nVersão: 01/01/2026\n\n## 1. Devoluções\n\n- 30 dias a partir da entrega, produto sem uso na embalagem original.\n- A devolução é gratuita; enviamos a etiqueta de devolução por e-mail.\n- Reembolso em até 5 dias úteis após o recebimento do produto.\n\n## 2. Garantia\n\n- 2 anos a partir da entrega.\n- Em caso de defeito, primeiro reparo ou troca após análise; uma foto do defeito agiliza a análise.\n- O reembolso do valor só é possível se o reparo ou a troca falharem.\n\n## 3. Entrega\n\n- Prazo de entrega de 2–4 dias úteis.\n- Em caso de atraso de mais de 7 dias úteis, oferecemos cancelamento gratuito.\n- Envio expresso disponível para pedidos até as 14h, por 9,90 EUR.\n\n## 4. Gestos de cortesia\n\n- A equipe de atendimento pode conceder sozinha vales e gestos de cortesia de até 20 EUR.\n- Valores acima de 20 EUR somente após aprovação da liderança da equipe.\n\n## 5. Perguntas sobre produtos\n\n- Informações sobre materiais somente a partir das fichas técnicas; na dúvida, perguntar em vez de supor."
+    },
+    "orders": {
+      "name": "Pedidos_loja_Cozinha_Amostra",
+      "description": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar. Três pedidos da loja de exemplo como exportação JSON: datas de pedido e entrega, status, itens e nota da transportadora.",
+      "content": [
+        {
+          "order": "10442",
+          "customer": "Jonas Exemplo",
+          "ordered": "2026-02-24",
+          "delivered": "2026-02-27",
+          "status": "entregue",
+          "items": [
+            "Frigideira de alumínio 28 cm (dados do produto: não compatível com indução)"
+          ],
+          "carrier_note": "Entregue ao cliente."
+        },
+        {
+          "order": "10518",
+          "customer": "Maria Amostra",
+          "ordered": "2026-01-12",
+          "delivered": "2026-01-15",
+          "status": "entregue",
+          "items": [
+            "Panela de aço inox 20 cm com tampa"
+          ],
+          "carrier_note": "Entregue, deixado com um vizinho."
+        },
+        {
+          "order": "10603",
+          "customer": "Ali Instância",
+          "ordered": "2026-03-09",
+          "delivered": null,
+          "status": "atrasado",
+          "items": [
+            "Jogo de facas, 5 peças, com cepo"
+          ],
+          "carrier_note": "Atraso no centro de distribuição; nova data de entrega 2026-03-23."
+        }
+      ]
     }
   },
   "tests": {
@@ -84,6 +131,19 @@
     "policies_file": {
       "name": "Política como arquivo PDF",
       "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nData de hoje: 2026-03-20\nNossa política de atendimento está anexada como arquivo.\n\nSolicitação 1 – Jonas Exemplo, pedido 10442, entregue em 2026-02-27:\n\"A frigideira não funciona no meu cooktop de indução. Posso devolver? Ainda está na embalagem original.\"\n\nSolicitação 2 – Maria Amostra, pedido 10518, entregue em 2026-01-15:\n\"O cabo da minha panela soltou, depois de dois meses! Isso é muito chato. Quero meu dinheiro de volta.\""
+    },
+    "order_lookup": {
+      "name": "Só números de pedido, exportação de pedidos anexada",
+      "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nData de hoje: 2026-03-20\n\nTrecho da nossa política de atendimento (loja online de exemplo \"Cozinha Amostra\"):\n- Devoluções: 30 dias a partir da entrega, produto sem uso na embalagem original; a devolução é gratuita.\n- Garantia: 2 anos; em caso de defeito, reparo ou troca após análise, uma foto do defeito ajuda.\n- Prazo de entrega: 2–4 dias úteis; em caso de atraso de mais de 7 dias úteis oferecemos cancelamento gratuito.\n- Vales e gestos de cortesia acima de 20 EUR somente após aprovação da liderança da equipe.\n\nA exportação de pedidos da nossa loja está anexada como arquivo.\n\nSolicitação 1 – Jonas Exemplo, pedido 10442:\n\"A frigideira não funciona no meu cooktop de indução. Posso devolver? Ainda está na embalagem original.\"\n\nSolicitação 2 – Maria Amostra, pedido 10518:\n\"O cabo da minha panela soltou, depois de dois meses! Isso é muito chato. Quero meu dinheiro de volta.\"\n\nSolicitação 3 – Ali Instância, pedido 10603:\n\"Onde está meu pedido? Preciso do jogo de facas como presente no fim de semana.\""
+    }
+  },
+  "integrations": {
+    "shop": {
+      "name": "Loja online (pedidos)",
+      "description": "Consulta de pedidos somente leitura na sua loja via MCP: get_order retorna as datas de pedido e entrega, o status, os itens e a última nota da transportadora de um pedido. O verificador de políticas a usa para conferir prazos com dados reais do pedido em vez do que os clientes dizem.",
+      "setup": "Um administrador adiciona o servidor MCP da sua loja em Ferramentas → Serviços conectados e aprova a ferramenta get_order como somente leitura. Ao copiar o exemplo, você escolhe esse servidor como conexão; sem conexão, a cópia roda no modo offline. Para testar sem loja, execute `python -m nodestro_examples.demo_mcp --language pt-BR` no computador com o aplicativo desktop do Nodestro, adicione http://127.0.0.1:8765/mcp em Ferramentas → Serviços conectados com o consentimento para um servidor de desenvolvimento local, aprove as ferramentas dele como somente leitura e escolha-o ao copiar. O servidor de demonstração só lê e fornece os pedidos sintéticos da exportação de exemplo, nunca dados reais de clientes. Execuções sem uma pessoa presente (agendamentos, séries de testes, processamento em lote) não podem usar ferramentas MCP, a menos que um administrador permita expressamente o MCP sem supervisão.",
+      "online": "Conectado à loja: o verificador de políticas consulta pedidos somente para leitura com get_order; os dados da loja prevalecem sobre o que os clientes dizem.",
+      "offline": "Modo offline: nenhuma loja está conectada. O verificador de políticas usa somente os dados de pedido das solicitações ou de uma exportação de pedidos anexada e aponta os que faltam; ele não consulta nada."
     }
   }
 }

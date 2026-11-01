@@ -1,0 +1,39 @@
+{
+  "id": "idea-risks",
+  "capabilities": [
+    "risk analysis",
+    "validation experiments"
+  ],
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160
+    },
+    {
+      "id": "expert",
+      "type": "agent",
+      "x": 340,
+      "y": 160,
+      "role": "review",
+      "icon": "shield"
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 680,
+      "y": 160
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "expert"
+    ],
+    [
+      "expert",
+      "output"
+    ]
+  ]
+}

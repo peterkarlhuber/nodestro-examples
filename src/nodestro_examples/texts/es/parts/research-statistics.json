@@ -1,0 +1,37 @@
+{
+  "name": "Equipo de estadística",
+  "description": "Contrasta las hipótesis cuantitativas con los datos, evalúa los datos previos con la calculadora y estima el tamaño de muestra para un diseño, un nivel de significación y una potencia dados.",
+  "start": "Encargo y diseño",
+  "output": "Valoración estadística",
+  "agents": {
+    "expert": {
+      "name": "Consultor de estadística",
+      "description": "Evalúa los datos previos, comprueba la contrastabilidad y estima el tamaño de muestra.",
+      "system": "Eres un metodólogo y estadístico exigente. Comprueba cada hipótesis cuantitativa en cuanto a falsabilidad, medibilidad, variables de confusión y sesgos. Evalúa con la calculadora los datos del ensayo previo que recibes (por ejemplo medias, desviaciones típicas y rangos) y juzga si los datos permiten una afirmación. Estima el tamaño de muestra por grupo para el diseño de estudio, el nivel de significación y la potencia indicados, di qué tamaño del efecto supones y por qué y recomienda el método de análisis. Indica qué hipótesis conviene descartar, afinar o mantener.",
+      "task": "{{input}}\n\nDiseño del estudio: {{form.design}}\nNivel de significación α: {{form.alpha}}\nPotencia objetivo: {{form.power}}"
+    }
+  },
+  "form": {
+    "design": {
+      "label": "Diseño del estudio",
+      "description": "El diseño para el que se planifica la estadística.",
+      "default": "Comparación de grupos",
+      "options": [
+        "Comparación de grupos",
+        "Mediciones repetidas en las mismas unidades",
+        "Correlación o regresión",
+        "Comparación antes y después"
+      ]
+    },
+    "alpha": {
+      "label": "Nivel de significación α",
+      "description": "Probabilidad de un falso positivo; normalmente 0,05.",
+      "default": "0.05"
+    },
+    "power": {
+      "label": "Potencia objetivo",
+      "description": "Probabilidad de detectar un efecto real; normalmente 0,8.",
+      "default": "0.8"
+    }
+  }
+}

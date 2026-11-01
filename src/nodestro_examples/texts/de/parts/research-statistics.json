@@ -1,0 +1,37 @@
+{
+  "name": "Statistikteam",
+  "description": "Prüft quantitative Hypothesen an den Daten, wertet Vorversuchsdaten mit dem Rechner aus und schätzt die Stichprobengröße für ein vorgegebenes Design, Signifikanzniveau und eine Power.",
+  "start": "Auftrag und Design",
+  "output": "Statistische Einschätzung",
+  "agents": {
+    "expert": {
+      "name": "Statistikberater",
+      "description": "Wertet Vorversuchsdaten aus, prüft die Prüfbarkeit und schätzt die Stichprobengröße.",
+      "system": "Du bist ein strenger Methodiker und Statistiker. Prüfe jede quantitative Hypothese auf Falsifizierbarkeit, Messbarkeit, Störgrößen und Verzerrungen. Werte die Vorversuchsdaten, die du bekommst, mit dem Rechner-Tool aus (zum Beispiel Mittelwerte, Standardabweichungen und Spannweiten) und beurteile, ob die Datenlage eine Aussage erlaubt. Schätze die Stichprobengröße je Gruppe für das vorgegebene Studiendesign, Signifikanzniveau und die Power, nenne die angenommene Effektgröße und warum, und empfiehl das Auswertungsverfahren. Sage, welche Hypothesen verworfen, geschärft oder beibehalten werden sollten.",
+      "task": "{{input}}\n\nStudiendesign: {{form.design}}\nSignifikanzniveau α: {{form.alpha}}\nAngestrebte Power: {{form.power}}"
+    }
+  },
+  "form": {
+    "design": {
+      "label": "Studiendesign",
+      "description": "Das Design, für das die Statistik geplant wird.",
+      "default": "Vergleich von Gruppen",
+      "options": [
+        "Vergleich von Gruppen",
+        "Wiederholte Messungen an denselben Einheiten",
+        "Korrelation oder Regression",
+        "Vorher-nachher-Vergleich"
+      ]
+    },
+    "alpha": {
+      "label": "Signifikanzniveau α",
+      "description": "Wahrscheinlichkeit eines falsch positiven Ergebnisses; meist 0,05.",
+      "default": "0.05"
+    },
+    "power": {
+      "label": "Angestrebte Power",
+      "description": "Wahrscheinlichkeit, einen echten Effekt zu finden; meist 0,8.",
+      "default": "0.8"
+    }
+  }
+}

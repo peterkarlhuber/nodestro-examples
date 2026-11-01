@@ -7,11 +7,13 @@
   "file_name": "Lieferantenvergleich",
   "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nBedarf: Edelstahl-Drehteil DT-40, 24.000 Stück pro Jahr, Abruf monatlich 2.000 Stück\nZielpreis: 2,10 EUR pro Stück frei Werk\n\nAngebot A – Beispiel Präzision GmbH (Deutschland, 80 km entfernt)\n- Preis 2,35 EUR/Stück, Lieferung frei Werk, Lieferzeit 2 Wochen\n- Mindestbestellmenge 1.000 Stück, Zahlungsziel 30 Tage\n- Reklamationsquote im Vorjahr 0,4 %, zertifiziert nach IATF 16949\n\nAngebot B – Example Components Ltd. (Fernost, Seefracht)\n- Preis 1,62 EUR/Stück ab Werk, Fracht und Zoll geschätzt 0,28 EUR/Stück, Lieferzeit 10 Wochen\n- Mindestbestellmenge 12.000 Stück, Zahlung 30 % Anzahlung, Rest bei Verschiffung\n- Noch keine Lieferhistorie, ISO 9001, Muster bestanden\n\nAngebot C – Muster Metallteile s.r.o. (Tschechien, 450 km entfernt)\n- Preis 1,98 EUR/Stück, Fracht 0,07 EUR/Stück, Lieferzeit 4 Wochen\n- Mindestbestellmenge 4.000 Stück, Zahlungsziel 45 Tage\n- Reklamationsquote im Vorjahr 1,1 %, ISO 9001, Kapazität laut Lieferant zu 90 % ausgelastet\n\nInterne Annahmen: Kapitalkosten 8 % pro Jahr, Lagerkosten 0,03 EUR pro Stück und Monat,\nKosten je Reklamationsfall (Prüfung, Sortierung) 0,90 EUR je fehlerhaftem Teil.",
   "guide": {
-    "problem": "Der günstigste Stückpreis ist selten das günstigste Angebot. Der Workflow vergleicht Angebote nach Gesamtkosten und Lieferrisiko und begründet eine Empfehlung für den Einkauf.",
-    "flow": "Kostenanalyst und Risikoanalyst arbeiten parallel. Der eine rechnet mit dem Rechner-Tool die Gesamtkosten (Total Cost of Ownership) je Angebot, der andere bewertet Lieferzeit, Abhängigkeiten und Qualität. Die Einkaufsempfehlung wägt beides ab und liefert ein strukturiertes Ergebnis.",
-    "input": "Mehrere Angebote mit Preis, Fracht, Lieferzeit, Mindestmenge, Zahlungsbedingungen und Qualitätsdaten sowie eure internen Kostensätze. Die Angebote kannst du in den Text schreiben oder als Dateien anhängen, auch gemischt als PDF, Word und Excel; die drei Beispieldateien zeigen genau das.",
-    "result": "Eine strukturierte Empfehlung mit Rangfolge, Begründungen, Risiken, Verhandlungspunkten und den getroffenen Annahmen. Der Lauf speichert sie zusätzlich als PDF-Bericht und als Excel-Datei mit je einem Blatt pro Liste.",
-    "adapt": "Hänge eure Angebote als Dateien an und trage Bedarf und Kostensätze in den Text ein. Wenn ihr feste Gewichtungen habt (zum Beispiel 50 % Kosten, 30 % Risiko, 20 % Qualität), ergänze sie im System-Prompt der Einkaufsempfehlung. Rahmenverträge oder Lieferantenbewertungen kannst du als Wissen hinterlegen und dem Risikoanalysten zuweisen."
+    "problem": "Der günstigste Stückpreis ist selten das günstigste Angebot, und die Versprechen eines Lieferanten sind nicht seine Lieferhistorie. Der Workflow vergleicht Angebote nach Gesamtkosten und Lieferrisiko, prüft die Historie der Lieferanten, wo sie vorliegt, und begründet eine Empfehlung für den Einkauf.",
+    "flow": "Kostenanalyst und Risikoanalyst arbeiten parallel. Der eine rechnet mit dem Rechner-Tool die Gesamtkosten (Total Cost of Ownership) je Angebot, der andere bewertet Lieferzeit, Abhängigkeiten, Kapazität und Qualität. Ist deine Kopie mit dem ERP-System verbunden, liest der Risikoanalyst die Lieferantenbewertung jedes Lieferanten mit list_suppliers und supplier_scorecard, nur lesend; ohne Verbindung nutzt er einen angehängten ERP-Export oder nur die Angebote und sagt, welche Historie fehlt. Die Einkaufsempfehlung wägt beides ab und liefert ein strukturiertes Ergebnis.",
+    "input": "Mehrere Angebote mit Preis, Fracht, Lieferzeit, Mindestmenge, Zahlungsbedingungen und Qualitätsdaten sowie eure internen Kostensätze. Die Angebote kannst du in den Text schreiben oder als Dateien anhängen, auch gemischt als PDF, Word und Excel; die drei Beispieldateien zeigen genau das. Optional hängst du einen ERP-Export der Lieferantenbewertungen an (Excel oder CSV); im Beispielexport fehlt der Lieferant von Angebot B absichtlich, weil er neu ist und noch keine Historie hat.",
+    "result": "Eine strukturierte Empfehlung mit Rangfolge, Begründungen, Risiken, Verhandlungspunkten und den getroffenen Annahmen. Die Risikobewertung nennt für jeden Lieferanten, woher seine Historie stammt: aus dem ERP-System, aus dem angehängten Export oder nur aus dem Angebot. Der Lauf speichert die Empfehlung zusätzlich als PDF-Bericht und als Excel-Datei mit je einem Blatt pro Liste.",
+    "adapt": "Hänge eure Angebote als Dateien an und trage Bedarf und Kostensätze in den Text ein. Für echte Lieferantenhistorie lässt du die ERP-Integration einrichten und wählst den Server beim Kopieren des Beispiels; sonst hängst du einen Export der Lieferantenbewertungen an. Wenn ihr feste Gewichtungen habt (zum Beispiel 50 % Kosten, 30 % Risiko, 20 % Qualität), ergänze sie im System-Prompt der Einkaufsempfehlung. Rahmenverträge kannst du als Wissen hinterlegen und dem Risikoanalysten zuweisen.",
+    "control": "Automatisch: Beide Analysen und die Abwägung laufen ohne Halt durch; das Rechnen übernimmt das Rechner-Tool, und der Lauf protokolliert jeden Schritt und jeden Tool-Aufruf. Die ERP-Verbindung ist optional und liest nur: Die Kopie bekommt die Tools list_suppliers und supplier_scorecard nur, wenn du sie mit einem MCP-Server verbindest, dessen Tools ein Administrator als nur lesend freigegeben hat; sonst läuft sie in einem deutlich gekennzeichneten Offline-Modus und tut nie so, als hätte sie ERP-Daten. Läufe ohne anwesende Person (Zeitpläne, Testreihen, Stapelverarbeitung) dürfen keine MCP-Tools nutzen, außer ein Administrator erlaubt unbeaufsichtigtes MCP ausdrücklich; nutze eine verbundene Kopie daher interaktiv. Kein Schritt wartet auf eine Freigabe: Die Empfehlung ist ein Entwurf, die Vergabeentscheidung bleibt bei dir.",
+    "why": "Kosten und Risiko sind unabhängige Fragen, deshalb arbeiten zwei Spezialisten parallel und ein dritter wägt ab; das ist schneller und leichter nachzuprüfen als ein einzelner Agent für alles. Die Lieferantenhistorie kommt über eine Integration, weil sie im ERP-System liegt und sich laufend ändert; eine Wissensdatei wäre schnell veraltet, und der Offline-Modus mit Export hält das Beispiel auch ohne Verbindung nutzbar. Schleife und Freigabeschritt fehlen bewusst, weil das Ergebnis eine Empfehlung ist und keine Aktion."
   },
   "agents": {
     "cost": {
@@ -23,8 +25,10 @@
     "risk": {
       "name": "Risikoanalyst",
       "description": "Bewertet Lieferzeit, Abhängigkeiten, Kapazität und Qualitätsrisiken.",
-      "system": "Du bist Supply-Chain-Risikomanager. Bewerte für jedes Angebot die Lieferrisiken: Lieferzeit und Flexibilität, Transportweg, Kapazitätsauslastung, Qualitätshistorie und Zertifizierung, finanzielle Bindung und Abhängigkeit. Bewerte jedes Risiko nach Eintrittswahrscheinlichkeit und Auswirkung (hoch, mittel, gering) und schlage Maßnahmen zur Absicherung vor, zum Beispiel Sicherheitsbestand oder eine Zweitquelle.",
-      "task": "Bewerte die Lieferrisiken dieser Angebote:\n\n{{run.input}}"
+      "system": "Du bist Supply-Chain-Risikomanager. Bewerte für jedes Angebot die Lieferrisiken: Lieferzeit und Flexibilität, Transportweg, Kapazitätsauslastung, Qualitätshistorie und Zertifizierung, finanzielle Bindung und Abhängigkeit. Halte die Angaben der Lieferanten getrennt von der im Unternehmen erfassten Historie und sage, worauf sich jede Aussage stützt. Bewerte jedes Risiko nach Eintrittswahrscheinlichkeit und Auswirkung (hoch, mittel, gering) und schlage Maßnahmen zur Absicherung vor, zum Beispiel Sicherheitsbestand oder eine Zweitquelle.",
+      "task": "Bewerte die Lieferrisiken dieser Angebote, einschließlich der Liefer- und Qualitätshistorie jedes Lieferanten:\n\n{{run.input}}",
+      "online": "Du bist mit dem ERP-System des Unternehmens verbunden (nur lesend). Suche für jedes Angebot den Lieferanten mit list_suppliers und lies seine Bewertung mit supplier_scorecard: Liefertreue, Qualität in ppm, Reklamationen, offene 8D-Berichte, letztes Audit und Bemerkungen. ERP-Daten haben Vorrang vor den Angaben in den Angeboten; weise auf Abweichungen hin. Steht ein Lieferant nicht im ERP-System, sage deutlich, dass es keine Lieferhistorie mit ihm gibt, und werte das als eigenes Risiko. Erfinde keine Werte, die die Tools nicht geliefert haben.",
+      "offline": "Es ist kein ERP-System verbunden (Offline-Modus). Nutze nur einen angehängten ERP-Export der Lieferantenbewertungen, falls vorhanden, und sonst nur die Angebote. Sage für jeden Lieferanten, welche Historie fehlt (zum Beispiel Liefertreue, Reklamationen, offene 8D-Berichte, Audits) und dass sie im ERP-System zu prüfen ist. Erfinde nie eine Historie; steht ein Lieferant nicht im Export, gibt es für ihn keine erfasste Historie."
     },
     "recommendation": {
       "name": "Einkaufsempfehlung",
@@ -45,6 +49,10 @@
     "offers": {
       "label": "Angebotsdateien",
       "description": "Optional: die Angebote als PDF, Word, Excel oder CSV, bis zu 10 Dateien. Ohne Dateien gelten die Angebote im Text; mit Dateien genügen im Text Bedarf, Zielpreis und interne Annahmen."
+    },
+    "history": {
+      "label": "ERP-Export (Lieferantenhistorie)",
+      "description": "Optional: ein Export der Lieferantenbewertungen aus eurem ERP-System als Excel oder CSV, mit Liefertreue, Qualität, Reklamationen und Audits. Nicht nötig, wenn deine Kopie mit dem ERP-System verbunden ist."
     }
   },
   "samples": {
@@ -115,6 +123,54 @@
           ]
         ]
       }
+    },
+    "history": {
+      "name": "ERP_Lieferantenbewertung",
+      "description": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren. Lieferantenbewertungen der letzten 12 Monate als Excel-Export aus dem ERP-System; der Lieferant von Angebot B fehlt, weil er noch nie geliefert hat.",
+      "content": {
+        "Lieferantenbewertung": [
+          [
+            "Lieferanten-Nr.",
+            "Lieferant",
+            "Liefertreue (%)",
+            "Qualität (ppm)",
+            "Reklamationen (12 Monate)",
+            "Offene 8D-Berichte",
+            "Letztes Audit",
+            "Bemerkungen"
+          ],
+          [
+            "S-1001",
+            "Beispiel Präzision GmbH",
+            98.4,
+            120,
+            1,
+            0,
+            "2026-04-14: bestanden (A)",
+            "Zuverlässig; kurzfristige Abrufänderungen wurden termingerecht geliefert."
+          ],
+          [
+            "S-1027",
+            "Muster Metallteile s.r.o.",
+            84.0,
+            1450,
+            7,
+            1,
+            "2026-02-03: bedingt bestanden (B), Maßnahmenplan zur Oberflächengüte vereinbart",
+            "Lieferant meldet seit Q3 2026 einen Kapazitätsengpass in der Dreherei; 3 verspätete Lieferungen in den letzten 6 Monaten. Offener 8D-Bericht 8D-2026-031: Grat in der Bohrung."
+          ],
+          [
+            "S-1033",
+            "Demo Oberflächentechnik GmbH",
+            95.1,
+            380,
+            2,
+            0,
+            "2025-11-20: bestanden (A)",
+            "Nur Beschichtung, liefert keine Drehteile."
+          ]
+        ]
+      }
     }
   },
   "tests": {
@@ -124,6 +180,19 @@
     "offers_files": {
       "name": "Drei Angebote als PDF, Word und Excel",
       "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nBedarf: Edelstahl-Drehteil DT-40, 24.000 Stück pro Jahr, Abruf monatlich 2.000 Stück\nZielpreis: 2,10 EUR pro Stück frei Werk\n\nDie drei Angebote liegen als Dateien bei.\n\nInterne Annahmen: Kapitalkosten 8 % pro Jahr, Lagerkosten 0,03 EUR pro Stück und Monat,\nKosten je Reklamationsfall (Prüfung, Sortierung) 0,90 EUR je fehlerhaftem Teil."
+    },
+    "with_history": {
+      "name": "Drei Angebote als Dateien plus ERP-Export",
+      "input": "SYNTHETISCHE BEISPIELDATEN – frei erfunden, nur zum Ausprobieren.\n\nBedarf: Edelstahl-Drehteil DT-40, 24.000 Stück pro Jahr, Abruf monatlich 2.000 Stück\nZielpreis: 2,10 EUR pro Stück frei Werk\n\nDie drei Angebote liegen als Dateien bei, dazu der ERP-Export unserer Lieferantenbewertungen.\n\nInterne Annahmen: Kapitalkosten 8 % pro Jahr, Lagerkosten 0,03 EUR pro Stück und Monat,\nKosten je Reklamationsfall (Prüfung, Sortierung) 0,90 EUR je fehlerhaftem Teil."
+    }
+  },
+  "integrations": {
+    "erp": {
+      "name": "ERP-System (Lieferantenbewertung)",
+      "description": "Nur lesender Zugriff über MCP auf die Lieferantendaten eures ERP-Systems: list_suppliers listet die Lieferanten, supplier_scorecard liefert die Bewertung eines Lieferanten für die letzten 12 Monate (Liefertreue, Qualität in ppm, Reklamationen, offene 8D-Berichte, letztes Audit). Der Risikoanalyst prüft damit die Angebote gegen die erfasste Historie.",
+      "setup": "Ein Administrator fügt den MCP-Server eures ERP-Systems unter Tools → Verbundene Dienste hinzu und gibt die beiden Tools list_suppliers und supplier_scorecard als nur lesend frei. Beim Kopieren des Beispiels wählst du diesen Server als Verbindung; ohne Verbindung läuft die Kopie im Offline-Modus. Zum Ausprobieren ohne ERP-System startest du auf dem Rechner mit der Nodestro-Desktop-App `python -m nodestro_examples.demo_mcp --language de`, fügst http://127.0.0.1:8765/mcp unter Tools → Verbundene Dienste mit der Zustimmung für einen lokalen Entwicklungsserver hinzu, gibst seine Tools als nur lesend frei und wählst ihn beim Kopieren. Der Demo-Server liest nur und liefert die synthetischen Daten des Beispielexports, nie echte Unternehmensdaten. Läufe ohne anwesende Person (Zeitpläne, Testreihen, Stapelverarbeitung) dürfen keine MCP-Tools nutzen, außer ein Administrator erlaubt unbeaufsichtigtes MCP ausdrücklich.",
+      "online": "Mit dem ERP-System verbunden: Der Risikoanalyst liest Lieferantenbewertungen nur lesend (list_suppliers, supplier_scorecard); ERP-Daten haben Vorrang vor den Angaben in den Angeboten.",
+      "offline": "Offline-Modus: Es ist kein ERP-System verbunden. Der Risikoanalyst nutzt nur einen angehängten ERP-Export oder die Angebote und nennt die fehlende Lieferantenhistorie; er fragt nichts ab."
     }
   }
 }

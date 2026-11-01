@@ -1,48 +1,50 @@
 {
   "name": "Analyser les retards de chantier",
   "field": "Bâtiment et travaux publics",
-  "description": "Calculer les écarts de planning, classer les causes, développer des contre-mesures et rendre compte au maître d'ouvrage.",
+  "description": "Calculer les écarts de planning et laisser une coordination de chantier faire appel aux équipes spécialisées dont le retard a besoin – du chantier et de l'approvisionnement aux réclamations et au rattrapage – puis rendre compte au maître d'ouvrage après validation.",
   "start": "État du projet",
   "output": "Rapport d'avancement",
   "file_name": "Rapport d'avancement",
   "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nProjet : nouvelle crèche « Beau Soleil », Villexemple ; maître d'ouvrage : commune de Villexemple\nDate d'achèvement contractuelle : 2026-09-30 ; date du rapport : 2026-05-15\n\n| Jalon | Prévu | Réel / prévision | Remarque |\n|---|---|---|---|\n| Gros œuvre terminé | 2026-02-27 | 2026-03-20 | 9 jours de gel en janvier, bétonnage suspendu |\n| Mise hors d'eau | 2026-03-27 | 2026-04-24 | Livraison tardive des éléments de toiture (le fournisseur signale une pénurie de matériaux) |\n| Menuiseries posées | 2026-04-17 | 2026-05-29 (prévision) | Modification des fenêtres d'évacuation à la demande du contrôle incendie |\n| Lots techniques, première phase | 2026-05-22 | 2026-06-19 (prévision) | Dépend des fenêtres ; électricien sur site avec seulement 2 personnes au lieu de 4 |\n| Second œuvre terminé | 2026-08-28 | ouvert | — |\n| Réception | 2026-09-30 | ouvert | Pénalité contractuelle 0,2 % du montant du marché par jour ouvré, max. 5 % |\n\nMontant du marché de l'entreprise générale : 3,2 M EUR. Le maître d'ouvrage attend un rapport pour la réunion du 2026-05-20.",
   "guide": {
-    "problem": "Les retards de chantier s'accumulent et les maîtres d'ouvrage ont vite besoin d'une vision claire. Le workflow calcule les écarts, classe les causes, développe des contre-mesures et rédige un rapport d'avancement.",
-    "flow": "L'analyste du planning et l'analyste des causes travaillent en parallèle. L'un calcule retards et marges avec les outils de dates et de calcul, l'autre classe les causes par domaine de responsabilité et besoin de documentation ; tous deux analysent aussi les plannings, journaux de chantier et photos joints. Le planificateur de contre-mesures élabore des options d'accélération et l'agent de rapport résume le tout pour le maître d'ouvrage. Avant que le rapport ne quitte l'équipe projet, une personne le valide.",
-    "input": "Un planning avec jalons prévus et réels, remarques sur les causes, date du rapport et conditions contractuelles, en texte ou en fichiers : planning en Excel, journal de chantier en PDF, photos en image. Les fichiers d'exemple contiennent un planning et un extrait du journal de chantier.",
-    "result": "Un rapport d'avancement factuel avec situation du planning, causes, contre-mesures, décisions à prendre et risques. Après validation, l'exécution l'enregistre en PDF et en fichier Word modifiable. Les questions de pénalités et de prolongation de délai restent soumises à un examen technique et juridique.",
-    "adapt": "Exportez votre planning depuis votre logiciel de projet en Excel et joignez le journal de chantier et les photos. Pour un rapport régulier, vous pouvez planifier la copie ; la validation vous attend alors."
+    "problem": "Les retards de chantier ont des causes différentes, et chaque cause demande une autre expertise : le gel doit être documenté, un fournisseur en retard appelle une notification d'empêchement à la bonne partie, une modification de projet ordonnée par le maître d'ouvrage peut justifier une prolongation de délai, et un manque de personnel demande un plan d'accélération. Le workflow calcule les écarts et laisse une coordination de chantier faire appel exactement aux équipes spécialisées dont la situation a besoin.",
+    "flow": "L'analyste planning calcule avec l'outil de dates le retard de chaque jalon et liste les causes supposées. La coordination de chantier, un orchestrateur, compose d'abord une équipe d'au plus trois parmi les quatre équipes spécialisées puis distribue les missions : l'équipe chantier pour la météo, le sol et les modifications de projet, l'équipe approvisionnement pour les fournisseurs et les sous-traitants, l'équipe réclamations pour les notifications d'empêchement et les prolongations de délai, l'équipe rattrapage pour les mesures d'accélération avec leur coût. Les équipes indépendantes travaillent en parallèle. L'équipe réclamations s'arrête pour une personne : son projet de notification n'est utilisé qu'après visa de la direction de chantier responsable. L'agent de rapport rédige le rapport d'avancement et, avant qu'il n'arrive au maître d'ouvrage, une personne le valide.",
+    "input": "Un aperçu du planning avec les jalons prévus et réels, des remarques sur les causes, la date du rapport et les conditions contractuelles, sous forme de texte ou de fichiers : planning en Excel, journal de chantier en PDF, photos en images. Les fichiers d'exemple contiennent un planning et un extrait du journal de chantier.",
+    "result": "Un rapport d'avancement factuel avec situation du planning, causes et sphères de responsabilité, notifications et demandes de prolongation, mesures de rattrapage chiffrées, décisions nécessaires et risques ; après validation, en PDF et en fichier Word modifiable. La vue d'orchestration montre quelles équipes la coordination a composées, ce que chacune a livré sous forme de données structurées et pourquoi. Les questions de pénalités contractuelles et de prolongation de délai restent soumises à un examen technique et juridique.",
+    "adapt": "Exportez votre planning depuis votre logiciel de projet en Excel et joignez le journal de chantier et les photos. Adaptez l'équipe réclamations à votre type de contrat (par exemple CCAG Travaux, FIDIC ou vos propres conditions) et saisissez les taux de coût de votre entreprise dans l'équipe rattrapage. Si vous avez besoin d'une autre spécialité, comme les lots techniques, enregistrez-la comme workflow avec une description claire et ajoutez-la aux équipes de la coordination.",
+    "control": "Automatique : la coordination choisit au plus trois équipes, en fait travailler au plus deux à la fois et confie à chaque équipe au plus deux missions ; chaque décision de composition et de mission est consignée avec sa raison. Une personne décide deux fois : la direction de chantier vise le projet de notification d'empêchement dans l'équipe réclamations (un refus arrête l'exécution), et une personne valide le rapport d'avancement avant la création des fichiers. Limites : au plus 8 décisions de la coordination, 50 étapes, 40 minutes et 4 USD par exécution.",
+    "why": "Une chaîne fixe traitait tous les retards de la même façon : un analyste des causes, un planificateur de mesures, que le problème soit le gel ou une notification manquante. Avec la coordination, un retard purement météorologique ne coûte pas d'examen des réclamations, tandis qu'une modification de projet ordonnée par le maître d'ouvrage fait intervenir l'équipe réclamations avec son visa. Les équipes renvoient des résultats structurés (jours, responsabilité, preuves), si bien que le rapport peut les additionner au lieu de reformuler de la prose. Le calcul du planning, le rapport et la validation finale restent des étapes fixes car tout rapport en a besoin."
   },
   "agents": {
     "schedule": {
       "name": "Analyste du planning",
-      "description": "Calcule retards, marges et conséquences avec l'outil de dates et la calculatrice.",
-      "system": "Tu es planificateur de travaux. Calcule le retard de chaque jalon en jours calendaires avec l'outil days_between et déduis l'effet sur la date d'achèvement si le retard se poursuit. Montre les dépendances entre jalons et utilise la calculatrice pour déterminer quelle pénalité contractuelle pourrait résulter d'un retard supposé, explicitement sous forme de scénario.",
-      "task": "Analyse la situation du planning :\n\n{{run.input}}"
-    },
-    "causes": {
-      "name": "Analyste des causes",
-      "description": "Classe les causes par domaine de responsabilité et besoin de documentation.",
-      "system": "Tu es conducteur de travaux expérimenté en gestion des réclamations. Attribue chaque retard à une catégorie de cause : météo, chaîne d'approvisionnement, modification de conception, effectifs ou autre. Indique de quel domaine de responsabilité il relève probablement d'après les informations disponibles, quelles preuves devraient être documentées et quelles notifications d'empêchement pourraient être nécessaires. Ne donne pas d'appréciation juridique.",
-      "task": "Classe les causes des retards :\n\n{{run.input}}"
-    },
-    "countermeasures": {
-      "name": "Planificateur de contre-mesures",
-      "description": "Développe des mesures d'accélération avec coût et effet.",
-      "system": "Tu es contrôleur de projet. Développe des contre-mesures pour tenir la date d'achèvement ou limiter le retard, par exemple réorganiser l'enchaînement des travaux, ajouter des capacités ou travailler en parallèle. Évalue chaque mesure selon le temps gagné, le coût, le risque et les décisions nécessaires du maître d'ouvrage. Recommande un ensemble de mesures.",
-      "task": "Développe des contre-mesures.\n\nAnalyse du planning :\n{{node:schedule}}\n\nCauses :\n{{node:causes}}"
+      "description": "Calcule les retards et le chemin critique avec les outils de dates et de calcul.",
+      "system": "Tu es planificateur de travaux. Calcule le retard de chaque jalon en jours calendaires avec l'outil days_between et déduis l'effet sur la date d'achèvement si le retard persiste. Montre quels jalons dépendent de quels autres et quel retard se trouve sur le chemin critique. Liste les causes supposées telles qu'elles figurent dans les documents, sans juger la responsabilité. Les équipes spécialisées travailleront ensuite sans les fichiers : reprends dans ton résumé chaque date, remarque et chiffre dont elles ont besoin.",
+      "task": "Analyse la situation du planning :\n\n{{run.input}}",
+      "fields": {
+        "summary": "Situation du planning avec toutes les dates, remarques et données contractuelles pertinentes des documents",
+        "delay_days": "Retard attendu de la date d'achèvement en jours calendaires",
+        "critical_path": "Les jalons du chemin critique et la façon dont leurs retards se répercutent",
+        "suspected_causes": "Causes supposées, une par retard, telles qu'indiquées dans les documents"
+      }
     },
     "report": {
       "name": "Rapport au maître d'ouvrage",
-      "description": "Résume de façon factuelle la situation du planning, les causes et les mesures.",
-      "system": "Tu rédiges des rapports d'avancement pour des maîtres d'ouvrage publics : factuels, clairs et sans chercher de coupable. Structure-le en situation du planning, causes, contre-mesures, décisions nécessaires et risques, sur une page au maximum. Signale que les questions de pénalités et de prolongation de délai doivent faire l'objet d'un examen professionnel et juridique.",
-      "task": "Rédige le rapport d'avancement.\n\nAnalyse du planning :\n{{node:schedule}}\n\nCauses :\n{{node:causes}}\n\nContre-mesures :\n{{node:countermeasures}}"
+      "description": "Résume de façon factuelle pour le maître d'ouvrage le planning, les causes, les réclamations et les mesures.",
+      "system": "Tu rédiges des rapports d'avancement pour des maîtres d'ouvrage publics : factuels, clairs et sans attribution de fautes. Structure-le en situation du planning, causes et sphères de responsabilité, notifications et réclamations, contre-mesures chiffrées, décisions attendues du maître d'ouvrage et risques, deux pages au plus. N'utilise que les chiffres de l'analyse planning et des équipes ; si des équipes divergent, montre les deux points de vue. Signale que les questions de pénalités contractuelles et de prolongation de délai doivent être examinées techniquement et juridiquement.",
+      "task": "Rédige le rapport d'avancement.\n\nAnalyse planning :\n{{node:schedule}}\n\nRésultats des équipes spécialisées :\n{{node:control}}"
     }
   },
   "steps": {
     "release": {
       "name": "Valider le rapport",
-      "instructions": "Vérifie le rapport d'avancement avant qu'il parte au maître d'ouvrage : les dates et les retards sont-ils justes, les causes sont-elles décrites de façon factuelle et sans chercher de coupable, et voit-on clairement quelles décisions le maître d'ouvrage doit prendre ? Les affirmations sur les pénalités et la prolongation de délai doivent avoir été vérifiées par un expert. En cas de refus, écris ce qui manque ; l'exécution se termine alors sans fichiers de rapport."
+      "instructions": "Vérifie le rapport d'avancement avant qu'il n'arrive au maître d'ouvrage : les dates et les retards sont-ils exacts, les causes et les responsabilités sont-elles décrites de façon factuelle et sans fautes, les notifications et demandes de prolongation correspondent-elles à ce que la direction de chantier a visé, et est-il clair quelles décisions le maître d'ouvrage doit prendre ? Les affirmations sur les pénalités contractuelles et les prolongations de délai doivent avoir été vérifiées par un expert. Si tu refuses, écris ce qui manque ; l'exécution se termine alors sans fichiers de rapport."
+    },
+    "control": {
+      "name": "Coordination de chantier",
+      "description": "Compose les équipes spécialisées dont le retard a besoin et distribue leurs missions.",
+      "instructions": "Compose d'abord une équipe d'au plus trois parmi les équipes spécialisées. Choisis selon les causes supposées : les causes techniques, la météo, le sol ou les modifications de projet demandent l'équipe chantier ; le matériel en retard, les fournisseurs ou l'effectif des sous-traitants demandent l'équipe approvisionnement ; dès qu'un retard peut sortir de la sphère de l'entreprise ou qu'une notification d'empêchement manque, l'équipe réclamations ; chaque fois que la date d'achèvement est menacée, l'équipe rattrapage. Confie en parallèle les missions indépendantes. Les équipes ne voient pas les fichiers : reprends dans chaque mission les dates et remarques pertinentes de l'analyse planning. Ne sollicite l'équipe rattrapage qu'après le retour des équipes chargées des causes, et transmets-lui les jours de retard qu'elles ont attribués. Si deux équipes attribuent les mêmes jours différemment, confie à l'une d'elles une mission de clarification. Termine par le résultat structuré de chaque équipe sous le nom de l'équipe et indique quelles équipes tu n'as pas utilisées et pourquoi.",
+      "task": "Clarifie avec les équipes spécialisées dont ce retard a besoin les causes, la responsabilité, les réclamations et les contre-mesures.\n\nAnalyse planning :\n{{node:schedule}}"
     }
   },
   "form": {

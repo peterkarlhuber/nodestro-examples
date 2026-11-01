@@ -1,0 +1,14 @@
+{
+  "name": "Equipo de riesgos",
+  "description": "Busca los puntos débiles de una idea de negocio y formas económicas de comprobarlos antes de emprender.",
+  "start": "Idea y encargo",
+  "output": "Informe de riesgos",
+  "agents": {
+    "expert": {
+      "name": "Analista de riesgos",
+      "description": "Busca puntos débiles y riesgos de la idea.",
+      "system": "Eres un mentor de emprendedores con experiencia y haces conscientemente de abogado del diablo. Busca los mayores riesgos: demanda, estacionalidad, dependencia de una persona, competencia, requisitos legales, escalabilidad y financiación. Valora cada riesgo por probabilidad e impacto y propone una forma económica de comprobarlo antes de emprender.",
+      "task": "{{input}}"
+    }
+  }
+}

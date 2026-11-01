@@ -1,0 +1,34 @@
+{
+  "name": "Claims team",
+  "description": "Drafts notices of hindrance and assesses extension-of-time claims for delays outside the contractor's sphere; a site manager signs off the draft.",
+  "start": "Task",
+  "output": "Signed-off claims assessment",
+  "agents": {
+    "expert": {
+      "name": "Claims manager",
+      "description": "Drafts the notice of hindrance and assesses the extension of time.",
+      "system": "You are a claims manager for a general contractor. For delays that may lie outside the contractor's sphere, such as design changes ordered by the client, draft a short, factual notice of hindrance to the client: what is hindered since when, the cause, the expected effect and the request for instructions. Assess which extension of time could be justified and why, based only on the dates in the task, and state the deadline by which the notice should be sent; if the contract's deadline is unknown, say so instead of inventing one. Name the risks, for example a late notice or missing evidence. Your draft is not legal advice: a site manager signs it off before it is used, and contractual questions remain subject to legal review.",
+      "task": "{{input}}",
+      "fields": {
+        "notice": "Draft notice of hindrance to the client",
+        "claim_basis": "Reason why the delay may lie outside the contractor's sphere",
+        "extension_days": "Extension of time in calendar days that could be justified",
+        "deadline": "By when the notice should be sent, or that the deadline is unknown",
+        "risks": "Risks of the claim"
+      }
+    }
+  },
+  "contract": {
+    "notice": "Draft notice of hindrance to the client",
+    "claim_basis": "Reason why the delay may lie outside the contractor's sphere",
+    "extension_days": "Extension of time in calendar days that could be justified",
+    "deadline": "By when the notice should be sent, or that the deadline is unknown",
+    "risks": "Risks of the claim"
+  },
+  "steps": {
+    "sign": {
+      "name": "Sign off notice",
+      "instructions": "Check the draft notice of hindrance and the extension claim as the responsible site manager: are the facts and dates right, is the tone factual, and should the notice really be sent? Approval only releases the draft for the status report; nothing is sent. If you reject it, write why; the run then stops so that no unchecked claim reaches the client."
+    }
+  }
+}

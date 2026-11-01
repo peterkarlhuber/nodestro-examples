@@ -1,39 +1,29 @@
 {
   "name": "Article de blog",
   "field": "Marketing et contenu",
-  "description": "Cerner le public, établir le plan, rédiger l'article et le relire.",
+  "description": "Établir un brief avec public, angle et plan, rédiger l'article et le relire.",
   "start": "Sujet",
   "output": "Article",
   "file_name": "Article de blog",
   "input": "Pourquoi les éditeurs visuels de workflows rendent les agents IA plus accessibles",
   "guide": {
-    "problem": "Les bons articles naissent d'un public clair et d'un plan réfléchi. Le workflow répartit le travail comme une rédaction et vérifie le résultat avant publication.",
-    "flow": "Le public et le plan sont élaborés en parallèle avec un modèle rapide. Le rédacteur en tire l'article ; une vérification qualité intégrée contrôle qu'il suit le plan et répond aux questions des lecteurs. La relecture vérifie longueur et lisibilité avec l'outil de statistiques de texte et signale les affirmations non vérifiées.",
+    "problem": "Les bons articles naissent d'un brief clair : qui les lit, sous quel angle et avec quels messages clés. Le workflow travaille comme une petite rédaction et vérifie le résultat avant publication.",
+    "flow": "Un modèle rapide établit un brief structuré avec public, angle, plan et messages clés. Le rédacteur en tire l'article ; une vérification qualité intégrée contrôle qu'il suit le plan et répond aux questions des lecteurs, et le renvoie sinon une fois en révision. Une relecture rapide vérifie longueur et lisibilité avec l'outil de statistiques de texte et signale les affirmations non vérifiées.",
     "input": "Un sujet en une phrase. Vous pouvez ajouter le public, le ton ou la longueur souhaitée directement dans l'entrée.",
     "result": "Un article terminé en Markdown avec intertitres, une méta-description et de courtes notes de relecture avec le nombre de mots et les affirmations à étayer avant publication. L'exécution enregistre aussi le résultat en fichier Markdown et HTML que vous pouvez reprendre dans votre CMS.",
-    "adapt": "Change le sujet dans l'entrée. Vous pouvez charger votre guide de style comme connaissance et l'attribuer au rédacteur et à la relecture. La longueur souhaitée se règle dans le prompt système du rédacteur."
+    "adapt": "Changez le sujet dans l'entrée. Vous pouvez charger votre guide de style comme connaissance et l'attribuer au rédacteur et à la relecture. La longueur souhaitée se règle dans le prompt système du rédacteur, le nombre de parties ou de messages clés dans le prompt système du brief.",
+    "control": "Automatique : brief, article et relecture s'enchaînent ; aucune étape n'attend une personne. Une vérification qualité distincte évalue l'article selon deux critères (suit le plan, répond aux questions des lecteurs) et, si l'un n'est pas rempli, le fait réviser une fois par le rédacteur. La relecture ne modifie pas le contenu ; elle signale les affirmations qui demandent une source. L'article est un projet : c'est vous qui décidez s'il est publié et où.",
+    "why": "Un seul brief structuré remplace deux planificateurs parallèles dont le rédacteur devait concilier les résultats : le plan était auparavant établi sans connaître le public. Désormais, public, angle, plan et messages clés partent d'une même idée et parviennent au rédacteur sous forme de champs bien séparés. Le rédacteur dispose d'une vérification qualité avec révision automatique, car c'est là que naissent la plupart des faiblesses. En tant qu'exemple pour débutants, le workflow reste volontairement une courte chaîne sans embranchements, boucles ni validations, pour que chaque étape puisse être suivie dans l'exécution."
   },
   "agents": {
-    "audience": {
-      "name": "Public",
-      "description": "Décrit les lecteurs, leurs questions et ce qu'ils savent déjà.",
-      "system": "Tu décris le public d'un article : qui sont les lecteurs, ce qu'ils savent déjà et quelles trois questions ils se posent. Sois concis.",
-      "task": "{{input}}"
-    },
-    "outline": {
-      "name": "Plan",
-      "description": "Propose le titre et le plan.",
-      "system": "Tu proposes un titre accrocheur et un plan en cinq parties pour un article. Indique en une phrase ce que chaque partie doit apporter.",
-      "task": "{{input}}"
-    },
     "writer": {
       "name": "Rédacteur",
-      "description": "Rédige l'article à partir du plan et du public.",
+      "description": "Rédige l'article à partir du brief.",
       "system": "Tu es une journaliste tech expérimentée. Rédige un article clair et vivant d'environ 700 mots avec des intertitres Markdown. Explique les termes techniques à leur première apparition et utilise des exemples concrets. N'invente ni études, ni chiffres, ni citations.",
-      "task": "Rédige l'article sur le sujet « {{run.input}} ».\n\nPublic :\n{{node:audience}}\n\nPlan :\n{{node:outline}}",
+      "task": "Rédige l'article sur le sujet « {{run.input}} ».\n\nBrief (public, angle, plan, messages clés) :\n{{node:brief}}",
       "criteria": {
-        "follows_outline": "L'article suit le plan.",
-        "audience": "L'article répond aux questions du public."
+        "follows_outline": "L'article suit le plan du brief.",
+        "audience": "L'article répond aux questions du public indiquées dans le brief."
       }
     },
     "editor": {
@@ -41,6 +31,18 @@
       "description": "Vérifie longueur et lisibilité et livre la version finale.",
       "system": "Tu es correcteur. Détermine le nombre de mots et de phrases de l'article avec l'outil de statistiques de texte. Améliore la clarté, l'orthographe et la fluidité sans modifier le contenu ni la structure. Donne d'abord la version finale révisée en Markdown, puis une méta-description de 155 caractères au plus et enfin des notes de relecture : nombre de mots, principales modifications et affirmations à étayer avant publication.",
       "task": "Relis cet article :\n\n{{input}}"
+    },
+    "brief": {
+      "name": "Brief",
+      "description": "Définit public, angle, plan et messages clés dans un brief structuré.",
+      "system": "Tu es secrétaire de rédaction et tu prépares le brief d'un article. Détermine le public (qui sont les lecteurs, ce qu'ils savent déjà et quelles trois questions ils se posent), l'angle qui rend l'article intéressant, avec un titre de travail, un plan en cinq parties avec une phrase par partie sur ce qu'elle doit apporter, et trois à cinq messages clés que les lecteurs doivent retenir. Sois concis et n'invente ni faits, ni chiffres, ni sources.",
+      "task": "Prépare le brief d'un article sur ce sujet :\n\n{{input}}",
+      "fields": {
+        "audience": "Public : qui sont les lecteurs, ce qu'ils savent déjà et quelles questions ils se posent",
+        "angle": "Angle et titre de travail de l'article",
+        "outline": "Parties dans l'ordre, chacune avec une phrase sur ce qu'elle doit apporter",
+        "key_messages": "Messages clés que les lecteurs doivent retenir"
+      }
     }
   },
   "tests": {

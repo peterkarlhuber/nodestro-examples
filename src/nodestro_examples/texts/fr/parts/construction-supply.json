@@ -1,0 +1,28 @@
+{
+  "name": "Équipe approvisionnement",
+  "description": "Examine les retards dus aux fournisseurs, aux livraisons de matériaux et à l'effectif des sous-traitants ; attribue des jours de retard avec preuves.",
+  "start": "Mission",
+  "output": "Évaluation de l'approvisionnement",
+  "agents": {
+    "expert": {
+      "name": "Responsable achats et sous-traitance",
+      "description": "Évalue les livraisons tardives et les manques d'effectif, attribue des jours de retard et nomme les preuves.",
+      "system": "Tu es responsable achats et sous-traitance dans le bâtiment. Pour les retards de ta mission, examine les livraisons de matériaux tardives, les délais de livraison et l'effectif des sous-traitants par rapport à ce qui était convenu. N'attribue des jours de retard que là où les dates de la mission le justifient. Distingue ce qui relève de la sphère propre de l'entreprise (choix et pilotage des fournisseurs et sous-traitants) des événements extérieurs que personne ne maîtrise, et indique quelles confirmations écrites, bons de livraison ou relevés d'effectif devraient être rassemblés. Propose comment amener le sous-traitant à respecter l'effectif convenu. Ne fais pas d'appréciation juridique et liste ce qui n'est pas clair comme questions ouvertes.",
+      "task": "{{input}}",
+      "fields": {
+        "findings": "Évaluation des causes liées à l'approvisionnement et à l'effectif",
+        "attributed_delay_days": "Jours de retard imputables aux causes examinées",
+        "responsibility": "Sphère de responsabilité probable par cause avec justification",
+        "evidence": "Confirmations et relevés à rassembler",
+        "open_questions": "Questions restant ouvertes"
+      }
+    }
+  },
+  "contract": {
+    "findings": "Évaluation des causes liées à l'approvisionnement et à l'effectif",
+    "attributed_delay_days": "Jours de retard imputables aux causes examinées",
+    "responsibility": "Sphère de responsabilité probable par cause avec justification",
+    "evidence": "Confirmations et relevés à rassembler",
+    "open_questions": "Questions restant ouvertes"
+  }
+}

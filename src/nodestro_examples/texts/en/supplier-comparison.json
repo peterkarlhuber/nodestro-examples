@@ -7,11 +7,13 @@
   "file_name": "Supplier comparison",
   "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nDemand: stainless steel turned part DT-40, 24,000 pieces per year, call-off of 2,000 pieces per month\nTarget price: EUR 2.10 per piece delivered to the plant\n\nOffer A – Example Precision GmbH (Germany, 80 km away)\n- Price EUR 2.35/piece, delivered to the plant, lead time 2 weeks\n- Minimum order 1,000 pieces, payment terms 30 days\n- Complaint rate last year 0.4 %, certified to IATF 16949\n\nOffer B – Example Components Ltd. (Far East, sea freight)\n- Price EUR 1.62/piece ex works, freight and duty estimated at EUR 0.28/piece, lead time 10 weeks\n- Minimum order 12,000 pieces, payment 30 % in advance, balance on shipment\n- No delivery history yet, ISO 9001, samples passed\n\nOffer C – Sample Metal Parts s.r.o. (Czech Republic, 450 km away)\n- Price EUR 1.98/piece, freight EUR 0.07/piece, lead time 4 weeks\n- Minimum order 4,000 pieces, payment terms 45 days\n- Complaint rate last year 1.1 %, ISO 9001, capacity 90 % utilised according to the supplier\n\nInternal assumptions: cost of capital 8 % per year, storage cost EUR 0.03 per piece and month,\ncost per complaint case (inspection, sorting) EUR 0.90 per defective part.",
   "guide": {
-    "problem": "The lowest unit price is rarely the cheapest offer. The workflow compares offers by total cost and supply risk and justifies a recommendation for purchasing.",
-    "flow": "The cost analyst and the risk analyst work in parallel. One calculates the total cost of ownership per offer with the calculator tool, the other assesses lead time, dependencies and quality. The purchasing recommendation weighs both and delivers a structured result.",
-    "input": "Several offers with price, freight, lead time, minimum quantity, payment terms and quality data, plus your internal cost rates. You can write the offers into the text or attach them as files, even mixed as PDF, Word and Excel; the three sample files show exactly that.",
-    "result": "A structured recommendation with ranking, reasons, risks, negotiation points and the assumptions made. The run also saves it as a PDF report and as an Excel file with one sheet per list.",
-    "adapt": "Attach your offers as files and enter demand and cost rates in the text. If you have fixed weightings (for example 50 % cost, 30 % risk, 20 % quality), add them to the system prompt of the purchasing recommendation. Framework agreements or supplier ratings can be stored as knowledge and assigned to the risk analyst."
+    "problem": "The lowest unit price is rarely the cheapest offer, and a supplier's promises are not its track record. The workflow compares offers by total cost and supply risk, checks the suppliers' history where it is available, and justifies a recommendation for purchasing.",
+    "flow": "The cost analyst and the risk analyst work in parallel. One calculates the total cost of ownership per offer with the calculator tool, the other assesses lead time, dependencies, capacity and quality. If your copy is connected to the ERP system, the risk analyst reads each supplier's scorecard read-only with list_suppliers and supplier_scorecard; without a connection it uses an attached ERP export or only the offers and says which history is missing. The purchasing recommendation weighs both and delivers a structured result.",
+    "input": "Several offers with price, freight, lead time, minimum quantity, payment terms and quality data, plus your internal cost rates. You can write the offers into the text or attach them as files, even mixed as PDF, Word and Excel; the three sample files show exactly that. Optionally attach an ERP export of the supplier scorecards (Excel or CSV); the sample export deliberately does not contain the supplier of offer B, which is new and has no history yet.",
+    "result": "A structured recommendation with ranking, reasons, risks, negotiation points and the assumptions made. The risk assessment states for each supplier where its history comes from: the ERP system, the attached export or only the offer. The run also saves the recommendation as a PDF report and as an Excel file with one sheet per list.",
+    "adapt": "Attach your offers as files and enter demand and cost rates in the text. To use real supplier history, have the ERP integration set up and choose the server when you copy the example; otherwise attach a scorecard export. If you have fixed weightings (for example 50 % cost, 30 % risk, 20 % quality), add them to the system prompt of the purchasing recommendation. Framework agreements can be stored as knowledge and assigned to the risk analyst.",
+    "control": "Automatic: both analyses and the weighing run without stopping; the calculator does the arithmetic, and the run records every step and tool call. The ERP connection is optional and only reads: the copy gets the tools list_suppliers and supplier_scorecard only if you connect it to an MCP server whose tools an administrator approved as read-only; otherwise it runs in a clearly labelled offline mode and never pretends to have ERP data. Runs without a person present (schedules, test series, batch processing) may not use MCP tools unless an administrator explicitly allows unattended MCP, so use a connected copy interactively. No step waits for an approval: the recommendation is a draft, and the sourcing decision stays with you.",
+    "why": "Cost and risk are independent questions, so two specialists work in parallel and a third weighs their results; that is faster and easier to check than one agent doing everything. Supplier history comes through an integration because it lives in the ERP system and changes constantly; a knowledge file would go stale, and the offline mode with an export keeps the example usable without a connection. There is no loop and no approval step, because the result is a recommendation, not an action."
   },
   "agents": {
     "cost": {
@@ -23,8 +25,10 @@
     "risk": {
       "name": "Risk analyst",
       "description": "Assesses lead time, dependencies, capacity and quality risks.",
-      "system": "You are a supply chain risk manager. Assess the supply risks of each offer: lead time and flexibility, transport route, capacity utilisation, quality history and certification, financial commitment and dependency. Rate each risk by likelihood and impact (high, medium, low) and propose safeguards, for example safety stock or a second source.",
-      "task": "Assess the supply risks of these offers:\n\n{{run.input}}"
+      "system": "You are a supply chain risk manager. Assess the supply risks of each offer: lead time and flexibility, transport route, capacity utilisation, quality history and certification, financial commitment and dependency. Keep the suppliers' own claims apart from your company's recorded history and say which one each statement is based on. Rate each risk by likelihood and impact (high, medium, low) and propose safeguards, for example safety stock or a second source.",
+      "task": "Assess the supply risks of these offers, including each supplier's delivery and quality history:\n\n{{run.input}}",
+      "online": "You are connected to the company's ERP system (read-only). For each offer, find the supplier with list_suppliers and read its scorecard with supplier_scorecard: on-time delivery, quality in ppm, complaints, open 8D reports, last audit and notes. ERP data take precedence over the claims in the offers; point out where they differ. If a supplier is not in the ERP system, say clearly that there is no delivery history with it and treat this as a risk of its own. Do not invent values the tools did not return.",
+      "offline": "No ERP system is connected (offline mode). Use only an attached ERP export of the supplier scorecards, if there is one, and otherwise only the offers. For each supplier, say which history is missing (for example on-time delivery, complaints, open 8D reports, audits) and that it should be checked in the ERP system. Never invent history; if a supplier is not in the export, there is no recorded history for it."
     },
     "recommendation": {
       "name": "Purchasing recommendation",
@@ -45,6 +49,10 @@
     "offers": {
       "label": "Offer files",
       "description": "Optional: the offers as PDF, Word, Excel or CSV, up to 10 files. Without files, the offers in the text apply; with files, the text only needs demand, target price and internal assumptions."
+    },
+    "history": {
+      "label": "ERP export (supplier history)",
+      "description": "Optional: one export of the supplier scorecards from your ERP system as Excel or CSV, with on-time delivery, quality, complaints and audits. Not needed if your copy is connected to the ERP system."
     }
   },
   "samples": {
@@ -115,6 +123,54 @@
           ]
         ]
       }
+    },
+    "history": {
+      "name": "ERP_supplier_scorecards",
+      "description": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only. Supplier scorecards of the last 12 months as an Excel export from the ERP system; the supplier of offer B is not in it because it has never delivered.",
+      "content": {
+        "Scorecards": [
+          [
+            "Supplier ID",
+            "Supplier",
+            "On-time delivery (%)",
+            "Quality (ppm)",
+            "Complaints (12 months)",
+            "Open 8D reports",
+            "Last audit",
+            "Notes"
+          ],
+          [
+            "S-1001",
+            "Example Precision GmbH",
+            98.4,
+            120,
+            1,
+            0,
+            "2026-04-14: passed (A)",
+            "Reliable; short-notice call-off changes were delivered on time."
+          ],
+          [
+            "S-1027",
+            "Sample Metal Parts s.r.o.",
+            84.0,
+            1450,
+            7,
+            1,
+            "2026-02-03: conditionally passed (B), action plan for surface finish agreed",
+            "Supplier reports a capacity bottleneck in turning since Q3 2026; 3 late deliveries in the last 6 months. Open 8D report 8D-2026-031: burrs in the bore."
+          ],
+          [
+            "S-1033",
+            "Demo Surface Coatings Ltd.",
+            95.1,
+            380,
+            2,
+            0,
+            "2025-11-20: passed (A)",
+            "Coating services only, does not supply turned parts."
+          ]
+        ]
+      }
     }
   },
   "tests": {
@@ -124,6 +180,19 @@
     "offers_files": {
       "name": "Three offers as PDF, Word and Excel",
       "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nDemand: stainless steel turned part DT-40, 24,000 pieces per year, call-off of 2,000 pieces per month\nTarget price: EUR 2.10 per piece delivered to the plant\n\nThe three offers are attached as files.\n\nInternal assumptions: cost of capital 8 % per year, storage cost EUR 0.03 per piece and month,\ncost per complaint case (inspection, sorting) EUR 0.90 per defective part."
+    },
+    "with_history": {
+      "name": "Three offers as files plus ERP export",
+      "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nDemand: stainless steel turned part DT-40, 24,000 pieces per year, call-off of 2,000 pieces per month\nTarget price: EUR 2.10 per piece delivered to the plant\n\nThe three offers are attached as files, together with the ERP export of our supplier scorecards.\n\nInternal assumptions: cost of capital 8 % per year, storage cost EUR 0.03 per piece and month,\ncost per complaint case (inspection, sorting) EUR 0.90 per defective part."
+    }
+  },
+  "integrations": {
+    "erp": {
+      "name": "ERP system (supplier scorecards)",
+      "description": "Read-only access through MCP to your ERP system's supplier data: list_suppliers lists the suppliers, supplier_scorecard returns a supplier's scorecard of the last 12 months (on-time delivery, quality in ppm, complaints, open 8D reports, last audit). The risk analyst uses it to check the offers against the recorded history.",
+      "setup": "An administrator adds your company's ERP MCP server under Tools → Connected services and approves the two tools list_suppliers and supplier_scorecard as read-only. When you copy the example, pick that server as the connection; without one, the copy runs in offline mode. To try it without an ERP system, run `python -m nodestro_examples.demo_mcp --language en` on the computer with the Nodestro desktop app, add http://127.0.0.1:8765/mcp under Tools → Connected services with the consent for a local development server, approve its tools as read-only and pick it when copying. The demo server only reads and serves the synthetic data of the sample export, never real company data. Runs without a person present (schedules, test series, batch processing) may not use MCP tools unless an administrator explicitly allows unattended MCP.",
+      "online": "Connected to the ERP system: the risk analyst reads supplier scorecards read-only (list_suppliers, supplier_scorecard); ERP data take precedence over the claims in the offers.",
+      "offline": "Offline mode: no ERP system is connected. The risk analyst uses only an attached ERP export or the offers and names the missing supplier history; it does not look anything up."
     }
   }
 }

@@ -8,17 +8,19 @@
   "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nOrganisation : Amis de la lecture Villexemple (association fictive), 60 bénévoles, une salariée à temps partiel\nProjet : « Parrains de lecture à l'école primaire » – des bénévoles lisent chaque semaine pendant une année scolaire\navec des enfants qui ont besoin de soutien en lecture.\nJusqu'ici : 2025/26 dans 4 écoles avec 48 enfants. Retour des enseignants : 31 des 48 enfants lisent plus\ncouramment (une appréciation, pas une mesure standardisée).\nObjectif : extension à 8 écoles et 100 enfants pour l'année scolaire 2026/27\nBesoin de financement : 25 000 EUR (coordination 15 000 EUR, livres et matériel 6 000 EUR, formations 4 000 EUR)\nPériode de campagne : 2026-09-01 au 2026-11-30\nCanaux existants : newsletter (1 200 destinataires), Instagram (900 abonnés), bons contacts avec le journal local",
   "guide": {
     "problem": "Les campagnes de dons ont besoin d'une histoire touchante, mais aussi d'affirmations honnêtes sur l'impact. Le workflow développe une campagne, évalue l'impact possible et vérifie si les promesses sont crédibles et éthiquement acceptables.",
-    "flow": "Le développeur de campagne et l'analyste d'impact travaillent en parallèle : l'un conçoit le message, les cibles et les actions, l'autre construit un modèle d'impact avec indicateurs et calcule le coût par enfant avec la calculatrice. Le contrôleur de crédibilité vérifie les deux ; le résultat contient les trois parties.",
+    "flow": "Le développeur de campagne et l'analyste d'impact travaillent en parallèle : l'un conçoit le message, les cibles et les actions, l'autre construit un modèle d'impact avec indicateurs et calcule le coût par enfant avec la calculatrice. Le contrôleur de crédibilité vérifie les deux. S'il juge la campagne non crédible, une condition la renvoie au développeur de campagne avec les remarques du contrôle ; la campagne révisée est contrôlée à nouveau, au plus deux fois. Le résultat contient les trois parties.",
     "input": "Organisation, projet, résultats obtenus, objectif, besoin de financement, période de campagne et canaux existants.",
     "result": "Un concept de campagne avec calendrier et projets de textes, un modèle d'impact avec indicateurs et un examen structuré des affirmations exagérées, des remarques éthiques et un plan de mesure de l'impact, aussi en fichier Word. L'analyste d'impact propose son modèle d'impact pour la connaissance, par exemple pour de futures demandes de financement ; seul ce que vous confirmez est enregistré.",
-    "adapt": "Décrivez votre projet et vos résultats aussi honnêtement que possible. Chargez des rapports annuels ou des évaluations comme connaissance et attribuez-les à l'analyste d'impact."
+    "adapt": "Décrivez votre projet et vos résultats aussi honnêtement que possible. Chargez des rapports annuels ou des évaluations comme connaissance et attribuez-les à l'analyste d'impact.",
+    "control": "Automatique : l'avis oui/non du contrôleur de crédibilité sur la crédibilité décide si la campagne repart en révision ; l'exécution montre quelle branche a été prise. Le développeur de campagne révise au plus deux fois, chaque fois avec les remarques du contrôle et son projet précédent. Si la campagne n'est toujours pas jugée crédible ensuite, l'exécution continue malgré tout jusqu'au résultat, et les remarques du contrôle montrent ce qui reste ouvert. Aucune étape n'attend une personne : les textes et les chiffres sont des projets que votre organisation vérifie avant publication, en particulier les affirmations sur l'impact et les photos d'enfants. Les modèles d'impact proposés ne sont enregistrés comme connaissance que si vous les confirmez.",
+    "why": "Les problèmes de crédibilité sont mieux corrigés par l'auteur du texte ; c'est pourquoi le contrôle renvoie au développeur de campagne au lieu de seulement lister les problèmes. La boucle est limitée à deux tours : une campagne qui exagère encore après cela a besoin de meilleures preuves de l'organisation, pas de nouvelles reformulations. Le modèle d'impact reste hors de la boucle, car il repose sur les données du projet et non sur les textes de la campagne. Aucune validation n'est prévue, car la campagne reste un projet et est de toute façon publiée en dehors du workflow."
   },
   "agents": {
     "campaign": {
       "name": "Développeur de campagne",
       "description": "Conçoit le message, les cibles, les canaux et le calendrier de la campagne.",
-      "system": "Tu es expert en collecte de fonds pour les organisations à but non lucratif. Développe une campagne de dons : message central, cibles, appels au don comme « Avec 50 euros … », canaux, un calendrier sur la période de campagne et trois projets de textes (newsletter, réseaux sociaux, communiqué de presse). Raconte l'histoire avec respect et sans images misérabilistes, et n'utilise que les résultats indiqués dans la description.",
-      "task": "Développe la campagne pour ce projet :\n\n{{input}}"
+      "system": "Tu es expert en collecte de fonds pour les organisations à but non lucratif. Développe une campagne de dons : message central, cibles, appels au don comme « Avec 50 euros … », canaux, un calendrier sur la période de campagne et trois projets de textes (newsletter, réseaux sociaux, communiqué de presse). Raconte l'histoire avec respect et sans images misérabilistes, et n'utilise que les résultats indiqués dans la description. Si la tâche contient un retour du contrôle de crédibilité, révise ton projet précédent point par point : reformule les affirmations exagérées comme proposé, tiens compte des remarques éthiques et garde ce qui n'a pas été critiqué.",
+      "task": "Développe la campagne pour ce projet :\n\n{{run.input}}\n\nRetour du contrôle de crédibilité (uniquement pour une révision, sinon « - ») :\n{{feedback}}\n\nTon projet précédent :\n{{previous}}"
     },
     "impact": {
       "name": "Analyste d'impact",
@@ -29,7 +31,7 @@
     "integrity": {
       "name": "Contrôleur de crédibilité",
       "description": "Vérifie les affirmations sous l'angle de l'exagération, de l'éthique et des preuves.",
-      "system": "Tu vérifies la crédibilité et l'éthique de supports de collecte de fonds. Compare les affirmations de la campagne avec le modèle d'impact : qu'est-ce qui est prouvé, qu'est-ce qui est exagéré, qu'est-ce qui devrait être formulé plus prudemment ? Sois attentif à la dignité des personnes représentées, à la protection des données pour les photos d'enfants et à la transparence sur l'utilisation des fonds. Propose un plan simple de mesure de l'impact.",
+      "system": "Tu contrôles des supports de collecte de fonds sous l'angle de la crédibilité et de l'éthique. Compare les affirmations de la campagne avec le modèle d'impact : qu'est-ce qui est prouvé, qu'est-ce qui est exagéré, qu'est-ce qui devrait être formulé avec plus de prudence ? Veille à la dignité des personnes montrées, à la protection des données pour les photos d'enfants et à la transparence sur l'utilisation des fonds. Propose un plan simple de mesure de l'impact. Ne juge la campagne non crédible que si elle n'est pas utilisable sans modifications, par exemple à cause de promesses d'impact non étayées, de chiffres absents de la description ou de représentations qui portent atteinte à la dignité ; elle repart alors au développeur de campagne avec tes remarques.",
       "task": "Vérifie la campagne et le modèle d'impact.\n\nCampagne :\n{{node:campaign}}\n\nModèle d'impact :\n{{node:impact}}",
       "fields": {
         "credible": "La campagne est-elle crédible sous sa forme actuelle ?",
@@ -43,6 +45,15 @@
   "tests": {
     "reading_mentors": {
       "name": "Parrains de lecture à l'école primaire"
+    }
+  },
+  "steps": {
+    "check": {
+      "name": "Crédible ?",
+      "branches": {
+        "credible": "Vers le résultat"
+      },
+      "default": "Réviser la campagne"
     }
   }
 }

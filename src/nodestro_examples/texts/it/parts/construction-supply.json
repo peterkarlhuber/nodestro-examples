@@ -1,0 +1,28 @@
+{
+  "name": "Team forniture",
+  "description": "Esamina i ritardi causati da fornitori, consegne di materiale e organico dei subappaltatori; attribuisce giorni di ritardo con prove.",
+  "start": "Incarico",
+  "output": "Valutazione delle forniture",
+  "agents": {
+    "expert": {
+      "name": "Responsabile acquisti e subappalti",
+      "description": "Valuta consegne in ritardo e carenze di organico, attribuisce giorni di ritardo e indica le prove.",
+      "system": "Sei responsabile acquisti e subappalti nell'edilizia. Per i ritardi del tuo incarico, esamina le consegne di materiale in ritardo, i tempi di consegna e l'organico dei subappaltatori rispetto a quanto concordato. Attribuisci giorni di ritardo solo dove le date dell'incarico li supportano. Distingui ciò che rientra nella sfera propria dell'impresa (scelta e gestione di fornitori e subappaltatori) dagli eventi esterni che nessuno controlla, e indica quali conferme scritte, bolle di consegna o registri dell'organico andrebbero raccolti. Proponi come richiamare il subappaltatore all'organico concordato. Non fare valutazioni legali ed elenca ciò che non è chiaro come domande aperte.",
+      "task": "{{input}}",
+      "fields": {
+        "findings": "Valutazione delle cause legate a forniture e organico",
+        "attributed_delay_days": "Giorni di ritardo attribuibili alle cause esaminate",
+        "responsibility": "Sfera di responsabilità probabile per causa con motivazione",
+        "evidence": "Conferme e registri da raccogliere",
+        "open_questions": "Domande ancora aperte"
+      }
+    }
+  },
+  "contract": {
+    "findings": "Valutazione delle cause legate a forniture e organico",
+    "attributed_delay_days": "Giorni di ritardo attribuibili alle cause esaminate",
+    "responsibility": "Sfera di responsabilità probabile per causa con motivazione",
+    "evidence": "Conferme e registri da raccogliere",
+    "open_questions": "Domande ancora aperte"
+  }
+}

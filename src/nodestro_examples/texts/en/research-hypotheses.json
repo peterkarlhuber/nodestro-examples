@@ -1,42 +1,32 @@
 {
   "name": "Turn a research question into hypotheses",
   "field": "Research and development",
-  "description": "Analyse a research question, develop testable hypotheses, review them critically and derive an experimental plan.",
+  "description": "Analyse a research question and let a coordinator involve exactly the method teams it needs, from hypotheses to statistics, qualitative methods and ethics, then derive a study plan.",
   "start": "Research question",
   "output": "Experimental plan",
   "file_name": "Experiment plan",
   "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nResearch question: Can the curing temperature of our powder coating PL-7 be reduced from 180 °C to 165 °C\nwithout harming adhesion on galvanised steel? The aim is to save around 10 % energy in the oven.\n\nPilot test (5 panels each, cross-cut rating according to ISO 2409, 0 = best adhesion, 5 = worst):\n- 180 °C, 15 min: 0, 0, 1, 0, 1\n- 165 °C, 15 min: 1, 0, 2, 1, 1\n- 165 °C, 20 min: 0, 1, 0, 1, 0\n\nConstraints: 40 test panels available per week, oven free for trials two days a week,\npre-treatment of the panels has so far been done on two different days.",
   "guide": {
-    "problem": "Good research starts with a precise, testable question. The workflow breaks down a research question, formulates hypotheses, has them criticised methodologically and derives a realistic experimental plan.",
-    "flow": "A sequential chain with a look back: the analyst clarifies variables and assumptions, the hypothesis agent formulates testable hypotheses with null hypotheses, the methods critic checks them against the pilot data with the calculator tool and names confounders. The experiment planner uses hypotheses and critique together.",
+    "problem": "Good research starts with a precise, testable question and the right methods. A material test needs a power analysis, an interview study needs a sampling plan and a consent form, and many questions need both. The workflow analyses the question and lets a research coordinator bring in exactly the method teams the question needs.",
+    "flow": "The question analyst structures the question and summarises attached data, because the teams work without the files. The research coordinator, an orchestrator, always starts with the hypothesis team and then decides: measurable outcomes go to the statistics team, whose study design and significance level it sets as parameters; experiences and reasons go to the qualitative methods team; people or personal data bring in the ethics and data protection team. If a team finds a hypothesis untestable, the coordinator sends it back to the hypothesis team once. The study planner turns everything into a plan.",
     "input": "A research question with its aim, existing data from pilot tests and constraints such as material, time and equipment. You can attach measurement data and documents as files; the sample file contains the pilot test ratings per panel.",
-    "result": "An experiment plan with hypotheses, factors and levels, sample size, measurement method, analysis and stopping criteria, plus the open risks, also as a Word file. The experiment planner proposes the plan for knowledge; you decide whether it is stored.",
-    "adapt": "Replace the question and pilot test with your own and attach measurement data directly. Literature you need again and again can be uploaded as knowledge in “Search” mode and assigned to the question analyst so that it works with quotations. Add your statistical guidelines to the methods critic."
+    "result": "A study plan with hypotheses, design, sample size, measurement or interview method, analysis, stopping criteria and the open risks, also as a Word file. The orchestration view of the run shows which method teams were involved, with which parameters, and which were left out and why. The study planner proposes the plan for knowledge; you decide whether it is stored.",
+    "adapt": "Replace question and pilot test with your own and attach measurement data directly. Add your statistical guidelines to the statistics team's agent. If your field needs another method team, for example a laboratory team, save it as a workflow with a clear description and add it to the coordinator's teams.",
+    "control": "Automatic: the coordinator decides which method teams work and fills the statistics team's form (design, significance level, power); every decision is recorded with its reason. Limits: at most 7 decisions, each team at most twice, a budget of USD 4 per run. No step waits for a person; the plan is a draft for the responsible researcher.",
+    "why": "A fixed chain would always run a statistics critique, even for an interview study where it has nothing to compute, and would never involve ethics unless someone remembered to add it. The coordinator chooses per question and passes the statistics team structured parameters instead of free text, so the power analysis works with a defined design. Analysis and final plan stay fixed steps: every study needs them."
   },
   "agents": {
     "framing": {
       "name": "Question analyst",
       "description": "Clarifies aim, variables, constraints and knowledge gaps.",
-      "system": "You are a research associate who structures research questions. Break the question down into aim, independent and dependent variables, possible confounders and constraints. Summarise what the existing data shows and what it does not, and separate established knowledge from conjecture.",
+      "system": "You are a research associate who structures research questions. Break the question down into aim, independent and dependent variables, possible confounders and constraints. Summarise what the existing data shows and what it does not, and separate established knowledge from conjecture. The method teams later work without the files: summarise the data of attached files with their key figures (number of measurements, values per group, conditions) so that nothing important is lost.",
       "task": "Analyse this research question:\n\n{{run.input}}"
     },
-    "hypotheses": {
-      "name": "Hypothesis developer",
-      "description": "Formulates testable hypotheses with predictions and null hypotheses.",
-      "system": "You formulate scientific hypotheses. Derive three to five testable hypotheses from the analysis. For each, state the null hypothesis, a measurable prediction, the measurement method and what counts as confirmation or refutation. Order them by relevance to the aim.",
-      "task": "Develop hypotheses based on this analysis:\n\n{{node:framing}}"
-    },
-    "critic": {
-      "name": "Methods critic",
-      "description": "Checks hypotheses for testability, confounders and the data available.",
-      "system": "You are a strict methodologist and reviewer. Check each hypothesis for falsifiability, measurability, confounders and bias. Evaluate the available pilot data with the calculator tool (for example means and ranges) and judge whether the data allows a statement. State which hypotheses should be rejected, sharpened or kept.",
-      "task": "Review these hypotheses critically.\n\nResearch question and data:\n{{run.input}}\n\nHypotheses:\n{{node:hypotheses}}"
-    },
     "design": {
-      "name": "Experiment planner",
-      "description": "Derives an experimental plan from the hypotheses and the critique.",
-      "system": "You plan experiments following the principles of design of experiments. For the hypotheses that were kept, design an experimental plan: factors and levels, replications, randomisation and blocking against confounders, measurement method, analysis method, stopping and success criteria, and a schedule that fits the constraints. Finish with the open risks.",
-      "task": "Design the experimental plan.\n\nHypotheses:\n{{node:hypotheses}}\n\nMethods critique:\n{{node:critic}}"
+      "name": "Study planner",
+      "description": "Derives the study plan from the analysis and the method teams' results.",
+      "system": "You plan studies. For the hypotheses that were kept, design the study plan: for experiments the factors and levels, replications, randomisation and blocking against confounders, measurement method and analysis; for qualitative parts the sampling, the interview guide and the analysis method; for studies with people the consent and data protection measures. Add stopping and success criteria and a schedule that fits the constraints. Use the sample sizes and decisions of the method teams and do not invent new figures. Finish with the open risks.",
+      "task": "Design the study plan.\n\nAnalysis of the question:\n{{node:framing}}\n\nResults of the method teams:\n{{node:coordinator}}"
     }
   },
   "form": {
@@ -172,6 +162,18 @@
     "pretest_file": {
       "name": "Pilot test data as CSV",
       "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nResearch question: Can the curing temperature of our powder coating PL-7 be reduced from 180 °C to 165 °C without harming adhesion on galvanised steel? The aim is to save around 10 % energy in the oven.\n\nThe pilot test ratings (cross-cut according to ISO 2409, 0 = best adhesion) are attached as a CSV file.\n\nConstraints: 40 test panels available per week, oven free for trials two days a week."
+    },
+    "interview_study": {
+      "name": "Interview study without measurements",
+      "input": "SYNTHETIC SAMPLE DATA – entirely fictional, for trying things out only.\n\nResearch question: Why do night-shift workers at our plant rarely use the new break app for booking quiet rooms, although they asked for it?\n\nWhat we know: 140 people work night shifts; in the first two months 9 of them booked a room. Day shifts: 210 bookings by 380 people. Some team leaders say the app needs the company login, which many night-shift workers do not use.\n\nConstraints: interviews only during breaks (30 minutes), the works council must agree, no recordings without consent; results by the end of the quarter."
+    }
+  },
+  "steps": {
+    "coordinator": {
+      "name": "Research coordinator",
+      "description": "Decides which method teams the question needs and sets the statistics team's parameters.",
+      "instructions": "Always start with the hypothesis team. Then decide from the question and the data: measurable outcomes and pilot data need the statistics team, whose study design you set as a parameter (and the significance level or power only if the question calls for other values than 0.05 and 0.8); questions about experiences, reasons or behaviour that cannot be counted need the qualitative methods team; anything involving people, health or personal data needs the ethics and data protection team. If the statistics or qualitative team finds a hypothesis untestable as formulated, give the hypothesis team one revision task with the critique. The teams do not see the files: put the relevant data from the analysis into every task. Finish with the final hypotheses and each team's key results under the team's name, and say which teams you did not involve and why.",
+      "task": "Plan how to investigate this research question with the method teams it needs.\n\nAnalysis of the question and the data:\n{{node:framing}}"
     }
   }
 }

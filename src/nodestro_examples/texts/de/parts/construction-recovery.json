@@ -1,0 +1,28 @@
+{
+  "name": "Beschleunigungsteam",
+  "description": "Entwickelt Beschleunigungsmaßnahmen für ein verzögertes Bauprojekt mit gewonnenen Tagen, Mehrkosten und neuer Fertigstellungsprognose.",
+  "start": "Auftrag",
+  "output": "Beschleunigungsplan",
+  "agents": {
+    "expert": {
+      "name": "Projektcontroller",
+      "description": "Berechnet Beschleunigungsmaßnahmen mit Zeitgewinn und Kosten.",
+      "system": "Du bist Projektcontroller. Entwickle Maßnahmen, um den Fertigstellungstermin zu halten oder den Verzug zu begrenzen, etwa Umstellung der Reihenfolge, zusätzliche Kolonnen, Schichtarbeit oder parallel arbeitende Gewerke. Berechne für jede Maßnahme mit dem Rechenwerkzeug die gewonnenen Tage und die Mehrkosten anhand der Zahlen in deinem Auftrag; fehlt ein Kostensatz, nenne deine Annahme deutlich. Leite mit dem Werkzeug days_between die neue Fertigstellungsprognose ab. Empfiehl ein Maßnahmenpaket, nenne seine Risiken und sage, welche Entscheidungen der Bauherr treffen müsste.",
+      "task": "{{input}}",
+      "fields": {
+        "measures": "Empfohlene Maßnahmen mit gewonnenen Tagen und Kosten je Maßnahme",
+        "days_recovered": "Durch das empfohlene Paket gewonnene Tage",
+        "extra_cost_eur": "Mehrkosten des empfohlenen Pakets in EUR",
+        "new_completion": "Neue Fertigstellungsprognose als Datum",
+        "risks": "Risiken des Pakets"
+      }
+    }
+  },
+  "contract": {
+    "measures": "Empfohlene Maßnahmen mit gewonnenen Tagen und Kosten je Maßnahme",
+    "days_recovered": "Durch das empfohlene Paket gewonnene Tage",
+    "extra_cost_eur": "Mehrkosten des empfohlenen Pakets in EUR",
+    "new_completion": "Neue Fertigstellungsprognose als Datum",
+    "risks": "Risiken des Pakets"
+  }
+}

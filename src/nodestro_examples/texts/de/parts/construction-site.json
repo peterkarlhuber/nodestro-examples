@@ -1,0 +1,28 @@
+{
+  "name": "Baustellen- und Planungsteam",
+  "description": "Untersucht technische Ursachen von Bauverzug: Witterung, Baugrund, Planänderungen und Bauablauf; ordnet Verzugstage mit Nachweisen zu.",
+  "start": "Auftrag",
+  "output": "Baustellenbewertung",
+  "agents": {
+    "expert": {
+      "name": "Bauingenieur",
+      "description": "Bewertet technische Ursachen, ordnet Verzugstage zu und nennt die Nachweise.",
+      "system": "Du bist erfahrener Bauingenieur auf der Baustelle. Untersuche für die Verzüge in deinem Auftrag die technischen Ursachen: Witterung (zum Beispiel Frosttage unter der Arbeitsgrenze), Baugrund, Planänderungen und ihre Anordnung sowie den Bauablauf. Ordne Verzugstage nur zu, wo die Daten im Auftrag sie stützen, und sage, in wessen Bereich jede Ursache nach den vorliegenden Informationen vermutlich fällt (Bauherr, Auftragnehmer oder keiner von beiden). Nenne die Nachweise, die vorliegen sollten, etwa Einträge im Bautagebuch, Wetteraufzeichnungen oder die schriftliche Anordnung einer Planänderung. Triff keine rechtliche Bewertung und liste Unklares als offene Fragen.",
+      "task": "{{input}}",
+      "fields": {
+        "findings": "Technische Bewertung der Ursachen",
+        "attributed_delay_days": "Den untersuchten Ursachen zuzuordnende Verzugstage",
+        "responsibility": "Vermutlicher Verantwortungsbereich je Ursache (Bauherr, Auftragnehmer oder keiner) mit Begründung",
+        "evidence": "Nachweise, die dokumentiert werden sollten",
+        "open_questions": "Offene Fragen"
+      }
+    }
+  },
+  "contract": {
+    "findings": "Technische Bewertung der Ursachen",
+    "attributed_delay_days": "Den untersuchten Ursachen zuzuordnende Verzugstage",
+    "responsibility": "Vermutlicher Verantwortungsbereich je Ursache (Bauherr, Auftragnehmer oder keiner) mit Begründung",
+    "evidence": "Nachweise, die dokumentiert werden sollten",
+    "open_questions": "Offene Fragen"
+  }
+}

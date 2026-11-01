@@ -1,0 +1,37 @@
+{
+  "name": "Team statistica",
+  "description": "Confronta le ipotesi quantitative con i dati, analizza i dati preliminari con la calcolatrice e stima la dimensione del campione per un disegno, un livello di significatività e una potenza dati.",
+  "start": "Incarico e disegno",
+  "output": "Valutazione statistica",
+  "agents": {
+    "expert": {
+      "name": "Consulente statistico",
+      "description": "Analizza i dati preliminari, verifica la verificabilità e stima la dimensione del campione.",
+      "system": "Sei un metodologo e statistico rigoroso. Verifica per ogni ipotesi quantitativa falsificabilità, misurabilità, fattori di confondimento e distorsioni. Analizza con la calcolatrice i dati preliminari ricevuti (per esempio medie, deviazioni standard e intervalli) e giudica se i dati consentono una conclusione. Stima la dimensione del campione per gruppo per il disegno di studio, il livello di significatività e la potenza indicati, di' quale dimensione dell'effetto assumi e perché e raccomanda il metodo di analisi. Indica quali ipotesi vanno scartate, precisate o mantenute.",
+      "task": "{{input}}\n\nDisegno dello studio: {{form.design}}\nLivello di significatività α: {{form.alpha}}\nPotenza desiderata: {{form.power}}"
+    }
+  },
+  "form": {
+    "design": {
+      "label": "Disegno dello studio",
+      "description": "Il disegno per cui viene pianificata la statistica.",
+      "default": "Confronto tra gruppi",
+      "options": [
+        "Confronto tra gruppi",
+        "Misure ripetute sulle stesse unità",
+        "Correlazione o regressione",
+        "Confronto prima-dopo"
+      ]
+    },
+    "alpha": {
+      "label": "Livello di significatività α",
+      "description": "Probabilità di un falso positivo; di solito 0,05.",
+      "default": "0.05"
+    },
+    "power": {
+      "label": "Potenza desiderata",
+      "description": "Probabilità di rilevare un effetto reale; di solito 0,8.",
+      "default": "0.8"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "name": "Équipe chantier et conception",
+  "description": "Examine les causes techniques des retards de chantier : météo, sol, modifications de projet et enchaînement des travaux ; attribue des jours de retard avec preuves.",
+  "start": "Mission",
+  "output": "Évaluation chantier",
+  "agents": {
+    "expert": {
+      "name": "Ingénieur travaux",
+      "description": "Évalue les causes techniques, attribue des jours de retard et nomme les preuves.",
+      "system": "Tu es un ingénieur travaux expérimenté. Pour les retards de ta mission, examine les causes techniques : météo (par exemple les jours de gel sous la limite de travail), sol, modifications de projet et leur ordre, et enchaînement des travaux. N'attribue des jours de retard que là où les dates de la mission le justifient, et indique à quelle sphère chaque cause appartient probablement selon les informations disponibles (maître d'ouvrage, entreprise ou aucun). Nomme les preuves qui devraient figurer au dossier, comme les entrées du journal de chantier, les relevés météo ou l'ordre écrit d'une modification de projet. Ne fais pas d'appréciation juridique et liste ce qui n'est pas clair comme questions ouvertes.",
+      "task": "{{input}}",
+      "fields": {
+        "findings": "Évaluation technique des causes",
+        "attributed_delay_days": "Jours de retard imputables aux causes examinées",
+        "responsibility": "Sphère de responsabilité probable par cause (maître d'ouvrage, entreprise ou aucun) avec justification",
+        "evidence": "Preuves à documenter",
+        "open_questions": "Questions restant ouvertes"
+      }
+    }
+  },
+  "contract": {
+    "findings": "Évaluation technique des causes",
+    "attributed_delay_days": "Jours de retard imputables aux causes examinées",
+    "responsibility": "Sphère de responsabilité probable par cause (maître d'ouvrage, entreprise ou aucun) avec justification",
+    "evidence": "Preuves à documenter",
+    "open_questions": "Questions restant ouvertes"
+  }
+}

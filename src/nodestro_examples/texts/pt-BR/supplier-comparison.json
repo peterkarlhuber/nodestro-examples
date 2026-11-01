@@ -7,11 +7,13 @@
   "file_name": "Comparação de fornecedores",
   "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nDemanda: peça torneada de aço inox DT-40, 24.000 peças por ano, pedidos de 2.000 peças por mês\nPreço-alvo: 2,10 EUR por peça entregue na fábrica\n\nProposta A – Exemplo Precisão GmbH (Alemanha, a 80 km)\n- Preço 2,35 EUR/peça, entregue na fábrica, prazo de entrega 2 semanas\n- Pedido mínimo 1.000 peças, prazo de pagamento 30 dias\n- Taxa de reclamações no último ano 0,4 %, certificação IATF 16949\n\nProposta B – Exemplo Componentes Ltd. (Extremo Oriente, frete marítimo)\n- Preço 1,62 EUR/peça na fábrica do fornecedor, frete e impostos estimados em 0,28 EUR/peça, prazo de entrega 10 semanas\n- Pedido mínimo 12.000 peças, pagamento de 30 % antecipado, saldo no embarque\n- Ainda sem histórico de entregas, ISO 9001, amostras aprovadas\n\nProposta C – Amostra Peças Metálicas s.r.o. (República Tcheca, a 450 km)\n- Preço 1,98 EUR/peça, frete 0,07 EUR/peça, prazo de entrega 4 semanas\n- Pedido mínimo 4.000 peças, prazo de pagamento 45 dias\n- Taxa de reclamações no último ano 1,1 %, ISO 9001, capacidade 90 % utilizada segundo o fornecedor\n\nPremissas internas: custo de capital 8 % ao ano, custo de armazenagem 0,03 EUR por peça e mês,\ncusto por reclamação (inspeção, seleção) 0,90 EUR por peça defeituosa.",
   "guide": {
-    "problem": "O menor preço unitário raramente é a proposta mais barata. O workflow compara propostas por custo total e risco de fornecimento e justifica uma recomendação para compras.",
-    "flow": "O analista de custos e o analista de riscos trabalham em paralelo. Um calcula o custo total de propriedade por proposta com a calculadora, o outro avalia prazo de entrega, dependências e qualidade. A recomendação de compra pondera os dois e entrega um resultado estruturado.",
-    "input": "Várias propostas com preço, frete, prazo de entrega, quantidade mínima, condições de pagamento e dados de qualidade, além dos seus custos internos. Você pode escrever as propostas no texto ou anexá-las como arquivos, inclusive misturando PDF, Word e Excel; os três arquivos de exemplo mostram exatamente isso.",
-    "result": "Uma recomendação estruturada com classificação, justificativas, riscos, pontos de negociação e premissas usadas. A execução também a salva como relatório em PDF e como arquivo Excel com uma planilha por lista.",
-    "adapt": "Anexe as suas propostas como arquivos e informe a demanda e os custos no texto. Se você tem pesos fixos (por exemplo 50 % custo, 30 % risco, 20 % qualidade), acrescente-os no prompt de sistema da recomendação de compra. Contratos-quadro ou avaliações de fornecedores podem ser salvos como conhecimento e atribuídos ao analista de riscos."
+    "problem": "O menor preço unitário raramente é a proposta mais barata, e as promessas de um fornecedor não são o seu histórico. O workflow compara propostas por custo total e risco de fornecimento, verifica o histórico dos fornecedores quando ele existe e justifica uma recomendação para compras.",
+    "flow": "O analista de custos e o analista de riscos trabalham em paralelo. Um calcula o custo total de propriedade por proposta com a calculadora, o outro avalia prazo de entrega, dependências, capacidade e qualidade. Se a sua cópia estiver conectada ao ERP, o analista de riscos lê a avaliação de cada fornecedor, apenas para leitura, com list_suppliers e supplier_scorecard; sem conexão, usa uma exportação do ERP anexada ou só as propostas e diz qual histórico falta. A recomendação de compra pondera os dois e entrega um resultado estruturado.",
+    "input": "Várias propostas com preço, frete, prazo de entrega, quantidade mínima, condições de pagamento e dados de qualidade, além dos seus custos internos. Você pode escrever as propostas no texto ou anexá-las como arquivos, inclusive misturando PDF, Word e Excel; os três arquivos de exemplo mostram exatamente isso. Opcionalmente, anexe uma exportação do ERP com a avaliação de fornecedores (Excel ou CSV); na exportação de exemplo falta de propósito o fornecedor da proposta B, que é novo e ainda não tem histórico.",
+    "result": "Uma recomendação estruturada com classificação, justificativas, riscos, pontos de negociação e premissas usadas. A avaliação de riscos informa, para cada fornecedor, de onde vem o seu histórico: do ERP, da exportação anexada ou só da proposta. A execução também salva a recomendação como relatório em PDF e como arquivo Excel com uma planilha por lista.",
+    "adapt": "Anexe as suas propostas como arquivos e informe a demanda e os custos no texto. Para usar o histórico real dos fornecedores, peça a configuração da integração com o ERP e escolha o servidor ao copiar o exemplo; caso contrário, anexe uma exportação da avaliação de fornecedores. Se você tem pesos fixos (por exemplo 50 % custo, 30 % risco, 20 % qualidade), acrescente-os no prompt de sistema da recomendação de compra. Contratos-quadro podem ser salvos como conhecimento e atribuídos ao analista de riscos.",
+    "control": "Automático: as duas análises e a ponderação rodam sem pausa; a calculadora faz as contas, e a execução registra cada etapa e cada chamada de ferramenta. A conexão com o ERP é opcional e só lê: a cópia recebe as ferramentas list_suppliers e supplier_scorecard somente se você a conectar a um servidor MCP cujas ferramentas um administrador aprovou como somente leitura; caso contrário, ela roda em um modo offline claramente identificado e nunca finge ter dados do ERP. Execuções sem uma pessoa presente (agendamentos, séries de testes, processamento em lote) não podem usar ferramentas MCP, a menos que um administrador permita expressamente o MCP sem supervisão; por isso, use uma cópia conectada de forma interativa. Nenhuma etapa aguarda aprovação: a recomendação é um rascunho, e a decisão de compra continua sendo sua.",
+    "why": "Custo e risco são questões independentes, por isso dois especialistas trabalham em paralelo e um terceiro pondera os resultados; é mais rápido e mais fácil de conferir do que um único agente para tudo. O histórico dos fornecedores vem por uma integração porque está no ERP e muda o tempo todo; um arquivo de conhecimento ficaria desatualizado, e o modo offline com uma exportação mantém o exemplo utilizável sem conexão. Não há laço nem etapa de aprovação porque o resultado é uma recomendação, não uma ação."
   },
   "agents": {
     "cost": {
@@ -23,8 +25,10 @@
     "risk": {
       "name": "Analista de riscos",
       "description": "Avalia riscos de prazo, dependência, capacidade e qualidade.",
-      "system": "Você é gerente de riscos da cadeia de suprimentos. Avalie os riscos de fornecimento de cada proposta: prazo de entrega e flexibilidade, rota de transporte, utilização da capacidade, histórico de qualidade e certificação, comprometimento financeiro e dependência. Avalie cada risco por probabilidade e impacto (alto, médio, baixo) e proponha salvaguardas, por exemplo estoque de segurança ou uma segunda fonte.",
-      "task": "Avalie os riscos de fornecimento destas propostas:\n\n{{run.input}}"
+      "system": "Você é gerente de riscos da cadeia de suprimentos. Avalie os riscos de fornecimento de cada proposta: prazo de entrega e flexibilidade, rota de transporte, utilização da capacidade, histórico de qualidade e certificação, comprometimento financeiro e dependência. Separe as declarações dos fornecedores do histórico registrado pela empresa e diga em que se baseia cada afirmação. Avalie cada risco por probabilidade e impacto (alto, médio, baixo) e proponha salvaguardas, por exemplo estoque de segurança ou uma segunda fonte.",
+      "task": "Avalie os riscos de fornecimento destas propostas, incluindo o histórico de entregas e de qualidade de cada fornecedor:\n\n{{run.input}}",
+      "online": "Você está conectado ao ERP da empresa (somente leitura). Para cada proposta, encontre o fornecedor com list_suppliers e leia a avaliação dele com supplier_scorecard: pontualidade de entrega, qualidade em ppm, reclamações, relatórios 8D abertos, última auditoria e observações. Os dados do ERP prevalecem sobre as declarações das propostas; aponte as diferenças. Se um fornecedor não estiver no ERP, diga claramente que não há histórico de fornecimento com ele e trate isso como um risco próprio. Não invente valores que as ferramentas não retornaram.",
+      "offline": "Nenhum ERP está conectado (modo offline). Use somente uma exportação do ERP com a avaliação de fornecedores, se houver uma anexada, e caso contrário só as propostas. Diga, para cada fornecedor, qual histórico falta (por exemplo pontualidade, reclamações, relatórios 8D abertos, auditorias) e que ele deve ser verificado no ERP. Nunca invente histórico; se um fornecedor não estiver na exportação, não há histórico registrado dele."
     },
     "recommendation": {
       "name": "Recomendação de compra",
@@ -45,6 +49,10 @@
     "offers": {
       "label": "Arquivos das propostas",
       "description": "Opcional: as propostas em PDF, Word, Excel ou CSV, até 10 arquivos. Sem arquivos valem as propostas do texto; com arquivos, o texto só precisa da demanda, do preço-alvo e das premissas internas."
+    },
+    "history": {
+      "label": "Exportação do ERP (histórico de fornecedores)",
+      "description": "Opcional: uma exportação da avaliação de fornecedores do seu ERP em Excel ou CSV, com pontualidade de entrega, qualidade, reclamações e auditorias. Não é necessária se a sua cópia estiver conectada ao ERP."
     }
   },
   "samples": {
@@ -115,6 +123,54 @@
           ]
         ]
       }
+    },
+    "history": {
+      "name": "ERP_avaliacao_fornecedores",
+      "description": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar. Avaliação de fornecedores dos últimos 12 meses como exportação Excel do ERP; o fornecedor da proposta B não consta porque nunca entregou.",
+      "content": {
+        "Avaliação de fornecedores": [
+          [
+            "Nº do fornecedor",
+            "Fornecedor",
+            "Pontualidade de entrega (%)",
+            "Qualidade (ppm)",
+            "Reclamações (12 meses)",
+            "Relatórios 8D abertos",
+            "Última auditoria",
+            "Observações"
+          ],
+          [
+            "S-1001",
+            "Exemplo Precisão GmbH",
+            98.4,
+            120,
+            1,
+            0,
+            "2026-04-14: aprovado (A)",
+            "Confiável; mudanças de pedido de última hora foram entregues no prazo."
+          ],
+          [
+            "S-1027",
+            "Amostra Peças Metálicas s.r.o.",
+            84.0,
+            1450,
+            7,
+            1,
+            "2026-02-03: aprovado com ressalvas (B), plano de ação para o acabamento superficial acordado",
+            "O fornecedor relata um gargalo de capacidade na tornearia desde o 3º trimestre de 2026; 3 entregas atrasadas nos últimos 6 meses. Relatório 8D aberto 8D-2026-031: rebarbas no furo."
+          ],
+          [
+            "S-1033",
+            "Demo Revestimentos Ltda.",
+            95.1,
+            380,
+            2,
+            0,
+            "2025-11-20: aprovado (A)",
+            "Apenas revestimentos, não fornece peças torneadas."
+          ]
+        ]
+      }
     }
   },
   "tests": {
@@ -124,6 +180,19 @@
     "offers_files": {
       "name": "Três propostas em PDF, Word e Excel",
       "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nDemanda: peça torneada de aço inox DT-40, 24.000 peças por ano, pedidos de 2.000 peças por mês\nPreço-alvo: 2,10 EUR por peça entregue na fábrica\n\nAs três propostas estão anexadas como arquivos.\n\nPremissas internas: custo de capital 8 % ao ano, custo de armazenagem 0,03 EUR por peça e mês,\ncusto por reclamação (inspeção, seleção) 0,90 EUR por peça defeituosa."
+    },
+    "with_history": {
+      "name": "Três propostas como arquivos mais exportação do ERP",
+      "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nDemanda: peça torneada de aço inox DT-40, 24.000 peças por ano, pedidos de 2.000 peças por mês\nPreço-alvo: 2,10 EUR por peça entregue na fábrica\n\nAs três propostas estão anexadas como arquivos, junto com a exportação do ERP com a nossa avaliação de fornecedores.\n\nPremissas internas: custo de capital 8 % ao ano, custo de armazenagem 0,03 EUR por peça e mês,\ncusto por reclamação (inspeção, seleção) 0,90 EUR por peça defeituosa."
+    }
+  },
+  "integrations": {
+    "erp": {
+      "name": "ERP (avaliação de fornecedores)",
+      "description": "Acesso somente leitura via MCP aos dados de fornecedores do seu ERP: list_suppliers lista os fornecedores, supplier_scorecard retorna a avaliação de um fornecedor dos últimos 12 meses (pontualidade, qualidade em ppm, reclamações, relatórios 8D abertos, última auditoria). O analista de riscos a usa para confrontar as propostas com o histórico registrado.",
+      "setup": "Um administrador adiciona o servidor MCP do ERP da sua empresa em Ferramentas → Serviços conectados e aprova as duas ferramentas list_suppliers e supplier_scorecard como somente leitura. Ao copiar o exemplo, você escolhe esse servidor como conexão; sem conexão, a cópia roda no modo offline. Para testar sem ERP, execute `python -m nodestro_examples.demo_mcp --language pt-BR` no computador com o aplicativo desktop do Nodestro, adicione http://127.0.0.1:8765/mcp em Ferramentas → Serviços conectados com o consentimento para um servidor de desenvolvimento local, aprove as ferramentas dele como somente leitura e escolha-o ao copiar. O servidor de demonstração só lê e fornece os dados sintéticos da exportação de exemplo, nunca dados reais de empresa. Execuções sem uma pessoa presente (agendamentos, séries de testes, processamento em lote) não podem usar ferramentas MCP, a menos que um administrador permita expressamente o MCP sem supervisão.",
+      "online": "Conectado ao ERP: o analista de riscos lê avaliações de fornecedores somente para leitura (list_suppliers, supplier_scorecard); os dados do ERP prevalecem sobre as declarações das propostas.",
+      "offline": "Modo offline: nenhum ERP está conectado. O analista de riscos usa somente uma exportação do ERP anexada ou as propostas e aponta o histórico de fornecedores que falta; ele não consulta nada."
     }
   }
 }

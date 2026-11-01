@@ -1,39 +1,29 @@
 {
   "name": "Blog article",
   "field": "Marketing and content",
-  "description": "Research the audience, draft an outline, write the article and edit it.",
+  "description": "Draft a brief with audience, angle and outline, write the article and edit it.",
   "start": "Topic",
   "output": "Article",
   "file_name": "Blog article",
   "input": "Why visual workflow editors make AI agents more accessible",
   "guide": {
-    "problem": "Good articles grow from a clear audience and a well-thought-out outline. The workflow splits the work like an editorial team and checks the result before it is published.",
-    "flow": "Audience and outline are created in parallel with a fast model. The writer turns them into the article; a built-in quality check makes sure it follows the outline and answers the readers' questions. The editor checks length and readability with the text statistics tool and marks unverified claims.",
+    "problem": "Good articles grow from a clear brief: who reads them, from which angle and with which key messages. The workflow works like a small editorial team and checks the result before it is published.",
+    "flow": "A fast model drafts a structured brief with audience, angle, outline and key messages. The writer turns it into the article; a built-in quality check makes sure it follows the outline and answers the readers' questions, and sends it back for one revision if not. A fast editor checks length and readability with the text statistics tool and marks unverified claims.",
     "input": "A topic in one sentence. Optionally add the audience, tone or desired length directly in the input.",
     "result": "A finished article in Markdown with headings, a meta description and short editorial notes with word count and pointers to claims that should be backed up before publication. The run also saves the result as a Markdown and an HTML file that you can paste into your CMS.",
-    "adapt": "Change the topic in the input. You can upload your style guide as knowledge and assign it to the writer and the editor. Set the desired length in the writer's system prompt."
+    "adapt": "Change the topic in the input. You can upload your style guide as knowledge and assign it to the writer and the editor. Set the desired length in the writer's system prompt, and the number of sections or key messages in the system prompt of the brief.",
+    "control": "Automatic: brief, article and editing run one after the other; no step waits for a person. A separate quality check rates the article against two criteria (follows the outline, answers the readers' questions) and, if one is not met, has the writer revise it once. The editor does not change the content; it flags claims that need a source. The article is a draft: you decide whether and where it is published.",
+    "why": "One structured brief replaces two parallel planners whose results the writer had to reconcile: the outline used to be drafted without knowing the audience. Now audience, angle, outline and key messages come from one idea and reach the writer as clearly separated fields. The writer has a quality check with automatic revision because that is where most weaknesses arise. As a beginner example, the workflow deliberately stays a short chain without branches, loops or approvals, so every step can be followed in the run."
   },
   "agents": {
-    "audience": {
-      "name": "Audience",
-      "description": "Describes the readers, their questions and what they already know.",
-      "system": "You describe the target readers of an article: who they are, what they already know and which three questions they bring. Be concise.",
-      "task": "{{input}}"
-    },
-    "outline": {
-      "name": "Outline",
-      "description": "Drafts the title and the outline.",
-      "system": "You draft a compelling title and a five-part outline for an article. State in one sentence what each section should achieve.",
-      "task": "{{input}}"
-    },
     "writer": {
       "name": "Writer",
-      "description": "Writes the article from the outline and the audience.",
+      "description": "Writes the article from the brief.",
       "system": "You are an experienced tech journalist. Write a clear, vivid article of about 700 words with Markdown headings. Explain technical terms when they first appear and use concrete examples. Do not invent studies, figures or quotes.",
-      "task": "Write the article on “{{run.input}}”.\n\nAudience:\n{{node:audience}}\n\nOutline:\n{{node:outline}}",
+      "task": "Write the article on “{{run.input}}”.\n\nBrief (audience, angle, outline, key messages):\n{{node:brief}}",
       "criteria": {
-        "follows_outline": "The article follows the outline.",
-        "audience": "The article answers the audience's questions."
+        "follows_outline": "The article follows the outline of the brief.",
+        "audience": "The article answers the questions of the target readers named in the brief."
       }
     },
     "editor": {
@@ -41,6 +31,18 @@
       "description": "Checks length and readability and delivers the final version.",
       "system": "You are an editor. Determine the article's word and sentence count with the text statistics tool. Improve clarity, spelling and flow without changing the content or the structure. First output the revised final version in Markdown, then a meta description of at most 155 characters, and finally editing notes: word count, main changes and claims that should be backed up before publication.",
       "task": "Edit this article:\n\n{{input}}"
+    },
+    "brief": {
+      "name": "Brief",
+      "description": "Defines audience, angle, outline and key messages in one structured brief.",
+      "system": "You are a managing editor and prepare the brief for an article. Determine the target readers (who they are, what they already know and which three questions they bring), the angle that makes the article worth reading, including a working title, a five-part outline with one sentence per section on what it should achieve, and three to five key messages readers should take away. Be concise and do not invent facts, figures or sources.",
+      "task": "Prepare the brief for an article on this topic:\n\n{{input}}",
+      "fields": {
+        "audience": "Target readers: who they are, what they already know and which questions they bring",
+        "angle": "Angle and working title of the article",
+        "outline": "Sections in order, each with one sentence on what it should achieve",
+        "key_messages": "Key messages readers should take away"
+      }
     }
   },
   "tests": {

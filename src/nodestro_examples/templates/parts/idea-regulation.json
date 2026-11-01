@@ -1,0 +1,41 @@
+{
+  "id": "idea-regulation",
+  "capabilities": [
+    "regulation",
+    "permits",
+    "licences",
+    "data protection"
+  ],
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160
+    },
+    {
+      "id": "expert",
+      "type": "agent",
+      "x": 340,
+      "y": 160,
+      "role": "review",
+      "icon": "scale"
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 680,
+      "y": 160
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "expert"
+    ],
+    [
+      "expert",
+      "output"
+    ]
+  ]
+}

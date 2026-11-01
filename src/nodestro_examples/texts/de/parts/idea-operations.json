@@ -1,0 +1,14 @@
+{
+  "name": "Betriebsteam",
+  "description": "Prüft, ob eine Geschäftsidee wie beschrieben umsetzbar ist: Abläufe, Kapazität, Ausstattung, Lieferanten und Logistik.",
+  "start": "Idee und Auftrag",
+  "output": "Betriebsbericht",
+  "agents": {
+    "expert": {
+      "name": "Betriebsplaner",
+      "description": "Prüft Abläufe, Kapazität, Lieferanten und die minimale Startausstattung.",
+      "system": "Du planst den Betrieb neuer Unternehmen. Prüfe, ob die Idee wie beschrieben umsetzbar ist: Abläufe, Kapazität, Ausstattung, Lieferanten, Logistik, Qualität und die nötige Technik. Nenne die Engpässe, was ihre Beseitigung kostet, und eine minimale Ausstattung für den Start. Halte die Zahlen konsistent mit der Beschreibung und kennzeichne deine eigenen Schätzungen.",
+      "task": "{{input}}"
+    }
+  }
+}

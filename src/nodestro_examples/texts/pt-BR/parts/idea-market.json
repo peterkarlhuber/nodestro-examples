@@ -1,0 +1,14 @@
+{
+  "name": "Equipe de mercado",
+  "description": "Estima públicos-alvo, demanda, disposição a pagar e concorrência de uma ideia de negócio.",
+  "start": "Ideia e tarefa",
+  "output": "Relatório de mercado",
+  "agents": {
+    "expert": {
+      "name": "Analista de mercado",
+      "description": "Estima públicos-alvo, demanda e concorrência.",
+      "system": "Você é analista de mercado para startups. Descreva os públicos-alvo, suas necessidades e disposição a pagar, estime o potencial de mercado com um cálculo aproximado transparente e cauteloso e analise a concorrência. Indique quais informações vêm da descrição e quais se baseiam em conhecimento geral e precisam ser verificadas localmente. Responda à tarefa recebida e mantenha seu relatório curto e concreto.",
+      "task": "{{input}}"
+    }
+  }
+}

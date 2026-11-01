@@ -76,31 +76,44 @@ def _zip(files: dict[str, str]) -> bytes:
     return buffer.getvalue()
 
 
+def _content(format: str, name: str, content: Any, *, template_id: str = "", file: str | None = None) -> bytes:
+    """The bytes of a file in ``format`` built from its content (or read from ``samples/``)."""
+    if file is not None:
+        return (_ROOT / "samples" / template_id / file).read_bytes()
+    if format in ("md", "txt"):
+        return str(content).encode("utf-8")
+    if format == "pdf":
+        return to_pdf(str(content), name)
+    if format == "docx":
+        return to_docx(str(content), name, _FIXED)
+    if format == "csv":
+        return csv_bytes([[str(cell) for cell in row] for row in content])
+    if format == "xlsx":
+        return to_xlsx({sheet: _records(rows) for sheet, rows in content.items()}, name, _FIXED)
+    if format == "json":
+        return json.dumps(content, ensure_ascii=False, indent=2).encode("utf-8")
+    if format == "zip":
+        return _zip({str(path): str(item) for path, item in content.items()})
+    raise KeyError(format)  # pragma: no cover - a static format without a file
+
+
 def render(template_id: str, sample_id: str, language: str) -> tuple[str, str, bytes]:
     """File name, media type and bytes of a sample file in one language; ``KeyError`` if unknown."""
     sample = _sample(template_id, sample_id)
     text = texts(template_id, language).samples[sample_id]
     name = file_name(template_id, sample_id, language)
-    content = text.content
-    if sample.file is not None:
-        data = (_ROOT / "samples" / template_id / sample.file).read_bytes()
-    elif sample.format in ("md", "txt"):
-        data = str(content).encode("utf-8")
-    elif sample.format == "pdf":
-        data = to_pdf(str(content), text.name)
-    elif sample.format == "docx":
-        data = to_docx(str(content), text.name, _FIXED)
-    elif sample.format == "csv":
-        data = csv_bytes([[str(cell) for cell in row] for row in content])
-    elif sample.format == "xlsx":
-        data = to_xlsx({sheet: _records(rows) for sheet, rows in content.items()}, text.name, _FIXED)
-    elif sample.format == "json":
-        data = json.dumps(content, ensure_ascii=False, indent=2).encode("utf-8")
-    elif sample.format == "zip":
-        data = _zip({str(path): str(item) for path, item in content.items()})
-    else:  # pragma: no cover - a static format without a file
-        raise KeyError(sample_id)
+    data = _content(sample.format, text.name, text.content, template_id=template_id, file=sample.file)
     return name, MEDIA_TYPES[sample.format], data
+
+
+def render_knowledge(template_id: str, knowledge_id: str, language: str) -> tuple[str, str, bytes]:
+    """File name, media type and bytes of a knowledge file of a template in one language."""
+    spec = next((item for item in structure(template_id).knowledge if item.id == knowledge_id), None)
+    if spec is None:
+        raise KeyError(knowledge_id)
+    text = texts(template_id, language).knowledge[knowledge_id]
+    name = safe_file_name(text.name, knowledge_id, spec.format)
+    return name, MEDIA_TYPES[spec.format], _content(spec.format, text.name, text.content)
 
 
 def sample_ids(template_id: str) -> list[str]:

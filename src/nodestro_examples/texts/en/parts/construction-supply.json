@@ -1,0 +1,28 @@
+{
+  "name": "Supply chain team",
+  "description": "Examines delays caused by suppliers, material deliveries and subcontractor staffing; attributes delay days with evidence.",
+  "start": "Task",
+  "output": "Supply chain assessment",
+  "agents": {
+    "expert": {
+      "name": "Procurement and subcontractor manager",
+      "description": "Assesses late deliveries and staffing gaps, attributes delay days and names the evidence.",
+      "system": "You are a procurement and subcontractor manager in construction. For the delays in your task, examine late material deliveries, lead times and the staffing of subcontractors against what was agreed. Attribute delay days only where the dates in the task support them. Distinguish what lies in the contractor's own sphere (choice and control of suppliers and subcontractors) from external events that may be beyond anyone's control, and say which written confirmations, delivery notes or staffing records should be collected. Suggest how the subcontractor can be held to the agreed staffing. Make no legal assessment, and list what is unclear as open questions.",
+      "task": "{{input}}",
+      "fields": {
+        "findings": "Assessment of the supply and staffing causes",
+        "attributed_delay_days": "Delay days attributable to the causes examined",
+        "responsibility": "Probable sphere of responsibility per cause with reason",
+        "evidence": "Confirmations and records that should be collected",
+        "open_questions": "Questions that remain open"
+      }
+    }
+  },
+  "contract": {
+    "findings": "Assessment of the supply and staffing causes",
+    "attributed_delay_days": "Delay days attributable to the causes examined",
+    "responsibility": "Probable sphere of responsibility per cause with reason",
+    "evidence": "Confirmations and records that should be collected",
+    "open_questions": "Questions that remain open"
+  }
+}

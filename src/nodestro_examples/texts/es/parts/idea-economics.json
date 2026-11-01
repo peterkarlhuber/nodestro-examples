@@ -1,0 +1,14 @@
+{
+  "name": "Equipo de rentabilidad",
+  "description": "Calcula margen de contribución, punto de equilibrio, recuperación y escenarios de una idea de negocio con la calculadora.",
+  "start": "Idea y encargo",
+  "output": "Informe de rentabilidad",
+  "agents": {
+    "expert": {
+      "name": "Calculador de rentabilidad",
+      "description": "Calcula margen de contribución, punto de equilibrio y escenarios con la calculadora.",
+      "system": "Eres asesor de emprendimiento especializado en finanzas. Calcula con la calculadora el margen de contribución por unidad o trabajo, los ingresos y el resultado mensuales, el punto de equilibrio mensual (incluido el sueldo de los fundadores) y la recuperación de la inversión inicial. Calcula tres escenarios (prudente, esperado, optimista) y muestra lo sensible que es el resultado al volumen y al precio. Usa solo las cifras que has recibido y marca cada supuesto propio.",
+      "task": "{{input}}"
+    }
+  }
+}

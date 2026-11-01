@@ -1,48 +1,50 @@
 {
   "name": "Analizar retrasos de obra",
   "field": "Construcción",
-  "description": "Calcular desviaciones de plazos, clasificar causas, desarrollar contramedidas e informar al promotor.",
+  "description": "Calcular las desviaciones del plazo y dejar que una coordinación de obra incorpore los equipos especializados que el retraso necesita – de obra y cadena de suministro a reclamaciones y recuperación – e informar a la propiedad tras la aprobación.",
   "start": "Estado del proyecto",
   "output": "Informe de situación",
   "file_name": "Informe de estado",
   "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nProyecto: nueva guardería «Mirasol», Villaejemplo; promotor: Ayuntamiento de Villaejemplo\nFecha contractual de finalización: 2026-09-30; fecha del informe: 2026-05-15\n\n| Hito | Previsto | Real / previsión | Observación |\n|---|---|---|---|\n| Estructura terminada | 2026-02-27 | 2026-03-20 | 9 días de helada en enero, hormigonado suspendido |\n| Cubierta estanca | 2026-03-27 | 2026-04-24 | Retraso en la entrega de elementos de cubierta (el proveedor alega falta de material) |\n| Ventanas instaladas | 2026-04-17 | 2026-05-29 (previsión) | Cambio de proyecto en ventanas de evacuación a petición de la revisión de incendios |\n| Instalaciones, primera fase | 2026-05-22 | 2026-06-19 (previsión) | Depende de las ventanas; el electricista solo tiene 2 personas en obra en lugar de 4 |\n| Acabados interiores terminados | 2026-08-28 | abierto | — |\n| Recepción | 2026-09-30 | abierto | Penalización contractual del 0,2 % del importe por día laborable, máx. 5 % |\n\nImporte del contrato del contratista general: 3,2 M EUR. El promotor espera un informe para la reunión del 2026-05-20.",
   "guide": {
-    "problem": "Los retrasos en obra se acumulan y los promotores necesitan rápido una imagen clara. El flujo calcula las desviaciones, clasifica las causas, desarrolla contramedidas y redacta un informe de situación.",
-    "flow": "El analista de plazos y el analista de causas trabajan en paralelo. Uno calcula retrasos y holguras con las herramientas de fechas y calculadora; el otro ordena las causas por ámbito de responsabilidad y necesidad de documentación; ambos analizan también las planificaciones, libros de obra y fotos adjuntos. El planificador de contramedidas desarrolla opciones de aceleración y el agente del informe lo resume todo para el promotor. Antes de que el informe salga del equipo del proyecto, una persona lo aprueba.",
-    "input": "Un resumen de plazos con hitos previstos y reales, observaciones sobre las causas, fecha del informe y condiciones contractuales, como texto o como archivos: planificación en Excel, libro de obra en PDF, fotos como imagen. Los archivos de ejemplo contienen una planificación y un extracto del libro de obra.",
-    "result": "Un informe de estado objetivo con situación de plazos, causas, contramedidas, decisiones necesarias y riesgos. Tras la aprobación, la ejecución lo guarda en PDF y como archivo de Word editable. Las cuestiones sobre penalizaciones y ampliación de plazo quedan sujetas a revisión técnica y jurídica.",
-    "adapt": "Exporta tu planificación desde el software de proyectos en Excel y adjunta el libro de obra y las fotos. Para un informe periódico puedes programar la copia; la aprobación te esperará entonces."
+    "problem": "Los retrasos en obra tienen causas distintas, y cada causa necesita otro conocimiento: las heladas deben documentarse, un proveedor que se retrasa requiere un aviso de impedimento a la parte correcta, un cambio de proyecto ordenado por la propiedad puede justificar una ampliación de plazo y la falta de personal requiere un plan de aceleración. El flujo de trabajo calcula las desviaciones y deja que una coordinación de obra incorpore exactamente los equipos especializados que la situación necesita.",
+    "flow": "El analista de plazos calcula con la herramienta de fechas el retraso de cada hito y enumera las causas supuestas. La coordinación de obra, un orquestador, forma primero un equipo de como máximo tres a partir de los cuatro equipos especializados y después reparte encargos: el equipo de obra para clima, terreno y cambios de proyecto, el equipo de suministro para proveedores y subcontratistas, el equipo de reclamaciones para avisos de impedimento y ampliaciones de plazo, el equipo de recuperación para medidas de aceleración con su coste. Los equipos independientes trabajan en paralelo. El equipo de reclamaciones se detiene para una persona: su borrador de aviso solo se usa después de que la jefatura de obra responsable lo haya visado. El agente de informes redacta el informe de situación y, antes de que llegue a la propiedad, una persona lo aprueba.",
+    "input": "Un resumen del calendario con hitos previstos y reales, observaciones sobre las causas, fecha del informe y condiciones contractuales, como texto o como archivos: calendario en Excel, diario de obra en PDF, fotos como imágenes. Los archivos de ejemplo contienen un calendario y un extracto del diario de obra.",
+    "result": "Un informe de situación objetivo con estado del plazo, causas y ámbitos de responsabilidad, avisos y reclamaciones de ampliación, medidas de recuperación con coste, decisiones necesarias y riesgos; tras la aprobación, en PDF y en un archivo de Word editable. La vista de orquestación muestra qué equipos formó la coordinación, qué entregó cada uno como datos estructurados y por qué. Las cuestiones sobre penalizaciones contractuales y ampliaciones de plazo quedan sujetas a revisión técnica y jurídica.",
+    "adapt": "Exporta tu calendario desde tu software de proyectos como Excel y adjunta el diario de obra y las fotos. Adapta el equipo de reclamaciones a tu tipo de contrato (por ejemplo FIDIC o tus propias condiciones) e introduce las tarifas de coste de tu empresa en el equipo de recuperación. Si necesitas otra especialidad, como instalaciones, guárdala como flujo de trabajo con una descripción clara y añádela a los equipos de la coordinación.",
+    "control": "Automático: la coordinación elige como máximo tres equipos, hace trabajar como máximo dos a la vez y da a cada equipo como máximo dos encargos; cada decisión de composición y de encargo queda registrada con su motivo. Una persona decide dos veces: la jefatura de obra visa el borrador del aviso de impedimento dentro del equipo de reclamaciones (rechazarlo detiene la ejecución), y una persona aprueba el informe de situación antes de que se creen archivos. Límites: como máximo 8 decisiones de la coordinación, 50 pasos, 40 minutos y 4 USD por ejecución.",
+    "why": "Una cadena fija trataba igual todos los retrasos: un analista de causas, un planificador de medidas, tanto si el problema era una helada como un aviso que faltaba. Con la coordinación, un retraso puramente climático no cuesta una revisión de reclamaciones, mientras que un cambio de proyecto ordenado por la propiedad incorpora el equipo de reclamaciones con su visado. Los equipos devuelven resultados estructurados (días, responsabilidad, pruebas), de modo que el informe puede sumarlos en lugar de reformular texto. El cálculo del plazo, el informe y la aprobación final siguen siendo pasos fijos porque todo informe los necesita."
   },
   "agents": {
     "schedule": {
       "name": "Analista de plazos",
-      "description": "Calcula retrasos, holguras y consecuencias con la herramienta de fechas y la calculadora.",
-      "system": "Eres planificador de obras. Calcula el retraso de cada hito en días naturales con la herramienta days_between y deduce el efecto sobre la fecha de finalización si el retraso continúa. Muestra las dependencias entre hitos y calcula con la calculadora qué penalización podría derivarse de un retraso supuesto, expresamente como escenario.",
-      "task": "Analiza la situación de plazos:\n\n{{run.input}}"
-    },
-    "causes": {
-      "name": "Analista de causas",
-      "description": "Clasifica las causas por ámbito de responsabilidad y necesidad de documentación.",
-      "system": "Eres jefe de obra con experiencia en gestión de reclamaciones. Asigna cada retraso a una categoría de causa: clima, cadena de suministro, cambio de proyecto, personal u otros. Indica en qué ámbito de responsabilidad recae probablemente según la información disponible, qué pruebas deberían documentarse y qué comunicaciones de impedimento podrían ser necesarias. No hagas valoraciones jurídicas.",
-      "task": "Clasifica las causas de los retrasos:\n\n{{run.input}}"
-    },
-    "countermeasures": {
-      "name": "Planificador de contramedidas",
-      "description": "Desarrolla medidas de aceleración con coste y efecto.",
-      "system": "Eres project manager de obra. Desarrolla contramedidas para mantener la fecha de finalización o limitar el retraso, por ejemplo reorganizar secuencias, más capacidad o trabajos en paralelo. Valora cada medida por tiempo ganado, coste, riesgo y decisiones necesarias del promotor. Recomienda un paquete de medidas.",
-      "task": "Desarrolla contramedidas.\n\nAnálisis de plazos:\n{{node:schedule}}\n\nCausas:\n{{node:causes}}"
+      "description": "Calcula los retrasos y el camino crítico con las herramientas de fechas y de cálculo.",
+      "system": "Eres planificador de obras. Calcula el retraso de cada hito en días naturales con la herramienta days_between y deduce el efecto sobre la fecha de terminación si el retraso continúa. Muestra qué hitos dependen de cuáles y qué retraso está en el camino crítico. Enumera las causas supuestas tal como figuran en los documentos, sin juzgar la responsabilidad. Los equipos especializados trabajarán después sin los archivos: incluye en tu resumen cada fecha, observación y cifra que necesiten.",
+      "task": "Analiza la situación de plazos:\n\n{{run.input}}",
+      "fields": {
+        "summary": "Situación del plazo con todas las fechas, observaciones y cifras contractuales relevantes de los documentos",
+        "delay_days": "Retraso esperado de la fecha de terminación en días naturales",
+        "critical_path": "Los hitos del camino crítico y cómo se transmiten sus retrasos",
+        "suspected_causes": "Causas supuestas, una por retraso, tal como figuran en los documentos"
+      }
     },
     "report": {
       "name": "Informe al promotor",
-      "description": "Resume de forma objetiva plazos, causas y medidas.",
-      "system": "Redactas informes de situación para promotores públicos: objetivos, claros y sin buscar culpables. Estructura el informe en situación de plazos, causas, contramedidas, decisiones necesarias y riesgos, como máximo una página. Indica que las cuestiones sobre penalizaciones y ampliación de plazo deben revisarse técnica y jurídicamente.",
-      "task": "Redacta el informe de situación.\n\nAnálisis de plazos:\n{{node:schedule}}\n\nCausas:\n{{node:causes}}\n\nContramedidas:\n{{node:countermeasures}}"
+      "description": "Resume de forma objetiva para la propiedad el plazo, las causas, las reclamaciones y las medidas.",
+      "system": "Redactas informes de situación para promotores públicos: objetivos, claros y sin atribuir culpas. Estructúralo en situación del plazo, causas y ámbitos de responsabilidad, avisos y reclamaciones, contramedidas con coste, decisiones que necesita la propiedad y riesgos, como máximo dos páginas. Usa solo las cifras del análisis de plazos y de los equipos; si los equipos discrepan, muestra ambas visiones. Indica que las cuestiones sobre penalizaciones contractuales y ampliaciones de plazo deben revisarse técnica y jurídicamente.",
+      "task": "Redacta el informe de situación.\n\nAnálisis de plazos:\n{{node:schedule}}\n\nResultados de los equipos especializados:\n{{node:control}}"
     }
   },
   "steps": {
     "release": {
       "name": "Aprobar informe",
-      "instructions": "Revisa el informe de estado antes de que llegue al promotor: ¿son correctos las fechas y los retrasos, se describen las causas de forma objetiva y sin buscar culpables, y queda claro qué decisiones debe tomar el promotor? Las afirmaciones sobre penalizaciones y ampliación de plazo deben estar revisadas por una persona experta. Si lo rechazas, escribe qué falta; la ejecución termina entonces sin archivos del informe."
+      "instructions": "Revisa el informe de situación antes de que llegue a la propiedad: ¿son correctas las fechas y los retrasos, se describen las causas y las responsabilidades de forma objetiva y sin culpas, coinciden los avisos y las reclamaciones de ampliación con lo que visó la jefatura de obra, y queda claro qué decisiones debe tomar la propiedad? Las afirmaciones sobre penalizaciones contractuales y ampliaciones de plazo deben estar revisadas por un experto. Si lo rechazas, escribe qué falta; la ejecución termina entonces sin archivos de informe."
+    },
+    "control": {
+      "name": "Coordinación de obra",
+      "description": "Forma los equipos especializados que el retraso necesita y reparte sus encargos.",
+      "instructions": "Forma primero un equipo de como máximo tres a partir de los equipos especializados. Elige según las causas supuestas: las causas técnicas, el clima, el terreno o los cambios de proyecto necesitan el equipo de obra; el material retrasado, los proveedores o la dotación de los subcontratistas necesitan el equipo de suministro; en cuanto un retraso pueda quedar fuera del ámbito del contratista o falte un aviso de impedimento, el equipo de reclamaciones; siempre que la fecha de terminación esté en riesgo, el equipo de recuperación. Da en paralelo los encargos independientes. Los equipos no ven los archivos: incluye en cada encargo las fechas y observaciones relevantes del análisis de plazos. Encarga al equipo de recuperación solo después de que los equipos de causas hayan informado, y pásale los días de retraso que atribuyeron. Si dos equipos atribuyen los mismos días de forma distinta, da a uno de ellos un encargo de aclaración. Termina con el resultado estructurado de cada equipo bajo el nombre del equipo e indica qué equipos no usaste y por qué.",
+      "task": "Aclara con los equipos especializados que este retraso necesita las causas, la responsabilidad, las reclamaciones y las contramedidas.\n\nAnálisis de plazos:\n{{node:schedule}}"
     }
   },
   "form": {

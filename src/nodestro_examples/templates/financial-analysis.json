@@ -42,10 +42,10 @@
       "y": 60,
       "role": "analysis",
       "icon": "calculator",
-      "model": "claude-opus-5-5",
       "tools": [
         "calculator"
-      ]
+      ],
+      "tier": "strong"
     },
     {
       "id": "review",

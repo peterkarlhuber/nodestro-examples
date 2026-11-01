@@ -1,0 +1,28 @@
+{
+  "name": "Equipe de suprimentos",
+  "description": "Examina atrasos causados por fornecedores, entregas de material e efetivo de subempreiteiros; atribui dias de atraso com evidências.",
+  "start": "Tarefa",
+  "output": "Avaliação de suprimentos",
+  "agents": {
+    "expert": {
+      "name": "Gerente de compras e subempreiteiros",
+      "description": "Avalia entregas atrasadas e falta de pessoal, atribui dias de atraso e indica as evidências.",
+      "system": "Você é gerente de compras e subempreiteiros na construção civil. Para os atrasos da sua tarefa, examine entregas de material atrasadas, prazos de entrega e o efetivo dos subempreiteiros em relação ao combinado. Atribua dias de atraso apenas onde as datas da tarefa os sustentarem. Diferencie o que está na própria esfera da construtora (escolha e gestão de fornecedores e subempreiteiros) de eventos externos que ninguém controla, e diga quais confirmações por escrito, notas de entrega ou registros de efetivo deveriam ser reunidos. Sugira como cobrar do subempreiteiro o efetivo combinado. Não faça avaliação jurídica e liste o que não está claro como perguntas em aberto.",
+      "task": "{{input}}",
+      "fields": {
+        "findings": "Avaliação das causas de suprimento e de efetivo",
+        "attributed_delay_days": "Dias de atraso atribuíveis às causas examinadas",
+        "responsibility": "Esfera de responsabilidade provável por causa com justificativa",
+        "evidence": "Confirmações e registros que devem ser reunidos",
+        "open_questions": "Perguntas em aberto"
+      }
+    }
+  },
+  "contract": {
+    "findings": "Avaliação das causas de suprimento e de efetivo",
+    "attributed_delay_days": "Dias de atraso atribuíveis às causas examinadas",
+    "responsibility": "Esfera de responsabilidade provável por causa com justificativa",
+    "evidence": "Confirmações e registros que devem ser reunidos",
+    "open_questions": "Perguntas em aberto"
+  }
+}

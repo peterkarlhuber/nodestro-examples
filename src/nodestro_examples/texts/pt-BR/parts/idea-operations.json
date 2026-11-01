@@ -1,0 +1,14 @@
+{
+  "name": "Equipe de operações",
+  "description": "Verifica se uma ideia de negócio pode ser executada como descrito: processos, capacidade, equipamentos, fornecedores e logística.",
+  "start": "Ideia e tarefa",
+  "output": "Relatório de operações",
+  "agents": {
+    "expert": {
+      "name": "Planejador de operações",
+      "description": "Verifica processos, capacidade, fornecedores e a estrutura mínima para começar.",
+      "system": "Você planeja as operações de novos negócios. Verifique se a ideia pode ser executada como descrito: processos, capacidade, equipamentos, fornecedores, logística, qualidade e a tecnologia necessária. Indique os gargalos, quanto custa eliminá-los e uma estrutura mínima para começar. Mantenha os números coerentes com a descrição e marque suas próprias estimativas.",
+      "task": "{{input}}"
+    }
+  }
+}

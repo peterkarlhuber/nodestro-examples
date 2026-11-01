@@ -1,48 +1,50 @@
 {
   "name": "Analisar atrasos de obra",
   "field": "Construção civil",
-  "description": "Calcular desvios de cronograma, classificar causas, desenvolver contramedidas e reportar ao contratante.",
+  "description": "Calcular os desvios do cronograma e deixar uma coordenação de obra envolver as equipes especializadas de que o atraso precisa – da obra e da cadeia de suprimentos a pleitos e recuperação – e informar o contratante após a liberação.",
   "start": "Situação do projeto",
   "output": "Relatório de situação",
   "file_name": "Relatório de status",
   "input": "DADOS DE EXEMPLO SINTÉTICOS – totalmente fictícios, apenas para testar.\n\nProjeto: nova creche \"Sol Nascente\", Cidade Exemplo; contratante: prefeitura de Cidade Exemplo\nData contratual de conclusão: 2026-09-30; data do relatório: 2026-05-15\n\n| Marco | Planejado | Real / previsão | Observação |\n|---|---|---|---|\n| Estrutura concluída | 2026-02-27 | 2026-03-20 | 9 dias de geada em janeiro, concretagem suspensa |\n| Cobertura estanque | 2026-03-27 | 2026-04-24 | Entrega atrasada dos elementos da cobertura (fornecedor relata falta de material) |\n| Esquadrias instaladas | 2026-04-17 | 2026-05-29 (previsão) | Mudança de projeto nas janelas de emergência a pedido da vistoria de incêndio |\n| Instalações, primeira etapa | 2026-05-22 | 2026-06-19 (previsão) | Depende das janelas; eletricista na obra com apenas 2 em vez de 4 pessoas |\n| Acabamento interno concluído | 2026-08-28 | em aberto | — |\n| Entrega | 2026-09-30 | em aberto | Multa contratual de 0,2 % do valor do contrato por dia útil, máx. 5 % |\n\nValor do contrato da construtora: 3,2 mi EUR. O contratante espera um relatório para a reunião de 2026-05-20.",
   "guide": {
-    "problem": "Atrasos na obra se acumulam, e os contratantes precisam rapidamente de uma visão clara. O workflow calcula desvios, classifica causas, desenvolve contramedidas e redige um relatório de situação.",
-    "flow": "O analista de cronograma e o analista de causas trabalham em paralelo. Um calcula atrasos e folgas com as ferramentas de datas e calculadora, o outro organiza as causas por área de responsabilidade e necessidade de documentação; os dois também analisam cronogramas, diários de obra e fotos anexados. O planejador de contramedidas desenvolve opções de aceleração e o agente de relatório resume tudo para o contratante. Antes que o relatório saia da equipe do projeto, uma pessoa o libera.",
-    "input": "Um cronograma com marcos planejados e reais, observações sobre as causas, data do relatório e condições contratuais, como texto ou como arquivos: cronograma em Excel, diário de obra em PDF, fotos como imagem. Os arquivos de exemplo contêm um cronograma e um trecho do diário de obra.",
-    "result": "Um relatório de status objetivo com situação do cronograma, causas, contramedidas, decisões necessárias e riscos. Após a liberação, a execução o salva em PDF e como arquivo Word editável. Questões sobre multas e prorrogação de prazo ficam sujeitas a análise técnica e jurídica.",
-    "adapt": "Exporte o seu cronograma do software de projetos em Excel e anexe o diário de obra e as fotos. Para um relatório periódico, você pode agendar a cópia; a liberação fica então esperando por você."
+    "problem": "Atrasos na obra têm causas diferentes, e cada causa precisa de outro conhecimento: geada precisa ser documentada, um fornecedor atrasado exige uma notificação de impedimento à parte certa, uma alteração de projeto determinada pelo contratante pode justificar uma prorrogação de prazo, e a falta de pessoal exige um plano de aceleração. O fluxo de trabalho calcula os desvios e deixa uma coordenação de obra envolver exatamente as equipes especializadas de que a situação precisa.",
+    "flow": "O analista de cronograma calcula com a ferramenta de datas o atraso de cada marco e lista as causas supostas. A coordenação de obra, um orquestrador, primeiro monta uma equipe de no máximo três a partir das quatro equipes especializadas e depois distribui tarefas: a equipe de obra para clima, solo e alterações de projeto, a equipe de suprimentos para fornecedores e subempreiteiros, a equipe de pleitos para notificações de impedimento e prorrogações de prazo, a equipe de recuperação para medidas de aceleração com custo. Equipes independentes trabalham em paralelo. A equipe de pleitos para por uma pessoa: seu rascunho de notificação só é usado depois que a gerência de obra responsável o visar. O agente de relatório redige o relatório de status e, antes que ele chegue ao contratante, uma pessoa o libera.",
+    "input": "Uma visão geral do cronograma com marcos planejados e reais, observações sobre as causas, data do relatório e condições contratuais, como texto ou como arquivos: cronograma em Excel, diário de obra em PDF, fotos como imagens. Os arquivos de exemplo contêm um cronograma e um trecho do diário de obra.",
+    "result": "Um relatório de status objetivo com situação do cronograma, causas e esferas de responsabilidade, notificações e pleitos de prorrogação, medidas de recuperação com custo, decisões necessárias e riscos; após a liberação, em PDF e em um arquivo Word editável. A visão de orquestração mostra quais equipes a coordenação montou, o que cada uma entregou como dados estruturados e por quê. Questões sobre multas contratuais e prorrogações de prazo continuam sujeitas a revisão técnica e jurídica.",
+    "adapt": "Exporte o seu cronograma do software de projetos em Excel e anexe o diário de obra e as fotos. Adapte a equipe de pleitos ao seu tipo de contrato (por exemplo FIDIC ou condições próprias) e informe na equipe de recuperação as taxas de custo da sua empresa. Se você precisar de outra especialidade, como instalações prediais, salve-a como fluxo de trabalho com uma descrição clara e adicione-a às equipes da coordenação.",
+    "control": "Automático: a coordenação escolhe no máximo três equipes, faz no máximo duas trabalharem ao mesmo tempo e dá a cada equipe no máximo duas tarefas; cada decisão de composição e de tarefa é registrada com o motivo. Uma pessoa decide duas vezes: a gerência de obra visa o rascunho da notificação de impedimento dentro da equipe de pleitos (rejeitá-lo encerra a execução), e uma pessoa libera o relatório de status antes que arquivos sejam criados. Limites: no máximo 8 decisões da coordenação, 50 passos, 40 minutos e 4 USD por execução.",
+    "why": "Uma cadeia fixa tratava todo atraso da mesma forma: um analista de causas, um planejador de medidas, fosse o problema geada ou uma notificação ausente. Com a coordenação, um atraso puramente climático não custa uma análise de pleitos, enquanto uma alteração de projeto determinada pelo contratante traz a equipe de pleitos com o seu visto. As equipes devolvem resultados estruturados (dias, responsabilidade, evidências), de modo que o relatório pode somá-los em vez de reformular texto. O cálculo do cronograma, o relatório e a liberação final continuam sendo passos fixos, porque todo relatório precisa deles."
   },
   "agents": {
     "schedule": {
       "name": "Analista de cronograma",
-      "description": "Calcula atrasos, folgas e consequências com a ferramenta de datas e a calculadora.",
-      "system": "Você é planejador de obras. Calcule o atraso de cada marco em dias corridos com a ferramenta days_between e derive o efeito sobre a data de conclusão se o atraso continuar. Mostre as dependências entre os marcos e use a calculadora para determinar qual multa contratual poderia surgir de um atraso suposto, explicitamente como cenário.",
-      "task": "Analise a posição do cronograma:\n\n{{run.input}}"
-    },
-    "causes": {
-      "name": "Analista de causas",
-      "description": "Classifica as causas por área de responsabilidade e necessidade de documentação.",
-      "system": "Você é gerente de obra com experiência em gestão de pleitos. Atribua cada atraso a uma categoria de causa: clima, cadeia de suprimentos, mudança de projeto, equipe ou outra. Indique em qual área de responsabilidade ele provavelmente se enquadra segundo as informações disponíveis, quais evidências devem ser documentadas e quais notificações de impedimento podem ser necessárias. Não faça avaliação jurídica.",
-      "task": "Classifique as causas dos atrasos:\n\n{{run.input}}"
-    },
-    "countermeasures": {
-      "name": "Planejador de contramedidas",
-      "description": "Desenvolve medidas de aceleração com custo e efeito.",
-      "system": "Você é controller de projetos. Desenvolva contramedidas para manter a data de conclusão ou limitar o atraso, por exemplo reorganizar a sequência de serviços, capacidade adicional ou trabalho em paralelo. Avalie cada medida por tempo ganho, custo, risco e decisões necessárias do contratante. Recomende um pacote de medidas.",
-      "task": "Desenvolva contramedidas.\n\nAnálise do cronograma:\n{{node:schedule}}\n\nCausas:\n{{node:causes}}"
+      "description": "Calcula os atrasos e o caminho crítico com as ferramentas de datas e de cálculo.",
+      "system": "Você é planejador de obras. Calcule o atraso de cada marco em dias corridos com a ferramenta days_between e deduza o efeito sobre a data de conclusão se o atraso continuar. Mostre quais marcos dependem de quais e qual atraso está no caminho crítico. Liste as causas supostas como constam nos documentos, sem julgar a responsabilidade. As equipes especializadas trabalharão depois sem os arquivos: inclua no seu resumo cada data, observação e número de que elas precisarem.",
+      "task": "Analise a posição do cronograma:\n\n{{run.input}}",
+      "fields": {
+        "summary": "Situação do cronograma com todas as datas, observações e números contratuais relevantes dos documentos",
+        "delay_days": "Atraso esperado da data de conclusão em dias corridos",
+        "critical_path": "Os marcos do caminho crítico e como seus atrasos se propagam",
+        "suspected_causes": "Causas supostas, uma por atraso, como indicadas nos documentos"
+      }
     },
     "report": {
       "name": "Relatório ao contratante",
-      "description": "Resume de forma objetiva a posição do cronograma, as causas e as medidas.",
-      "system": "Você redige relatórios de situação para contratantes públicos: objetivos, claros e sem atribuir culpa. Estruture-o em posição do cronograma, causas, contramedidas, decisões necessárias e riscos, em no máximo uma página. Indique que questões de multas contratuais e prorrogação de prazo precisam de análise técnica e jurídica.",
-      "task": "Redija o relatório de situação.\n\nAnálise do cronograma:\n{{node:schedule}}\n\nCausas:\n{{node:causes}}\n\nContramedidas:\n{{node:countermeasures}}"
+      "description": "Resume de forma objetiva para o contratante o cronograma, as causas, os pleitos e as medidas.",
+      "system": "Você escreve relatórios de status para contratantes públicos: objetivos, claros e sem atribuir culpa. Estruture em situação do cronograma, causas e esferas de responsabilidade, notificações e pleitos, contramedidas com custo, decisões necessárias do contratante e riscos, no máximo duas páginas. Use apenas os números da análise de cronograma e das equipes; se as equipes divergirem, mostre as duas visões. Indique que questões sobre multas contratuais e prorrogações de prazo precisam de revisão técnica e jurídica.",
+      "task": "Escreva o relatório de status.\n\nAnálise de cronograma:\n{{node:schedule}}\n\nResultados das equipes especializadas:\n{{node:control}}"
     }
   },
   "steps": {
     "release": {
       "name": "Liberar relatório",
-      "instructions": "Verifique o relatório de status antes que ele vá para o contratante: as datas e os atrasos estão corretos, as causas estão descritas de forma objetiva e sem atribuir culpa, e está claro quais decisões o contratante deve tomar? Afirmações sobre multas e prorrogação de prazo precisam ter sido verificadas por um especialista. Se recusar, escreva o que falta; a execução então termina sem arquivos de relatório."
+      "instructions": "Verifique o relatório de status antes que ele vá para o contratante: as datas e os atrasos estão corretos, as causas e responsabilidades estão descritas de forma objetiva e sem culpa, as notificações e pleitos de prorrogação correspondem ao que a gerência de obra visou, e está claro quais decisões o contratante deve tomar? Afirmações sobre multas contratuais e prorrogações de prazo precisam ter sido verificadas por um especialista. Se rejeitar, escreva o que falta; a execução termina então sem arquivos de relatório."
+    },
+    "control": {
+      "name": "Coordenação de obra",
+      "description": "Monta as equipes especializadas de que o atraso precisa e distribui suas tarefas.",
+      "instructions": "Primeiro monte uma equipe de no máximo três a partir das equipes especializadas. Escolha pelas causas supostas: causas técnicas, clima, solo ou alterações de projeto precisam da equipe de obra; material atrasado, fornecedores ou o efetivo dos subempreiteiros precisam da equipe de suprimentos; assim que um atraso puder estar fora da esfera da construtora ou faltar uma notificação de impedimento, a equipe de pleitos; sempre que a data de conclusão estiver em risco, a equipe de recuperação. Dê tarefas independentes em paralelo. As equipes não veem os arquivos: inclua em cada tarefa as datas e observações relevantes da análise de cronograma. Acione a equipe de recuperação só depois que as equipes de causas tiverem respondido, e passe a ela os dias de atraso que atribuíram. Se duas equipes atribuírem os mesmos dias de forma diferente, dê a uma delas uma tarefa de esclarecimento. Termine com o resultado estruturado de cada equipe sob o nome da equipe e diga quais equipes você não usou e por quê.",
+      "task": "Esclareça com as equipes especializadas de que este atraso precisa as causas, a responsabilidade, os pleitos e as contramedidas.\n\nAnálise de cronograma:\n{{node:schedule}}"
     }
   },
   "form": {

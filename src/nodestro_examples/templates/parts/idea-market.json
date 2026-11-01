@@ -1,0 +1,40 @@
+{
+  "id": "idea-market",
+  "capabilities": [
+    "market analysis",
+    "target groups",
+    "competition"
+  ],
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160
+    },
+    {
+      "id": "expert",
+      "type": "agent",
+      "x": 340,
+      "y": 160,
+      "role": "research",
+      "icon": "users"
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 680,
+      "y": 160
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "expert"
+    ],
+    [
+      "expert",
+      "output"
+    ]
+  ]
+}

@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "nodestro-examples"
-version = "0.2.0"
+version = "0.3.0"
 description = "Nodestro Examples – the 24 example multi-agent workflows of Nodestro in six languages, with sample files and test cases."
 readme = "README.md"
 license = "MIT"

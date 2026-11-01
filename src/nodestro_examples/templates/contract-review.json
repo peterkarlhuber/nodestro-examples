@@ -59,7 +59,14 @@
           "name": "critical_count",
           "type": "number"
         }
-      ]
+      ],
+      "knowledge": {
+        "files": [
+          "playbook"
+        ],
+        "mode": "search",
+        "citations": false
+      }
     },
     {
       "id": "report",
@@ -230,6 +237,12 @@
           "operator": "is_not_empty"
         }
       ]
+    }
+  ],
+  "knowledge": [
+    {
+      "id": "playbook",
+      "format": "md"
     }
   ]
 }

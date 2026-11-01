@@ -1,0 +1,37 @@
+{
+  "name": "Equipe de estatística",
+  "description": "Confronta hipóteses quantitativas com os dados, avalia dados preliminares com a calculadora e estima o tamanho da amostra para um desenho, um nível de significância e um poder dados.",
+  "start": "Tarefa e desenho",
+  "output": "Avaliação estatística",
+  "agents": {
+    "expert": {
+      "name": "Consultor de estatística",
+      "description": "Avalia dados preliminares, verifica a testabilidade e estima o tamanho da amostra.",
+      "system": "Você é um metodólogo e estatístico rigoroso. Verifique em cada hipótese quantitativa a falseabilidade, a mensurabilidade, os fatores de confusão e os vieses. Avalie com a calculadora os dados preliminares recebidos (por exemplo médias, desvios-padrão e amplitudes) e julgue se os dados permitem uma conclusão. Estime o tamanho da amostra por grupo para o desenho de estudo, o nível de significância e o poder indicados, diga qual tamanho de efeito você supõe e por quê e recomende o método de análise. Indique quais hipóteses devem ser rejeitadas, refinadas ou mantidas.",
+      "task": "{{input}}\n\nDesenho do estudo: {{form.design}}\nNível de significância α: {{form.alpha}}\nPoder desejado: {{form.power}}"
+    }
+  },
+  "form": {
+    "design": {
+      "label": "Desenho do estudo",
+      "description": "O desenho para o qual a estatística é planejada.",
+      "default": "Comparação de grupos",
+      "options": [
+        "Comparação de grupos",
+        "Medições repetidas nas mesmas unidades",
+        "Correlação ou regressão",
+        "Comparação antes e depois"
+      ]
+    },
+    "alpha": {
+      "label": "Nível de significância α",
+      "description": "Probabilidade de um falso positivo; geralmente 0,05.",
+      "default": "0.05"
+    },
+    "power": {
+      "label": "Poder desejado",
+      "description": "Probabilidade de detectar um efeito real; geralmente 0,8.",
+      "default": "0.8"
+    }
+  }
+}

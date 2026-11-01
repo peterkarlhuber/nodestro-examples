@@ -1,39 +1,29 @@
 {
   "name": "Articolo per il blog",
   "field": "Marketing e contenuti",
-  "description": "Analizzare il pubblico, creare una scaletta, scrivere l'articolo e revisionarlo.",
+  "description": "Preparare un brief con pubblico, taglio e scaletta, scrivere l'articolo e revisionarlo.",
   "start": "Tema",
   "output": "Articolo",
   "file_name": "Articolo per il blog",
   "input": "Perché gli editor visuali di workflow rendono gli agenti IA più accessibili",
   "guide": {
-    "problem": "I buoni articoli nascono da un pubblico chiaro e da una scaletta ben pensata. Il workflow divide il lavoro come una redazione e controlla il risultato prima della pubblicazione.",
-    "flow": "Pubblico e scaletta vengono creati in parallelo con un modello veloce. L'autore li trasforma nell'articolo; un controllo qualità integrato verifica che segua la scaletta e risponda alle domande dei lettori. La redazione controlla lunghezza e leggibilità con lo strumento di statistiche del testo e segnala le affermazioni non verificate.",
+    "problem": "I buoni articoli nascono da un brief chiaro: chi li legge, con quale taglio e con quali messaggi chiave. Il workflow lavora come una piccola redazione e controlla il risultato prima della pubblicazione.",
+    "flow": "Un modello veloce prepara un brief strutturato con pubblico, taglio, scaletta e messaggi chiave. L'autore lo trasforma nell'articolo; un controllo qualità integrato verifica che segua la scaletta e risponda alle domande dei lettori e, in caso contrario, lo rimanda una volta in revisione. Una redazione veloce controlla lunghezza e leggibilità con lo strumento di statistiche del testo e segnala le affermazioni non verificate.",
     "input": "Un tema in una frase. Facoltativamente aggiungi il pubblico, il tono o la lunghezza desiderata direttamente nell'input.",
     "result": "Un articolo finito in Markdown con titoli, una meta description e brevi note redazionali con il numero di parole e le affermazioni da documentare prima della pubblicazione. L'esecuzione salva inoltre il risultato come file Markdown e HTML da riprendere nel tuo CMS.",
-    "adapt": "Cambia il tema nell'input. Puoi caricare la tua guida di stile come conoscenza e assegnarla all'autore e alla redazione. Imposta la lunghezza desiderata nel prompt di sistema dell'autore."
+    "adapt": "Cambia il tema nell'input. Puoi caricare la tua guida di stile come conoscenza e assegnarla all'autore e alla redazione. Imposta la lunghezza desiderata nel prompt di sistema dell'autore e il numero di sezioni o di messaggi chiave nel prompt di sistema del brief.",
+    "control": "Automatico: brief, articolo e revisione redazionale si susseguono; nessun passo attende una persona. Un controllo qualità separato valuta l'articolo secondo due criteri (segue la scaletta, risponde alle domande dei lettori) e, se uno non è soddisfatto, lo fa rivedere una volta dall'autore. La redazione non cambia il contenuto, ma segnala le affermazioni che richiedono una fonte. L'articolo è una bozza: sei tu a decidere se e dove pubblicarlo.",
+    "why": "Un unico brief strutturato sostituisce due pianificatori in parallelo i cui risultati l'autore doveva conciliare: prima la scaletta nasceva senza conoscere il pubblico. Ora pubblico, taglio, scaletta e messaggi chiave nascono da un'unica idea e arrivano all'autore come campi ben separati. L'autore ha un controllo qualità con revisione automatica perché è lì che nasce la maggior parte dei punti deboli. Come esempio per principianti, il workflow resta di proposito una catena breve senza diramazioni, cicli o approvazioni, così ogni passo si può seguire nell'esecuzione."
   },
   "agents": {
-    "audience": {
-      "name": "Pubblico",
-      "description": "Descrive i lettori, le loro domande e cosa sanno già.",
-      "system": "Descrivi i lettori a cui si rivolge un articolo: chi sono, cosa sanno già e quali tre domande portano con sé. Sii conciso.",
-      "task": "{{input}}"
-    },
-    "outline": {
-      "name": "Scaletta",
-      "description": "Crea il titolo e la scaletta.",
-      "system": "Crei un titolo accattivante e una scaletta in cinque parti per un articolo. Indica in una frase cosa deve ottenere ogni sezione.",
-      "task": "{{input}}"
-    },
     "writer": {
       "name": "Autore",
-      "description": "Scrive l'articolo a partire dalla scaletta e dal pubblico.",
+      "description": "Scrive l'articolo a partire dal brief.",
       "system": "Sei un giornalista tecnologico esperto. Scrivi un articolo chiaro e vivace di circa 700 parole con titoli in Markdown. Spiega i termini tecnici alla prima occorrenza e usa esempi concreti. Non inventare studi, numeri o citazioni.",
-      "task": "Scrivi l'articolo su “{{run.input}}”.\n\nPubblico:\n{{node:audience}}\n\nScaletta:\n{{node:outline}}",
+      "task": "Scrivi l'articolo su “{{run.input}}”.\n\nBrief (pubblico, taglio, scaletta, messaggi chiave):\n{{node:brief}}",
       "criteria": {
-        "follows_outline": "L'articolo segue la scaletta.",
-        "audience": "L'articolo risponde alle domande del pubblico."
+        "follows_outline": "L'articolo segue la scaletta del brief.",
+        "audience": "L'articolo risponde alle domande del pubblico indicate nel brief."
       }
     },
     "editor": {
@@ -41,6 +31,18 @@
       "description": "Controlla lunghezza e leggibilità e fornisce la versione finale.",
       "system": "Sei un redattore. Determina il numero di parole e di frasi dell'articolo con lo strumento di statistiche del testo. Migliora chiarezza, ortografia e scorrevolezza senza cambiare contenuto o struttura. Fornisci prima la versione finale revisionata in Markdown, poi una meta description di al massimo 155 caratteri e infine le note redazionali: numero di parole, modifiche principali e affermazioni da documentare prima della pubblicazione.",
       "task": "Revisiona questo articolo:\n\n{{input}}"
+    },
+    "brief": {
+      "name": "Brief",
+      "description": "Definisce pubblico, taglio, scaletta e messaggi chiave in un brief strutturato.",
+      "system": "Sei il caporedattore e prepari il brief di un articolo. Definisci il pubblico (chi sono i lettori, cosa sanno già e quali tre domande portano con sé), il taglio che rende l'articolo degno di essere letto, con un titolo provvisorio, una scaletta in cinque parti con una frase su cosa deve ottenere ogni sezione e da tre a cinque messaggi chiave che i lettori devono portarsi via. Sii conciso e non inventare fatti, numeri o fonti.",
+      "task": "Prepara il brief di un articolo su questo tema:\n\n{{input}}",
+      "fields": {
+        "audience": "Pubblico: chi sono i lettori, cosa sanno già e quali domande portano con sé",
+        "angle": "Taglio e titolo provvisorio dell'articolo",
+        "outline": "Sezioni in ordine, ciascuna con una frase su cosa deve ottenere",
+        "key_messages": "Messaggi chiave che i lettori devono portarsi via"
+      }
     }
   },
   "tests": {

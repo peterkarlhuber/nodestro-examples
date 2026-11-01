@@ -1,42 +1,32 @@
 {
   "name": "Convertir una pregunta de investigación en hipótesis",
   "field": "Investigación y desarrollo",
-  "description": "Analizar una pregunta de investigación, desarrollar hipótesis comprobables, revisarlas críticamente y derivar un plan experimental.",
+  "description": "Analizar una pregunta de investigación y dejar que una coordinación involucre exactamente los equipos de métodos que necesita – de las hipótesis a la estadística, los métodos cualitativos y la ética – para derivar un plan de estudio.",
   "start": "Pregunta de investigación",
   "output": "Plan experimental",
   "file_name": "Plan experimental",
   "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nPregunta de investigación: ¿Se puede reducir la temperatura de curado de nuestra pintura en polvo PL-7 de 180 °C a\n165 °C sin que se resienta la adherencia sobre acero galvanizado? El objetivo es ahorrar alrededor de un 10 % de\nenergía en el horno.\n\nEnsayo previo (5 chapas por condición, valor de corte cruzado según ISO 2409, 0 = mejor adherencia, 5 = peor):\n- 180 °C, 15 min: 0, 0, 1, 0, 1\n- 165 °C, 15 min: 1, 0, 2, 1, 1\n- 165 °C, 20 min: 0, 1, 0, 1, 0\n\nCondiciones: 40 chapas de ensayo disponibles por semana, horno libre para ensayos dos días por semana,\nel pretratamiento de las chapas se ha hecho hasta ahora en dos días distintos.",
   "guide": {
-    "problem": "La buena investigación empieza con una pregunta precisa y comprobable. El flujo descompone una pregunta de investigación, formula hipótesis, las somete a una crítica metodológica y deriva un plan experimental realista.",
-    "flow": "Una cadena secuencial con retroceso: el analista aclara variables y supuestos, el agente de hipótesis formula hipótesis comprobables con hipótesis nulas y el crítico metodológico las contrasta con los datos del ensayo previo usando la calculadora y señala variables de confusión. El planificador de experimentos usa juntas las hipótesis y la crítica.",
-    "input": "Una pregunta de investigación con su objetivo, datos de ensayos previos y condiciones como material, tiempo y equipos. Puedes adjuntar datos de medición y documentos como archivos; el archivo de ejemplo contiene los valores del ensayo previo por chapa.",
-    "result": "Un plan experimental con hipótesis, factores y niveles, tamaño de muestra, método de medición, análisis y criterios de interrupción, además de los riesgos abiertos, también como archivo de Word. El planificador de experimentos propone el plan para el conocimiento; tú decides si se guarda.",
-    "adapt": "Sustituye la pregunta y el ensayo previo por los tuyos y adjunta los datos de medición directamente. La literatura que necesitas una y otra vez puedes subirla como conocimiento en modo «Búsqueda» y asignarla al analista de la pregunta para que trabaje con citas. Vuestras directrices estadísticas se añaden en el crítico metodológico."
+    "problem": "La buena investigación empieza con una pregunta precisa y comprobable y con los métodos adecuados. Un ensayo de materiales necesita un análisis de potencia, un estudio con entrevistas necesita un plan de muestreo y un consentimiento informado, y muchas preguntas necesitan ambos. El flujo de trabajo analiza la pregunta y deja que una coordinación de investigación incorpore exactamente los equipos de métodos que la pregunta requiere.",
+    "flow": "El analista de la pregunta la estructura y resume los datos adjuntos, porque los equipos trabajan sin los archivos. La coordinación de investigación, un orquestador, empieza siempre con el equipo de hipótesis y luego decide: los resultados medibles van al equipo de estadística, cuyo diseño de estudio y nivel de significación fija como parámetros; las experiencias y los motivos van al equipo de métodos cualitativos; las personas o los datos personales incorporan al equipo de ética y protección de datos. Si un equipo considera que una hipótesis no es comprobable, la coordinación la devuelve una vez al equipo de hipótesis. El planificador del estudio convierte todo en un plan.",
+    "input": "Una pregunta de investigación con su objetivo, los datos existentes de ensayos previos y las condiciones como material, tiempo y equipos. Puedes adjuntar datos de medición y documentos como archivos; el archivo de ejemplo contiene las valoraciones del ensayo previo por panel.",
+    "result": "Un plan de estudio con hipótesis, diseño, tamaño de muestra, método de medición o de entrevista, análisis, criterios de parada y riesgos abiertos, también como archivo de Word. La vista de orquestación de la ejecución muestra qué equipos de métodos participaron, con qué parámetros, y cuáles se dejaron fuera y por qué. El planificador propone el plan para el conocimiento; tú decides si se guarda.",
+    "adapt": "Sustituye la pregunta y el ensayo previo por los tuyos y adjunta directamente los datos de medición. Añade tus directrices estadísticas al agente del equipo de estadística. Si tu ámbito necesita otro equipo de métodos, por ejemplo un equipo de laboratorio, guárdalo como flujo de trabajo con una descripción clara y añádelo a los equipos de la coordinación.",
+    "control": "Automático: la coordinación decide qué equipos de métodos trabajan y rellena el formulario del equipo de estadística (diseño, nivel de significación, potencia); cada decisión queda registrada con su motivo. Límites: como máximo 7 decisiones, cada equipo como máximo dos veces, un presupuesto de 4 USD por ejecución. Ningún paso espera a una persona; el plan es un borrador para la persona investigadora responsable.",
+    "why": "Una cadena fija ejecutaría siempre una crítica estadística, incluso en un estudio con entrevistas donde no hay nada que calcular, y solo incluiría la ética si alguien se acordara. La coordinación elige según la pregunta y pasa al equipo de estadística parámetros estructurados en lugar de texto libre, de modo que el análisis de potencia calcula con un diseño definido. El análisis y el plan final siguen siendo pasos fijos: todo estudio los necesita."
   },
   "agents": {
     "framing": {
       "name": "Analista de la pregunta",
       "description": "Aclara objetivo, variables, condiciones y lagunas de conocimiento.",
-      "system": "Eres investigador y estructuras preguntas de investigación. Descompón la pregunta en objetivo, variables independientes y dependientes, posibles variables de confusión y condiciones. Resume lo que muestran los datos disponibles y lo que no, y separa el conocimiento establecido de las conjeturas.",
+      "system": "Eres investigador y estructuras preguntas de investigación. Descompón la pregunta en objetivo, variables independientes y dependientes, posibles variables de confusión y condiciones. Resume lo que muestran los datos disponibles y lo que no, y separa el conocimiento establecido de las conjeturas. Los equipos de métodos trabajarán después sin los archivos: resume los datos de los archivos adjuntos con sus cifras clave (número de mediciones, valores por grupo, condiciones) para que no se pierda nada importante.",
       "task": "Analiza esta pregunta de investigación:\n\n{{run.input}}"
     },
-    "hypotheses": {
-      "name": "Desarrollador de hipótesis",
-      "description": "Formula hipótesis comprobables con predicciones e hipótesis nulas.",
-      "system": "Formulas hipótesis científicas. Deriva del análisis entre tres y cinco hipótesis comprobables. Indica para cada una la hipótesis nula, una predicción medible, el método de medición y qué cuenta como confirmación o refutación. Ordénalas por relevancia para el objetivo.",
-      "task": "Desarrolla hipótesis a partir de este análisis:\n\n{{node:framing}}"
-    },
-    "critic": {
-      "name": "Crítico metodológico",
-      "description": "Comprueba la contrastabilidad de las hipótesis, las variables de confusión y los datos.",
-      "system": "Eres un metodólogo y revisor exigente. Comprueba cada hipótesis en cuanto a falsabilidad, medibilidad, variables de confusión y sesgos. Evalúa con la calculadora los datos disponibles del ensayo previo (por ejemplo medias y rangos) y juzga si los datos permiten una afirmación. Indica qué hipótesis conviene descartar, afinar o mantener.",
-      "task": "Revisa críticamente estas hipótesis.\n\nPregunta de investigación y datos:\n{{run.input}}\n\nHipótesis:\n{{node:hypotheses}}"
-    },
     "design": {
-      "name": "Planificador de experimentos",
-      "description": "Deriva un plan experimental de las hipótesis y la crítica.",
-      "system": "Planificas experimentos según los principios del diseño de experimentos. Para las hipótesis que se mantienen, diseña un plan: factores y niveles, repeticiones, aleatorización y bloques frente a variables de confusión, método de medición, método de análisis, criterios de parada y de éxito, y un calendario que se ajuste a las condiciones. Termina con los riesgos abiertos.",
-      "task": "Diseña el plan experimental.\n\nHipótesis:\n{{node:hypotheses}}\n\nCrítica metodológica:\n{{node:critic}}"
+      "name": "Planificador del estudio",
+      "description": "Deriva el plan de estudio del análisis y de los resultados de los equipos de métodos.",
+      "system": "Planificas estudios. Para las hipótesis que se mantienen, diseña el plan de estudio: en experimentos, factores y niveles, repeticiones, aleatorización y bloques frente a variables de confusión, método de medición y análisis; en partes cualitativas, la muestra, la guía de entrevista y el método de análisis; en estudios con personas, las medidas de consentimiento y protección de datos. Añade criterios de parada y de éxito y un calendario que se ajuste a las condiciones. Usa los tamaños de muestra y las decisiones de los equipos de métodos y no inventes cifras nuevas. Termina con los riesgos abiertos.",
+      "task": "Diseña el plan de estudio.\n\nAnálisis de la pregunta:\n{{node:framing}}\n\nResultados de los equipos de métodos:\n{{node:coordinator}}"
     }
   },
   "form": {
@@ -172,6 +162,18 @@
     "pretest_file": {
       "name": "Datos del ensayo previo en CSV",
       "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente inventados, solo para probar.\n\nPregunta de investigación: ¿Se puede reducir la temperatura de curado de nuestra pintura en polvo PL-7 de 180 °C a 165 °C sin que se resienta la adherencia sobre acero galvanizado? El objetivo es ahorrar alrededor de un 10 % de energía en el horno.\n\nLos valores del ensayo previo (corte cruzado según ISO 2409, 0 = mejor adherencia) se adjuntan como archivo CSV.\n\nCondiciones: 40 chapas de ensayo disponibles por semana, horno libre para ensayos dos días por semana."
+    },
+    "interview_study": {
+      "name": "Estudio con entrevistas sin mediciones",
+      "input": "DATOS DE EJEMPLO SINTÉTICOS – totalmente ficticios, solo para probar.\n\nPregunta de investigación: ¿Por qué las personas del turno de noche de nuestra planta apenas usan la nueva app de descansos para reservar salas de reposo, aunque la habían pedido?\n\nLo que sabemos: 140 personas trabajan en turno de noche; en los dos primeros meses, 9 de ellas reservaron una sala. Turnos de día: 210 reservas de 380 personas. Algunos jefes de equipo dicen que la app requiere el acceso corporativo, que muchas personas del turno de noche no usan.\n\nCondiciones: entrevistas solo durante las pausas (30 minutos), el comité de empresa debe estar de acuerdo, ninguna grabación sin consentimiento; resultados antes de fin de trimestre."
+    }
+  },
+  "steps": {
+    "coordinator": {
+      "name": "Coordinación de investigación",
+      "description": "Decide qué equipos de métodos necesita la pregunta y fija los parámetros del equipo de estadística.",
+      "instructions": "Empieza siempre con el equipo de hipótesis. Después decide según la pregunta y los datos: los resultados medibles y los datos de ensayos previos necesitan el equipo de estadística, cuyo diseño de estudio fijas como parámetro (el nivel de significación o la potencia solo si la pregunta requiere valores distintos de 0,05 y 0,8); las preguntas sobre experiencias, motivos o comportamientos que no se pueden contar necesitan el equipo de métodos cualitativos; todo lo que afecte a personas, salud o datos personales necesita el equipo de ética y protección de datos. Si el equipo de estadística o el cualitativo considera que una hipótesis no es comprobable tal como está formulada, da al equipo de hipótesis un encargo de revisión con la crítica. Los equipos no ven los archivos: incluye en cada encargo los datos relevantes del análisis. Termina con las hipótesis finales y los resultados clave de cada equipo bajo el nombre del equipo, e indica qué equipos no involucraste y por qué.",
+      "task": "Planifica cómo investigar esta pregunta con los equipos de métodos que necesita.\n\nAnálisis de la pregunta y de los datos:\n{{node:framing}}"
     }
   }
 }

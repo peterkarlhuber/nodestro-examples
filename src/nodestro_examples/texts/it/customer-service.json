@@ -6,11 +6,13 @@
   "output": "Bozze di risposta",
   "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nData di oggi: 2026-03-20\n\nEstratto dalla nostra policy di servizio (negozio online di esempio \"Cucina Campione\"):\n- Resi: 30 giorni dalla consegna, merce non usata nella confezione originale; il reso è gratuito.\n- Garanzia: 2 anni; in caso di difetti riparazione o sostituzione dopo verifica, una foto del difetto aiuta.\n- Tempi di consegna: 2–4 giorni lavorativi; in caso di ritardo superiore a 7 giorni lavorativi offriamo l'annullamento gratuito.\n- Buoni e gesti di cortesia oltre 20 EUR solo dopo approvazione del responsabile del team.\n\nRichiesta 1 – Jonas Esempio, ordine 10442, consegnato il 2026-02-27:\n\"La padella non funziona sul mio piano a induzione. Posso restituirla? È ancora nella confezione originale.\"\n\nRichiesta 2 – Maria Campione, ordine 10518, consegnato il 2026-01-15:\n\"Il manico della mia pentola si è staccato, dopo due mesi! È davvero fastidioso. Rivoglio i miei soldi.\"\n\nRichiesta 3 – Ali Istanza, ordine 10603, effettuato il 2026-03-09, non ancora consegnato:\n\"Dov'è il mio ordine? Mi serve il set di coltelli come regalo per il fine settimana.\"\n\nRichiesta 4 – Sofia Prova:\n\"Avete anche stampi in silicone per dolci senza plastificanti?\"",
   "guide": {
-    "problem": "Nel servizio clienti arrivano molte richieste insieme, e ognuna richiede la regola giusta e il tono giusto. Il workflow ordina le richieste, verifica regole e scadenze e prepara risposte da approvare.",
-    "flow": "Un classificatore veloce ordina ogni richiesta per argomento, urgenza e stato d'animo. Il verificatore delle regole applica la policy di servizio e ricalcola le scadenze con lo strumento delle date. Il redattore delle risposte scrive le risposte; un controllo qualità verifica che non si prometta nulla oltre la policy. Un nodo decisionale invia prima le escalation a un agente di de-escalation. Ogni bozza attende un'approvazione; un rifiuto con riscontro rimanda le bozze, tramite un ciclo, al redattore delle risposte, che le rivede e le sottopone di nuovo all'approvazione (al massimo tre giri).",
-    "input": "Più richieste di clienti con dati di ordine e consegna, la data di oggi e la vostra policy di servizio, come estratto nel testo o come file (PDF, Word, Markdown); il file di esempio contiene una policy più dettagliata.",
-    "result": "Per ogni richiesta una classificazione, la regola applicabile con verifica delle scadenze e una bozza di risposta che una persona approva prima dell'invio.",
-    "adapt": "Allega la vostra policy completa e le FAQ come file, oppure caricale come conoscenza e assegnale al verificatore delle regole se valgono in modo permanente. Il tono del tuo marchio (tu o Lei, formula di saluto) si definisce nel prompt di sistema del redattore delle risposte. Per molte richieste insieme usa l'elaborazione in batch."
+    "problem": "Nel servizio clienti arrivano molte richieste insieme, e ognuna richiede la regola giusta, i dati d'ordine giusti e il tono giusto. Il workflow ordina le richieste, verifica regole e scadenze in base ai dati dell'ordine e prepara risposte da approvare.",
+    "flow": "Un classificatore veloce ordina ogni richiesta per argomento, urgenza e stato d'animo. Il verificatore delle regole applica la policy di servizio e ricalcola le scadenze con lo strumento delle date; se la tua copia è collegata al negozio online, consulta ogni ordine in sola lettura con get_order, altrimenti usa i dati d'ordine delle richieste o un export degli ordini allegato. Il redattore delle risposte scrive le risposte; un controllo qualità verifica che non si prometta nulla oltre la policy. Un nodo decisionale invia prima le escalation a un agente di de-escalation. Ogni bozza attende un'approvazione; un rifiuto con commento rimanda le bozze, tramite un ciclo, al redattore delle risposte, che le rivede e le sottopone di nuovo all'approvazione (al massimo tre giri).",
+    "input": "Più richieste di clienti con numeri d'ordine, la data di oggi e la vostra policy di servizio, come estratto nel testo o come file (PDF, Word, Markdown); il file di esempio contiene una policy più dettagliata. Le date di ordine e consegna vengono dalle richieste, da un export degli ordini del vostro negozio allegato (JSON, CSV o Excel) o, con il collegamento, direttamente dal negozio; l'export di esempio contiene i tre ordini delle richieste di esempio.",
+    "result": "Per ogni richiesta una classificazione, la regola applicabile con verifica delle scadenze e una bozza di risposta che una persona approva prima dell'invio. La verifica delle regole indica da dove vengono i dati d'ordine (negozio, export o richiesta) e quali mancano.",
+    "adapt": "Allega la vostra policy completa e le FAQ come file, oppure caricale come conoscenza e assegnale al verificatore delle regole se valgono in modo permanente. Per controllare gli ordini dal vivo, fai configurare l'integrazione con il negozio e scegli il server quando copi l'esempio. Il tono del tuo marchio (tu o Lei, formula di saluto) si definisce nel prompt di sistema del redattore delle risposte. L'elaborazione in batch gestisce molte richieste insieme, ma le esecuzioni senza una persona presente non possono usare il collegamento al negozio: allega quindi ai batch un export degli ordini.",
+    "control": "Automatico: la classificazione, la decisione di escalation (verso la de-escalation quando almeno un cliente è arrabbiato o chiede più di quanto la policy consenta), la verifica delle regole e le bozze; lo strumento delle date calcola le scadenze, un controllo qualità verifica le bozze secondo tre criteri (conforme alla policy, tono, nessuna promessa) e ogni passo viene registrato. Una persona approva ogni bozza prima di qualsiasi invio: un rifiuto richiede un commento e rimanda le bozze al redattore delle risposte; se dopo al massimo tre giri vengono ancora rifiutate, l'esecuzione termina come fallita. Le risposte restano bozze; nulla viene inviato automaticamente. Il collegamento al negozio è facoltativo e legge soltanto: la copia riceve get_order solo se la colleghi a un server MCP il cui strumento un amministratore ha approvato in sola lettura; altrimenti funziona in una modalità offline chiaramente indicata. Le esecuzioni senza una persona presente (pianificazioni, serie di test, elaborazione in batch) non possono usare strumenti MCP, a meno che un amministratore non consenta espressamente l'MCP non presidiato.",
+    "why": "I passi si basano l'uno sull'altro (classificare, verificare, scrivere), quindi basta una catena fissa con una diramazione per le escalation; un orchestratore aggiungerebbe costi senza benefici, e per classificare basta un modello veloce. I dati d'ordine arrivano tramite un'integrazione perché si trovano nel negozio e cambiano di ora in ora; la modalità offline con un export mantiene l'esempio utilizzabile anche senza collegamento. L'approvazione con ciclo di revisione resta perché le risposte vanno ai clienti: l'ultima parola spetta a una persona."
   },
   "agents": {
     "triage": {
@@ -27,7 +29,9 @@
       "name": "Verificatore delle regole",
       "description": "Applica la policy di servizio e verifica le scadenze con lo strumento delle date.",
       "system": "Sei responsabile di un team del servizio clienti. Determina per ogni richiesta quale regola della policy di servizio si applica. Calcola le scadenze con lo strumento days_between invece di stimarle. Decidi cosa si può promettere, cosa richiede approvazione e quali informazioni mancano dal cliente. Se la policy non copre una risposta, dillo chiaramente.",
-      "task": "Verifica le regole per queste richieste.\n\nRichieste e policy:\n{{run.input}}\n\nClassificazione:\n{{node:triage}}"
+      "task": "Verifica le regole per queste richieste.\n\nRichieste e policy:\n{{run.input}}\n\nClassificazione:\n{{node:triage}}",
+      "online": "Sei collegato al negozio online (sola lettura). Consulta ogni numero d'ordine delle richieste con get_order: date di ordine e consegna, stato, articoli e l'ultima nota del corriere. I dati del negozio prevalgono su quanto dicono i clienti; se differiscono, dillo e calcola le scadenze con i dati del negozio. Se una richiesta non ha un numero d'ordine o un ordine non viene trovato, dillo e indica cosa va chiesto. Non indovinare mai i dati d'ordine.",
+      "offline": "Nessun negozio online è collegato (modalità offline). Usa solo i dati d'ordine delle richieste o di un export degli ordini del negozio allegato; l'export prevale su quanto i clienti dicono del proprio ordine. Indica per ogni richiesta quali dati d'ordine mancano (data dell'ordine, data di consegna, stato, articoli) e vanno verificati nel negozio o chiesti al cliente. Non inventare mai dati d'ordine né scadenze."
     },
     "reply": {
       "name": "Redattore delle risposte",
@@ -64,6 +68,10 @@
     "policies": {
       "label": "Policy di servizio come file",
       "description": "Facoltativo: le vostre regole o FAQ in PDF, Word, Markdown o testo, fino a 5 file. Senza file vale l'estratto nel testo."
+    },
+    "orders": {
+      "label": "Export degli ordini (negozio online)",
+      "description": "Facoltativo: un export degli ordini interessati dal vostro negozio online in JSON, CSV o Excel. Non serve se la tua copia è collegata al negozio; senza nessuno dei due valgono solo i dati d'ordine nelle richieste."
     }
   },
   "samples": {
@@ -71,6 +79,45 @@
       "name": "Policy_servizio_Cucina_Campione",
       "description": "Una policy di servizio fittizia più completa, in PDF.",
       "content": "# Policy di servizio del negozio online \"Cucina Campione\" (fittizia)\n\nVersione: 01/01/2026\n\n## 1. Resi\n\n- 30 giorni dalla consegna, merce non usata nella confezione originale.\n- Il reso è gratuito; inviamo l'etichetta di reso via e-mail.\n- Rimborso entro 5 giorni lavorativi dal ricevimento della merce.\n\n## 2. Garanzia\n\n- 2 anni dalla consegna.\n- In caso di difetti prima riparazione o sostituzione dopo verifica; una foto del difetto accelera la verifica.\n- Il rimborso del prezzo è possibile solo se riparazione o sostituzione falliscono.\n\n## 3. Consegna\n\n- Tempi di consegna 2–4 giorni lavorativi.\n- In caso di ritardo superiore a 7 giorni lavorativi offriamo l'annullamento gratuito.\n- Spedizione espressa possibile per ordini entro le 14 a 9,90 EUR.\n\n## 4. Gesti di cortesia\n\n- Il team di assistenza può concedere autonomamente buoni e gesti di cortesia fino a 20 EUR.\n- Oltre 20 EUR solo dopo approvazione del responsabile del team.\n\n## 5. Domande sui prodotti\n\n- Informazioni sui materiali solo dalle schede tecniche; nel dubbio chiedere invece di indovinare."
+    },
+    "orders": {
+      "name": "Ordini_negozio_Cucina_Campione",
+      "description": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare. Tre ordini del negozio di esempio come export JSON: date di ordine e consegna, stato, articoli e nota del corriere.",
+      "content": [
+        {
+          "order": "10442",
+          "customer": "Jonas Esempio",
+          "ordered": "2026-02-24",
+          "delivered": "2026-02-27",
+          "status": "consegnato",
+          "items": [
+            "Padella in alluminio 28 cm (dati prodotto: non adatta all'induzione)"
+          ],
+          "carrier_note": "Consegnato al cliente."
+        },
+        {
+          "order": "10518",
+          "customer": "Maria Campione",
+          "ordered": "2026-01-12",
+          "delivered": "2026-01-15",
+          "status": "consegnato",
+          "items": [
+            "Pentola in acciaio inox 20 cm con coperchio"
+          ],
+          "carrier_note": "Consegnato, lasciato a un vicino."
+        },
+        {
+          "order": "10603",
+          "customer": "Ali Istanza",
+          "ordered": "2026-03-09",
+          "delivered": null,
+          "status": "in ritardo",
+          "items": [
+            "Set di coltelli, 5 pezzi, con ceppo"
+          ],
+          "carrier_note": "Ritardo al centro di smistamento; nuova data di consegna 2026-03-23."
+        }
+      ]
     }
   },
   "tests": {
@@ -84,6 +131,19 @@
     "policies_file": {
       "name": "Policy come file PDF",
       "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nData di oggi: 2026-03-20\nLa nostra policy di servizio è allegata come file.\n\nRichiesta 1 – Jonas Esempio, ordine 10442, consegnato il 2026-02-27:\n\"La padella non funziona sul mio piano a induzione. Posso restituirla? È ancora nella confezione originale.\"\n\nRichiesta 2 – Maria Campione, ordine 10518, consegnato il 2026-01-15:\n\"Il manico della mia pentola si è staccato, dopo due mesi! È davvero fastidioso. Rivoglio i miei soldi.\""
+    },
+    "order_lookup": {
+      "name": "Solo numeri d'ordine, export degli ordini allegato",
+      "input": "DATI DI ESEMPIO SINTETICI – completamente fittizi, solo per provare.\n\nData di oggi: 2026-03-20\n\nEstratto dalla nostra policy di servizio (negozio online di esempio \"Cucina Campione\"):\n- Resi: 30 giorni dalla consegna, merce non usata nella confezione originale; il reso è gratuito.\n- Garanzia: 2 anni; in caso di difetti riparazione o sostituzione dopo verifica, una foto del difetto aiuta.\n- Tempi di consegna: 2–4 giorni lavorativi; in caso di ritardo superiore a 7 giorni lavorativi offriamo l'annullamento gratuito.\n- Buoni e gesti di cortesia oltre 20 EUR solo dopo approvazione del responsabile del team.\n\nL'export degli ordini del nostro negozio è allegato come file.\n\nRichiesta 1 – Jonas Esempio, ordine 10442:\n\"La padella non funziona sul mio piano a induzione. Posso restituirla? È ancora nella confezione originale.\"\n\nRichiesta 2 – Maria Campione, ordine 10518:\n\"Il manico della mia pentola si è staccato, dopo due mesi! È davvero fastidioso. Rivoglio i miei soldi.\"\n\nRichiesta 3 – Ali Istanza, ordine 10603:\n\"Dov'è il mio ordine? Mi serve il set di coltelli come regalo per il fine settimana.\""
+    }
+  },
+  "integrations": {
+    "shop": {
+      "name": "Negozio online (ordini)",
+      "description": "Consultazione degli ordini in sola lettura nel vostro negozio online tramite MCP: get_order restituisce le date di ordine e consegna, lo stato, gli articoli e l'ultima nota del corriere di un ordine. Il verificatore delle regole la usa per controllare le scadenze con dati d'ordine reali invece che con quanto dicono i clienti.",
+      "setup": "Un amministratore aggiunge il server MCP del vostro negozio online in Strumenti → Servizi collegati e approva il suo strumento get_order in sola lettura. Quando copi l'esempio scegli quel server come collegamento; senza collegamento la copia funziona in modalità offline. Per provarlo senza negozio, avvia `python -m nodestro_examples.demo_mcp --language it` sul computer con l'app desktop di Nodestro, aggiungi http://127.0.0.1:8765/mcp in Strumenti → Servizi collegati con il consenso per un server di sviluppo locale, approva i suoi strumenti in sola lettura e sceglilo quando copi. Il server demo legge soltanto e fornisce gli ordini sintetici dell'export di esempio, mai dati reali di clienti. Le esecuzioni senza una persona presente (pianificazioni, serie di test, elaborazione in batch) non possono usare strumenti MCP, a meno che un amministratore non consenta espressamente l'MCP non presidiato.",
+      "online": "Collegato al negozio online: il verificatore delle regole consulta gli ordini in sola lettura con get_order; i dati del negozio prevalgono su quanto dicono i clienti.",
+      "offline": "Modalità offline: nessun negozio online è collegato. Il verificatore delle regole usa solo i dati d'ordine delle richieste o di un export degli ordini allegato e indica quelli mancanti; non consulta nulla."
     }
   }
 }

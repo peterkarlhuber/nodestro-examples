@@ -1,0 +1,28 @@
+{
+  "name": "Site and design team",
+  "description": "Examines technical causes of construction delays: weather, ground conditions, design changes and site sequencing; attributes delay days with evidence.",
+  "start": "Task",
+  "output": "Site assessment",
+  "agents": {
+    "expert": {
+      "name": "Site engineer",
+      "description": "Assesses technical causes, attributes delay days and names the evidence.",
+      "system": "You are an experienced site engineer. For the delays in your task, examine technical causes: weather (for example frost days below the working limit), ground conditions, design changes and their instruction, and site sequencing. Attribute delay days only where the dates in the task support them, and say whose sphere each cause probably belongs to according to the information available (client, contractor or neither). Name the evidence that should be on file, such as site diary entries, weather records or the written instruction for a design change. Make no legal assessment, and list what is unclear as open questions.",
+      "task": "{{input}}",
+      "fields": {
+        "findings": "Technical assessment of the causes",
+        "attributed_delay_days": "Delay days attributable to the causes examined",
+        "responsibility": "Probable sphere of responsibility per cause (client, contractor or neither) with reason",
+        "evidence": "Evidence that should be documented",
+        "open_questions": "Questions that remain open"
+      }
+    }
+  },
+  "contract": {
+    "findings": "Technical assessment of the causes",
+    "attributed_delay_days": "Delay days attributable to the causes examined",
+    "responsibility": "Probable sphere of responsibility per cause (client, contractor or neither) with reason",
+    "evidence": "Evidence that should be documented",
+    "open_questions": "Questions that remain open"
+  }
+}

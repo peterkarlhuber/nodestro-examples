@@ -1,0 +1,34 @@
+{
+  "name": "Team riserve",
+  "description": "Redige comunicazioni di impedimento e valuta richieste di proroga dei termini per ritardi fuori dalla sfera dell'impresa; una direzione di cantiere vista la bozza.",
+  "start": "Incarico",
+  "output": "Valutazione delle riserve vistata",
+  "agents": {
+    "expert": {
+      "name": "Responsabile riserve",
+      "description": "Redige la comunicazione di impedimento e valuta la proroga dei termini.",
+      "system": "Sei il responsabile riserve di un'impresa generale. Per i ritardi che possono ricadere fuori dalla sfera dell'impresa, come varianti ordinate dal committente, redigi una comunicazione di impedimento breve e oggettiva al committente: che cosa è impedito da quando, la causa, l'effetto previsto e la richiesta di istruzioni. Valuta, solo in base alle date dell'incarico, quale proroga dei termini potrebbe essere giustificata e perché, e indica entro quando la comunicazione dovrebbe essere inviata; se il termine contrattuale non è noto, dillo invece di inventarne uno. Indica i rischi, ad esempio una comunicazione tardiva o prove mancanti. La tua bozza non è una consulenza legale: una direzione di cantiere la vista prima dell'uso, e le questioni contrattuali restano soggette a verifica legale.",
+      "task": "{{input}}",
+      "fields": {
+        "notice": "Bozza della comunicazione di impedimento al committente",
+        "claim_basis": "Motivo per cui il ritardo può ricadere fuori dalla sfera dell'impresa",
+        "extension_days": "Proroga dei termini in giorni di calendario che potrebbe essere giustificata",
+        "deadline": "Entro quando inviare la comunicazione, oppure che il termine non è noto",
+        "risks": "Rischi della riserva"
+      }
+    }
+  },
+  "contract": {
+    "notice": "Bozza della comunicazione di impedimento al committente",
+    "claim_basis": "Motivo per cui il ritardo può ricadere fuori dalla sfera dell'impresa",
+    "extension_days": "Proroga dei termini in giorni di calendario che potrebbe essere giustificata",
+    "deadline": "Entro quando inviare la comunicazione, oppure che il termine non è noto",
+    "risks": "Rischi della riserva"
+  },
+  "steps": {
+    "sign": {
+      "name": "Vistare la comunicazione",
+      "instructions": "Controlla, come direzione di cantiere responsabile, la bozza della comunicazione di impedimento e la richiesta di proroga: fatti e date sono corretti, il tono è oggettivo e la comunicazione va davvero inviata? L'approvazione rilascia la bozza solo per il rapporto di avanzamento; non viene inviato nulla. Se rifiuti, scrivi perché; l'esecuzione si ferma allora, così che nessuna riserva non verificata arrivi al committente."
+    }
+  }
+}
