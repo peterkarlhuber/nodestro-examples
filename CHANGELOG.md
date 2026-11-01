@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Runtime pin: backend audit fixes (2026-11-01)
+
+- Pin of `nodestro-runtime` at `6eacec1` (before: `58cec5c`): fixes from the internal backend audit (bounded sandbox
+  output, run integrity across processes, PostgreSQL connection pool, resume side-effect journal, provider failure
+  codes; see the runtime CHANGELOG).
+
 ### Template format 2 and the modernized examples (2026-11-01)
 
 - `FORMAT_VERSION = 2`, package version 0.3.0. New, optional template features, validated on load: model tiers
