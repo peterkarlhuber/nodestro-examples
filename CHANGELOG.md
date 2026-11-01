@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Runtime pin: security fix for stale tools in server workers (2026-11-01)
+
+- Pin of `nodestro-runtime` at `6ac4ae3` (before: `081705d`): every process sees tool changes and deletions made by
+  another process, and a tool an agent holds refuses to run once its version is no longer the current approved one
+  (S-2 pilot finding F1). No change in this package.
+
 ### Runtime pin: dynamic teams and approvals inside teams (2026-11-01)
 
 - Pin of `nodestro-runtime` at `081705d` (before: `1bc3924`): orchestrators wait for approvals inside their teams
