@@ -202,6 +202,8 @@ language, then run the tests; they name every missing key, placeholder or refere
 CI needs the repository secret `NODESTRO_READ`: a token with read access to orkexa and the Nodestro repositories,
 used only for `pip install` of the pinned dependencies and never stored in the checkout or the package.
 
+Open work (release blockers, known gaps, follow-ups) is listed in [docs/TODO.md](docs/TODO.md).
+
 ## Known limitations
 
 - When an approval is decided with a comment, the comment reaches the result node as an extra result: the run's
