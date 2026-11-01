@@ -4,7 +4,7 @@
 
 ### Runtime pin: runs paused at a tool approval (2026-11-01)
 
-- Pin of `nodestro-runtime` at `26c86ef` (before: `6ac4ae3`): with the new switch
+- Pin of `nodestro-runtime` at `c86781b` (before: `6ac4ae3`): with the new switch
   `NODESTRO_TOOL_APPROVAL_CHECKPOINTS` (default off) a tool call that waits for a person pauses the run and
   continues it after the decision without asking the model again (AO M6b). No change in this package.
 
