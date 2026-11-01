@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Runtime pin: live run chat and steering (LRC-1, 2026-11-01)
+
+- Pins `nodestro-runtime` `d20991f` (master merge of runtime #67; before `ac96c6f`): `nodestro_runtime.run_chat` (questions and instructions to
+  an orchestrator while it runs). Nothing else changes here.
+
 ### Runtime pin: Amazon Bedrock (branch only, 2026-11-01)
 
 - Pin of `nodestro-runtime` at `ac96c6f` (before: `d141b8f`) on the Bedrock branch, so the dependent nodestro-api
