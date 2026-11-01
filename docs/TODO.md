@@ -11,8 +11,8 @@
 |---|---|
 | P0 Critical | 0 |
 | P1 High | 0 |
-| P2 Medium | 0 |
-| P3 Low | 7 |
+| P2 Medium | 1 |
+| P3 Low | 6 |
 | P4 Optional | 4 |
 
 **Release blockers:** None for this repository.
@@ -40,12 +40,12 @@ None known.
 
 ### EX-005 · MCP integrations of examples 3 and 8 await the MCP security acceptance
 
-- **Priority:** P3 Low · **Status:** Needs external review · **Refs:** README "Known limitations", MCP re-review
+- **Priority:** P3 Low · **Status:** Blocked (MCP scope decision) · **Refs:** README "Known limitations", MCP re-review
 - **What:** `supplier-comparison` and `customer-service` can bind read-only MCP tools. A working demonstration is not a
   security acceptance; the platform's MCP support is released only for a read-only server pilot.
 - **Next step:** None here until the review concludes; the examples must keep working offline and never depend on MCP,
   unattended MCP or tool approvals (S-2).
-- **Depends on:** nodestro-runtime / nodestro-api MCP review
+- **Depends on:** nodestro-runtime RT-016 (MCP beyond the read-only pilot), nodestro-studio ST-030 (accepted MCP scope)
 
 ## Bugs and reliability
 
@@ -132,12 +132,12 @@ None known.
 
 ### EX-011 · CI requires the `NODESTRO_READ` token although the dependencies are public
 
-- **Priority:** P3 Low · **Status:** Open · **Refs:** #40, backend audit D-08 residual
+- **Priority:** P2 Medium · **Status:** Open · **Refs:** #40, backend audit D-08 residual
 - **What:** The CI install steps exit when the `NODESTRO_READ` secret is missing and still call the components
   private. All Nodestro repositories and orkexa are public now, so runs without secrets (Dependabot, forks) fail early.
 - **Next step:** Install the git dependencies anonymously, make the token optional or remove it, fix the comments.
-- **Depends on:** none; the same change is tracked in nodestro-api #50, nodestro-sdk #47, nodestro-server #25,
-  nodestro-desktop #17 and nodestro-studio #85.
+- **Depends on:** none; the same change is tracked in nodestro-runtime #75 (RT-029), nodestro-api #50,
+  nodestro-sdk #47, nodestro-integrations #36, nodestro-server #25, nodestro-desktop #17 and nodestro-studio #85.
 
 ## Later optimizations
 
@@ -155,9 +155,10 @@ None known.
 ### EX-010 · Python dependencies not watched by Dependabot
 
 - **Priority:** P4 Optional · **Status:** Accepted risk · **Refs:** `.github/dependabot.yml`, `.github/workflows/ci.yml`
-- **What:** Dependabot updates only GitHub Actions; the private Nodestro dependencies are pinned by Git commit.
-- **Reason:** Dependabot cannot read the private Git URLs; pins move with the platform's pin cascade, and the blocking
-  `pip-audit` step in CI catches known vulnerabilities.
+- **What:** Dependabot updates only GitHub Actions; the Nodestro dependencies are pinned by Git commit.
+- **Reason:** Pins move with the platform's pin cascade, and the blocking `pip-audit` step in CI catches known
+  vulnerabilities. The original reason (private Git URLs) no longer applies now that all repositories are public;
+  re-evaluate a pip ecosystem entry together with EX-011 and fix the stale comment in `dependabot.yml`.
 
 ## Cross-repository dependencies
 
@@ -166,10 +167,10 @@ None known.
 | EX-002 | nodestro-runtime | pointer in its cross-repo table | A per-field `label` on `OutputField` would let examples keep long descriptions. |
 | EX-002 | nodestro-studio | ST-032 (ED-17) | `fieldLabel()` and the palette team hint show field ids. |
 | EX-003 | nodestro-studio | ST-031 (AD-18) | Studio shows the offline badge; this repo provides the marker. |
-| EX-005 | nodestro-runtime, nodestro-api | MCP review | Acceptance of MCP support. |
+| EX-005 | nodestro-runtime, nodestro-studio | RT-016, ST-030 (MCP scope) | Wider MCP use needs an owner decision and a new review. |
 | EX-008 | nodestro-studio | ST-026 (fr apostrophes) | Same typography decision. |
 | — | nodestro-studio | `make example-docs` | Regenerate `beispiele.md` on every examples pin bump. |
-| EX-011 | all component repositories | `NODESTRO_READ` CI change (api #50, sdk #47, runtime #75, server #25, desktop #17, studio #85) | Same change everywhere |
+| EX-011 | all component repositories | `NODESTRO_READ` CI change (runtime #75 / RT-029, api #50, sdk #47, integrations #36, server #25, desktop #17, studio #85) | Same change everywhere |
 
 ## Maintaining this file
 
