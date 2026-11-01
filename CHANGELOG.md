@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Runtime pin: MCP security fixes (2026-11-01)
+
+- Pin of `nodestro-runtime` at `f71086a` (before: `c86781b`): fixes from the independent MCP review (per-call
+  approvals hold in agent tests and the tool panel, no credentials in server addresses, response size limit) and the
+  offline worker fix F5. No change in this package.
+
 ### Runtime pin: runs paused at a tool approval (2026-11-01)
 
 - Pin of `nodestro-runtime` at `c86781b` (before: `6ac4ae3`): with the new switch
