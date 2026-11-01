@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Runtime pin: warnings before unattended starts (2026-11-01)
+
+- Pin of `nodestro-runtime` at `2d55242` (before: `a13f894`): `tool_preflight.unattended_tool_issues` warns before a
+  schedule, batch, test series or published API whose tool calls the per-call approval rules would refuse (S-2, R1).
+  No change in this package.
+
 ### Runtime pin: legacy exemption fix (2026-10-31)
 
 - Pin of `nodestro-runtime` at `a13f894` (before: `40e04b4`): the per-call tool approval activation step runs once,
