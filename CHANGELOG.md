@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Runtime pin: live run chat and steering (LRC-1, 2026-11-01)
+
+- Pins `nodestro-runtime` `ac0ac62` (before `d141b8f`): `nodestro_runtime.run_chat` (questions and instructions to
+  an orchestrator while it runs). Nothing else changes here.
+
 ### Runtime pin: PostgreSQL read performance (2026-11-01)
 
 - Pin of `nodestro-runtime` at `d141b8f` (before: `6eacec1`): the PostgreSQL store checks pooled connections only
