@@ -12,7 +12,7 @@
 | P0 Critical | 0 |
 | P1 High | 0 |
 | P2 Medium | 0 |
-| P3 Low | 6 |
+| P3 Low | 7 |
 | P4 Optional | 4 |
 
 **Release blockers:** None for this repository.
@@ -130,6 +130,15 @@ None known.
   file names unchanged; add a test that keeps the style.
 - **Depends on:** nodestro-studio (fr apostrophe cleanup)
 
+### EX-011 · CI requires the `NODESTRO_READ` token although the dependencies are public
+
+- **Priority:** P3 Low · **Status:** Open · **Refs:** #40, backend audit D-08 residual
+- **What:** The CI install steps exit when the `NODESTRO_READ` secret is missing and still call the components
+  private. All Nodestro repositories and orkexa are public now, so runs without secrets (Dependabot, forks) fail early.
+- **Next step:** Install the git dependencies anonymously, make the token optional or remove it, fix the comments.
+- **Depends on:** none; the same change is tracked in nodestro-api #50, nodestro-sdk #47, nodestro-server #25,
+  nodestro-desktop #17 and nodestro-studio #85.
+
 ## Later optimizations
 
 None known.
@@ -154,12 +163,13 @@ None known.
 
 | This repo item | Other repo | Other item | Relation |
 |---|---|---|---|
-| EX-002 | nodestro-runtime | (none yet) | A per-field `label` on `OutputField` would let examples keep long descriptions. |
-| EX-002 | nodestro-studio | ED-17 follow-up | `fieldLabel()` and the palette team hint show field ids. |
-| EX-003 | nodestro-studio | AD-18 | Studio shows the offline badge; this repo provides the marker. |
+| EX-002 | nodestro-runtime | pointer in its cross-repo table | A per-field `label` on `OutputField` would let examples keep long descriptions. |
+| EX-002 | nodestro-studio | ST-032 (ED-17) | `fieldLabel()` and the palette team hint show field ids. |
+| EX-003 | nodestro-studio | ST-031 (AD-18) | Studio shows the offline badge; this repo provides the marker. |
 | EX-005 | nodestro-runtime, nodestro-api | MCP review | Acceptance of MCP support. |
-| EX-008 | nodestro-studio | fr apostrophes | Same typography decision. |
+| EX-008 | nodestro-studio | ST-026 (fr apostrophes) | Same typography decision. |
 | — | nodestro-studio | `make example-docs` | Regenerate `beispiele.md` on every examples pin bump. |
+| EX-011 | all component repositories | `NODESTRO_READ` CI change (api #50, sdk #47, runtime #75, server #25, desktop #17, studio #85) | Same change everywhere |
 
 ## Maintaining this file
 
@@ -170,4 +180,4 @@ None known.
 - Accepted risks stay listed with their reason until the risk is removed or re-evaluated.
 - Re-review the whole file before each release and update the "Last full review" line.
 - Security issues that are not yet fixed are described only in general terms here. Report details privately
-  (see SECURITY.md or GitHub private vulnerability reporting), never in this file or in public issues.
+  (GitHub private vulnerability reporting), never in this file or in public issues.
