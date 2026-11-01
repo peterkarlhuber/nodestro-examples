@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Runtime pin: MCP resources (2026-11-01)
+
+- Pin of `nodestro-runtime` at `1bc3924` (before: `2d55242`): a connected MCP service's listed resources can be read
+  through one approved tool, `resources/read` (MCP WP-10). No change in this package.
+
 ### Runtime pin: warnings before unattended starts (2026-11-01)
 
 - Pin of `nodestro-runtime` at `2d55242` (before: `a13f894`): `tool_preflight.unattended_tool_issues` warns before a
