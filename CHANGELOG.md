@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+### Runtime pin: dynamic teams and approvals inside teams (2026-11-01)
+
+- Pin of `nodestro-runtime` at `081705d` (before: `1bc3924`): orchestrators wait for approvals inside their teams
+  instead of cancelling them, and can assemble their team, run teams in parallel and fill team forms (AO M6b, all
+  opt-in). Orchestration records are protocol version 2. No change in this package.
+
 ### Runtime pin: MCP resources (2026-11-01)
 
 - Pin of `nodestro-runtime` at `1bc3924` (before: `2d55242`): a connected MCP service's listed resources can be read
