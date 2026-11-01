@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+### Runtime pin: PostgreSQL read performance (2026-11-01)
+
+- Pin of `nodestro-runtime` at `d141b8f` (before: `6eacec1`): the PostgreSQL store checks pooled connections only
+  after they sat idle, retries reads on a lost connection, and its find indexes are partial (migration 0006).
+
 ### Runtime pin: backend audit fixes (2026-11-01)
 
 - Pin of `nodestro-runtime` at `6eacec1` (before: `58cec5c`): fixes from the internal backend audit (bounded sandbox
