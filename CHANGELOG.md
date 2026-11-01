@@ -4,7 +4,7 @@
 
 ### Runtime pin: Amazon Bedrock (branch only, 2026-11-01)
 
-- Pin of `nodestro-runtime` at `464468d` (before: `d141b8f`) on the Bedrock branch, so the dependent nodestro-api
+- Pin of `nodestro-runtime` at `ac96c6f` (before: `d141b8f`) on the Bedrock branch, so the dependent nodestro-api
   branch resolves one runtime (the runtime adds the `bedrock` provider; nothing here changes).
 
 ### Runtime pin: PostgreSQL read performance (2026-11-01)
