@@ -55,7 +55,7 @@ pip install "nodestro-examples @ git+https://github.com/peterkarlhuber/nodestro-
 ```
 
 The runtime and orkexa are pinned to exact commits; the combination tested together is listed in
-`nodestro-studio/platform/versions.json`. Python 3.10 to 3.13.
+`nodestro-studio/platform/versions.json`. Python 3.11 to 3.13.
 
 ## Usage
 
