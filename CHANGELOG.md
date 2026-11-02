@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Pin nodestro-runtime bcfea7f (security review round 4 Lows R4-3 to R4-7, runtime #95; real-engine resolve tests
+  and orkexa 0861c1b, #94; Axentra 2767a2e; 2026-11-02). Nothing changes in this package.
 - Pin nodestro-runtime 96f14ef (static tenant SQL check round-3 gaps, #89; tool generation jobs stopped on tenant
   suspension, NF-1; Axentra f3ed8d2; runtime #93; 2026-11-02). Nothing changes in this package.
 - Pin nodestro-runtime 958be1d (R-1 source builds only on the desktop and R-5 container shape checks, runtime #90; MCP
