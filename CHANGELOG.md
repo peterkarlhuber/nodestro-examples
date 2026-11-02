@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Pin nodestro-runtime 50edcf7 (Axentra migration completion: security review fixes, M12 cleanup, Axentra a8ea5d5;
+  runtime #86; 2026-11-02). Nothing changes in this package.
 - Pin nodestro-runtime bf9af7d (Docker sandbox security review fixes, runtime #85; 2026-11-02). Nothing changes in
   this package.
 - Pin nodestro-runtime 64895e6 (run budget decisions, BUDGET-1, runtime #84; 2026-11-02): an attended run whose next
