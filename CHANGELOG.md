@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Pin nodestro-runtime 95dbdfa (Axentra platform services in the server profile, off by default; runtime #79;
+  2026-11-02). Nothing changes here: this package never imports Axentra.
 - Pin nodestro-runtime 7fd8761 (automatic sandbox selection, runtime #78; 2026-11-02).
 
 ### Runtime pin: live run chat fix (LRC-1, 2026-11-01)
