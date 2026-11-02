@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Pin nodestro-runtime 7fd8761 (automatic sandbox selection, runtime #78; 2026-11-02).
+
 ### Runtime pin: live run chat fix (LRC-1, 2026-11-01)
 
 - Pins `nodestro-runtime` `a42b672` (before `d20991f`): questions to a team leader are answered with any provider.
