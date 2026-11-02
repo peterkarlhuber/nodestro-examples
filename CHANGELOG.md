@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Pin nodestro-runtime bf9af7d (Docker sandbox security review fixes, runtime #85; 2026-11-02). Nothing changes in
+  this package.
 - Pin nodestro-runtime 64895e6 (run budget decisions, BUDGET-1, runtime #84; 2026-11-02): an attended run whose next
   model request does not fit its budget pauses for a decision instead of failing. Nothing changes in this repository.
 - Pin nodestro-runtime b608f90 (Docker-first sandbox plan R1-R4, runtime #83; 2026-11-02): the Docker sandbox runs
