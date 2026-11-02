@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Pin nodestro-runtime b608f90 (Docker-first sandbox plan R1-R4, runtime #83; 2026-11-02): the Docker sandbox runs
+  through Orkexa's engine and refuses to run without a proven daemon. Nothing changes in this package.
 - Pin nodestro-runtime 95dbdfa (Axentra platform services in the server profile, off by default; runtime #79;
   2026-11-02). Nothing changes here: this package never imports Axentra.
 - Pin nodestro-runtime 7fd8761 (automatic sandbox selection, runtime #78; 2026-11-02).
