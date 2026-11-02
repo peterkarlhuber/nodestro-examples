@@ -2,8 +2,9 @@
 
 ## Unreleased
 
-- Pin nodestro-runtime 977b298 (R-1 source builds only on the desktop, R-5 container shape checks; runtime #90;
-  2026-11-02). Nothing changes in this package.
+- Pin nodestro-runtime 958be1d (R-1 source builds only on the desktop and R-5 container shape checks, runtime #90; MCP
+  container deadline 15 minutes, #91; adopting AI-generated tools on the desktop, R-4, #92; 2026-11-02). Nothing
+  changes in this package.
 - Pin nodestro-runtime 51262a2 (Python 3.11 minimum, orkexa dec66eb; runtime #88; 2026-11-02).
 - Python 3.11 is now the minimum (3.10 reached end of life in October 2026): `requires-python`, ruff `py311`, mypy 3.11,
   CI matrix 3.11/3.13; the MCP demo tests no longer skip without the SDK.
