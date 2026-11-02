@@ -16,7 +16,7 @@ Nothing is run: starting the test series is the user's decision.
 from __future__ import annotations
 
 from collections.abc import Callable
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 import io
 import json
 from pathlib import Path
@@ -32,7 +32,7 @@ from nodestro_runtime.schemas import ConditionRule, WorkflowIn
 from . import _ROOT, SampleSpec, structure, texts
 
 #: The date written into generated Office files, so they are the same every time.
-_FIXED = datetime(2026, 1, 1, tzinfo=timezone.utc)
+_FIXED = datetime(2026, 1, 1, tzinfo=UTC)
 _ZIP_TIME = (2026, 1, 1, 0, 0, 0)
 
 MEDIA_TYPES: dict[str, str] = {

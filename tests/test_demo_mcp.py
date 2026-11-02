@@ -15,14 +15,11 @@ import threading
 import time
 from typing import Any
 
-import pytest
-
-pytest.importorskip("mcp")
-
 from conftest import Scenario, finish, instantiate, start_request
 from nodestro_runtime.mcp.models import McpServerIn, ToolAccess
 from nodestro_runtime.schemas import LANGUAGES
 from nodestro_runtime.workspace import Workspace
+import pytest
 
 import nodestro_examples as library
 from nodestro_examples import demo_mcp

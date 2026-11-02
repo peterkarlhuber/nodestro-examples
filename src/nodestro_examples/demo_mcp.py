@@ -15,7 +15,7 @@ implementation: the answers are synthetic and marked as such, never real company
 system can take its place when its MCP server offers tools with the same names (``list_suppliers``,
 ``supplier_scorecard``, ``get_order``) and an administrator approves them as read-only.
 
-Needs the ``mcp`` package (Python 3.11 or later), which Nodestro's runtime installs.
+Needs the ``mcp`` package, which Nodestro's runtime installs.
 """
 
 from __future__ import annotations

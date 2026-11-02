@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Python 3.11 is now the minimum (3.10 reached end of life in October 2026): `requires-python`, ruff `py311`, mypy 3.11,
+  CI matrix 3.11/3.13; the MCP demo tests no longer skip without the SDK.
 - Pin nodestro-runtime 0369132 (security re-review Lows, Axentra 024da57; runtime #87; 2026-11-02). Nothing changes
   in this package.
 - Pin nodestro-runtime 50edcf7 (Axentra migration completion: security review fixes, M12 cleanup, Axentra a8ea5d5;
