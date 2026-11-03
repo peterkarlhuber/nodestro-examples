@@ -199,8 +199,8 @@ python -m nodestro_examples.docs --root ../nodestro-studio --check  # exit code 
 To add an example: add `templates/<id>.json` with the next number and a `texts/<language>/<id>.json` for every
 language, then run the tests; they name every missing key, placeholder or reference.
 
-CI needs the repository secret `NODESTRO_READ`: a token with read access to orkexa and the Nodestro repositories,
-used only for `pip install` of the pinned dependencies and never stored in the checkout or the package.
+CI needs no secret: orkexa and the Nodestro repositories are public, and `pip install` reads the pinned
+dependencies anonymously.
 
 Open work (release blockers, known gaps, follow-ups) is listed in [docs/TODO.md](docs/TODO.md).
 
