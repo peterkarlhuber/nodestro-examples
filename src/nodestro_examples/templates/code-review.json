@@ -32,7 +32,8 @@
       "x": 360,
       "y": 40,
       "role": "analysis",
-      "icon": "code"
+      "icon": "code",
+      "task": "coding"
     },
     {
       "id": "security",
@@ -40,7 +41,8 @@
       "x": 360,
       "y": 320,
       "role": "review",
-      "icon": "shield"
+      "icon": "shield",
+      "task": "coding"
     },
     {
       "id": "fix",
@@ -49,6 +51,7 @@
       "y": 180,
       "role": "writing",
       "icon": "code",
+      "task": "coding",
       "criteria": [
         "every_finding_addressed",
         "tests_cover_findings",

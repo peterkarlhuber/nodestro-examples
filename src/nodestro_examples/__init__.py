@@ -36,6 +36,8 @@ Format 2 adds, without changing how format 1 templates are read:
   other parts before those), as workflows of their own, and pins every reference to the copy's first version.
 - *Model tiers*: agents name a tier (``fast``, ``standard``, ``strong``) instead of a model; :func:`model_choice`
   maps the tiers to the models of the workspace's provider, so the examples are not bound to one provider.
+  Every agent also names its task profile (``task``); :func:`agent_plan` lists the agents with their tasks, so a
+  copy can give single agents their own model (:attr:`ModelChoice.agents`), e.g. recommended local models.
 - *Knowledge files* (``knowledge``): synthetic reference documents a copy stores in the knowledge base and
   gives to agents (search with citations by default).
 - *Integrations* (``integrations``): optional MCP tools. A copy is either connected to an MCP server the
@@ -62,6 +64,8 @@ from pathlib import Path
 import re
 from typing import Any, Literal, Protocol
 
+from nodestro_runtime.file_formats import FORMATS, accepted
+from nodestro_runtime.local_models import TASKS, TIER_TASKS
 from nodestro_runtime.providers import provider_of
 from nodestro_runtime.schemas import (
     LANGUAGES,
@@ -158,30 +162,77 @@ JUDGE_TIER: Tier = "standard"
 _SERVER_TOOL_PROVIDER = "anthropic"
 
 
+#: The rank of each tier, on the scale of the runtime's task profiles (:data:`~nodestro_runtime.local_models.TASKS`:
+#: ``minimum`` and ``ideal``): fast models are rank 1, standard models rank 2, strong models rank 3.
+TIER_RANK: dict[str, int] = {"fast": 1, "standard": 2, "strong": 3}
+#: The task profiles an agent of a template may name (``task``): every profile of the runtime except the ones of
+#: Nodestro's own assistants (``architect``, ``assistant``) and embeddings, which are no agent work.
+AGENT_TASKS: tuple[str, ...] = tuple(task for task in TASKS if task not in {"architect", "assistant", "embedding"})
+
+
+def tier_fits(tier: Tier | None, task: str) -> bool:
+    """Whether an agent's tier is consistent with its task profile.
+
+    The rule: ``minimum <= rank(tier) <= max(ideal, 2)`` with the task's ranks from
+    :data:`~nodestro_runtime.local_models.TASKS` and :data:`TIER_RANK` (no tier is the standard tier). A task that
+    needs a capable model (analysis, coding, judging, orchestrating: minimum rank 2) never runs on the fast tier,
+    and only a task whose ideal model is a strong one (analysis, coding, orchestrating) may use the strong tier, so
+    a fast or strong tier always says the same as the task. The standard tier fits every task.
+    """
+    profile = TASKS[task]
+    rank = TIER_RANK[tier or "standard"]
+    return profile.minimum <= rank <= max(profile.ideal, TIER_RANK["standard"])
+
+
 class ModelChoice(BaseModel):
-    """The model of each tier in a copy (``provider:model``)."""
+    """The models of a copy (``provider:model``): one per tier, optionally one per agent and one for judges.
+
+    ``agents`` maps agent keys (:attr:`AgentPlan.key`: ``<node id>`` in the template's workflow,
+    ``<part id>/<node id>`` in a part) to the model that agent gets instead of its tier's model, e.g. a
+    recommended local model per task. ``judge`` is the model of the quality checks' judges (default: the
+    :data:`JUDGE_TIER`'s model). Everything not named keeps the tier models.
+    """
 
     fast: str = DEFAULT_MODELS["fast"]
     standard: str = DEFAULT_MODELS["standard"]
     strong: str = DEFAULT_MODELS["strong"]
+    agents: dict[str, str] = Field(default_factory=dict)
+    judge: str | None = None
 
     def of(self, tier: Tier) -> str:
         return str(getattr(self, tier))
 
+    def for_agent(self, key: str, tier: Tier | None) -> str:
+        """The model of the agent with this key: its own model if one is named, otherwise its tier's model."""
+        return self.agents.get(key) or self.of(tier or "standard")
 
-def model_choice(default_model: str | None = None, assistant_model: str | None = None) -> ModelChoice:
+    def judge_model(self) -> str:
+        return self.judge or self.of(JUDGE_TIER)
+
+
+def model_choice(
+    default_model: str | None = None,
+    assistant_model: str | None = None,
+    *,
+    agents: Mapping[str, str] | None = None,
+    judge: str | None = None,
+) -> ModelChoice:
     """The models a copy gets in a workspace with these default models.
 
     With Anthropic (or no setting) the curated tiers: Haiku for fast extraction and classification, Sonnet for
     everyday agent work, Opus for demanding analysis. With another provider every tier uses the workspace's
     default model, and the strong tier the assistant model when it belongs to the same provider: Nodestro knows
     no tiers of other providers, so it never guesses a model id that might not exist there.
+
+    ``agents`` (agent key -> model, see :func:`agent_plan`) and ``judge`` are taken over unchanged: the caller
+    decides them (for example from the runtime's local model recommendations per task, with manual choices first).
     """
+    extra: dict[str, Any] = {"agents": dict(agents or {}), "judge": judge}
     if not default_model or provider_of(default_model) == "anthropic":
-        return ModelChoice()
+        return ModelChoice(**extra)
     provider = provider_of(default_model)
     strong = assistant_model if assistant_model and provider_of(assistant_model) == provider else default_model
-    return ModelChoice(fast=default_model, standard=default_model, strong=strong)
+    return ModelChoice(fast=default_model, standard=default_model, strong=strong, **extra)
 
 
 # ---- the files ------------------------------------------------------------------
@@ -297,6 +348,9 @@ class NodeSpec(_Strict):
     icon: str = "bot"
     #: The model tier (agents and orchestrators); see :func:`model_choice`.
     tier: Tier | None = None
+    #: The kind of work (agents and orchestrators): a task profile of the runtime (:data:`AGENT_TASKS`), used to
+    #: recommend a model per agent (:func:`agent_plan`); it must fit the tier (:func:`tier_fits`).
+    task: str | None = None
     #: A fixed model instead of a tier (format 1); a tier keeps a copy usable with other providers.
     model: str | None = None
     effort: Effort | None = "medium"
@@ -363,6 +417,15 @@ def _graph_problems(nodes: list[NodeSpec], edges: list[Connection]) -> list[str]
             found.append(f"{node.id} has a contract but is no result node")
         if (node.knowledge or node.mcp or node.server_tools) and node.type != "agent":
             found.append(f"{node.id} has agent settings but is no agent")
+        if node.task is not None:
+            if node.type not in ("agent", "orchestrator"):
+                found.append(f"{node.id} has a task but is no agent")
+            elif node.task not in AGENT_TASKS:
+                found.append(f"{node.id} names the unknown task {node.task!r}")
+            elif (node.type == "orchestrator") != (node.task == "orchestrator"):
+                found.append(f"{node.id}: the task orchestrator belongs to orchestrators, and only to them")
+            elif not tier_fits(node.tier, node.task):
+                found.append(f"{node.id}: the tier {node.tier or 'standard'} does not fit the task {node.task}")
     if len({edge[:3] for edge in edges}) != len(edges):
         found.append("a connection is listed twice")
     successors: dict[str, list[str]] = {}
@@ -802,9 +865,13 @@ class _Context:
     connections: Mapping[str, Mapping[str, str]]
     #: knowledge id -> knowledge file id.
     knowledge: Mapping[str, str]
+    #: The part being built (``None``: the template's own workflow); it scopes the agent keys.
+    part: str | None = None
 
     def model(self, node: NodeSpec) -> str:
-        return node.model if node.model else self.models.of(node.tier or "standard")
+        """The agent's own model of the copy, else the template's fixed model (format 1), else its tier's."""
+        own = self.models.agents.get(agent_key(node.id, self.part))
+        return own or node.model or self.models.of(node.tier or "standard")
 
 
 def _build_nodes(
@@ -949,7 +1016,7 @@ def _build_nodes(
                 enabled=True,
                 criteria=[QualityCriterion(name=name, description=own.criteria[name]) for name in item.criteria],
                 max_revisions=item.max_revisions,
-                judge_model=context.models.of(JUDGE_TIER),
+                judge_model=context.models.judge_model(),
             )
         model = context.model(item)
         tools = list(item.tools)
@@ -1009,8 +1076,9 @@ def _context(
     models: ModelChoice | None,
     connections: Mapping[str, Mapping[str, str]] | None,
     knowledge: Mapping[str, str] | None,
+    part: str | None = None,
 ) -> _Context:
-    return _Context(models=models or ModelChoice(), connections=connections or {}, knowledge=knowledge or {})
+    return _Context(models=models or ModelChoice(), connections=connections or {}, knowledge=knowledge or {}, part=part)
 
 
 def build(
@@ -1023,7 +1091,8 @@ def build(
 ) -> WorkflowIn:
     """The workflow a template describes, in one language (a fresh object every time).
 
-    ``models`` maps the tiers to models (default: :data:`DEFAULT_MODELS`). ``connections`` names, per connected
+    ``models`` maps the tiers to models (default: :data:`DEFAULT_MODELS`), and names models of single agents
+    (:attr:`ModelChoice.agents`). ``connections`` names, per connected
     integration, the agent tool name of each of its server tools (:func:`connect`); integrations without one run
     in offline mode. ``knowledge`` maps the template's knowledge files to stored knowledge file ids. Until a copy
     resolves them, sub-workflow and team references read ``library-part:<id>`` and knowledge files
@@ -1117,7 +1186,7 @@ def build_part(
         contract=text.contract,
         rules=common(language),
         sensitive=sensitive,
-        context=_context(models, None, None),
+        context=_context(models, None, None, part=part_id),
     )
     return WorkflowIn(
         name=text.name,
@@ -1230,7 +1299,8 @@ def instantiate(
 
     Knowledge files are stored (identical content keeps one file), the parts are saved as workflows of their
     own (parts used by other parts first) and every reference is pinned to the saved version. ``connections``
-    comes from :func:`connect`; integrations without a connection run in offline mode.
+    comes from :func:`connect`; integrations without a connection run in offline mode. A key of ``models.agents``
+    that names no agent of the template (:func:`agent_plan`) raises :class:`KeyError` before anything is created.
     """
     from .samples import render_knowledge
 
@@ -1240,6 +1310,10 @@ def instantiate(
     unknown = set(connections) - {item.id for item in spec.integrations}
     if unknown:
         raise KeyError(", ".join(sorted(unknown)))
+    if models is not None and models.agents:
+        strange = set(models.agents) - {plan.key for plan in agent_plan(template_id)}
+        if strange:
+            raise KeyError(f"no agent of {template_id} has the key {', '.join(sorted(strange))}")
     stored: dict[str, str] = {}
     collection = common(language).collection.replace("{name}", text.name)
     for item in spec.knowledge:
@@ -1265,6 +1339,124 @@ def instantiate(
     )
 
 
+# ---- the models per agent --------------------------------------------------------
+
+
+def agent_key(node_id: str, part_id: str | None = None) -> str:
+    """The key of an agent across a template and its parts: ``<node id>`` or ``<part id>/<node id>``."""
+    return f"{part_id}/{node_id}" if part_id else node_id
+
+
+class AgentPlan(BaseModel):
+    """What one agent (or orchestrator) of a template does, for choosing its model before a copy is made.
+
+    ``needs`` are the capabilities its model must have: the task profile's needs, ``tools`` when the agent uses
+    tools of any kind (even when its task does not need them, as a demanding analysis with the calculator), and
+    ``vision`` when it receives images from the start node's form.
+    """
+
+    #: ``<node id>`` for the template's own workflow, ``<part id>/<node id>`` for an agent of a part (a team or
+    #: sub-workflow; a part is copied once per copy, however many nodes use it). The key of :attr:`ModelChoice.agents`.
+    key: str
+    #: The part the agent belongs to (``None``: the template's workflow).
+    part: str | None
+    node_id: str
+    #: The agent's name in the requested language: ``texts/<language>/<id>.json`` → ``agents.<node id>.name``
+    #: (``steps.<node id>.name`` for an orchestrator; ``texts/<language>/parts/<part id>.json`` for parts).
+    name: str
+    kind: Literal["agent", "orchestrator"]
+    #: The model tier (``standard`` when the template names none).
+    tier: Tier
+    #: The task profile (:data:`~nodestro_runtime.local_models.TASKS`) a model is recommended for.
+    task: str
+    #: Its own tools, server tools, integrations, knowledge search or reading, memory, or delegation to teams.
+    tools: bool
+    #: A structured result (output fields).
+    structured: bool
+    #: It receives the files of the start node's form.
+    files: bool
+    #: Some of those files can be images.
+    vision: bool
+    #: Its result is checked by a judge (quality criteria); the judge uses :meth:`ModelChoice.judge_model`.
+    judge: bool
+    needs: list[str]
+
+
+def _plan_of(
+    node: NodeSpec,
+    part_id: str | None,
+    name: str,
+    file_fields: list[InputSpec],
+    with_files: set[str],
+) -> AgentPlan:
+    # Without a task: the task the tier stands for (the runtime's TIER_TASKS).
+    task = node.task or ("orchestrator" if node.type == "orchestrator" else TIER_TASKS[node.tier or "standard"])
+    files = node.id in with_files
+    groups = {FORMATS[key].group for field in file_fields for key in accepted(field.accept)} if files else set()
+    vision = "image" in groups
+    # Archives and files delivered on demand come with the files tool.
+    file_tool = files and ("archive" in groups or any(field.delivery == "on_demand" for field in file_fields))
+    knowledge_tool = node.knowledge is not None and node.knowledge.mode != "context"
+    tools = bool(
+        node.tools
+        or node.server_tools
+        or node.mcp
+        or node.memory
+        or knowledge_tool
+        or file_tool
+        or node.type == "orchestrator"
+    )
+    needs = set(TASKS[task].needs) | ({"tools"} if tools else set()) | ({"vision"} if vision else set())
+    return AgentPlan(
+        key=agent_key(node.id, part_id),
+        part=part_id,
+        node_id=node.id,
+        name=name,
+        kind="orchestrator" if node.type == "orchestrator" else "agent",
+        tier=node.tier or "standard",
+        task=task,
+        tools=tools,
+        structured=bool(node.output_fields),
+        files=files,
+        vision=vision,
+        judge=bool(node.criteria),
+        needs=sorted(needs),
+    )
+
+
+def agent_plan(template_id: str, language: str = FALLBACK_LANGUAGE) -> list[AgentPlan]:
+    """Every agent and orchestrator a copy of the template creates: the template's own first (in node order),
+    then those of its parts (in the order a copy saves them, :func:`part_ids`).
+
+    The API recommends a model per :attr:`AgentPlan.key` from its task and needs and passes them as
+    :attr:`ModelChoice.agents`; ``language`` only selects the names.
+    """
+    spec = structure(template_id)
+    text = texts(template_id, language)
+    names = {**{key: step.name for key, step in text.steps.items()}, **{key: a.name for key, a in text.agents.items()}}
+    fields = [field for node in spec.nodes for field in node.form if field.type == "file"]
+    with_files = _fed_by_start(spec.nodes, spec.edges) if fields else set()
+    found = [
+        _plan_of(node, None, names[node.id], fields, with_files)
+        for node in spec.nodes
+        if node.type in ("agent", "orchestrator")
+    ]
+    for part_id in part_ids(template_id):
+        spec_part = part(part_id)
+        text_part = part_texts(part_id, language)
+        part_names = {
+            **{key: step.name for key, step in text_part.steps.items()},
+            **{key: a.name for key, a in text_part.agents.items()},
+        }
+        # A part gets a text task, never files: nothing of the start node's form reaches its agents.
+        found += [
+            _plan_of(node, part_id, part_names[node.id], [], set())
+            for node in spec_part.nodes
+            if node.type in ("agent", "orchestrator")
+        ]
+    return found
+
+
 # ---- what the API returns ---------------------------------------------------------
 
 
@@ -1274,6 +1466,8 @@ class TemplateAgent(BaseModel):
     description: str
     role: Role | None
     model: str
+    #: The task profile the model is chosen for (:attr:`AgentPlan.task`).
+    task: str | None = None
     tools: list[str]
     structured: bool
     judge: bool
@@ -1503,6 +1697,7 @@ def _agents_of(
                     description=step.description,
                     role=item.role,
                     model=models[item.id],
+                    task=item.task,
                     tools=[],
                     structured=False,
                     judge=False,
@@ -1521,6 +1716,7 @@ def _agents_of(
                 description=own.description,
                 role=item.role,
                 model=models[item.id],
+                task=item.task,
                 tools=list(item.tools),
                 structured=bool(item.output_fields),
                 judge=bool(item.criteria),

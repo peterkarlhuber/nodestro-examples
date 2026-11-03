@@ -13,7 +13,8 @@
       "x": 340,
       "y": 160,
       "role": "analysis",
-      "icon": "shield"
+      "icon": "shield",
+      "task": "analysis"
     },
     {
       "id": "plan",
@@ -21,7 +22,8 @@
       "x": 680,
       "y": 160,
       "role": "planning",
-      "icon": "check"
+      "icon": "check",
+      "task": "write"
     },
     {
       "id": "output",

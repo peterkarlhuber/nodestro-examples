@@ -31,6 +31,7 @@
       "y": 40,
       "role": "analysis",
       "icon": "calculator",
+      "task": "tool_agent",
       "tools": [
         "calculator"
       ]
@@ -41,7 +42,8 @@
       "x": 360,
       "y": 320,
       "role": "analysis",
-      "icon": "search"
+      "icon": "search",
+      "task": "document_vision"
     },
     {
       "id": "assessment",
@@ -50,6 +52,7 @@
       "y": 180,
       "role": "review",
       "icon": "scale",
+      "task": "analysis",
       "output_name": "PropertyAssessment",
       "output_fields": [
         {

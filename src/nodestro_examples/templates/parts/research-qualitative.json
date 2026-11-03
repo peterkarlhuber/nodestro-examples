@@ -18,7 +18,8 @@
       "x": 340,
       "y": 160,
       "role": "research",
-      "icon": "chat"
+      "icon": "chat",
+      "task": "analysis"
     },
     {
       "id": "output",

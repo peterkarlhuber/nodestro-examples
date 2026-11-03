@@ -35,6 +35,7 @@
       "y": 180,
       "role": "analysis",
       "icon": "target",
+      "task": "tool_agent",
       "effort": "low",
       "memory": {
         "space": "learning-progress"
@@ -47,6 +48,7 @@
       "y": 180,
       "role": "planning",
       "icon": "list",
+      "task": "tool_agent",
       "memory": {
         "space": "learning-progress"
       }
@@ -57,7 +59,8 @@
       "x": 1020,
       "y": 40,
       "role": "writing",
-      "icon": "book"
+      "icon": "book",
+      "task": "write"
     },
     {
       "id": "quiz",
@@ -65,7 +68,8 @@
       "x": 1020,
       "y": 320,
       "role": "review",
-      "icon": "check"
+      "icon": "check",
+      "task": "write"
     },
     {
       "id": "output",

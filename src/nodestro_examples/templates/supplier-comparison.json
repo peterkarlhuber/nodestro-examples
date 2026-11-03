@@ -41,6 +41,7 @@
       "y": 40,
       "role": "analysis",
       "icon": "calculator",
+      "task": "tool_agent",
       "tools": [
         "calculator"
       ]
@@ -52,6 +53,7 @@
       "y": 320,
       "role": "analysis",
       "icon": "shield",
+      "task": "tool_agent",
       "mcp": [
         {
           "integration": "erp",
@@ -70,6 +72,7 @@
       "y": 180,
       "role": "planning",
       "icon": "scale",
+      "task": "analysis",
       "output_name": "SupplierRecommendation",
       "output_fields": [
         {

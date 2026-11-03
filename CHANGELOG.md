@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+- Pin nodestro-runtime 3006ce0 (runtime #106: CPU saving mode, local model hints, `recommend(require=)`, evidence-weighted hybrid search).
+- Models per agent (EX-011): every agent and orchestrator of the 24 templates and their parts names a task profile of
+  the runtime (`task`: `classify`, `extract`, `write`, `document_vision`, `tool_agent`, `analysis`, `coding`,
+  `judge`, `orchestrator`), validated on load (`AGENT_TASKS`, and `tier_fits()`: the tier must fit the task's
+  ranks). `agent_plan(template_id, language)` lists each agent with its key (`<node id>`, or `<part id>/<node id>`
+  in a part), name, tier, task, tools, structured output, files, vision, judge and needed capabilities.
+  `ModelChoice` gains `agents` (key -> model, used instead of the tier) and `judge` (the quality judges' model);
+  `model_choice()` takes both as optional keywords and is otherwise unchanged. `instantiate()` refuses keys that
+  name no agent. The gallery's agent details show the task. Without per-agent models every copy is unchanged.
 - Pin nodestro-runtime 7b9f4f7 (runtime #102: local agents are checked with what their server reports, so the
   templates' agents with tools, memory or an effort run on local models; checks for missing or unsuitable local
   models).

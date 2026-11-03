@@ -17,6 +17,7 @@
       "y": 200,
       "role": "planning",
       "icon": "users",
+      "task": "orchestrator",
       "orchestrator": {
         "members": [
           "idea-market",
@@ -37,6 +38,7 @@
       "y": 200,
       "role": "review",
       "icon": "scale",
+      "task": "analysis",
       "output_name": "IdeaVerdict",
       "output_fields": [
         {

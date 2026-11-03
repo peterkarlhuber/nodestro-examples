@@ -30,6 +30,7 @@
       "y": 40,
       "role": "analysis",
       "icon": "calculator",
+      "task": "tool_agent",
       "tools": [
         "calculator"
       ],
@@ -51,7 +52,8 @@
       "x": 360,
       "y": 320,
       "role": "analysis",
-      "icon": "brain"
+      "icon": "brain",
+      "task": "analysis"
     },
     {
       "id": "measures",
@@ -60,6 +62,7 @@
       "y": 180,
       "role": "planning",
       "icon": "target",
+      "task": "write",
       "criteria": [
         "linked_to_findings",
         "prioritised",

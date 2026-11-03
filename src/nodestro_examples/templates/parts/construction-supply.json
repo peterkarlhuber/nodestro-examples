@@ -19,6 +19,7 @@
       "y": 160,
       "role": "analysis",
       "icon": "list",
+      "task": "analysis",
       "output_name": "TeamResult",
       "output_fields": [
         {

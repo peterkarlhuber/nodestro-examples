@@ -25,6 +25,7 @@ def main() -> int:
     for language in LANGUAGES:
         for template_id in ids:
             examples.detail(template_id, language)
+            assert examples.agent_plan(template_id, language), template_id
             for part_id in examples.part_ids(template_id):
                 examples.build_part(part_id, language)
             for sample_id in samples.sample_ids(template_id):

@@ -19,6 +19,7 @@
       "role": "planning",
       "icon": "list",
       "tier": "fast",
+      "task": "write",
       "effort": "low",
       "output_name": "Brief",
       "output_fields": [
@@ -47,6 +48,7 @@
       "y": 160,
       "role": "writing",
       "icon": "pen",
+      "task": "write",
       "criteria": [
         "follows_outline",
         "audience"
@@ -63,7 +65,8 @@
       "tools": [
         "text_statistics"
       ],
-      "tier": "fast"
+      "tier": "fast",
+      "task": "tool_agent"
     },
     {
       "id": "output",

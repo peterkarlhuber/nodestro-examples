@@ -28,7 +28,8 @@
       "x": 340,
       "y": 160,
       "role": "planning",
-      "icon": "idea"
+      "icon": "idea",
+      "task": "write"
     },
     {
       "id": "costing",
@@ -37,6 +38,7 @@
       "y": 160,
       "role": "analysis",
       "icon": "calculator",
+      "task": "tool_agent",
       "tools": [
         "calculator"
       ]
@@ -48,6 +50,7 @@
       "y": 160,
       "role": "writing",
       "icon": "pen",
+      "task": "write",
       "criteria": [
         "target_group",
         "prices_match",

@@ -30,7 +30,8 @@
       "x": 340,
       "y": 160,
       "role": "planning",
-      "icon": "target"
+      "icon": "target",
+      "task": "document_vision"
     },
     {
       "id": "ideas",
@@ -39,6 +40,7 @@
       "y": 160,
       "role": "writing",
       "icon": "idea",
+      "task": "tool_agent",
       "memory": {
         "space": "creator-ideas"
       }
@@ -50,6 +52,7 @@
       "y": 160,
       "role": "planning",
       "icon": "list",
+      "task": "write",
       "criteria": [
         "realistic_frequency",
         "pillars_balanced",

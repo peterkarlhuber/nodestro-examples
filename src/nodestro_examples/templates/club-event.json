@@ -17,6 +17,7 @@
       "y": 40,
       "role": "planning",
       "icon": "list",
+      "task": "tool_agent",
       "tools": [
         "days_between"
       ]
@@ -28,6 +29,7 @@
       "y": 320,
       "role": "analysis",
       "icon": "calculator",
+      "task": "tool_agent",
       "tools": [
         "calculator"
       ]
@@ -38,7 +40,8 @@
       "x": 720,
       "y": 40,
       "role": "writing",
-      "icon": "mail"
+      "icon": "mail",
+      "task": "write"
     },
     {
       "id": "board_paper",
@@ -47,6 +50,7 @@
       "y": 180,
       "role": "writing",
       "icon": "file",
+      "task": "write",
       "criteria": [
         "complete",
         "responsibilities",

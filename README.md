@@ -93,6 +93,44 @@ classified as read-only. `POST /api/library/{id}/copy` of the API does exactly t
 never change a copy. With `"tests": true` the copy also gets the example's test cases as a test series; nothing is
 run until a person starts it (refused for connected copies: MCP tools are not allowed in unattended runs).
 
+## Models per agent
+
+The tiers say how capable a model must be; with Anthropic they are the curated Haiku, Sonnet and Opus. With one local
+(or other) default model every tier gets the same model, so each agent also names its **task**. `agent_plan()` lists
+every agent and orchestrator a copy creates, the template's own first, then those of its parts:
+
+```python
+for plan in examples.agent_plan("code-review", "de"):
+    plan.key, plan.name, plan.tier, plan.task, plan.needs  # "bugs", "Fehleranalyst", "standard", "coding", [...]
+
+models = examples.model_choice(
+    settings.default_model,
+    settings.assistant_model,
+    agents={"bugs": "ollama:devstral-small-2:24b", "idea-market/expert": "ollama:qwen3.5:9b"},  # key -> model
+    judge="ollama:qwen3.5:9b",  # optional: the quality checks' judge (default: the standard tier's model)
+)
+made = examples.instantiate("code-review", "de", host, models=models)
+```
+
+- `key` is `<node id>` for an agent of the template's workflow and `<part id>/<node id>` for an agent of a part (a
+  team or sub-workflow; a part is copied once, however many nodes use it). `ModelChoice.agents` maps keys to
+  qualified model ids; every agent not named keeps its tier's model. `instantiate()` raises `KeyError` for a key
+  that names no agent of the template.
+- `needs` is what the model must be able to do: the task profile's needs, plus `tools` when the agent uses tools of
+  any kind (tools, integrations, knowledge search, memory, delegation, the files tool for archives) and `vision`
+  when it receives images from the start node's form. `tools`, `structured`, `files`, `vision` and `judge` say why.
+- The tasks were chosen agent by agent: routing and labelling `classify`; pulling fields or figures out of a text
+  into a structured result `extract`; drafts, plans, summaries and reports `write`; reading attached documents and
+  images as the main work `document_vision`; work with tools or knowledge search `tool_agent`; weighing several
+  inputs, root causes, risks, legal or quantitative assessments `analysis`; reading and fixing code `coding`;
+  checking another agent's result for errors, fairness or credibility `judge`; steering teams `orchestrator`.
+- Rules, checked when a template is loaded and by `tests/test_agent_models.py`: a task must fit the tier,
+  `minimum <= rank(tier) <= max(ideal, 2)` with the task's ranks from the runtime and fast = 1, standard = 2,
+  strong = 3 (`tier_fits()`: no analysis, coding, judging or orchestrating on the fast tier, the strong tier only for
+  analysis, coding and orchestrating); orchestrators, and only they, have `orchestrator`; an agent with tools has a
+  task that needs tools, except an `analysis` (its rank matters more; its `needs` still list `tools`); an agent that
+  reads images has `document_vision`, or `tool_agent` when it also works with tools (`needs` list `vision`).
+
 ## Template format
 
 `FORMAT_VERSION = 2`. A template is data in two kinds of files:
@@ -110,6 +148,10 @@ What format 2 adds, all optional and validated when a template is loaded:
 - **Model tiers** (`tier`: `fast`, `standard`, `strong`) instead of fixed models. `model_choice()` maps them to Haiku,
   Sonnet and Opus with Anthropic, and to the workspace's default (and assistant) model with any other provider; the
   quality judge uses the standard tier. Server tools are left out with other providers.
+- **Task profiles** (`task`): every agent and orchestrator names the kind of work it does, a task profile of the
+  runtime (`nodestro_runtime.local_models.TASKS`: `classify`, `extract`, `write`, `document_vision`, `tool_agent`,
+  `analysis`, `coding`, `judge`, `orchestrator`), so a model can be recommended per agent, for example a local one
+  (see [Models per agent](#models-per-agent)).
 - **Teams**: an `orchestrator` node names parts as its members, with limits (`max_decisions`, `max_per_member`,
   `max_parallel`), optional `staffing` (`max_team`) and `allow_values` (the orchestrator fills a team's form). A
   team gets a text task only, never files, so the step before it summarizes attached data. Approvals inside a team
@@ -179,6 +221,7 @@ runs use the real engine, pre-check and Orkexa agents.
 | `tests/test_templates.py` | structure: 24 templates, the same keys and placeholders in every language, valid graphs, files, models, tools, figures equal across languages, invalid templates refused |
 | `tests/test_runs.py` | runtime: every example runs in every language (144 runs); agents that read the input keep the text when a file is attached; the pre-check asks for exactly the providers the example uses |
 | `tests/test_cases.py` | test cases and branches: all 49 cases run in all six languages with an answer that solves them and pass their checks; an empty answer fails at least one check of every case; every decision opens its branch and its default; every approval releases the result files and stops or revises after a rejection |
+| `tests/test_agent_models.py` | models per agent: every agent's task is the reviewed one and fits its tier, tool users and image readers need tools and vision, orchestrators orchestrate; the agent plan names every agent a copy creates in every language; `ModelChoice.agents` and `judge` reach the agents of the template and its parts, the rest keeps the tiers; unknown keys and tasks are refused |
 | `tests/test_format2.py` | format 2: tiers follow the workspace provider; teams, limits, parameters, contracts and approvals of the orchestrated examples; copies pin parts and store knowledge once; orchestration on the runtime with scripted decisions (staffing, parallel teams, team parameters, a rejected sign-off inside a team stops the run, the decision budget ends a runaway orchestrator); integrations need approved read-only tools; online and offline prompts |
 | `tests/test_demo_mcp.py` | the demo MCP server over Streamable HTTP: data equals the sample exports in every language, all tools read-only; a connected copy calls the server in a real run; write-classified or unapproved tools are refused; offline copies never call it; unattended runs of a connected copy are refused |
 | `tests/test_docs.py` | the generated documentation chapter: complete, idempotent, handwritten text kept, broken markers refused |

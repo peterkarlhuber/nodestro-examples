@@ -17,7 +17,8 @@
       "x": 340,
       "y": 180,
       "role": "analysis",
-      "icon": "users"
+      "icon": "users",
+      "task": "write"
     },
     {
       "id": "job_ad",
@@ -25,7 +26,8 @@
       "x": 680,
       "y": 40,
       "role": "writing",
-      "icon": "pen"
+      "icon": "pen",
+      "task": "write"
     },
     {
       "id": "interview",
@@ -33,7 +35,8 @@
       "x": 680,
       "y": 320,
       "role": "planning",
-      "icon": "chat"
+      "icon": "chat",
+      "task": "write"
     },
     {
       "id": "fairness",
@@ -42,6 +45,7 @@
       "y": 180,
       "role": "review",
       "icon": "scale",
+      "task": "judge",
       "output_name": "FairnessReview",
       "output_fields": [
         {
@@ -84,7 +88,8 @@
       "x": 1700,
       "y": 380,
       "role": "writing",
-      "icon": "pen"
+      "icon": "pen",
+      "task": "write"
     },
     {
       "id": "release",

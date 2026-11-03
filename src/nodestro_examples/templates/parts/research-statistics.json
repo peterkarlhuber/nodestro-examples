@@ -34,6 +34,7 @@
       "y": 160,
       "role": "analysis",
       "icon": "calculator",
+      "task": "analysis",
       "effort": "high",
       "tools": [
         "calculator"

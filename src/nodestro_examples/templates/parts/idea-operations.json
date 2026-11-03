@@ -19,7 +19,8 @@
       "x": 340,
       "y": 160,
       "role": "planning",
-      "icon": "target"
+      "icon": "target",
+      "task": "analysis"
     },
     {
       "id": "output",
