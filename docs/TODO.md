@@ -11,7 +11,7 @@
 |---|---|
 | P0 Critical | 0 |
 | P1 High | 0 |
-| P2 Medium | 1 |
+| P2 Medium | 0 |
 | P3 Low | 5 |
 | P4 Optional | 4 |
 
@@ -123,15 +123,6 @@ None known.
   file names unchanged; add a test that keeps the style.
 - **Depends on:** nodestro-studio (fr apostrophe cleanup)
 
-### EX-011 · CI requires the `NODESTRO_READ` token although the dependencies are public
-
-- **Priority:** P2 Medium · **Status:** Open · **Refs:** #40, backend audit D-08 residual
-- **What:** The CI install steps exit when the `NODESTRO_READ` secret is missing and still call the components
-  private. All Nodestro repositories and orkexa are public now, so runs without secrets (Dependabot, forks) fail early.
-- **Next step:** Install the git dependencies anonymously, make the token optional or remove it, fix the comments.
-- **Depends on:** none; the same change is tracked in nodestro-runtime #75 (RT-029), nodestro-api #50,
-  nodestro-sdk #47, nodestro-integrations #36, nodestro-server #25, nodestro-desktop #17 and nodestro-studio #85.
-
 ## Later optimizations
 
 None known.
@@ -151,7 +142,8 @@ None known.
 - **What:** Dependabot updates only GitHub Actions; the Nodestro dependencies are pinned by Git commit.
 - **Reason:** Pins move with the platform's pin cascade, and the blocking `pip-audit` step in CI catches known
   vulnerabilities. The original reason (private Git URLs) no longer applies now that all repositories are public;
-  re-evaluate a pip ecosystem entry together with EX-011 and fix the stale comment in `dependabot.yml`.
+  re-evaluate a pip ecosystem entry (CI no longer needs the `NODESTRO_READ` token) and fix the stale comment in
+  `dependabot.yml`.
 
 ## Cross-repository dependencies
 
@@ -163,7 +155,6 @@ None known.
 | EX-005 | nodestro-runtime, nodestro-studio | RT-016, ST-030 (MCP scope) | Wider MCP use needs an owner decision and a new review. |
 | EX-008 | nodestro-studio | ST-026 (fr apostrophes) | Same typography decision. |
 | — | nodestro-studio | `make example-docs` | Regenerate `beispiele.md` on every examples pin bump. |
-| EX-011 | all component repositories | `NODESTRO_READ` CI change (runtime #75 / RT-029, api #50, sdk #47, integrations #36, server #25, desktop #17, studio #85) | Same change everywhere |
 
 ## Maintaining this file
 
