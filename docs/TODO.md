@@ -88,7 +88,7 @@ None known.
 
 ### EX-011 · Model tiers for local models
 
-- **Priority:** P3 Low · **Status:** In progress (examples part done; PR linked once opened) · **Refs:** `model_choice`,
+- **Priority:** P3 Low · **Status:** In progress (examples part: #64) · **Refs:** `model_choice`,
   `agent_plan`, local models work order (2026-11-03), nodestro-runtime RT-052
 - **What:** With a local default model every tier gets that model, and `strong` the assistant model: with "prefer
   European models" `fast` gets `ministral-3:8b` instead of `3b`, and `code-review` gets `ministral-3:8b` instead of
