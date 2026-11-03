@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Pin nodestro-runtime 7b9f4f7 (runtime #102: local agents are checked with what their server reports, so the
+  templates' agents with tools, memory or an effort run on local models; checks for missing or unsuitable local
+  models).
 - Pin nodestro-runtime a60be7d (local models, embeddings and semantic knowledge search, runtime #99 and #101;
   orkexa 9b06a5e, #42; 2026-11-03). Nothing changes in this package yet; the examples keep their models.
 - The test cases are approved with a comment, and the README no longer lists approval comments as a known
