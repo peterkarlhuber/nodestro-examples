@@ -12,7 +12,7 @@
 | P0 Critical | 0 |
 | P1 High | 0 |
 | P2 Medium | 0 |
-| P3 Low | 5 |
+| P3 Low | 6 |
 | P4 Optional | 4 |
 
 **Release blockers:** None for this repository.
@@ -85,6 +85,16 @@ None known.
 - **Next step:** Choose a visible first description line or a workflow marker field (runtime/API) set by
   `instantiate()`; the studio then shows a badge.
 - **Depends on:** nodestro-studio (badge); nodestro-runtime and nodestro-api if a marker field is chosen
+
+### EX-011 · Model tiers for local models
+
+- **Priority:** P3 Low · **Status:** Open · **Refs:** `model_choice`, local models work order (2026-11-03), nodestro-runtime RT-052
+- **What:** With a local default model every tier gets that model, and `strong` the assistant model: with "prefer
+  European models" `fast` gets `ministral-3:8b` instead of `3b`, and `code-review` gets `ministral-3:8b` instead of
+  the coding model `devstral-small-2:24b`. `model_choice` only knows the default and the assistant model. All 24
+  examples copy and pass the check with local models (Qwen and the EU profile), and the person can change each model.
+- **Next step:** Let `model_choice` take the runtime's per-task recommendation for installed local models (fast tier
+  and coding agents), without ever picking a model that is not installed.
 
 ### EX-007 · Separate memory spaces per copy
 
