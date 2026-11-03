@@ -12,7 +12,7 @@
 | P0 Critical | 0 |
 | P1 High | 0 |
 | P2 Medium | 1 |
-| P3 Low | 6 |
+| P3 Low | 5 |
 | P4 Optional | 4 |
 
 **Release blockers:** None for this repository.
