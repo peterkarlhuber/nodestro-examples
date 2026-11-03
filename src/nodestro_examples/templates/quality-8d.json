@@ -32,6 +32,7 @@
       "y": 160,
       "role": "analysis",
       "icon": "file",
+      "task": "document_vision",
       "output_name": "D1D3",
       "output_fields": [
         {
@@ -51,6 +52,7 @@
       "y": 160,
       "role": "analysis",
       "icon": "search",
+      "task": "tool_agent",
       "knowledge": {
         "files": [
           "past_reports"
@@ -65,7 +67,8 @@
       "x": 1020,
       "y": 160,
       "role": "planning",
-      "icon": "shield"
+      "icon": "shield",
+      "task": "write"
     },
     {
       "id": "report",
@@ -74,6 +77,7 @@
       "y": 160,
       "role": "writing",
       "icon": "list",
+      "task": "extract",
       "output_name": "EightDReport",
       "output_fields": [
         {
@@ -137,7 +141,8 @@
       "x": 1020,
       "y": 380,
       "role": "planning",
-      "icon": "shield"
+      "icon": "shield",
+      "task": "write"
     },
     {
       "id": "release",

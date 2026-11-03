@@ -19,6 +19,7 @@
       "y": 160,
       "role": "analysis",
       "icon": "calculator",
+      "task": "tool_agent",
       "tools": [
         "calculator"
       ]

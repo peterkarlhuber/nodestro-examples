@@ -16,7 +16,8 @@
       "x": 360,
       "y": 40,
       "role": "planning",
-      "icon": "sparkles"
+      "icon": "sparkles",
+      "task": "write"
     },
     {
       "id": "impact",
@@ -25,6 +26,7 @@
       "y": 320,
       "role": "analysis",
       "icon": "target",
+      "task": "tool_agent",
       "tools": [
         "calculator"
       ],
@@ -37,6 +39,7 @@
       "y": 180,
       "role": "review",
       "icon": "shield",
+      "task": "judge",
       "output_name": "CampaignReview",
       "output_fields": [
         {

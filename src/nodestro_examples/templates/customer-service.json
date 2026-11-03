@@ -54,7 +54,8 @@
           "type": "boolean"
         }
       ],
-      "tier": "fast"
+      "tier": "fast",
+      "task": "classify"
     },
     {
       "id": "policy",
@@ -63,6 +64,7 @@
       "y": 160,
       "role": "research",
       "icon": "shield",
+      "task": "tool_agent",
       "tools": [
         "days_between"
       ],
@@ -82,6 +84,7 @@
       "y": 160,
       "role": "writing",
       "icon": "chat",
+      "task": "write",
       "criteria": [
         "policy_compliant",
         "tone",
@@ -110,7 +113,8 @@
       "x": 680,
       "y": 380,
       "role": "planning",
-      "icon": "users"
+      "icon": "users",
+      "task": "write"
     },
     {
       "id": "approve",

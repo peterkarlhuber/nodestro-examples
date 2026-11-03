@@ -19,7 +19,8 @@
       "x": 340,
       "y": 160,
       "role": "review",
-      "icon": "scale"
+      "icon": "scale",
+      "task": "analysis"
     },
     {
       "id": "output",

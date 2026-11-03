@@ -19,6 +19,7 @@
       "y": 160,
       "role": "review",
       "icon": "scale",
+      "task": "analysis",
       "output_name": "TeamResult",
       "output_fields": [
         {

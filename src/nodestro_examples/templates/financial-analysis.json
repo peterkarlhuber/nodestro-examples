@@ -32,6 +32,7 @@
       "y": 60,
       "role": "research",
       "icon": "search",
+      "task": "extract",
       "effort": "low",
       "proposals": "extracted"
     },
@@ -45,7 +46,8 @@
       "tools": [
         "calculator"
       ],
-      "tier": "strong"
+      "tier": "strong",
+      "task": "analysis"
     },
     {
       "id": "review",
@@ -54,6 +56,7 @@
       "y": 60,
       "role": "review",
       "icon": "check",
+      "task": "judge",
       "effort": "low",
       "output_name": "Review",
       "output_fields": [

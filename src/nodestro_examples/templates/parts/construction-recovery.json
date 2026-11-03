@@ -19,6 +19,7 @@
       "y": 160,
       "role": "planning",
       "icon": "target",
+      "task": "tool_agent",
       "tools": [
         "calculator",
         "days_between"

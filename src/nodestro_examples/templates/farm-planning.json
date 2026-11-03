@@ -29,7 +29,8 @@
       "x": 340,
       "y": 160,
       "role": "planning",
-      "icon": "list"
+      "icon": "list",
+      "task": "analysis"
     },
     {
       "id": "margins",
@@ -38,6 +39,7 @@
       "y": 160,
       "role": "analysis",
       "icon": "calculator",
+      "task": "tool_agent",
       "tools": [
         "calculator"
       ]
@@ -49,6 +51,7 @@
       "y": 160,
       "role": "review",
       "icon": "check",
+      "task": "judge",
       "output_name": "FarmPlanReview",
       "output_fields": [
         {

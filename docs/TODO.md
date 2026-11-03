@@ -88,13 +88,22 @@ None known.
 
 ### EX-011 · Model tiers for local models
 
-- **Priority:** P3 Low · **Status:** Open · **Refs:** `model_choice`, local models work order (2026-11-03), nodestro-runtime RT-052
+- **Priority:** P3 Low · **Status:** In progress (examples part done; PR linked once opened) · **Refs:** `model_choice`,
+  `agent_plan`, local models work order (2026-11-03), nodestro-runtime RT-052
 - **What:** With a local default model every tier gets that model, and `strong` the assistant model: with "prefer
   European models" `fast` gets `ministral-3:8b` instead of `3b`, and `code-review` gets `ministral-3:8b` instead of
-  the coding model `devstral-small-2:24b`. `model_choice` only knows the default and the assistant model. All 24
-  examples copy and pass the check with local models (Qwen and the EU profile), and the person can change each model.
-- **Next step:** Let `model_choice` take the runtime's per-task recommendation for installed local models (fast tier
-  and coding agents), without ever picking a model that is not installed.
+  the coding model `devstral-small-2:24b`. All 24 examples copy and pass the check with local models (Qwen and the EU
+  profile), and the person can change each model.
+- **Done here:** every agent and orchestrator of the 24 templates and their parts names a reviewed task profile
+  (`task`, validated against the tier); `agent_plan()` lists each agent with key, tier, task and needs (tools,
+  vision); `ModelChoice.agents` (key -> model) and `ModelChoice.judge` give single agents and the quality judges
+  their own model, and `instantiate()` refuses keys that name no agent.
+- **Open:** nodestro-api computes the recommendations (`recommend` per `AgentPlan.task`, hardware, installed models,
+  languages, EU preference; manual choices first) and passes them to the copy; it must also honor
+  `AgentPlan.needs`, because `recommend()` only checks the task profile's needs (an `analysis` agent with the
+  calculator needs `tools`, a `tool_agent` that reads images needs `vision`). Not verified with real local runs yet
+  (the tasks are a reviewed judgment, not measured).
+- **Depends on:** nodestro-api (copy route), nodestro-runtime pin cascade
 
 ### EX-007 · Separate memory spaces per copy
 

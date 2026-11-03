@@ -32,6 +32,7 @@
       "y": 160,
       "role": "analysis",
       "icon": "calculator",
+      "task": "tool_agent",
       "tools": [
         "calculator"
       ]
@@ -43,6 +44,7 @@
       "y": 160,
       "role": "planning",
       "icon": "idea",
+      "task": "tool_agent",
       "tools": [
         "calculator"
       ]
@@ -54,6 +56,7 @@
       "y": 160,
       "role": "review",
       "icon": "check",
+      "task": "judge",
       "effort": "low",
       "output_name": "BudgetCheck",
       "output_fields": [

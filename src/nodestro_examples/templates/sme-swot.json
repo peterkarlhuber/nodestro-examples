@@ -16,7 +16,8 @@
       "x": 360,
       "y": 40,
       "role": "analysis",
-      "icon": "search"
+      "icon": "search",
+      "task": "analysis"
     },
     {
       "id": "external",
@@ -24,7 +25,8 @@
       "x": 360,
       "y": 320,
       "role": "research",
-      "icon": "globe"
+      "icon": "globe",
+      "task": "analysis"
     },
     {
       "id": "strategy",
@@ -32,7 +34,8 @@
       "x": 720,
       "y": 180,
       "role": "planning",
-      "icon": "target"
+      "icon": "target",
+      "task": "analysis"
     },
     {
       "id": "critic",
@@ -41,6 +44,7 @@
       "y": 320,
       "role": "review",
       "icon": "scale",
+      "task": "judge",
       "output_name": "StrategyReview",
       "output_fields": [
         {

@@ -35,7 +35,8 @@
       "role": "analysis",
       "icon": "list",
       "effort": "low",
-      "tier": "fast"
+      "tier": "fast",
+      "task": "document_vision"
     },
     {
       "id": "rules",
@@ -44,6 +45,7 @@
       "y": 160,
       "role": "research",
       "icon": "book",
+      "task": "tool_agent",
       "proposals": "extracted",
       "knowledge": {
         "files": [
@@ -60,6 +62,7 @@
       "y": 160,
       "role": "writing",
       "icon": "mail",
+      "task": "write",
       "criteria": [
         "only_given_rules",
         "plain_language",
