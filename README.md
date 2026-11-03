@@ -206,9 +206,6 @@ Open work (release blockers, known gaps, follow-ups) is listed in [docs/TODO.md]
 
 ## Known limitations
 
-- When an approval is decided with a comment, the comment reaches the result node as an extra result: the run's
-  result becomes an object with one entry per name, and checks on fields of the approved result no longer match.
-  Approve test series runs without a comment.
 - `creator-strategy` remembers ideas in the memory space `creator-ideas` and `learning-plan` the learner's progress in
   `learning-progress`; every copy of the same example shares its space.
 - Teams of an orchestrator receive a text task, not the run's files; the orchestrated examples summarize attached

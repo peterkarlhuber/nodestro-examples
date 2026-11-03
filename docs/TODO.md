@@ -110,14 +110,7 @@ None known.
 
 ## Documentation
 
-### EX-004 · Stale "Known limitation" on approval comments
-
-- **Priority:** P3 Low · **Status:** Open · **Refs:** README "Known limitations", `tests/test_cases.py` (approval
-  without comment), runtime CHANGELOG (platform integration fixes)
-- **What:** The README says an approval comment becomes an extra result of the result node. The runtime no longer
-  passes approval comments to result nodes or decisions, so the note and the comment-free workaround in the test are
-  outdated (checked: all 49 cases pass in six languages when approved with a comment).
-- **Next step:** Approve with a comment in `test_cases.py` to prove the fix, then remove the README note.
+None known.
 
 ## Technical debt
 

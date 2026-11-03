@@ -72,8 +72,8 @@ async def until(workspace: Workspace, run: Any, node_id: str) -> Any:
 async def run_case(workspace: Workspace, workflow: Workflow, case: dict[str, Any]) -> Any:
     workspace.fake.learn(workflow)  # type: ignore[attr-defined]
     run = await workspace.run(workflow, RunIn(input=case["input"], values=case["values"]))
-    # Approved without a comment: a comment becomes part of the run's result (see the README).
-    return await finish(workspace, run, comment="")
+    # Approved with a comment: the runtime no longer passes approval comments to result nodes (EX-004).
+    return await finish(workspace, run, comment="Checked, looks right.")
 
 
 def results(case: dict[str, Any], output: Any) -> list[bool | None]:
