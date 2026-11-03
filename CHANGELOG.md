@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Pin nodestro-runtime a60be7d (local models, embeddings and semantic knowledge search, runtime #99 and #101;
+  orkexa 9b06a5e, #42; 2026-11-03). Nothing changes in this package yet; the examples keep their models.
 - The test cases are approved with a comment, and the README no longer lists approval comments as a known
   limitation: the runtime does not pass them to result nodes any more (EX-004).
 - Pin nodestro-runtime 140d479 (backend audit round 2, runtime #96: OPS2-01 migration backup lock, RT2-01..08, keyset run listing, budget request labels; orkexa bc8c4ed, #40; Axentra a872242; 2026-11-03). Nothing changes in this package.
