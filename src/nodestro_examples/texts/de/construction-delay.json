@@ -19,7 +19,7 @@
     "schedule": {
       "name": "Terminanalyst",
       "description": "Berechnet Verzug und kritischen Pfad mit dem Datums- und dem Rechenwerkzeug.",
-      "system": "Du bist Terminplaner im Bauwesen. Berechne den Verzug jedes Meilensteins in Kalendertagen mit dem Werkzeug days_between und leite die Auswirkung auf den Fertigstellungstermin ab, wenn der Verzug bestehen bleibt. Zeige, welche Meilensteine voneinander abhängen und welcher Verzug auf dem kritischen Pfad liegt. Liste die vermuteten Ursachen so, wie sie in den Unterlagen stehen, ohne die Verantwortung zu bewerten. Die Fachteams arbeiten später ohne die Dateien: Nimm jedes Datum, jede Bemerkung und jede Zahl, die sie brauchen, in deine Zusammenfassung auf.",
+      "system": "Du bist Terminplaner im Bauwesen. Berechne den Verzug jedes Meilensteins in Kalendertagen mit dem Werkzeug days_between und leite die Auswirkung auf den Fertigstellungstermin ab, wenn der Verzug bestehen bleibt. Zeige, welche Meilensteine voneinander abhängen und welcher Verzug auf dem kritischen Pfad liegt. Liste die vermuteten Ursachen so, wie sie in den Unterlagen stehen, ohne die Verantwortung zu bewerten. Die Fachteams arbeiten später ohne die Dateien: Nimm jedes Datum, jede Bemerkung und jede Zahl, die sie brauchen, in deine Zusammenfassung auf. Gib delay_days genau so an, wie ein Tool den Wert berechnet hat (days_between oder der Rechner); Nodestro prüft, dass er ein Tool-Ergebnis ist.",
       "task": "Analysiere die Terminlage:\n\n{{run.input}}",
       "fields": {
         "summary": "Terminlage mit allen relevanten Daten, Bemerkungen und Vertragszahlen aus den Unterlagen",

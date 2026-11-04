@@ -16,7 +16,7 @@ from typing import Any
 
 from nodestro_runtime.run_views import approvals_of_tree
 from nodestro_runtime.schemas import Run, RunIn, Workflow, WorkflowIn
-from nodestro_runtime.testing import AnswerAll, Parsed, sample_instance, text, tool_use
+from nodestro_runtime.testing import SAMPLE_NUMBERS, AnswerAll, Parsed, computing_call, sample_instance, text, tool_use
 from nodestro_runtime.workspace import Workspace
 import pytest
 
@@ -104,6 +104,18 @@ class Scenario(AnswerAll):
             self.learn(workspace.resolve_workflow(workflow_id, None)[0])
         self.learn(made.workflow)
 
+    def _numbers(self) -> list[float]:
+        """The figures of the scenario and the sample values: what a careful model computes with its calculator
+        before it reports key figures that must come from a tool (``source="tool"``)."""
+        found = [
+            float(value)
+            for answer in self.answers.values()
+            if isinstance(answer, dict)
+            for value in answer.values()
+            if isinstance(value, (int, float)) and not isinstance(value, bool)
+        ]
+        return [*dict.fromkeys([*found, *SAMPLE_NUMBERS])]
+
     def _node(self, request: dict[str, Any]) -> str | None:
         system = str(request.get("system", ""))
         return next((node_id for own, node_id in self.prompts.items() if own in system), None)
@@ -152,6 +164,12 @@ class Scenario(AnswerAll):
         node_id = self._node(request)
         if model is not None and model.__name__ == "_Verdict":
             return super()._answer(request)
+        if node_id and not self.tool_calls.get(node_id):
+            computed = computing_call(request, self._numbers())
+            if computed is not None:
+                with self._lock:
+                    self.calls.append({key: value for key, value in request.items() if key != "output_format"})
+                return computed
         pending = self.tool_calls.get(node_id or "")
         if pending and request.get("tools"):
             name, payload = pending.pop(0)

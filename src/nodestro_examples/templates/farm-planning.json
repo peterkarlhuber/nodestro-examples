@@ -60,7 +60,8 @@
         },
         {
           "name": "total_margin_eur",
-          "type": "number"
+          "type": "number",
+          "source": "tool"
         },
         {
           "name": "rule_checks",

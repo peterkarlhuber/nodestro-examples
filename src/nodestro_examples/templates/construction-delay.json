@@ -45,7 +45,8 @@
         },
         {
           "name": "delay_days",
-          "type": "number"
+          "type": "number",
+          "source": "tool"
         },
         {
           "name": "critical_path",

@@ -2,6 +2,17 @@
 
 ## Unreleased
 
+- Key figures come from a tool. In the live benchmark, the `production-downtime` agent estimated the downtime share
+  (2.83 % and 3.31 %; correct: 665 of 14,400 minutes = 4.62 %), so the gate (`> 3 %`) skipped the quality check. The
+  downtime agent now has the runtime's deterministic `table_totals` tool besides the calculator, and its
+  `downtime_share_percent` is a checked field (`FieldSpec.source = "tool"`, passed to the runtime's
+  `OutputField.source`): the runtime accepts it only when a tool computed it from the whole table. The same applies
+  to the money and day figures of `household-budget` (`monthly_surplus`, `savings_potential`; the check agent gets
+  the calculator and the `analysis` task), `farm-planning` (`total_margin_eur`) and `construction-delay`
+  (`delay_days`). `contract-review` no longer counts its critical clauses: the checkpoint lists them
+  (`critical_clauses`) and the gate tests `is_not_empty`. A test makes sure every numeric gate field is checked. Texts
+  in all six languages are updated. EX-012 records the figures that remain in free text.
+- Pin nodestro-runtime 2f1de71 (runtime #108: checked key figures, `table_totals`; #109 and #110: orkexa 6e61862, local Ollama agents with a structured result call their tools and answer in the conversation's language; a calculator echo backs no checked value).
 - EX-011 is done and leaves `docs/TODO.md`. nodestro-api computes the per-agent plan from these task profiles and the
   agents' own needs (`GET /api/library/{id}/models`), and Studio shows it when copying. Live runs on a 4 vCPU CPU with
   `qwen3.5:4b` (32k context, CPU saving mode) through the benchmark API: `contract-review` (de, input file) 736 s,

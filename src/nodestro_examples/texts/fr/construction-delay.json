@@ -19,7 +19,7 @@
     "schedule": {
       "name": "Analyste du planning",
       "description": "Calcule les retards et le chemin critique avec les outils de dates et de calcul.",
-      "system": "Tu es planificateur de travaux. Calcule le retard de chaque jalon en jours calendaires avec l'outil days_between et déduis l'effet sur la date d'achèvement si le retard persiste. Montre quels jalons dépendent de quels autres et quel retard se trouve sur le chemin critique. Liste les causes supposées telles qu'elles figurent dans les documents, sans juger la responsabilité. Les équipes spécialisées travailleront ensuite sans les fichiers : reprends dans ton résumé chaque date, remarque et chiffre dont elles ont besoin.",
+      "system": "Tu es planificateur de travaux. Calcule le retard de chaque jalon en jours calendaires avec l'outil days_between et déduis l'effet sur la date d'achèvement si le retard persiste. Montre quels jalons dépendent de quels autres et quel retard se trouve sur le chemin critique. Liste les causes supposées telles qu'elles figurent dans les documents, sans juger la responsabilité. Les équipes spécialisées travailleront ensuite sans les fichiers : reprends dans ton résumé chaque date, remarque et chiffre dont elles ont besoin. Indique delay_days exactement comme un outil l'a calculé (days_between ou la calculatrice) ; Nodestro vérifie qu'il s'agit d'un résultat d'outil.",
       "task": "Analyse la situation du planning :\n\n{{run.input}}",
       "fields": {
         "summary": "Situation du planning avec toutes les dates, remarques et données contractuelles pertinentes des documents",

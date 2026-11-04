@@ -246,6 +246,8 @@ class FieldSpec(_Strict):
     name: str
     type: OutputFieldType = "string"
     required: bool = True
+    #: ``tool``: a key figure that must be the result of a tool call (nodestro-runtime ``value_checks``).
+    source: Literal["model", "tool"] = "model"
 
 
 class RuleSpec(_Strict):
@@ -1006,7 +1008,13 @@ def _build_nodes(
                 mode="structured",
                 name=item.output_name,
                 fields=[
-                    OutputField(name=f.name, type=f.type, required=f.required, description=own.fields[f.name])
+                    OutputField(
+                        name=f.name,
+                        type=f.type,
+                        required=f.required,
+                        description=own.fields[f.name],
+                        source=f.source,
+                    )
                     for f in item.output_fields
                 ],
             )

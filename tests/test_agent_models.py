@@ -53,7 +53,7 @@ EXPECTED: dict[str, dict[str, str]] = {
     "customer-service": {"triage": "classify", "policy": "tool_agent", "reply": "write", "deescalation": "write"},
     "farm-planning": {"rotation": "analysis", "margins": "tool_agent", "review": "judge"},
     "financial-analysis": {"research": "extract", "analysis": "analysis", "review": "judge"},
-    "household-budget": {"budget": "tool_agent", "savings": "tool_agent", "check": "judge"},
+    "household-budget": {"budget": "tool_agent", "savings": "tool_agent", "check": "analysis"},
     "hr-recruiting": {
         "profile": "write",
         "job_ad": "write",

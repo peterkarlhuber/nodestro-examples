@@ -26,6 +26,12 @@ import nodestro_examples as library
 from nodestro_examples import samples
 
 IDS = library.template_ids()
+#: Templates with key figures that must come from a tool (``source="tool"``).
+CHECKED = {
+    template_id
+    for template_id in IDS
+    if any(field.source == "tool" for node in library.structure(template_id).nodes for field in node.output_fields)
+}
 CASES = [(template_id, case.id) for template_id in IDS for case in library.structure(template_id).tests]
 
 #: What a model that solved a case answers, where the checks look at it (node id -> fields or text).
@@ -39,7 +45,7 @@ SCENARIOS: dict[tuple[str, str], dict[str, Any]] = {
     ("customer-service", "calm_request"): {"triage": {"escalation": False}},
     ("code-review", "snippet"): {"fix": "def test_coupon_never_below_zero():\n    ..."},
     ("code-review", "project_zip"): {"fix": "def test_find_orders_is_parameterised():\n    ..."},
-    ("contract-review", "balanced_contract"): {"checkpoints": {"critical_count": 0}},
+    ("contract-review", "balanced_contract"): {"checkpoints": {"critical_clauses": []}},
     # Income 4,605 minus 4,142 spending (annual items per month) leaves 463; the March export 460.
     ("household-budget", "budget_text"): {"check": {"monthly_surplus": 463, "savings_potential": 150}},
     ("household-budget", "transactions_file"): {"check": {"monthly_surplus": 460, "savings_potential": 150}},
@@ -143,6 +149,11 @@ async def test_no_case_passes_with_an_empty_answer(make_workspace: Any, template
     ids = [case.id for case in library.structure(template_id).tests]
     case = stored_cases(workspace, template_id, "en", workflow)[ids.index(case_id)]
     done = await run_case(workspace, workflow, case)
+    if template_id in CHECKED:
+        # An empty key figure is no tool result: the step stops instead of passing a made-up 0 on (value checks).
+        assert done.status == "failed", (template_id, case_id)
+        assert "run.value_unverified" in {state.error_code for state in done.nodes.values()}, done.nodes
+        return
     assert done.status == "succeeded", (template_id, case_id, done.error)
     assert False in results(case, done.output), (template_id, case_id, done.output)
 
@@ -172,6 +183,8 @@ def _hit_and_miss(operator: str, value: Any) -> tuple[Any, Any]:
         return False, True
     if operator == "gt":
         return value + 1, value
+    if operator == "is_not_empty":
+        return ["Clause 9: liability unlimited"], []
     raise AssertionError(f"no values for {operator}")  # pragma: no cover - a new kind of rule
 
 
@@ -316,3 +329,34 @@ async def test_result_files_are_written_in_the_configured_formats(make_workspace
         name = library.texts(template_id, "fr").file_name or library.texts(template_id, "fr").name
         assert entry.name == file_name(name, "result", entry.format), (template_id, entry.name)
     assert len(workspace.files.list(done.id)) == len(output.output.files if output.output else [])
+
+
+def test_key_figures_that_decide_or_report_money_come_from_a_tool() -> None:
+    """The figures a decision or a money amount rests on are tool results, never the model's own arithmetic."""
+    checked = {
+        (template_id, node.id, field.name)
+        for template_id in IDS
+        for node in library.structure(template_id).nodes
+        for field in node.output_fields
+        if field.source == "tool"
+    }
+    assert checked == {
+        ("production-downtime", "downtime", "downtime_share_percent"),
+        ("household-budget", "check", "monthly_surplus"),
+        ("household-budget", "check", "savings_potential"),
+        ("farm-planning", "review", "total_margin_eur"),
+        ("construction-delay", "schedule", "delay_days"),
+    }
+    downtime = next(node for node in library.structure("production-downtime").nodes if node.id == "downtime")
+    assert "table_totals" in downtime.tools
+    # Every number a decision reads is checked, or the decision reads a list instead of a count.
+    for template_id in IDS:
+        spec = library.structure(template_id)
+        for node in spec.nodes:
+            if node.condition is None or node.condition.source in (None, "start"):
+                continue
+            source = next(item for item in spec.nodes if item.id == node.condition.source)
+            for rule in node.condition.rules:
+                field = next((item for item in source.output_fields if item.name == rule.field), None)
+                if field is not None and field.type in ("number", "integer"):
+                    assert field.source == "tool", (template_id, node.id, rule.field)

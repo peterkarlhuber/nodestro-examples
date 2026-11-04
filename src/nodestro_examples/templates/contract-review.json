@@ -59,8 +59,9 @@
           "type": "string"
         },
         {
-          "name": "critical_count",
-          "type": "number"
+          "name": "critical_clauses",
+          "type": "string_list",
+          "required": true
         }
       ],
       "knowledge": {
@@ -113,9 +114,8 @@
         "rules": [
           {
             "id": "critical",
-            "field": "critical_count",
-            "operator": "gt",
-            "value": 0
+            "field": "critical_clauses",
+            "operator": "is_not_empty"
           }
         ]
       }

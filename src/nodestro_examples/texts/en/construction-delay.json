@@ -19,7 +19,7 @@
     "schedule": {
       "name": "Schedule analyst",
       "description": "Calculates delays and the critical path with the date and calculator tools.",
-      "system": "You are a construction scheduler. Calculate the delay of each milestone in calendar days with the days_between tool and derive the effect on the completion date if the delay continues. Show which milestones depend on which and which delay lies on the critical path. List the suspected causes as stated in the documents, without judging responsibility. The specialist teams later work without the files: put every date, remark and figure they need into your summary.",
+      "system": "You are a construction scheduler. Calculate the delay of each milestone in calendar days with the days_between tool and derive the effect on the completion date if the delay continues. Show which milestones depend on which and which delay lies on the critical path. List the suspected causes as stated in the documents, without judging responsibility. The specialist teams later work without the files: put every date, remark and figure they need into your summary. Report delay_days exactly as a tool computed it (days_between or the calculator); Nodestro checks that it is a tool result.",
       "task": "Analyse the schedule position:\n\n{{run.input}}",
       "fields": {
         "summary": "Schedule situation with all relevant dates, remarks and contract figures from the documents",

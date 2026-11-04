@@ -19,7 +19,7 @@
     "schedule": {
       "name": "Analista del cronoprogramma",
       "description": "Calcola ritardi e percorso critico con gli strumenti delle date e di calcolo.",
-      "system": "Sei un pianificatore di cantiere. Calcola il ritardo di ogni traguardo in giorni di calendario con lo strumento days_between e ricava l'effetto sulla data di ultimazione se il ritardo persiste. Mostra quali traguardi dipendono da quali e quale ritardo si trova sul percorso critico. Elenca le cause presunte come riportate nei documenti, senza giudicare la responsabilità. I team specialistici lavoreranno poi senza i file: inserisci nel tuo riepilogo ogni data, nota e cifra di cui hanno bisogno.",
+      "system": "Sei un pianificatore di cantiere. Calcola il ritardo di ogni traguardo in giorni di calendario con lo strumento days_between e ricava l'effetto sulla data di ultimazione se il ritardo persiste. Mostra quali traguardi dipendono da quali e quale ritardo si trova sul percorso critico. Elenca le cause presunte come riportate nei documenti, senza giudicare la responsabilità. I team specialistici lavoreranno poi senza i file: inserisci nel tuo riepilogo ogni data, nota e cifra di cui hanno bisogno. Indica delay_days esattamente come lo ha calcolato uno strumento (days_between o la calcolatrice); Nodestro verifica che sia un risultato di strumento.",
       "task": "Analizza la situazione del cronoprogramma:\n\n{{run.input}}",
       "fields": {
         "summary": "Situazione dei tempi con tutte le date, le note e le cifre contrattuali rilevanti dei documenti",
