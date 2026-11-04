@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Pin nodestro-runtime 40c8c06 (runtime #113, backend audit round 3: key-figure checks, event-loop safety, cancel of local model requests, `reindex_required`, catalog `license_source`; orkexa e9c2147, axentra 0a1d1cc). No change to this package.
 - Pin nodestro-runtime c6f0240 (runtime #111: RT-054 TODO; #112: orkexa 22f2910, the Ollama runtime of another
   platform for portable packages). No change to the examples.
 - Key figures come from a tool. In the live benchmark, the `production-downtime` agent estimated the downtime share
