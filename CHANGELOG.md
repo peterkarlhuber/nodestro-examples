@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- EX-011 is done and leaves `docs/TODO.md`. nodestro-api computes the per-agent plan from these task profiles and the
+  agents' own needs (`GET /api/library/{id}/models`), and Studio shows it when copying. Live runs on a 4 vCPU CPU with
+  `qwen3.5:4b` (32k context, CPU saving mode) through the benchmark API: `contract-review` (de, input file) 736 s,
+  checks 3/3; `code-review` (en, coding) passed 1/1; `customer-service` (fr, tools and parallel branches, 1255 s) and
+  `citizen-inquiry` (it, 742 s) ran every agent and stopped at their approval step as designed; the orchestration
+  `business-idea` (en, five experts) reached its own 30-minute time limit after 11 requests. The other 19 examples
+  were checked statically (plan for three hardware profiles, with and without the European preference).
+
 - Pin nodestro-runtime 7cb9b4b (runtime #107: a local judge answers without thinking in the CPU saving mode, longer
   request timeout for local model servers).
 - Pin nodestro-runtime 3006ce0 (runtime #106: CPU saving mode, local model hints, `recommend(require=)`, evidence-weighted hybrid search).

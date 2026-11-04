@@ -12,7 +12,7 @@
 | P0 Critical | 0 |
 | P1 High | 0 |
 | P2 Medium | 0 |
-| P3 Low | 6 |
+| P3 Low | 5 |
 | P4 Optional | 4 |
 
 **Release blockers:** None for this repository.
@@ -85,25 +85,6 @@ None known.
 - **Next step:** Choose a visible first description line or a workflow marker field (runtime/API) set by
   `instantiate()`; the studio then shows a badge.
 - **Depends on:** nodestro-studio (badge); nodestro-runtime and nodestro-api if a marker field is chosen
-
-### EX-011 · Model tiers for local models
-
-- **Priority:** P3 Low · **Status:** In progress (examples part: #64) · **Refs:** `model_choice`,
-  `agent_plan`, local models work order (2026-11-03), nodestro-runtime RT-052
-- **What:** With a local default model every tier gets that model, and `strong` the assistant model: with "prefer
-  European models" `fast` gets `ministral-3:8b` instead of `3b`, and `code-review` gets `ministral-3:8b` instead of
-  the coding model `devstral-small-2:24b`. All 24 examples copy and pass the check with local models (Qwen and the EU
-  profile), and the person can change each model.
-- **Done here:** every agent and orchestrator of the 24 templates and their parts names a reviewed task profile
-  (`task`, validated against the tier); `agent_plan()` lists each agent with key, tier, task and needs (tools,
-  vision); `ModelChoice.agents` (key -> model) and `ModelChoice.judge` give single agents and the quality judges
-  their own model, and `instantiate()` refuses keys that name no agent.
-- **Open:** nodestro-api computes the recommendations (`recommend` per `AgentPlan.task`, hardware, installed models,
-  languages, EU preference; manual choices first) and passes them to the copy; it must also honor
-  `AgentPlan.needs`, because `recommend()` only checks the task profile's needs (an `analysis` agent with the
-  calculator needs `tools`, a `tool_agent` that reads images needs `vision`). Not verified with real local runs yet
-  (the tasks are a reviewed judgment, not measured).
-- **Depends on:** nodestro-api (copy route), nodestro-runtime pin cascade
 
 ### EX-007 · Separate memory spaces per copy
 
