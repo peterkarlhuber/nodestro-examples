@@ -3,7 +3,7 @@
 > Open work for this repository: release blockers, known bugs, security follow-ups, technical debt and planned improvements.
 > GitHub issues are the source of truth for details; this file is the entry point and summary.
 >
-> **Last full review:** 2026-11-03 against `master` at `6c9feb5` (close of UX round 2 and backend audit 2).
+> **Last full review:** 2026-11-04 against `master` at `64e534a` (UX round 3 and backend audit 3).
 
 ## Summary
 
@@ -100,14 +100,16 @@ None known.
 
 ## Technical debt
 
-### EX-008 · Typographic apostrophes in fr, it and en texts
+### EX-008 · Typographic apostrophes in French texts
 
-- **Priority:** P4 Optional · **Status:** Open · **Refs:** identified in this inventory
-- **What:** The example texts use straight apostrophes only (about 1,570 in fr, 730 in it, 120 in en), while the
-  studio locales mostly use typographic ones, so gallery and guides mix both styles.
-- **Next step:** Follow the studio's typography decision and convert in one pass, leaving code, placeholders and
-  file names unchanged; add a test that keeps the style.
-- **Depends on:** nodestro-studio (fr apostrophe cleanup)
+- **Priority:** P4 Optional · **Status:** Open · **Refs:** identified in this inventory; studio decision 7dff7f5 (ST-026)
+- **What:** The French example texts use straight apostrophes only (about 1,570), while the studio converted all
+  French UI texts to typographic ones and now enforces that with a test, so French gallery cards and guides mix
+  both styles. English stays with straight apostrophes like the studio; Italian has no decision yet (the studio
+  locale mixes both).
+- **Next step:** Convert the French texts in one pass, leaving code, placeholders and file names unchanged; add a
+  test that keeps the style. This needs a new examples pin and `make example-docs` in the studio afterwards.
+- **Depends on:** nothing
 
 ## Later optimizations
 
@@ -147,7 +149,6 @@ None known.
 |---|---|---|---|
 | EX-003 | nodestro-studio | ST-031 (AD-18) | Studio shows the offline badge; this repo provides the marker. |
 | EX-005 | nodestro-runtime, nodestro-studio | RT-016, ST-030 (MCP scope) | Wider MCP use needs an owner decision and a new review. |
-| EX-008 | nodestro-studio | ST-026 (fr apostrophes) | Same typography decision. |
 | — | nodestro-studio | `make example-docs` | Regenerate `beispiele.md` on every examples pin bump. |
 
 ## Maintaining this file
