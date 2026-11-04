@@ -1,6 +1,7 @@
 {
   "name": "Équipe hypothèses",
   "description": "Transforme une question de recherche analysée en hypothèses testables avec hypothèses nulles et prédictions mesurables ; les révise après une critique méthodologique.",
+  "capabilities": ["hypothèses", "opérationnalisation"],
   "start": "Question et mission",
   "output": "Hypothèses",
   "agents": {

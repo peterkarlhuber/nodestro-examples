@@ -1,6 +1,7 @@
 {
   "name": "Equipe de métodos qualitativos",
   "description": "Planeja entrevistas, observações ou grupos focais para perguntas sobre experiências, motivos e comportamentos: amostra, roteiro e análise.",
+  "capabilities": ["métodos qualitativos", "entrevistas", "observação"],
   "start": "Pergunta e tarefa",
   "output": "Desenho qualitativo",
   "agents": {

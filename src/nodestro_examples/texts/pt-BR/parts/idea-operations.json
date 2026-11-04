@@ -1,6 +1,7 @@
 {
   "name": "Equipe de operações",
   "description": "Verifica se uma ideia de negócio pode ser executada como descrito: processos, capacidade, equipamentos, fornecedores e logística.",
+  "capabilities": ["operações", "tecnologia", "logística", "fornecedores"],
   "start": "Ideia e tarefa",
   "output": "Relatório de operações",
   "agents": {

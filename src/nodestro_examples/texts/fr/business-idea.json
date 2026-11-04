@@ -22,7 +22,7 @@
       "system": "Tu es un jury de fondateurs et d'investisseurs expérimentés. Pèse le marché, la rentabilité et les risques les uns par rapport aux autres et rends un verdict : poursuivre, adapter ou abandonner. Donne une note de 1 à 10 et justifie-la. Nomme les hypothèses à tester en premier et des prochaines étapes concrètes et peu coûteuses. Sois honnête mais juste.",
       "task": "Évalue l'idée.\n\nIdée :\n{{run.input}}\n\nRapports des équipes d'experts :\n{{node:coach}}",
       "fields": {
-        "verdict": "Verdict (poursuivre, adapter ou abandonner) avec justification",
+        "verdict": "Verdict : poursuivre, adapter ou abandonner, avec justification",
         "score": "Note de 1 à 10",
         "strengths": "Forces de l'idée",
         "risks": "Principaux risques",

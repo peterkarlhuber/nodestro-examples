@@ -1,6 +1,7 @@
 {
   "name": "Team riserve",
   "description": "Redige comunicazioni di impedimento e valuta richieste di proroga dei termini per ritardi fuori dalla sfera dell'impresa; una direzione di cantiere vista la bozza.",
+  "capabilities": ["contratto", "riserve", "comunicazione di impedimento"],
   "start": "Incarico",
   "output": "Valutazione delle riserve vistata",
   "agents": {
@@ -11,18 +12,18 @@
       "task": "{{input}}",
       "fields": {
         "notice": "Bozza della comunicazione di impedimento al committente",
-        "claim_basis": "Motivo per cui il ritardo può ricadere fuori dalla sfera dell'impresa",
-        "extension_days": "Proroga dei termini in giorni di calendario che potrebbe essere giustificata",
-        "deadline": "Entro quando inviare la comunicazione, oppure che il termine non è noto",
+        "claim_basis": "Fondamento della richiesta: perché il ritardo può ricadere fuori dalla sfera dell'impresa",
+        "extension_days": "Proroga in giorni: giorni di calendario che potrebbero essere giustificati",
+        "deadline": "Termine della comunicazione: entro quando inviarla, oppure che il termine non è noto",
         "risks": "Rischi della riserva"
       }
     }
   },
   "contract": {
     "notice": "Bozza della comunicazione di impedimento al committente",
-    "claim_basis": "Motivo per cui il ritardo può ricadere fuori dalla sfera dell'impresa",
-    "extension_days": "Proroga dei termini in giorni di calendario che potrebbe essere giustificata",
-    "deadline": "Entro quando inviare la comunicazione, oppure che il termine non è noto",
+    "claim_basis": "Fondamento della richiesta: perché il ritardo può ricadere fuori dalla sfera dell'impresa",
+    "extension_days": "Proroga in giorni: giorni di calendario che potrebbero essere giustificati",
+    "deadline": "Termine della comunicazione: entro quando inviarla, oppure che il termine non è noto",
     "risks": "Rischi della riserva"
   },
   "steps": {

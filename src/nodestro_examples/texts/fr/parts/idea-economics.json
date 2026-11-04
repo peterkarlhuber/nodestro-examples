@@ -1,6 +1,7 @@
 {
   "name": "Équipe rentabilité",
   "description": "Calcule la marge sur coûts variables, le point mort, le retour sur investissement et des scénarios d'une idée d'entreprise avec la calculatrice.",
+  "capabilities": ["rentabilité", "point mort", "plan de financement"],
   "start": "Idée et mission",
   "output": "Rapport de rentabilité",
   "agents": {

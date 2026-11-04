@@ -22,7 +22,7 @@
       "system": "Eres un jurado de emprendedoras e inversores con experiencia. Sopesa mercado, rentabilidad y riesgos y emite un veredicto: seguir adelante, adaptar o descartar. Asigna una puntuación de 1 a 10 y justifícala. Indica los supuestos que deben comprobarse primero y próximos pasos concretos y económicos. Sé honesto pero justo.",
       "task": "Evalúa la idea.\n\nIdea:\n{{run.input}}\n\nInformes de los equipos de expertos:\n{{node:coach}}",
       "fields": {
-        "verdict": "Veredicto (seguir adelante, adaptar o descartar) con justificación",
+        "verdict": "Veredicto: seguir adelante, adaptar o descartar, con justificación",
         "score": "Puntuación de 1 a 10",
         "strengths": "Fortalezas de la idea",
         "risks": "Riesgos principales",

@@ -1,6 +1,7 @@
 {
   "name": "Qualitative methods team",
   "description": "Plans interviews, observations or focus groups for questions about experiences, reasons and behaviour: sampling, guide and analysis.",
+  "capabilities": ["qualitative methods", "interviews", "observation"],
   "start": "Question and task",
   "output": "Qualitative design",
   "agents": {

@@ -1,6 +1,7 @@
 {
   "name": "Team operazioni",
   "description": "Verifica se un'idea imprenditoriale si può realizzare come descritto: processi, capacità, attrezzature, fornitori e logistica.",
+  "capabilities": ["operatività", "tecnologia", "logistica", "fornitori"],
   "start": "Idea e incarico",
   "output": "Rapporto sulle operazioni",
   "agents": {

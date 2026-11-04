@@ -1,6 +1,7 @@
 {
   "name": "Équipe exploitation",
   "description": "Vérifie si une idée d'entreprise peut être réalisée comme décrit : processus, capacité, équipement, fournisseurs et logistique.",
+  "capabilities": ["exploitation", "technique", "logistique", "fournisseurs"],
   "start": "Idée et mission",
   "output": "Rapport d'exploitation",
   "agents": {

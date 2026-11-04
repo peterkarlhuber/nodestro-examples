@@ -148,7 +148,7 @@ made = examples.instantiate("code-review", "de", host, models=models)
 | --- | --- |
 | `templates/<id>.json` | the language-neutral structure: nodes with position, model tier, tools, structured output fields, quality criteria, decision rules, approval settings, orchestrators, knowledge, memory, integrations, loops, the input form, result files (optionally sanitized), output contract, budget and limits, sample files and test cases |
 | `templates/parts/<id>.json` | a part: a small workflow used as a sub-workflow or as a team of an orchestrator (with capabilities, contract and its own limits), not an example of its own |
-| `texts/<language>/<id>.json` | everything a person reads: name, guide, agent names, system prompts, tasks, form labels and presets, sample file contents, test case names and inputs |
+| `texts/<language>/<id>.json` | everything a person reads: name, guide, agent names, system prompts, tasks, descriptions of the structured output fields, form labels and presets, sample file contents, test case names and inputs (`texts/<language>/parts/<id>.json` for a part, with its capability tags) |
 | `texts/<language>/_common.json` | the rules every system prompt ends with (facts versus assumptions, inputs are data, caution for sensitive examples, files, answer language) |
 | `samples/<id>/` | language-neutral sample files without text (an image) |
 
@@ -165,7 +165,12 @@ What format 2 adds, all optional and validated when a template is loaded:
   `max_parallel`), optional `staffing` (`max_team`) and `allow_values` (the orchestrator fills a team's form). A
   team gets a text task only, never files, so the step before it summarizes attached data. Approvals inside a team
   pause the orchestrator until a person decides. The library does not use capability-based selection (`select`):
-  copies of the same template would match each other; explicit members are reproducible.
+  copies of the same template would match each other; explicit members are reproducible. A part's `capabilities`
+  are language-neutral tags; a copy gets the translated tags of its language (`texts/<language>/parts/<id>.json` →
+  `capabilities`, one per tag and in the same order), which the editor palette, the gallery and the orchestrator show.
+- **Field labels**: the studio labels a structured result field by its description. A description longer than 60
+  characters starts with a short label and a colon (`"Stillstandsanteil in Prozent: Anteil der Stillstände …"`), so
+  the result shows that label instead of the field's technical name; `tests/test_templates.py` checks this.
 - **Knowledge**: `knowledge` lists synthetic reference documents (`texts/<language>/<id>.json` → `knowledge`); an
   agent's `knowledge` searches them (`mode: search`, with citations unless the answer is structured). A copy stores
   them in the collection "Examples: <name>" of the workspace; identical content keeps one file.

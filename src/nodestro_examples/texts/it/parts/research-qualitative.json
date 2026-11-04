@@ -1,6 +1,7 @@
 {
   "name": "Team metodi qualitativi",
   "description": "Pianifica interviste, osservazioni o focus group per domande su esperienze, motivazioni e comportamenti: campione, traccia e analisi.",
+  "capabilities": ["metodi qualitativi", "interviste", "osservazione"],
   "start": "Domanda e incarico",
   "output": "Disegno qualitativo",
   "agents": {

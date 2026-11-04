@@ -1,6 +1,7 @@
 {
   "name": "Equipo de mercado",
   "description": "Estima públicos objetivo, demanda, disposición a pagar y competencia de una idea de negocio.",
+  "capabilities": ["análisis de mercado", "públicos objetivo", "competencia"],
   "start": "Idea y encargo",
   "output": "Informe de mercado",
   "agents": {

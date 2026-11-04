@@ -23,7 +23,7 @@
       "task": "Work on D1 to D3 for this complaint:\n\n{{run.input}}",
       "fields": {
         "analysis": "D1 to D3 as text: team, problem description (5W2H, is/is not) and containment actions with effectiveness checks",
-        "critical": "true if the case is critical: safety or legal relevance, a stopped customer line or affected stock that is still being shipped"
+        "critical": "Critical case: true for safety or legal relevance, a stopped customer line or affected stock that is still being shipped"
       }
     },
     "root_cause": {

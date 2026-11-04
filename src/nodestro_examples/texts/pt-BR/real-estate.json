@@ -35,7 +35,7 @@
       "task": "Compare as ofertas.\n\nCálculo de rentabilidade:\n{{node:returns}}\n\nAvaliação do imóvel e da localização:\n{{node:property}}",
       "fields": {
         "comparison": "Comparação dos indicadores das duas ofertas",
-        "preferred_offer": "Oferta que combina melhor com as premissas, com justificativa",
+        "preferred_offer": "Oferta preferida: a que combina melhor com as premissas, com justificativa",
         "opportunities": "Oportunidades",
         "risks": "Riscos",
         "checks_before_decision": "Verificações antes de uma decisão"

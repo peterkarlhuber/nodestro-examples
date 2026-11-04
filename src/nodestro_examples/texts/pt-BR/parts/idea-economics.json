@@ -1,6 +1,7 @@
 {
   "name": "Equipe de rentabilidade",
   "description": "Calcula margem de contribuição, ponto de equilíbrio, retorno e cenários de uma ideia de negócio com a calculadora.",
+  "capabilities": ["rentabilidade", "ponto de equilíbrio", "planejamento financeiro"],
   "start": "Ideia e tarefa",
   "output": "Relatório de rentabilidade",
   "agents": {

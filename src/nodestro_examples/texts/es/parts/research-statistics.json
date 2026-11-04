@@ -1,6 +1,7 @@
 {
   "name": "Equipo de estadística",
   "description": "Contrasta las hipótesis cuantitativas con los datos, evalúa los datos previos con la calculadora y estima el tamaño de muestra para un diseño, un nivel de significación y una potencia dados.",
+  "capabilities": ["estadística", "análisis de potencia", "métodos cuantitativos"],
   "start": "Encargo y diseño",
   "output": "Valoración estadística",
   "agents": {

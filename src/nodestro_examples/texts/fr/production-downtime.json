@@ -23,7 +23,7 @@
       "task": "Exploite ce journal des arrêts de manière quantitative :\n\n{{run.input}}",
       "fields": {
         "analysis": "L'analyse quantitative sous forme de texte avec tableaux",
-        "downtime_share_percent": "Part des arrêts dans le temps de production planifié, en pour cent"
+        "downtime_share_percent": "Part des arrêts en pour cent : part des arrêts dans le temps de production planifié"
       }
     },
     "causes": {

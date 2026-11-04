@@ -1,6 +1,7 @@
 {
   "name": "Équipe réclamations",
   "description": "Rédige des notifications d'empêchement et évalue les demandes de prolongation de délai pour les retards hors de la sphère de l'entreprise ; une direction de chantier vise le projet.",
+  "capabilities": ["contrat", "réclamations", "notification d'empêchement"],
   "start": "Mission",
   "output": "Évaluation des réclamations visée",
   "agents": {
@@ -11,18 +12,18 @@
       "task": "{{input}}",
       "fields": {
         "notice": "Projet de notification d'empêchement au maître d'ouvrage",
-        "claim_basis": "Raison pour laquelle le retard peut sortir de la sphère de l'entreprise",
-        "extension_days": "Prolongation de délai en jours calendaires qui pourrait se justifier",
-        "deadline": "Date limite d'envoi de la notification, ou indication que le délai est inconnu",
+        "claim_basis": "Fondement de la réclamation : pourquoi le retard peut sortir de la sphère de l'entreprise",
+        "extension_days": "Prolongation de délai en jours : jours calendaires qui pourraient se justifier",
+        "deadline": "Délai de la notification : date limite d'envoi, ou indication que le délai est inconnu",
         "risks": "Risques de la réclamation"
       }
     }
   },
   "contract": {
     "notice": "Projet de notification d'empêchement au maître d'ouvrage",
-    "claim_basis": "Raison pour laquelle le retard peut sortir de la sphère de l'entreprise",
-    "extension_days": "Prolongation de délai en jours calendaires qui pourrait se justifier",
-    "deadline": "Date limite d'envoi de la notification, ou indication que le délai est inconnu",
+    "claim_basis": "Fondement de la réclamation : pourquoi le retard peut sortir de la sphère de l'entreprise",
+    "extension_days": "Prolongation de délai en jours : jours calendaires qui pourraient se justifier",
+    "deadline": "Délai de la notification : date limite d'envoi, ou indication que le délai est inconnu",
     "risks": "Risques de la réclamation"
   },
   "steps": {

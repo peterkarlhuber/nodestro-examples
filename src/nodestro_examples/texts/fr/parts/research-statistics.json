@@ -1,6 +1,7 @@
 {
   "name": "Équipe statistique",
   "description": "Confronte les hypothèses quantitatives aux données, exploite les données préliminaires avec la calculatrice et estime la taille d'échantillon pour un plan, un seuil de signification et une puissance donnés.",
+  "capabilities": ["statistiques", "analyse de puissance", "méthodes quantitatives"],
   "start": "Mission et plan",
   "output": "Évaluation statistique",
   "agents": {

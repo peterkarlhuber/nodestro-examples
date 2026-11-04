@@ -1,6 +1,7 @@
 {
   "name": "Equipe de regulação",
   "description": "Identifica licenças, registros, rotulagem, higiene, seguros e obrigações de proteção de dados que uma ideia de negócio envolve.",
+  "capabilities": ["regulação", "autorizações", "licenças", "proteção de dados"],
   "start": "Ideia e tarefa",
   "output": "Relatório regulatório",
   "agents": {

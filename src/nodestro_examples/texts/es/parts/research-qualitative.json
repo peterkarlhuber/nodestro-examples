@@ -1,6 +1,7 @@
 {
   "name": "Equipo de métodos cualitativos",
   "description": "Planifica entrevistas, observaciones o grupos focales para preguntas sobre experiencias, motivos y comportamientos: muestra, guía y análisis.",
+  "capabilities": ["métodos cualitativos", "entrevistas", "observación"],
   "start": "Pregunta y encargo",
   "output": "Diseño cualitativo",
   "agents": {

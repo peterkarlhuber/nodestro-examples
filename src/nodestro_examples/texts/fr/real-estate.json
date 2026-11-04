@@ -35,7 +35,7 @@
       "task": "Compare les offres.\n\nCalcul de rendement :\n{{node:returns}}\n\nÉvaluation du bien et de l'emplacement :\n{{node:property}}",
       "fields": {
         "comparison": "Comparaison des indicateurs des deux offres",
-        "preferred_offer": "Offre qui convient le mieux selon les hypothèses, avec justification",
+        "preferred_offer": "Offre préférée : celle qui convient le mieux selon les hypothèses, avec justification",
         "opportunities": "Opportunités",
         "risks": "Risques",
         "checks_before_decision": "Vérifications avant une décision"

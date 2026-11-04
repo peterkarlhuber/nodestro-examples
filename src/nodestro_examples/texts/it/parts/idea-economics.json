@@ -1,6 +1,7 @@
 {
   "name": "Team redditività",
   "description": "Calcola margine di contribuzione, punto di pareggio, rientro e scenari di un'idea imprenditoriale con la calcolatrice.",
+  "capabilities": ["redditività", "punto di pareggio", "pianificazione finanziaria"],
   "start": "Idea e incarico",
   "output": "Rapporto sulla redditività",
   "agents": {

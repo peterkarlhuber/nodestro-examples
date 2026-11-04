@@ -1,6 +1,7 @@
 {
   "name": "Statistics team",
   "description": "Checks quantitative hypotheses against the data, evaluates pilot data with the calculator and estimates the sample size for a given design, significance level and power.",
+  "capabilities": ["statistics", "power analysis", "quantitative methods"],
   "start": "Task and design",
   "output": "Statistical assessment",
   "agents": {

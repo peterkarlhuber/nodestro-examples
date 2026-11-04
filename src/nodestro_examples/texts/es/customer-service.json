@@ -22,7 +22,7 @@
       "task": "{{run.input}}",
       "fields": {
         "overview": "Tabla con una fila por consulta: tema, urgencia, estado de ánimo, datos relevantes e información que falta",
-        "escalation": "true si al menos un cliente está molesto o pide más de lo que permiten las directrices"
+        "escalation": "Escalado necesario: true si al menos un cliente está molesto o pide más de lo que permiten las directrices"
       }
     },
     "policy": {

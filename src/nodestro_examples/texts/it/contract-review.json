@@ -34,7 +34,7 @@
       "system": "Prepari i contratti per un esame legale per conto del cliente, usando il suo manuale di negoziazione contrattuale (playbook). Per ogni clausola e per ogni tema del playbook, cerca nel playbook con lo strumento di ricerca. Per ogni punto da verificare, cita la sezione del playbook (per esempio \"Playbook P4\"), confronta la clausola con la posizione standard, la posizione di ripiego accettabile e la linea rossa, e classificala: rispetta lo standard, entro la posizione di ripiego, scostamento oltre il ripiego oppure linea rossa. Una clausola che supera una linea rossa è sempre critica. Verifica anche i temi del playbook che il contratto non regola affatto ed elencali come disposizioni mancanti. Dove il playbook tace su una clausola, dillo esplicitamente (\"Il playbook non prevede nulla in merito\") e valuta la clausola solo come punto da verificare generale, per esempio rinnovo automatico, modifiche unilaterali dei prezzi, impegni di servizio deboli, limiti di responsabilità, subfornitori o restituzione dei dati. Se il contratto non è uno in cui l'azienda del playbook è il cliente, di' che il playbook può servire solo come confronto. Spiega per ogni punto perché va verificato e formula una domanda in merito. Non dare una valutazione giuridica definitiva. Per ogni punto da verificare, riporta il testo letterale della clausola interessata con il riferimento, così che i passi successivi possano lavorarci senza il documento originale.",
       "task": "Raccogli i punti da verificare di questo contratto.\n\nContratto:\n{{run.input}}\n\nStruttura:\n{{node:structure}}",
       "fields": {
-        "points": "Punti di verifica con sezione del playbook, classificazione (standard, ripiego, scostamento, linea rossa o playbook silente), motivazione e domanda",
+        "points": "Punti di verifica: ciascuno con sezione del playbook, classificazione (standard, ripiego, scostamento, linea rossa o playbook silente), motivazione e domanda",
         "critical_clauses": "Clausole critiche, una per voce con il suo riferimento: ogni clausola che supera una linea rossa del playbook e, dove il playbook tace, le clausole chiaramente critiche (ad es. responsabilità illimitata o molto bassa, trattamento dei dati senza accordo); vuota se non ce ne sono"
       }
     },
@@ -45,7 +45,7 @@
       "task": "Crea la sintesi del contratto.\n\nClausole spiegate:\n{{node:explain}}\n\nPunti da verificare:\n{{node:checkpoints}}\n\nClausole critiche in dettaglio:\n{{node:critical}}",
       "fields": {
         "overview": "Sintesi del contratto in tre-cinque frasi",
-        "key_terms": "Condizioni chiave con posizione (durata, scadenze, corrispettivi)",
+        "key_terms": "Condizioni chiave: con posizione (durata, scadenze, corrispettivi)",
         "clauses_explained": "Clausole in linguaggio semplice",
         "check_points": "Punti da verificare con motivazione",
         "questions_for_expert": "Domande per un legale"

@@ -1,6 +1,7 @@
 {
   "name": "Equipo de riesgos",
   "description": "Busca los puntos débiles de una idea de negocio y formas económicas de comprobarlos antes de emprender.",
+  "capabilities": ["análisis de riesgos", "experimentos de validación"],
   "start": "Idea y encargo",
   "output": "Informe de riesgos",
   "agents": {

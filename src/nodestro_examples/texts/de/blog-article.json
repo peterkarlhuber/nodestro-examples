@@ -40,7 +40,7 @@
       "fields": {
         "audience": "Zielgruppe: wer die Leser sind, was sie schon wissen und welche Fragen sie mitbringen",
         "angle": "Blickwinkel und Arbeitstitel des Artikels",
-        "outline": "Abschnitte in Reihenfolge, je mit einem Satz dazu, was sie leisten sollen",
+        "outline": "Gliederung: Abschnitte in Reihenfolge, je mit einem Satz dazu, was sie leisten sollen",
         "key_messages": "Kernbotschaften, die die Leser mitnehmen sollen"
       }
     }

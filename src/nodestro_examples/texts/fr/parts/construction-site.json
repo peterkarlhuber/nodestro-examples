@@ -1,6 +1,7 @@
 {
   "name": "Équipe chantier et conception",
   "description": "Examine les causes techniques des retards de chantier : météo, sol, modifications de projet et enchaînement des travaux ; attribue des jours de retard avec preuves.",
+  "capabilities": ["causes techniques", "modifications de plans", "sol", "météo"],
   "start": "Mission",
   "output": "Évaluation chantier",
   "agents": {
@@ -12,7 +13,7 @@
       "fields": {
         "findings": "Évaluation technique des causes",
         "attributed_delay_days": "Jours de retard imputables aux causes examinées",
-        "responsibility": "Sphère de responsabilité probable par cause (maître d'ouvrage, entreprise ou aucun) avec justification",
+        "responsibility": "Sphère de responsabilité : probable par cause (maître d'ouvrage, entreprise ou aucun), avec justification",
         "evidence": "Preuves à documenter",
         "open_questions": "Questions restant ouvertes"
       }
@@ -21,7 +22,7 @@
   "contract": {
     "findings": "Évaluation technique des causes",
     "attributed_delay_days": "Jours de retard imputables aux causes examinées",
-    "responsibility": "Sphère de responsabilité probable par cause (maître d'ouvrage, entreprise ou aucun) avec justification",
+    "responsibility": "Sphère de responsabilité : probable par cause (maître d'ouvrage, entreprise ou aucun), avec justification",
     "evidence": "Preuves à documenter",
     "open_questions": "Questions restant ouvertes"
   }

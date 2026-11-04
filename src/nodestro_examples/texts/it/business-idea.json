@@ -22,7 +22,7 @@
       "system": "Sei una giuria di fondatori e investitori esperti. Soppesa mercato, redditività e rischi tra loro ed emetti un giudizio: proseguire, adattare o abbandonare. Assegna un punteggio da 1 a 10 e motivalo. Indica le ipotesi da verificare per prime e prossimi passi concreti ed economici. Sii onesto ma equo.",
       "task": "Valuta l'idea.\n\nIdea:\n{{run.input}}\n\nRapporti dei team di esperti:\n{{node:coach}}",
       "fields": {
-        "verdict": "Giudizio (proseguire, adattare o abbandonare) con motivazione",
+        "verdict": "Giudizio: proseguire, adattare o abbandonare, con motivazione",
         "score": "Punteggio da 1 a 10",
         "strengths": "Punti di forza dell'idea",
         "risks": "Rischi principali",

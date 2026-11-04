@@ -1,6 +1,7 @@
 {
   "name": "Equipe de pleitos",
   "description": "Redige notificações de impedimento e avalia pleitos de prorrogação de prazo para atrasos fora da esfera da construtora; uma gerência de obra visa o rascunho.",
+  "capabilities": ["contrato", "pleitos", "notificação de impedimento"],
   "start": "Tarefa",
   "output": "Avaliação de pleitos visada",
   "agents": {
@@ -11,18 +12,18 @@
       "task": "{{input}}",
       "fields": {
         "notice": "Rascunho da notificação de impedimento ao contratante",
-        "claim_basis": "Motivo pelo qual o atraso pode estar fora da esfera da construtora",
-        "extension_days": "Prorrogação de prazo em dias corridos que poderia ser justificada",
-        "deadline": "Até quando a notificação deveria ser enviada, ou que o prazo é desconhecido",
+        "claim_basis": "Fundamento do pleito: por que o atraso pode estar fora da esfera da construtora",
+        "extension_days": "Prorrogação de prazo em dias: dias corridos que poderiam ser justificados",
+        "deadline": "Prazo da notificação: até quando deveria ser enviada, ou que o prazo é desconhecido",
         "risks": "Riscos do pleito"
       }
     }
   },
   "contract": {
     "notice": "Rascunho da notificação de impedimento ao contratante",
-    "claim_basis": "Motivo pelo qual o atraso pode estar fora da esfera da construtora",
-    "extension_days": "Prorrogação de prazo em dias corridos que poderia ser justificada",
-    "deadline": "Até quando a notificação deveria ser enviada, ou que o prazo é desconhecido",
+    "claim_basis": "Fundamento do pleito: por que o atraso pode estar fora da esfera da construtora",
+    "extension_days": "Prorrogação de prazo em dias: dias corridos que poderiam ser justificados",
+    "deadline": "Prazo da notificação: até quando deveria ser enviada, ou que o prazo é desconhecido",
     "risks": "Riscos do pleito"
   },
   "steps": {

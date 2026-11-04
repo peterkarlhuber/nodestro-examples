@@ -23,7 +23,7 @@
       "task": "Werte dieses Stillstandsprotokoll quantitativ aus:\n\n{{run.input}}",
       "fields": {
         "analysis": "Die quantitative Auswertung als Text mit Tabellen",
-        "downtime_share_percent": "Anteil der Stillstände an der geplanten Produktionszeit in Prozent"
+        "downtime_share_percent": "Stillstandsanteil in Prozent: Anteil der Stillstände an der geplanten Produktionszeit"
       }
     },
     "causes": {

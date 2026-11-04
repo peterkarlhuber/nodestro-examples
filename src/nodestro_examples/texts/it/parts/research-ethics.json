@@ -1,6 +1,7 @@
 {
   "name": "Team etica e protezione dei dati",
   "description": "Verifica studi con persone o dati personali: consenso, minimizzazione dei dati, anonimizzazione, coinvolgimento delle rappresentanze dei lavoratori e parere etico.",
+  "capabilities": ["etica della ricerca", "protezione dei dati", "consenso informato"],
   "start": "Studio e incarico",
   "output": "Valutazione di etica e protezione dei dati",
   "agents": {

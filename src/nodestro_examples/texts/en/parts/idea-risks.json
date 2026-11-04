@@ -1,6 +1,7 @@
 {
   "name": "Risk team",
   "description": "Looks for the weak points of a business idea and cheap ways to test them before founding.",
+  "capabilities": ["risk analysis", "validation experiments"],
   "start": "Idea and question",
   "output": "Risk report",
   "agents": {

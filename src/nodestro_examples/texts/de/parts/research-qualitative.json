@@ -1,6 +1,7 @@
 {
   "name": "Team qualitative Methoden",
   "description": "Plant Interviews, Beobachtungen oder Fokusgruppen für Fragen nach Erfahrungen, Gründen und Verhalten: Stichprobe, Leitfaden und Auswertung.",
+  "capabilities": ["qualitative Methoden", "Interviews", "Beobachtung"],
   "start": "Frage und Auftrag",
   "output": "Qualitatives Design",
   "agents": {

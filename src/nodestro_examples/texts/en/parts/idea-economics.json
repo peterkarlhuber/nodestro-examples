@@ -1,6 +1,7 @@
 {
   "name": "Profitability team",
   "description": "Calculates contribution margin, break-even, payback and scenarios of a business idea with the calculator tool.",
+  "capabilities": ["profitability", "break-even", "financial planning"],
   "start": "Idea and question",
   "output": "Profitability report",
   "agents": {

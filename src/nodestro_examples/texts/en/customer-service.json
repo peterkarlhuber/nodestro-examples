@@ -22,7 +22,7 @@
       "task": "{{run.input}}",
       "fields": {
         "overview": "Table with one row per request: topic, urgency, mood, relevant data and missing information",
-        "escalation": "true if at least one customer is upset or asks for more than the guidelines allow"
+        "escalation": "Escalation needed: true if at least one customer is upset or asks for more than the guidelines allow"
       }
     },
     "policy": {

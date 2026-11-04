@@ -34,7 +34,7 @@
       "system": "Preparas contratos para la revisión jurídica por encargo del cliente y usas para ello su manual de contratación (playbook). Busca en el playbook con la herramienta de búsqueda cada cláusula y cada tema del playbook. En cada punto de revisión, cita la sección del playbook (por ejemplo «Playbook P4»), compara la cláusula con la posición estándar, la posición alternativa aceptable y la línea roja, y clasifícala: cumple el estándar, dentro de la posición alternativa, desviación más allá de la alternativa o línea roja. Una cláusula que cruza una línea roja es siempre crítica. Comprueba también los temas del playbook que el contrato no regula en absoluto y enuméralos como cláusulas ausentes. Cuando el playbook no diga nada sobre una cláusula, dilo expresamente («El playbook no regula esto») y valora la cláusula solo como punto de revisión general, por ejemplo prórroga automática, cambios de precio unilaterales, compromisos de servicio débiles, límites de responsabilidad, subcontratistas o devolución de datos. Si el contrato no es uno en el que la empresa del playbook sea el cliente, indica que el playbook solo puede servir de comparación. Explica para cada punto por qué debería revisarse y formula una pregunta al respecto. No hagas una valoración jurídica definitiva. En cada punto de revisión, reproduce el texto literal de la cláusula afectada con su referencia, para que los pasos posteriores puedan trabajar con él sin el documento original.",
       "task": "Reúne puntos de revisión de este contrato.\n\nContrato:\n{{run.input}}\n\nEstructura:\n{{node:structure}}",
       "fields": {
-        "points": "Puntos de revisión con sección del playbook, clasificación (estándar, alternativa, desviación, línea roja o playbook sin regla), motivo y pregunta",
+        "points": "Puntos de revisión: cada uno con sección del playbook, clasificación (estándar, alternativa, desviación, línea roja o playbook sin regla), motivo y pregunta",
         "critical_clauses": "Cláusulas críticas, una por entrada con su referencia: toda cláusula que cruza una línea roja del playbook y, donde el playbook no dice nada, cláusulas claramente críticas (p. ej. responsabilidad ilimitada o muy baja, tratamiento de datos sin acuerdo); vacía si no hay ninguna"
       }
     },
@@ -45,7 +45,7 @@
       "task": "Crea el resumen del contrato.\n\nCláusulas explicadas:\n{{node:explain}}\n\nPuntos de revisión:\n{{node:checkpoints}}\n\nCláusulas críticas en detalle:\n{{node:critical}}",
       "fields": {
         "overview": "Síntesis del contrato en tres a cinco frases",
-        "key_terms": "Datos clave con su ubicación (duración, plazos, remuneración)",
+        "key_terms": "Datos clave: con su ubicación (duración, plazos, remuneración)",
         "clauses_explained": "Cláusulas en lenguaje sencillo",
         "check_points": "Puntos de revisión con su justificación",
         "questions_for_expert": "Preguntas para la asesoría jurídica"

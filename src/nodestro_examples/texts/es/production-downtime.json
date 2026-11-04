@@ -23,7 +23,7 @@
       "task": "Evalúa cuantitativamente este registro de paradas:\n\n{{run.input}}",
       "fields": {
         "analysis": "La evaluación cuantitativa como texto con tablas",
-        "downtime_share_percent": "Porcentaje de paradas sobre el tiempo de producción planificado"
+        "downtime_share_percent": "Porcentaje de paradas: parte de las paradas sobre el tiempo de producción planificado, en porcentaje"
       }
     },
     "causes": {

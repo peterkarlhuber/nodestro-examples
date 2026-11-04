@@ -1,6 +1,7 @@
 {
   "name": "Risikoteam",
   "description": "Sucht die Schwachstellen einer Geschäftsidee und günstige Wege, sie vor der Gründung zu testen.",
+  "capabilities": ["Risikoanalyse", "Validierungsexperimente"],
   "start": "Idee und Auftrag",
   "output": "Risikobericht",
   "agents": {

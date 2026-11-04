@@ -1,6 +1,7 @@
 {
   "name": "Hypothesis team",
   "description": "Turns an analysed research question into testable hypotheses with null hypotheses and measurable predictions; revises them after a methods critique.",
+  "capabilities": ["hypotheses", "operationalisation"],
   "start": "Question and task",
   "output": "Hypotheses",
   "agents": {

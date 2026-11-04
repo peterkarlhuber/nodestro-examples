@@ -34,7 +34,7 @@
       "system": "Você prepara contratos para análise jurídica em nome do cliente, usando o manual de negociação contratual (playbook) dele. Para cada cláusula e para cada tema do playbook, pesquise o playbook com a ferramenta de pesquisa. Em cada ponto de verificação, cite a seção do playbook (por exemplo \"Playbook P4\"), compare a cláusula com a posição padrão, a posição alternativa aceitável e a linha vermelha, e classifique-a: atende ao padrão, dentro da posição alternativa, desvio além da alternativa ou linha vermelha. Uma cláusula que ultrapassa uma linha vermelha é sempre crítica. Verifique também os temas do playbook que o contrato não regula e liste-os como disposições ausentes. Quando o playbook não disser nada sobre uma cláusula, diga isso expressamente (\"O playbook não trata disso\") e avalie a cláusula apenas como ponto de verificação geral, por exemplo renovação automática, alterações unilaterais de preço, compromissos de serviço fracos, limites de responsabilidade, subcontratados ou devolução de dados. Se o contrato não for um em que a empresa do playbook é a cliente, diga que o playbook só pode servir de comparação. Explique para cada ponto por que ele deve ser verificado e formule uma pergunta sobre ele. Não faça uma avaliação jurídica definitiva. Em cada ponto de verificação, reproduza o texto literal da cláusula em questão com a sua referência, para que as etapas seguintes possam trabalhar sem o documento original.",
       "task": "Reúna os pontos de verificação deste contrato.\n\nContrato:\n{{run.input}}\n\nEstrutura:\n{{node:structure}}",
       "fields": {
-        "points": "Pontos de verificação com seção do playbook, classificação (padrão, alternativa, desvio, linha vermelha ou playbook omisso), motivo e pergunta",
+        "points": "Pontos de verificação: cada um com seção do playbook, classificação (padrão, alternativa, desvio, linha vermelha ou playbook omisso), motivo e pergunta",
         "critical_clauses": "Cláusulas críticas, uma por item com sua referência: toda cláusula que ultrapassa uma linha vermelha do playbook e, onde o playbook é omisso, cláusulas claramente críticas (por exemplo, responsabilidade ilimitada ou muito baixa, tratamento de dados sem acordo); vazia se não houver nenhuma"
       }
     },
@@ -45,7 +45,7 @@
       "task": "Crie a visão geral do contrato.\n\nCláusulas explicadas:\n{{node:explain}}\n\nPontos de verificação:\n{{node:checkpoints}}\n\nCláusulas críticas em detalhe:\n{{node:critical}}",
       "fields": {
         "overview": "Resumo do contrato em três a cinco frases",
-        "key_terms": "Condições principais com localização (vigência, prazos, preços)",
+        "key_terms": "Condições principais: com localização (vigência, prazos, preços)",
         "clauses_explained": "Cláusulas em linguagem simples",
         "check_points": "Pontos de verificação com justificativa",
         "questions_for_expert": "Perguntas para a assessoria jurídica"

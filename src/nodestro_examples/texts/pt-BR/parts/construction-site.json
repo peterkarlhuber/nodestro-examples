@@ -1,6 +1,7 @@
 {
   "name": "Equipe de obra e projeto",
   "description": "Examina causas técnicas de atrasos de obra: clima, solo, alterações de projeto e sequência dos serviços; atribui dias de atraso com evidências.",
+  "capabilities": ["causas técnicas", "mudanças de projeto", "condições do solo", "clima"],
   "start": "Tarefa",
   "output": "Avaliação da obra",
   "agents": {
@@ -12,7 +13,7 @@
       "fields": {
         "findings": "Avaliação técnica das causas",
         "attributed_delay_days": "Dias de atraso atribuíveis às causas examinadas",
-        "responsibility": "Esfera de responsabilidade provável por causa (contratante, construtora ou nenhum) com justificativa",
+        "responsibility": "Esfera de responsabilidade: provável por causa (contratante, construtora ou nenhum), com justificativa",
         "evidence": "Evidências que devem ser documentadas",
         "open_questions": "Perguntas em aberto"
       }
@@ -21,7 +22,7 @@
   "contract": {
     "findings": "Avaliação técnica das causas",
     "attributed_delay_days": "Dias de atraso atribuíveis às causas examinadas",
-    "responsibility": "Esfera de responsabilidade provável por causa (contratante, construtora ou nenhum) com justificativa",
+    "responsibility": "Esfera de responsabilidade: provável por causa (contratante, construtora ou nenhum), com justificativa",
     "evidence": "Evidências que devem ser documentadas",
     "open_questions": "Perguntas em aberto"
   }

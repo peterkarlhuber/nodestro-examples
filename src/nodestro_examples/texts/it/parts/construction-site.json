@@ -1,6 +1,7 @@
 {
   "name": "Team di cantiere e progettazione",
   "description": "Esamina le cause tecniche dei ritardi di cantiere: meteo, terreno, varianti e sequenza delle lavorazioni; attribuisce giorni di ritardo con prove.",
+  "capabilities": ["cause tecniche", "varianti di progetto", "terreno", "meteo"],
   "start": "Incarico",
   "output": "Valutazione di cantiere",
   "agents": {
@@ -12,7 +13,7 @@
       "fields": {
         "findings": "Valutazione tecnica delle cause",
         "attributed_delay_days": "Giorni di ritardo attribuibili alle cause esaminate",
-        "responsibility": "Sfera di responsabilità probabile per causa (committente, impresa o nessuno) con motivazione",
+        "responsibility": "Sfera di responsabilità: probabile per causa (committente, impresa o nessuno), con motivazione",
         "evidence": "Prove da documentare",
         "open_questions": "Domande ancora aperte"
       }
@@ -21,7 +22,7 @@
   "contract": {
     "findings": "Valutazione tecnica delle cause",
     "attributed_delay_days": "Giorni di ritardo attribuibili alle cause esaminate",
-    "responsibility": "Sfera di responsabilità probabile per causa (committente, impresa o nessuno) con motivazione",
+    "responsibility": "Sfera di responsabilità: probabile per causa (committente, impresa o nessuno), con motivazione",
     "evidence": "Prove da documentare",
     "open_questions": "Domande ancora aperte"
   }

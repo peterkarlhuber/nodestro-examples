@@ -1,6 +1,7 @@
 {
   "name": "Baustellen- und Planungsteam",
   "description": "Untersucht technische Ursachen von Bauverzug: Witterung, Baugrund, Planänderungen und Bauablauf; ordnet Verzugstage mit Nachweisen zu.",
+  "capabilities": ["technische Ursachen", "Planänderungen", "Baugrund", "Witterung"],
   "start": "Auftrag",
   "output": "Baustellenbewertung",
   "agents": {
@@ -12,7 +13,7 @@
       "fields": {
         "findings": "Technische Bewertung der Ursachen",
         "attributed_delay_days": "Den untersuchten Ursachen zuzuordnende Verzugstage",
-        "responsibility": "Vermutlicher Verantwortungsbereich je Ursache (Bauherr, Auftragnehmer oder keiner) mit Begründung",
+        "responsibility": "Verantwortungsbereich: vermutlich je Ursache (Bauherr, Auftragnehmer oder keiner), mit Begründung",
         "evidence": "Nachweise, die dokumentiert werden sollten",
         "open_questions": "Offene Fragen"
       }
@@ -21,7 +22,7 @@
   "contract": {
     "findings": "Technische Bewertung der Ursachen",
     "attributed_delay_days": "Den untersuchten Ursachen zuzuordnende Verzugstage",
-    "responsibility": "Vermutlicher Verantwortungsbereich je Ursache (Bauherr, Auftragnehmer oder keiner) mit Begründung",
+    "responsibility": "Verantwortungsbereich: vermutlich je Ursache (Bauherr, Auftragnehmer oder keiner), mit Begründung",
     "evidence": "Nachweise, die dokumentiert werden sollten",
     "open_questions": "Offene Fragen"
   }

@@ -1,6 +1,7 @@
 {
   "name": "Ethics and data protection team",
   "description": "Checks studies with people or personal data: consent, data minimisation, anonymisation, participation of employee representatives and ethics review.",
+  "capabilities": ["research ethics", "data protection", "informed consent"],
   "start": "Study and task",
   "output": "Ethics and data protection assessment",
   "agents": {

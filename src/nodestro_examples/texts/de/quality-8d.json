@@ -23,7 +23,7 @@
       "task": "Bearbeite D1 bis D3 für diese Reklamation:\n\n{{run.input}}",
       "fields": {
         "analysis": "D1 bis D3 als Text: Team, Problembeschreibung (5W2H, Ist/Ist-nicht) und Sofortmaßnahmen mit Wirksamkeitsprüfung",
-        "critical": "true, wenn der Fall kritisch ist: Sicherheits- oder Rechtsrelevanz, stehende Kundenlinie oder betroffener Bestand, der noch ausgeliefert wird"
+        "critical": "Kritischer Fall: true bei Sicherheits- oder Rechtsrelevanz, stehender Kundenlinie oder betroffenem Bestand, der noch ausgeliefert wird"
       }
     },
     "root_cause": {

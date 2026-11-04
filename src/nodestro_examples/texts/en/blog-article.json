@@ -40,7 +40,7 @@
       "fields": {
         "audience": "Target readers: who they are, what they already know and which questions they bring",
         "angle": "Angle and working title of the article",
-        "outline": "Sections in order, each with one sentence on what it should achieve",
+        "outline": "Outline: sections in order, each with one sentence on what it should achieve",
         "key_messages": "Key messages readers should take away"
       }
     }
