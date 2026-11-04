@@ -12,7 +12,7 @@
 | P0 Critical | 0 |
 | P1 High | 0 |
 | P2 Medium | 0 |
-| P3 Low | 5 |
+| P3 Low | 3 |
 | P4 Optional | 5 |
 
 **Release blockers:** None for this repository.
@@ -20,8 +20,8 @@
 The 24 examples (format 2, six languages) build, run and pass their 49 test cases in all languages with deterministic
 doubles, and the generated studio chapter `beispiele.md` is current at studio `0a6a320`. Key figures that a gate
 decides on or that report money or days come from a tool and are checked by the runtime (live-tested for
-`production-downtime` and `household-budget` with `qwen3.5:4b`). Open work is mostly
-localization polish from the UX initiative, one stale documentation note, and checks that need real providers.
+`production-downtime` and `household-budget` with `qwen3.5:4b`). Result fields and team tags are labeled in the example's language (UX round 3). Open work is
+mostly typography polish, one stale documentation note, and checks that need real providers.
 
 ## Priorities and statuses
 
@@ -51,23 +51,7 @@ None known.
 
 ## Bugs and reliability
 
-### EX-001 · Team capability tags are English in every language
-
-- **Priority:** P3 Low · **Status:** Open · **Refs:** #38, UX audit ED-17
-- **What:** The tags of the ten parts are in the language-neutral `templates/parts/*.json`, so the editor palette and
-  the orchestrator prompt show English tags in all languages. The library does not use `select`, so translating them
-  does not change team matching.
-- **Next step:** Move the tags into `texts/<language>/<part>.json` for all six languages, with a check and a test.
-
-### EX-002 · Long field descriptions make structured results show English field ids
-
-- **Priority:** P3 Low · **Status:** Needs decision · **Refs:** UX audit ED-17, six-language journeys report
-- **What:** The studio labels a structured result field by its description only up to 60 characters; otherwise it
-  humanizes the English field id (`key_terms` → "Key terms"). 10 to 17 of the 76 field descriptions per language are
-  longer, partly because they also instruct the model (e.g. `contract-review` `critical_count`).
-- **Next step:** Decide between a separate short label per field (needs a `label` on the runtime's `OutputField`) and
-  shortening descriptions where the model does not need the detail; then add a test for the chosen limit.
-- **Depends on:** nodestro-runtime (`OutputField`), nodestro-studio (`fieldLabel()`, palette team hint)
+None known.
 
 ## Architecture and modularity
 
@@ -161,8 +145,6 @@ None known.
 
 | This repo item | Other repo | Other item | Relation |
 |---|---|---|---|
-| EX-002 | nodestro-runtime | pointer in its cross-repo table | A per-field `label` on `OutputField` would let examples keep long descriptions. |
-| EX-002 | nodestro-studio | ST-032 (ED-17) | `fieldLabel()` and the palette team hint show field ids. |
 | EX-003 | nodestro-studio | ST-031 (AD-18) | Studio shows the offline badge; this repo provides the marker. |
 | EX-005 | nodestro-runtime, nodestro-studio | RT-016, ST-030 (MCP scope) | Wider MCP use needs an owner decision and a new review. |
 | EX-008 | nodestro-studio | ST-026 (fr apostrophes) | Same typography decision. |
