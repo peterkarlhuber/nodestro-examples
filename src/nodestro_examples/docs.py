@@ -414,6 +414,8 @@ _BLOCKS = (
 def render(language: str) -> str:
     """The generated Markdown for one language, including the markers."""
     labels = _LABELS[language]
+    # French puts a space before a colon, as the hand-written chapters do.
+    c = " :" if language == "fr" else ":"
     examples = [detail(template_id, language) for template_id in template_ids()]
     lines = [START, "", f"## {labels['overview']} {{#uebersicht}}", "", labels["overview_text"], ""]
     lines.append(
@@ -428,14 +430,14 @@ def render(language: str) -> str:
     for example in examples:
         keywords = ", ".join([example.field.lower(), *(agent.name.lower() for agent in example.agent_details)])
         facts = [
-            f"**{labels['field']}:** {example.field}",
-            f"**{labels['agents']}:** {example.agents}",
-            f"**{labels['pattern']}:** {labels[example.pattern]}",
-            f"**{labels['level']}:** {labels[example.level]}",
+            f"**{labels['field']}{c}** {example.field}",
+            f"**{labels['agents']}{c}** {example.agents}",
+            f"**{labels['pattern']}{c}** {labels[example.pattern]}",
+            f"**{labels['level']}{c}** {labels[example.level]}",
         ]
         blocks = [labels[feature] for feature in _BLOCKS if feature in example.features]
         if blocks:
-            facts.append(f"**{labels['blocks']}:** {', '.join(blocks)}")
+            facts.append(f"**{labels['blocks']}{c}** {', '.join(blocks)}")
         lines += [
             "",
             f"## {example.number} · {example.name} {{#{example.id}}}",
@@ -447,7 +449,7 @@ def render(language: str) -> str:
         ]
         if example.sensitive:
             lines += ["", f"> {labels['sensitive']}"]
-        lines += ["", f"**{labels['flow']}:** {example.guide.flow}", ""]
+        lines += ["", f"**{labels['flow']}{c}** {example.guide.flow}", ""]
         lines.append(f"| {labels['agent']} | {labels['task']} | {labels['receives']} |")
         lines.append("|---|---|---|")
         for agent in example.agent_details:
@@ -457,51 +459,51 @@ def render(language: str) -> str:
             if agent.structured:
                 extras.append(labels["structured"])
             if agent.tools:
-                extras.append(f"{labels['tools']}: " + ", ".join(f"`{tool}`" for tool in agent.tools))
+                extras.append(f"{labels['tools']}{c} " + ", ".join(f"`{tool}`" for tool in agent.tools))
             task = agent.description + (f" ({'; '.join(extras)})" if extras else "")
             lines.append(f"| **{_cell(agent.name)}** | {_cell(task)} | {_cell(', '.join(agent.receives))} |")
         if example.team_details:
-            lines += ["", f"**{labels['teams']}:**", ""]
+            lines += ["", f"**{labels['teams']}{c}**", ""]
             lines.append(f"| {labels['team']} | {labels['task']} | {labels['capabilities']} |")
             lines.append("|---|---|---|")
             for team in example.team_details:
                 notes = [labels["team_approval"]] if team.approval else []
                 if team.parameters:
-                    notes.append(f"{labels['parameters']}: " + ", ".join(team.parameters))
+                    notes.append(f"{labels['parameters']}{c} " + ", ".join(team.parameters))
                 task = team.description + (f" ({'; '.join(notes)})" if notes else "")
                 lines.append(f"| **{_cell(team.name)}** | {_cell(task)} | {_cell(', '.join(team.capabilities))} |")
         lines += [
             "",
-            f"**{labels['input']}:** {example.guide.input}",
+            f"**{labels['input']}{c}** {example.guide.input}",
             "",
         ]
         if example.samples:
             names = ", ".join(f"`{sample.file_name}`" for sample in example.samples)
-            lines += [f"**{labels['samples']}:** {names}", ""]
+            lines += [f"**{labels['samples']}{c}** {names}", ""]
         if example.tests:
-            lines += [f"**{labels['tests']}:** {'; '.join(example.tests)}", ""]
+            lines += [f"**{labels['tests']}{c}** {'; '.join(example.tests)}", ""]
         lines += [
-            f"**{labels['result']}:** {example.guide.result}",
+            f"**{labels['result']}{c}** {example.guide.result}",
             "",
-            f"**{labels['control']}:** {example.guide.control}",
+            f"**{labels['control']}{c}** {example.guide.control}",
             "",
-            f"**{labels['why']}:** {example.guide.why}",
+            f"**{labels['why']}{c}** {example.guide.why}",
         ]
         if example.knowledge:
-            names = "; ".join(f"{item.name}: {item.description}" for item in example.knowledge)
-            lines += ["", f"**{labels['knowledge_files']}:** {names}"]
+            names = "; ".join(f"{item.name}{c} {item.description}" for item in example.knowledge)
+            lines += ["", f"**{labels['knowledge_files']}{c}** {names}"]
         for integration in example.integrations:
             tools = ", ".join(f"`{tool}`" for tool in integration.tools)
             lines += [
                 "",
-                f"**{labels['integrations']}: {integration.name}** ({labels['tools']}: {tools}). "
+                f"**{labels['integrations']}{c} {integration.name}** ({labels['tools']}{c} {tools}). "
                 f"{integration.description}",
                 "",
-                f"**{labels['setup']}:** {integration.setup}",
+                f"**{labels['setup']}{c}** {integration.setup}",
                 "",
-                f"**{labels['offline']}:** {integration.offline}",
+                f"**{labels['offline']}{c}** {integration.offline}",
             ]
-        lines += ["", f"**{labels['adapt']}:** {example.guide.adapt}"]
+        lines += ["", f"**{labels['adapt']}{c}** {example.guide.adapt}"]
     lines += ["", END]
     return "\n".join(lines)
 
