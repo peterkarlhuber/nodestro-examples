@@ -18,7 +18,9 @@
 **Release blockers:** None for this repository.
 
 The 24 examples (format 2, six languages) build, run and pass their 49 test cases in all languages with deterministic
-doubles, and the generated studio chapter `beispiele.md` is current at studio `8e18cae`. Open work is mostly
+doubles, and the generated studio chapter `beispiele.md` is current at studio `0a6a320`. Key figures that a gate
+decides on or that report money or days come from a tool and are checked by the runtime (live-tested for
+`production-downtime` and `household-budget` with `qwen3.5:4b`). Open work is mostly
 localization polish from the UX initiative, one stale documentation note, and checks that need real providers.
 
 ## Priorities and statuses
