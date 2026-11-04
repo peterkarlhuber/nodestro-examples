@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Pin nodestro-runtime c6f0240 (runtime #111: RT-054 TODO; #112: orkexa 22f2910, the Ollama runtime of another
+  platform for portable packages). No change to the examples.
 - Key figures come from a tool. In the live benchmark, the `production-downtime` agent estimated the downtime share
   (2.83 % and 3.31 %; correct: 665 of 14,400 minutes = 4.62 %), so the gate (`> 3 %`) skipped the quality check. The
   downtime agent now has the runtime's deterministic `table_totals` tool besides the calculator, and its
