@@ -1,6 +1,7 @@
 {
   "name": "Equipo de hipótesis",
   "description": "Convierte una pregunta de investigación analizada en hipótesis comprobables con hipótesis nulas y predicciones medibles; las revisa tras una crítica metodológica.",
+  "capabilities": ["hipótesis", "operacionalización"],
   "start": "Pregunta y encargo",
   "output": "Hipótesis",
   "agents": {

@@ -1,6 +1,7 @@
 {
   "name": "Team Ethik und Datenschutz",
   "description": "Prüft Studien mit Menschen oder personenbezogenen Daten: Einwilligung, Datensparsamkeit, Anonymisierung, Beteiligung der Beschäftigtenvertretung und Ethikvotum.",
+  "capabilities": ["Forschungsethik", "Datenschutz", "informierte Einwilligung"],
   "start": "Studie und Auftrag",
   "output": "Einschätzung zu Ethik und Datenschutz",
   "agents": {

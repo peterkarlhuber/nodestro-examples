@@ -35,7 +35,7 @@
       "task": "Vérifie le plan d'économies.\n\nÉvaluation budgétaire :\n{{node:budget}}\n\nPropositions d'économies :\n{{node:savings}}",
       "fields": {
         "monthly_surplus": "Excédent actuel par mois en euros",
-        "savings_potential": "Potentiel d'économies supplémentaire réaliste par mois en euros",
+        "savings_potential": "Potentiel d'économies par mois : supplémentaire et réaliste, en euros",
         "measures": "Mesures avec économie estimée",
         "quick_wins": "Étapes réalisables dès cette semaine",
         "caveats": "Limites de l'analyse et remarques"

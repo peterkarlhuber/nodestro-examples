@@ -1,6 +1,7 @@
 {
   "name": "Claims team",
   "description": "Drafts notices of hindrance and assesses extension-of-time claims for delays outside the contractor's sphere; a site manager signs off the draft.",
+  "capabilities": ["contract", "claims", "notice of obstruction"],
   "start": "Task",
   "output": "Signed-off claims assessment",
   "agents": {
@@ -13,7 +14,7 @@
         "notice": "Draft notice of hindrance to the client",
         "claim_basis": "Reason why the delay may lie outside the contractor's sphere",
         "extension_days": "Extension of time in calendar days that could be justified",
-        "deadline": "By when the notice should be sent, or that the deadline is unknown",
+        "deadline": "Notice deadline: by when the notice should be sent, or that the deadline is unknown",
         "risks": "Risks of the claim"
       }
     }
@@ -22,7 +23,7 @@
     "notice": "Draft notice of hindrance to the client",
     "claim_basis": "Reason why the delay may lie outside the contractor's sphere",
     "extension_days": "Extension of time in calendar days that could be justified",
-    "deadline": "By when the notice should be sent, or that the deadline is unknown",
+    "deadline": "Notice deadline: by when the notice should be sent, or that the deadline is unknown",
     "risks": "Risks of the claim"
   },
   "steps": {

@@ -1,6 +1,7 @@
 {
   "name": "Équipe marché",
   "description": "Estime les cibles, la demande, la disposition à payer et la concurrence d'une idée d'entreprise.",
+  "capabilities": ["analyse de marché", "cibles", "concurrence"],
   "start": "Idée et mission",
   "output": "Rapport de marché",
   "agents": {

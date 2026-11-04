@@ -1,6 +1,7 @@
 {
   "name": "Marktteam",
   "description": "Schätzt Zielgruppen, Nachfrage, Zahlungsbereitschaft und Wettbewerb einer Geschäftsidee ein.",
+  "capabilities": ["Marktanalyse", "Zielgruppen", "Wettbewerb"],
   "start": "Idee und Auftrag",
   "output": "Marktbericht",
   "agents": {

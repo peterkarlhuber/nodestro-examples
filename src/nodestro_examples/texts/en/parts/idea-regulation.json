@@ -1,6 +1,7 @@
 {
   "name": "Regulation team",
   "description": "Identifies the permits, registrations, labelling, hygiene, insurance and data protection duties a business idea touches.",
+  "capabilities": ["regulation", "permits", "licences", "data protection"],
   "start": "Idea and question",
   "output": "Regulation report",
   "agents": {

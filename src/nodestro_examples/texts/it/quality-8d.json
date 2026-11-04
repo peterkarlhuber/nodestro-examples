@@ -23,7 +23,7 @@
       "task": "Lavora su D1–D3 per questo reclamo:\n\n{{run.input}}",
       "fields": {
         "analysis": "Da D1 a D3 come testo: team, descrizione del problema (5W2H, è/non è) e azioni di contenimento con verifica dell'efficacia",
-        "critical": "true se il caso è critico: rilevanza per la sicurezza o legale, linea del cliente ferma o scorte coinvolte ancora in spedizione"
+        "critical": "Caso critico: true in caso di rilevanza per la sicurezza o legale, linea del cliente ferma o scorte coinvolte ancora in spedizione"
       }
     },
     "root_cause": {

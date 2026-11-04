@@ -1,6 +1,7 @@
 {
   "name": "Team regolamentazione",
   "description": "Individua autorizzazioni, registrazioni, etichettatura, igiene, assicurazioni e obblighi di protezione dei dati che riguardano un'idea imprenditoriale.",
+  "capabilities": ["regolamentazione", "autorizzazioni", "licenze", "protezione dei dati"],
   "start": "Idea e incarico",
   "output": "Rapporto sulle norme",
   "agents": {

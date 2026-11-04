@@ -1,6 +1,7 @@
 {
   "name": "Équipe éthique et protection des données",
   "description": "Vérifie les études impliquant des personnes ou des données personnelles : consentement, minimisation des données, anonymisation, implication des représentants du personnel et avis éthique.",
+  "capabilities": ["éthique de la recherche", "protection des données", "consentement éclairé"],
   "start": "Étude et mission",
   "output": "Évaluation éthique et protection des données",
   "agents": {

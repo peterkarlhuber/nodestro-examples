@@ -1,6 +1,7 @@
 {
   "name": "Team mercato",
   "description": "Stima target, domanda, disponibilità a pagare e concorrenza di un'idea imprenditoriale.",
+  "capabilities": ["analisi di mercato", "target", "concorrenza"],
   "start": "Idea e incarico",
   "output": "Rapporto di mercato",
   "agents": {

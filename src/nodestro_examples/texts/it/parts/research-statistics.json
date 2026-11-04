@@ -1,6 +1,7 @@
 {
   "name": "Team statistica",
   "description": "Confronta le ipotesi quantitative con i dati, analizza i dati preliminari con la calcolatrice e stima la dimensione del campione per un disegno, un livello di significatività e una potenza dati.",
+  "capabilities": ["statistica", "analisi della potenza", "metodi quantitativi"],
   "start": "Incarico e disegno",
   "output": "Valutazione statistica",
   "agents": {

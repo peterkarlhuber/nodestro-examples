@@ -1,6 +1,7 @@
 {
   "name": "Statistikteam",
   "description": "Prüft quantitative Hypothesen an den Daten, wertet Vorversuchsdaten mit dem Rechner aus und schätzt die Stichprobengröße für ein vorgegebenes Design, Signifikanzniveau und eine Power.",
+  "capabilities": ["Statistik", "Poweranalyse", "quantitative Methoden"],
   "start": "Auftrag und Design",
   "output": "Statistische Einschätzung",
   "agents": {

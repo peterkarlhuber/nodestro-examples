@@ -22,7 +22,7 @@
       "task": "{{run.input}}",
       "fields": {
         "overview": "Tabella con una riga per richiesta: tema, urgenza, stato d'animo, dati rilevanti e informazioni mancanti",
-        "escalation": "true se almeno un cliente è contrariato o chiede più di quanto consentono le linee guida"
+        "escalation": "Escalation necessaria: true se almeno un cliente è contrariato o chiede più di quanto consentono le linee guida"
       }
     },
     "policy": {

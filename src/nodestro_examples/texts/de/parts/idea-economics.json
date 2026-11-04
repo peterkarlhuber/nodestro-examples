@@ -1,6 +1,7 @@
 {
   "name": "Wirtschaftlichkeitsteam",
   "description": "Rechnet Deckungsbeitrag, Break-even, Amortisation und Szenarien einer Geschäftsidee mit dem Rechner-Tool.",
+  "capabilities": ["Wirtschaftlichkeit", "Break-even", "Finanzplanung"],
   "start": "Idee und Auftrag",
   "output": "Wirtschaftlichkeitsbericht",
   "agents": {

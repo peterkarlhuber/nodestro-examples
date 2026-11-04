@@ -1,6 +1,7 @@
 {
   "name": "Nachtragsteam",
   "description": "Entwirft Behinderungsanzeigen und bewertet Ansprüche auf Bauzeitverlängerung für Verzug außerhalb des Bereichs des Auftragnehmers; eine Bauleitung zeichnet den Entwurf ab.",
+  "capabilities": ["Vertrag", "Nachträge", "Behinderungsanzeige"],
   "start": "Auftrag",
   "output": "Abgezeichnete Anspruchsbewertung",
   "agents": {
@@ -11,18 +12,18 @@
       "task": "{{input}}",
       "fields": {
         "notice": "Entwurf der Behinderungsanzeige an den Bauherrn",
-        "claim_basis": "Begründung, warum der Verzug außerhalb des Bereichs des Auftragnehmers liegen kann",
-        "extension_days": "Bauzeitverlängerung in Kalendertagen, die begründet sein könnte",
-        "deadline": "Bis wann die Anzeige versandt werden sollte, oder dass die Frist unbekannt ist",
+        "claim_basis": "Anspruchsgrundlage: warum der Verzug außerhalb des Bereichs des Auftragnehmers liegen kann",
+        "extension_days": "Bauzeitverlängerung in Tagen: Kalendertage, die begründet sein könnten",
+        "deadline": "Frist der Anzeige: bis wann sie versandt werden sollte, oder dass die Frist unbekannt ist",
         "risks": "Risiken des Anspruchs"
       }
     }
   },
   "contract": {
     "notice": "Entwurf der Behinderungsanzeige an den Bauherrn",
-    "claim_basis": "Begründung, warum der Verzug außerhalb des Bereichs des Auftragnehmers liegen kann",
-    "extension_days": "Bauzeitverlängerung in Kalendertagen, die begründet sein könnte",
-    "deadline": "Bis wann die Anzeige versandt werden sollte, oder dass die Frist unbekannt ist",
+    "claim_basis": "Anspruchsgrundlage: warum der Verzug außerhalb des Bereichs des Auftragnehmers liegen kann",
+    "extension_days": "Bauzeitverlängerung in Tagen: Kalendertage, die begründet sein könnten",
+    "deadline": "Frist der Anzeige: bis wann sie versandt werden sollte, oder dass die Frist unbekannt ist",
     "risks": "Risiken des Anspruchs"
   },
   "steps": {

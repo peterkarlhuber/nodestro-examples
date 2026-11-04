@@ -22,7 +22,7 @@
       "task": "{{run.input}}",
       "fields": {
         "overview": "Tabela com uma linha por solicitação: tema, urgência, humor, dados relevantes e informações que faltam",
-        "escalation": "true se pelo menos um cliente estiver irritado ou pedir mais do que as diretrizes permitem"
+        "escalation": "Escalonamento necessário: true se pelo menos um cliente estiver irritado ou pedir mais do que as diretrizes permitem"
       }
     },
     "policy": {

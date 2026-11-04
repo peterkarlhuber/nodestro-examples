@@ -1,6 +1,7 @@
 {
   "name": "Betriebsteam",
   "description": "Prüft, ob eine Geschäftsidee wie beschrieben umsetzbar ist: Abläufe, Kapazität, Ausstattung, Lieferanten und Logistik.",
+  "capabilities": ["Betrieb", "Technik", "Logistik", "Lieferanten"],
   "start": "Idee und Auftrag",
   "output": "Betriebsbericht",
   "agents": {

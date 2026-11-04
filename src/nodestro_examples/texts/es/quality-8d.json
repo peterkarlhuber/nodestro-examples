@@ -23,7 +23,7 @@
       "task": "Trabaja D1 a D3 para esta reclamación:\n\n{{run.input}}",
       "fields": {
         "analysis": "D1 a D3 como texto: equipo, descripción del problema (5W2H, es/no es) y acciones de contención con verificación de eficacia",
-        "critical": "true si el caso es crítico: relevancia de seguridad o legal, línea del cliente parada o stock afectado que todavía se está enviando"
+        "critical": "Caso crítico: true si hay relevancia de seguridad o legal, línea del cliente parada o stock afectado que todavía se está enviando"
       }
     },
     "root_cause": {

@@ -1,6 +1,7 @@
 {
   "name": "Operations team",
   "description": "Checks whether a business idea can be delivered as described: processes, capacity, equipment, suppliers and logistics.",
+  "capabilities": ["operations", "technology", "logistics", "suppliers"],
   "start": "Idea and question",
   "output": "Operations report",
   "agents": {

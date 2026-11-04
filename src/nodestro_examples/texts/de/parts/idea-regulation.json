@@ -1,6 +1,7 @@
 {
   "name": "Regulierungsteam",
   "description": "Ermittelt Genehmigungen, Anmeldungen, Kennzeichnung, Hygiene, Versicherung und Datenschutzpflichten, die eine Geschäftsidee berührt.",
+  "capabilities": ["Regulierung", "Genehmigungen", "Lizenzen", "Datenschutz"],
   "start": "Idee und Auftrag",
   "output": "Regulierungsbericht",
   "agents": {

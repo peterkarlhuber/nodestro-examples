@@ -1,6 +1,7 @@
 {
   "name": "Equipo de reclamaciones",
   "description": "Redacta avisos de impedimento y valora reclamaciones de ampliación de plazo para retrasos fuera del ámbito del contratista; una jefatura de obra visa el borrador.",
+  "capabilities": ["contrato", "reclamaciones", "aviso de obstrucción"],
   "start": "Encargo",
   "output": "Valoración de reclamaciones visada",
   "agents": {
@@ -11,18 +12,18 @@
       "task": "{{input}}",
       "fields": {
         "notice": "Borrador del aviso de impedimento a la propiedad",
-        "claim_basis": "Motivo por el que el retraso puede quedar fuera del ámbito del contratista",
-        "extension_days": "Ampliación de plazo en días naturales que podría justificarse",
-        "deadline": "Hasta cuándo debería enviarse el aviso, o que el plazo es desconocido",
+        "claim_basis": "Fundamento de la reclamación: por qué el retraso puede quedar fuera del ámbito del contratista",
+        "extension_days": "Ampliación de plazo en días: días naturales que podrían justificarse",
+        "deadline": "Plazo del aviso: hasta cuándo debería enviarse, o que el plazo es desconocido",
         "risks": "Riesgos de la reclamación"
       }
     }
   },
   "contract": {
     "notice": "Borrador del aviso de impedimento a la propiedad",
-    "claim_basis": "Motivo por el que el retraso puede quedar fuera del ámbito del contratista",
-    "extension_days": "Ampliación de plazo en días naturales que podría justificarse",
-    "deadline": "Hasta cuándo debería enviarse el aviso, o que el plazo es desconocido",
+    "claim_basis": "Fundamento de la reclamación: por qué el retraso puede quedar fuera del ámbito del contratista",
+    "extension_days": "Ampliación de plazo en días: días naturales que podrían justificarse",
+    "deadline": "Plazo del aviso: hasta cuándo debería enviarse, o que el plazo es desconocido",
     "risks": "Riesgos de la reclamación"
   },
   "steps": {

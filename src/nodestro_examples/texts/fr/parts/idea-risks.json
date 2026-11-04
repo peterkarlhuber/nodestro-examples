@@ -1,6 +1,7 @@
 {
   "name": "Équipe risques",
   "description": "Cherche les points faibles d'une idée d'entreprise et des moyens peu coûteux de les tester avant la création.",
+  "capabilities": ["analyse des risques", "expériences de validation"],
   "start": "Idée et mission",
   "output": "Rapport sur les risques",
   "agents": {

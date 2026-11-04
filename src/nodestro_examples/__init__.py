@@ -493,7 +493,8 @@ class PartSpec(_Strict):
     """A small workflow used as a sub-workflow or a team by templates; not an example of its own."""
 
     id: str
-    #: What the part can do as a team (tags the orchestrator sees, also used for capability selection).
+    #: What the part can do as a team, as language-neutral (English) tags. A copy gets the tags of its language
+    #: (``PartTexts.capabilities``, same order): the editor palette, the gallery and the orchestrator show them.
     capabilities: list[str] = Field(default_factory=list, max_length=MAX_CAPABILITIES)
     budget_usd: float | None = Field(default=None, gt=0)
     limits: LimitsSpec | None = None
@@ -758,6 +759,8 @@ class TemplateTexts(_Strict):
 class PartTexts(_Strict):
     name: str
     description: str
+    #: The part's capability tags in the language, one per tag of ``PartSpec.capabilities`` and in its order.
+    capabilities: list[str] = Field(default_factory=list, max_length=MAX_CAPABILITIES)
     start: str
     output: str
     agents: dict[str, NodeTexts]
@@ -1149,7 +1152,10 @@ def part(part_id: str) -> PartSpec:
 @cache
 def part_texts(part_id: str, language: str) -> PartTexts:
     path = _ROOT / "texts" / language_of(language) / "parts" / f"{part_id}.json"
-    return PartTexts.model_validate(json.loads(path.read_text("utf-8")))
+    texts = PartTexts.model_validate(json.loads(path.read_text("utf-8")))
+    if len(texts.capabilities) != len(part(part_id).capabilities):
+        raise ValueError(f"{path}: one capability tag per tag of the part is needed")
+    return texts
 
 
 def part_ids(template_id: str) -> list[str]:
@@ -1201,7 +1207,7 @@ def build_part(
         description=text.description,
         nodes=nodes,
         edges=edges,
-        capabilities=list(spec.capabilities),
+        capabilities=list(text.capabilities),
         budget_usd=spec.budget_usd,
         limits=_limits(spec.limits),
     )
@@ -1490,6 +1496,13 @@ class TemplateAgent(BaseModel):
     memory: bool = False
 
 
+class ContractField(BaseModel):
+    """A field of a team's output contract with its description in the language (its label for people)."""
+
+    name: str
+    description: str
+
+
 class TemplateTeam(BaseModel):
     """A team an orchestrator of the template can delegate to (a part, copied as a workflow of its own)."""
 
@@ -1500,8 +1513,10 @@ class TemplateTeam(BaseModel):
     agents: list[TemplateAgent]
     #: The team stops for a person's approval; the orchestrator waits for the decision.
     approval: bool
-    #: The fields the team promises to deliver (its output contract).
+    #: The fields the team promises to deliver (its output contract), by technical name.
     contract: list[str]
+    #: The same fields with their descriptions in the language, for showing them to people.
+    contract_fields: list[ContractField] = Field(default_factory=list)
     #: The start form fields an orchestrator may fill when it delegates.
     parameters: list[str]
 
@@ -1755,10 +1770,13 @@ def detail(template_id: str, language: str) -> TemplateDetail:
                 part_id=part_id,
                 name=own.name,
                 description=own.description,
-                capabilities=list(part_spec.capabilities),
+                capabilities=list(own.capabilities),
                 agents=_agents_of(part_spec.nodes, part_spec.edges, built, own.agents, own.steps, {}, {}),
                 approval=any(node.type == "approval" for node in part_spec.nodes),
                 contract=[item.name for item in output.contract],
+                contract_fields=[
+                    ContractField(name=item.name, description=own.contract[item.name]) for item in output.contract
+                ],
                 parameters=[own.form[field.name].label for node in part_spec.nodes for field in node.form],
             )
         )

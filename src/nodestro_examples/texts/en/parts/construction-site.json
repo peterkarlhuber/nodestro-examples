@@ -1,6 +1,7 @@
 {
   "name": "Site and design team",
   "description": "Examines technical causes of construction delays: weather, ground conditions, design changes and site sequencing; attributes delay days with evidence.",
+  "capabilities": ["technical causes", "design changes", "ground conditions", "weather"],
   "start": "Task",
   "output": "Site assessment",
   "agents": {
@@ -12,7 +13,7 @@
       "fields": {
         "findings": "Technical assessment of the causes",
         "attributed_delay_days": "Delay days attributable to the causes examined",
-        "responsibility": "Probable sphere of responsibility per cause (client, contractor or neither) with reason",
+        "responsibility": "Sphere of responsibility: probable per cause (client, contractor or neither), with reason",
         "evidence": "Evidence that should be documented",
         "open_questions": "Questions that remain open"
       }
@@ -21,7 +22,7 @@
   "contract": {
     "findings": "Technical assessment of the causes",
     "attributed_delay_days": "Delay days attributable to the causes examined",
-    "responsibility": "Probable sphere of responsibility per cause (client, contractor or neither) with reason",
+    "responsibility": "Sphere of responsibility: probable per cause (client, contractor or neither), with reason",
     "evidence": "Evidence that should be documented",
     "open_questions": "Questions that remain open"
   }

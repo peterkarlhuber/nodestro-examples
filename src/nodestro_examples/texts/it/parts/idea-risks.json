@@ -1,6 +1,7 @@
 {
   "name": "Team rischi",
   "description": "Cerca i punti deboli di un'idea imprenditoriale e modi economici per verificarli prima dell'avvio.",
+  "capabilities": ["analisi dei rischi", "esperimenti di validazione"],
   "start": "Idea e incarico",
   "output": "Rapporto sui rischi",
   "agents": {

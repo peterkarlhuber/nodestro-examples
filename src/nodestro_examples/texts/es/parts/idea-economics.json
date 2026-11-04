@@ -1,6 +1,7 @@
 {
   "name": "Equipo de rentabilidad",
   "description": "Calcula margen de contribución, punto de equilibrio, recuperación y escenarios de una idea de negocio con la calculadora.",
+  "capabilities": ["rentabilidad", "punto de equilibrio", "planificación financiera"],
   "start": "Idea y encargo",
   "output": "Informe de rentabilidad",
   "agents": {

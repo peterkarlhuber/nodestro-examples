@@ -98,6 +98,25 @@ def test_team_details_show_parameters_contracts_and_approvals() -> None:
     assert construction["construction-claims"].approval
     assert not construction["construction-site"].approval
     assert "attributed_delay_days" in construction["construction-site"].contract
+    site = {team.part_id: team for team in library.detail("construction-delay", "de").team_details}["construction-site"]
+    labels = {field.name: field.description for field in site.contract_fields}
+    assert [field.name for field in site.contract_fields] == site.contract
+    german = library.part_texts("construction-site", "de").contract
+    assert labels["attributed_delay_days"] == german["attributed_delay_days"]
+
+
+@pytest.mark.parametrize("language", LANGUAGES)
+def test_team_capabilities_are_in_the_language(language: str) -> None:
+    """The tags people and the orchestrator see are in the copy's language (EX-001); the part's English tags stay
+    the language-neutral reference, one translated tag each, in the same order."""
+    for teams in TEAMS.values():
+        for team in teams:
+            neutral = library.part(team).capabilities
+            tags = library.part_texts(team, language).capabilities
+            assert len(tags) == len(neutral) and all(tag.strip() for tag in tags), (language, team)
+            assert library.build_part(team, language).capabilities == tags
+            if language != "en":
+                assert tags != neutral, (language, team)
 
 
 def test_copies_pin_their_parts_and_teams() -> None:

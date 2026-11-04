@@ -1,6 +1,7 @@
 {
   "name": "Équipe réglementation",
   "description": "Identifie les autorisations, déclarations, règles d'étiquetage et d'hygiène, assurances et obligations de protection des données qui concernent une idée d'entreprise.",
+  "capabilities": ["réglementation", "autorisations", "licences", "protection des données"],
   "start": "Idée et mission",
   "output": "Rapport réglementaire",
   "agents": {

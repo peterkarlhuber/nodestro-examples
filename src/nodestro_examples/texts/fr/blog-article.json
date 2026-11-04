@@ -40,7 +40,7 @@
       "fields": {
         "audience": "Public : qui sont les lecteurs, ce qu'ils savent déjà et quelles questions ils se posent",
         "angle": "Angle et titre de travail de l'article",
-        "outline": "Parties dans l'ordre, chacune avec une phrase sur ce qu'elle doit apporter",
+        "outline": "Plan de l'article : parties dans l'ordre, chacune avec une phrase sur ce qu'elle doit apporter",
         "key_messages": "Messages clés que les lecteurs doivent retenir"
       }
     }

@@ -1,6 +1,7 @@
 {
   "name": "Equipe de riscos",
   "description": "Busca os pontos fracos de uma ideia de negócio e formas baratas de testá-los antes de abrir a empresa.",
+  "capabilities": ["análise de riscos", "experimentos de validação"],
   "start": "Ideia e tarefa",
   "output": "Relatório de riscos",
   "agents": {

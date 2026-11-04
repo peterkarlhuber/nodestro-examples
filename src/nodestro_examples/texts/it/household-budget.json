@@ -35,7 +35,7 @@
       "task": "Verifica il piano di risparmio.\n\nAnalisi del bilancio:\n{{node:budget}}\n\nProposte di risparmio:\n{{node:savings}}",
       "fields": {
         "monthly_surplus": "Avanzo attuale al mese in euro",
-        "savings_potential": "Potenziale di risparmio aggiuntivo realistico al mese in euro",
+        "savings_potential": "Potenziale di risparmio al mese: aggiuntivo e realistico, in euro",
         "measures": "Misure con risparmio stimato",
         "quick_wins": "Passi realizzabili già questa settimana",
         "caveats": "Limiti dell'analisi e note"

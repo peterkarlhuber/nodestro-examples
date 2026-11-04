@@ -1,6 +1,7 @@
 {
   "name": "Equipe de hipóteses",
   "description": "Transforma uma pergunta de pesquisa analisada em hipóteses testáveis com hipóteses nulas e previsões mensuráveis; revisa-as após uma crítica metodológica.",
+  "capabilities": ["hipóteses", "operacionalização"],
   "start": "Pergunta e tarefa",
   "output": "Hipóteses",
   "agents": {

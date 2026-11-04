@@ -22,7 +22,7 @@
       "task": "{{run.input}}",
       "fields": {
         "overview": "Tableau avec une ligne par demande : sujet, urgence, humeur, données utiles et informations manquantes",
-        "escalation": "true si au moins un client est mécontent ou demande plus que ce que permettent les règles"
+        "escalation": "Escalade nécessaire : true si au moins un client est mécontent ou demande plus que ce que permettent les règles"
       }
     },
     "policy": {

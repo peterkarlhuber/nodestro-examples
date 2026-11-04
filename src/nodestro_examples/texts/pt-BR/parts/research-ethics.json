@@ -1,6 +1,7 @@
 {
   "name": "Equipe de ética e proteção de dados",
   "description": "Verifica estudos com pessoas ou dados pessoais: consentimento, minimização de dados, anonimização, participação da representação dos trabalhadores e parecer ético.",
+  "capabilities": ["ética em pesquisa", "proteção de dados", "consentimento informado"],
   "start": "Estudo e tarefa",
   "output": "Avaliação de ética e proteção de dados",
   "agents": {

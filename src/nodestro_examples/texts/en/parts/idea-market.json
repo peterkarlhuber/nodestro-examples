@@ -1,6 +1,7 @@
 {
   "name": "Market team",
   "description": "Estimates target groups, demand, willingness to pay and competition of a business idea.",
+  "capabilities": ["market analysis", "target groups", "competition"],
   "start": "Idea and question",
   "output": "Market report",
   "agents": {

@@ -1,6 +1,7 @@
 {
   "name": "Hypothesenteam",
   "description": "Macht aus einer analysierten Forschungsfrage prüfbare Hypothesen mit Nullhypothesen und messbaren Vorhersagen; überarbeitet sie nach einer Methodenkritik.",
+  "capabilities": ["Hypothesen", "Operationalisierung"],
   "start": "Frage und Auftrag",
   "output": "Hypothesen",
   "agents": {

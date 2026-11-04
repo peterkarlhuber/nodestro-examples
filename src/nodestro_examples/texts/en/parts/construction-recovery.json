@@ -1,6 +1,7 @@
 {
   "name": "Recovery team",
   "description": "Develops acceleration measures for a delayed construction project with days recovered, extra cost and a new completion forecast.",
+  "capabilities": ["recovery planning", "acceleration", "cost estimate"],
   "start": "Task",
   "output": "Recovery plan",
   "agents": {

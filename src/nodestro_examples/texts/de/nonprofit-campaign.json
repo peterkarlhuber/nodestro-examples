@@ -35,7 +35,7 @@
       "task": "Prüfe Kampagne und Wirkungsmodell.\n\nKampagne:\n{{node:campaign}}\n\nWirkungsmodell:\n{{node:impact}}",
       "fields": {
         "credible": "Ist die Kampagne in ihrer jetzigen Form glaubwürdig?",
-        "overstated_claims": "Übertriebene oder nicht belegte Aussagen mit besserer Formulierung",
+        "overstated_claims": "Übertriebene Aussagen: übertriebene oder nicht belegte Aussagen mit besserer Formulierung",
         "ethical_notes": "Ethische Hinweise und Datenschutz",
         "suggested_changes": "Weitere Verbesserungsvorschläge",
         "measurement_plan": "Einfacher Plan zur Wirkungsmessung"

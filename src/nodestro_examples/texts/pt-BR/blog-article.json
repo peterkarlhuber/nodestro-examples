@@ -40,7 +40,7 @@
       "fields": {
         "audience": "Público: quem são os leitores, o que já sabem e quais perguntas trazem",
         "angle": "Abordagem e título provisório do artigo",
-        "outline": "Seções em ordem, cada uma com uma frase sobre o que deve alcançar",
+        "outline": "Estrutura: seções em ordem, cada uma com uma frase sobre o que deve alcançar",
         "key_messages": "Mensagens-chave que os leitores devem levar consigo"
       }
     }

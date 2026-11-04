@@ -1,6 +1,7 @@
 {
   "name": "Equipo de obra y proyecto",
   "description": "Examina las causas técnicas de los retrasos de obra: clima, terreno, cambios de proyecto y secuencia de trabajos; atribuye días de retraso con pruebas.",
+  "capabilities": ["causas técnicas", "cambios de proyecto", "terreno", "meteorología"],
   "start": "Encargo",
   "output": "Valoración de obra",
   "agents": {
@@ -12,7 +13,7 @@
       "fields": {
         "findings": "Valoración técnica de las causas",
         "attributed_delay_days": "Días de retraso atribuibles a las causas examinadas",
-        "responsibility": "Ámbito de responsabilidad probable por causa (propiedad, contratista o ninguno) con motivo",
+        "responsibility": "Ámbito de responsabilidad: probable por causa (propiedad, contratista o ninguno), con motivo",
         "evidence": "Pruebas que deberían documentarse",
         "open_questions": "Preguntas que quedan abiertas"
       }
@@ -21,7 +22,7 @@
   "contract": {
     "findings": "Valoración técnica de las causas",
     "attributed_delay_days": "Días de retraso atribuibles a las causas examinadas",
-    "responsibility": "Ámbito de responsabilidad probable por causa (propiedad, contratista o ninguno) con motivo",
+    "responsibility": "Ámbito de responsabilidad: probable por causa (propiedad, contratista o ninguno), con motivo",
     "evidence": "Pruebas que deberían documentarse",
     "open_questions": "Preguntas que quedan abiertas"
   }

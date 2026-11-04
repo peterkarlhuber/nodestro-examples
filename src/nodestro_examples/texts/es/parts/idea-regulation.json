@@ -1,6 +1,7 @@
 {
   "name": "Equipo de regulación",
   "description": "Identifica permisos, registros, etiquetado, higiene, seguros y obligaciones de protección de datos que afectan a una idea de negocio.",
+  "capabilities": ["regulación", "permisos", "licencias", "protección de datos"],
   "start": "Idea y encargo",
   "output": "Informe de regulación",
   "agents": {

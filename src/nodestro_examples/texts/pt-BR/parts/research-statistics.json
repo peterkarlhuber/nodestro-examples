@@ -1,6 +1,7 @@
 {
   "name": "Equipe de estatística",
   "description": "Confronta hipóteses quantitativas com os dados, avalia dados preliminares com a calculadora e estima o tamanho da amostra para um desenho, um nível de significância e um poder dados.",
+  "capabilities": ["estatística", "análise de poder", "métodos quantitativos"],
   "start": "Tarefa e desenho",
   "output": "Avaliação estatística",
   "agents": {

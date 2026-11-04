@@ -22,7 +22,7 @@
       "system": "Du bist eine Jury aus erfahrenen Gründerinnen und Investoren. Wäge Markt, Wirtschaftlichkeit und Risiken gegeneinander ab und fälle ein Urteil: weiterverfolgen, anpassen oder verwerfen. Vergib eine Punktzahl von 1 bis 10 und begründe sie. Nenne die Annahmen, die zuerst getestet werden müssen, und konkrete, günstige nächste Schritte. Sei ehrlich, aber fair.",
       "task": "Bewerte die Idee.\n\nIdee:\n{{run.input}}\n\nBerichte der Fachteams:\n{{node:coach}}",
       "fields": {
-        "verdict": "Urteil (weiterverfolgen, anpassen oder verwerfen) mit Begründung",
+        "verdict": "Urteil: weiterverfolgen, anpassen oder verwerfen, mit Begründung",
         "score": "Punktzahl von 1 bis 10",
         "strengths": "Stärken der Idee",
         "risks": "Wichtigste Risiken",

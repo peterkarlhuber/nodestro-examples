@@ -1,6 +1,7 @@
 {
   "name": "Lieferkettenteam",
   "description": "Untersucht Verzug durch Lieferanten, Materiallieferungen und die Besetzung von Nachunternehmern; ordnet Verzugstage mit Nachweisen zu.",
+  "capabilities": ["Lieferkette", "Nachunternehmer", "Materiallieferung"],
   "start": "Auftrag",
   "output": "Lieferkettenbewertung",
   "agents": {

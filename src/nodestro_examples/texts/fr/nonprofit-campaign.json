@@ -35,7 +35,7 @@
       "task": "Vérifie la campagne et le modèle d'impact.\n\nCampagne :\n{{node:campaign}}\n\nModèle d'impact :\n{{node:impact}}",
       "fields": {
         "credible": "La campagne est-elle crédible sous sa forme actuelle ?",
-        "overstated_claims": "Affirmations exagérées ou non étayées, avec une meilleure formulation",
+        "overstated_claims": "Affirmations exagérées : exagérées ou non étayées, avec une meilleure formulation",
         "ethical_notes": "Remarques éthiques et protection des données",
         "suggested_changes": "Autres propositions d'amélioration",
         "measurement_plan": "Plan simple de mesure de l'impact"

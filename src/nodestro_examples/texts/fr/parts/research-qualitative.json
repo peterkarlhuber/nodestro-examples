@@ -1,6 +1,7 @@
 {
   "name": "Équipe méthodes qualitatives",
   "description": "Planifie entretiens, observations ou groupes de discussion pour des questions sur des expériences, des motifs et des comportements : échantillon, guide et analyse.",
+  "capabilities": ["méthodes qualitatives", "entretiens", "observation"],
   "start": "Question et mission",
   "output": "Plan qualitatif",
   "agents": {

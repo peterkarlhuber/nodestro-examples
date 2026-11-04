@@ -1,6 +1,7 @@
 {
   "name": "Team forniture",
   "description": "Esamina i ritardi causati da fornitori, consegne di materiale e organico dei subappaltatori; attribuisce giorni di ritardo con prove.",
+  "capabilities": ["catena di fornitura", "subappaltatori", "consegna dei materiali"],
   "start": "Incarico",
   "output": "Valutazione delle forniture",
   "agents": {

@@ -23,7 +23,7 @@
       "task": "Analizza in modo quantitativo questo registro dei fermi:\n\n{{run.input}}",
       "fields": {
         "analysis": "L'analisi quantitativa come testo con tabelle",
-        "downtime_share_percent": "Quota dei fermi sul tempo di produzione pianificato, in percentuale"
+        "downtime_share_percent": "Quota dei fermi in percentuale: quota sul tempo di produzione pianificato"
       }
     },
     "causes": {

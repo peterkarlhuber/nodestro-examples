@@ -1,6 +1,7 @@
 {
   "name": "Supply chain team",
   "description": "Examines delays caused by suppliers, material deliveries and subcontractor staffing; attributes delay days with evidence.",
+  "capabilities": ["supply chain", "subcontractors", "material delivery"],
   "start": "Task",
   "output": "Supply chain assessment",
   "agents": {

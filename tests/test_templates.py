@@ -163,6 +163,42 @@ def test_every_text_exists_in_every_language(language: str) -> None:
             assert model.input.startswith(SYNTHETIC[language]), (language, template_id)
 
 
+#: The longest field description the studio shows whole as the label of a result field (``LABEL_MAX`` in
+#: nodestro-studio frontend/src/components/Markdown.tsx); a longer one is labelled by its lead before the first colon.
+LABEL_MAX = 60
+
+
+def field_label(description: str) -> str | None:
+    """The label the studio takes from a field description, or ``None`` when it would have to cut the text."""
+    text = description.strip()
+    if len(text) <= LABEL_MAX:
+        return text
+    colon = re.search(r":\s", text)
+    lead = text[: colon.start()].strip() if colon else ""
+    return lead if 2 <= len(lead) <= LABEL_MAX else None
+
+
+@pytest.mark.parametrize("language", LANGUAGES)
+def test_every_result_field_has_a_label_in_the_language(language: str) -> None:
+    """Result views label a structured field by its description, so a long one starts with a short label ("Label:
+    details") instead of falling back to the English field id (EX-002); a yes/no field names what it says."""
+    described: list[tuple[str, str, str]] = []
+    for template_id in IDS:
+        texts = library.texts(template_id, language)
+        for node_id, agent in texts.agents.items():
+            described += [(f"{template_id}/{node_id}", name, text) for name, text in agent.fields.items()]
+        described += [(f"{template_id}/contract", name, text) for name, text in texts.contract.items()]
+        for part_id in library.part_ids(template_id):
+            part_text = library.part_texts(part_id, language)
+            for node_id, agent in part_text.agents.items():
+                described += [(f"{part_id}/{node_id}", name, text) for name, text in agent.fields.items()]
+            described += [(f"{part_id}/contract", name, text) for name, text in part_text.contract.items()]
+    for where, name, text in described:
+        label = field_label(text)
+        assert label, (language, where, name, text)
+        assert not re.match(r"(true|false)\b", label), (language, where, name, label)
+
+
 def test_templates_only_use_what_nodestro_offers() -> None:
     tools = {tool.name for tool in BUILTIN_TOOLS}
     for template_id in IDS:

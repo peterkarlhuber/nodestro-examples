@@ -1,6 +1,7 @@
 {
   "name": "Equipo de cadena de suministro",
   "description": "Examina los retrasos causados por proveedores, entregas de material y la dotación de subcontratistas; atribuye días de retraso con pruebas.",
+  "capabilities": ["cadena de suministro", "subcontratistas", "entrega de material"],
   "start": "Encargo",
   "output": "Valoración del suministro",
   "agents": {

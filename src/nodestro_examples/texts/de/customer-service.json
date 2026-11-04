@@ -22,7 +22,7 @@
       "task": "{{run.input}}",
       "fields": {
         "overview": "Tabelle mit einer Zeile pro Anfrage: Thema, Dringlichkeit, Stimmung, relevante Daten und fehlende Angaben",
-        "escalation": "true, wenn mindestens ein Kunde verärgert ist oder mehr verlangt, als die Richtlinien erlauben"
+        "escalation": "Eskalation nötig: true, wenn mindestens ein Kunde verärgert ist oder mehr verlangt, als die Richtlinien erlauben"
       }
     },
     "policy": {

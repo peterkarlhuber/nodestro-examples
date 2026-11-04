@@ -1,6 +1,7 @@
 {
   "name": "Team ipotesi",
   "description": "Trasforma una domanda di ricerca analizzata in ipotesi verificabili con ipotesi nulle e previsioni misurabili; le rivede dopo una critica metodologica.",
+  "capabilities": ["ipotesi", "operazionalizzazione"],
   "start": "Domanda e incarico",
   "output": "Ipotesi",
   "agents": {

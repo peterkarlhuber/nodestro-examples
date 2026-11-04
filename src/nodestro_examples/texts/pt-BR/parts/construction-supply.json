@@ -1,6 +1,7 @@
 {
   "name": "Equipe de suprimentos",
   "description": "Examina atrasos causados por fornecedores, entregas de material e efetivo de subempreiteiros; atribui dias de atraso com evidências.",
+  "capabilities": ["cadeia de suprimentos", "subempreiteiros", "entrega de material"],
   "start": "Tarefa",
   "output": "Avaliação de suprimentos",
   "agents": {
@@ -12,7 +13,7 @@
       "fields": {
         "findings": "Avaliação das causas de suprimento e de efetivo",
         "attributed_delay_days": "Dias de atraso atribuíveis às causas examinadas",
-        "responsibility": "Esfera de responsabilidade provável por causa com justificativa",
+        "responsibility": "Esfera de responsabilidade: provável por causa, com justificativa",
         "evidence": "Confirmações e registros que devem ser reunidos",
         "open_questions": "Perguntas em aberto"
       }
@@ -21,7 +22,7 @@
   "contract": {
     "findings": "Avaliação das causas de suprimento e de efetivo",
     "attributed_delay_days": "Dias de atraso atribuíveis às causas examinadas",
-    "responsibility": "Esfera de responsabilidade provável por causa com justificativa",
+    "responsibility": "Esfera de responsabilidade: provável por causa, com justificativa",
     "evidence": "Confirmações e registros que devem ser reunidos",
     "open_questions": "Perguntas em aberto"
   }

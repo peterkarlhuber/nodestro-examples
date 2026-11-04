@@ -43,7 +43,7 @@
         "approved": "Utilizzabile senza modifiche?",
         "issues": "Problemi individuati, con la loro posizione",
         "suggested_changes": "Proposte di modifica concrete",
-        "human_checks": "Punti che le risorse umane o una persona qualificata devono verificare"
+        "human_checks": "Verifiche umane: punti che le risorse umane o una persona qualificata devono verificare"
       }
     },
     "revise": {
