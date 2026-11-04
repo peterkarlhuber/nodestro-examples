@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Pin nodestro-runtime 7cb9b4b (runtime #107: a local judge answers without thinking in the CPU saving mode, longer
+  request timeout for local model servers).
 - Pin nodestro-runtime 3006ce0 (runtime #106: CPU saving mode, local model hints, `recommend(require=)`, evidence-weighted hybrid search).
 - Models per agent (EX-011): every agent and orchestrator of the 24 templates and their parts names a task profile of
   the runtime (`task`: `classify`, `extract`, `write`, `document_vision`, `tool_agent`, `analysis`, `coding`,
