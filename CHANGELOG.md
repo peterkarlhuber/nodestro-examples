@@ -12,7 +12,7 @@
   (`delay_days`). `contract-review` no longer counts its critical clauses: the checkpoint lists them
   (`critical_clauses`) and the gate tests `is_not_empty`. A test makes sure every numeric gate field is checked. Texts
   in all six languages are updated. EX-012 records the figures that remain in free text.
-- Pin nodestro-runtime d0fee19 (runtime #108: checked key figures, `table_totals`; runtime #109: orkexa 014144b, local Ollama agents with a structured result call their tools).
+- Pin nodestro-runtime 2f1de71 (runtime #108: checked key figures, `table_totals`; #109 and #110: orkexa 6e61862, local Ollama agents with a structured result call their tools and answer in the conversation's language; a calculator echo backs no checked value).
 - EX-011 is done and leaves `docs/TODO.md`. nodestro-api computes the per-agent plan from these task profiles and the
   agents' own needs (`GET /api/library/{id}/models`), and Studio shows it when copying. Live runs on a 4 vCPU CPU with
   `qwen3.5:4b` (32k context, CPU saving mode) through the benchmark API: `contract-review` (de, input file) 736 s,
