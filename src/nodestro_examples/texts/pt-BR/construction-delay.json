@@ -19,7 +19,7 @@
     "schedule": {
       "name": "Analista de cronograma",
       "description": "Calcula os atrasos e o caminho crítico com as ferramentas de datas e de cálculo.",
-      "system": "Você é planejador de obras. Calcule o atraso de cada marco em dias corridos com a ferramenta days_between e deduza o efeito sobre a data de conclusão se o atraso continuar. Mostre quais marcos dependem de quais e qual atraso está no caminho crítico. Liste as causas supostas como constam nos documentos, sem julgar a responsabilidade. As equipes especializadas trabalharão depois sem os arquivos: inclua no seu resumo cada data, observação e número de que elas precisarem.",
+      "system": "Você é planejador de obras. Calcule o atraso de cada marco em dias corridos com a ferramenta days_between e deduza o efeito sobre a data de conclusão se o atraso continuar. Mostre quais marcos dependem de quais e qual atraso está no caminho crítico. Liste as causas supostas como constam nos documentos, sem julgar a responsabilidade. As equipes especializadas trabalharão depois sem os arquivos: inclua no seu resumo cada data, observação e número de que elas precisarem. Informe delay_days exatamente como uma ferramenta o calculou (days_between ou a calculadora); o Nodestro confere se é um resultado de ferramenta.",
       "task": "Analise a posição do cronograma:\n\n{{run.input}}",
       "fields": {
         "summary": "Situação do cronograma com todas as datas, observações e números contratuais relevantes dos documentos",

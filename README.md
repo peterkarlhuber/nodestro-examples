@@ -14,7 +14,7 @@ pydantic; it has no engine, HTTP API or agent orchestration of its own.
 
 | No. | Id | Category | Shows |
 | --- | --- | --- | --- |
-| 1 | `production-downtime` | industry | parallel analysis, calculator, decision, sub-workflow, Excel input |
+| 1 | `production-downtime` | industry | parallel analysis, exact table totals, decision on a checked key figure, sub-workflow, Excel input |
 | 2 | `quality-8d` | industry | 8D chain, archive of past 8D reports searched with citations, decision, approval, knowledge proposals |
 | 3 | `supplier-comparison` | industry | parallel cost and risk analysis, optional read-only ERP connection (MCP) or ERP export, offers as PDF, Word and Excel |
 | 4 | `sme-swot` | business | parallel SWOT, TOWS strategy, structured critical review |
@@ -25,7 +25,7 @@ pydantic; it has no engine, HTTP API or agent orchestration of its own.
 | 9 | `hr-recruiting` | administration | job advert and interview guide, fairness gate with revision branch, final approval |
 | 10 | `research-hypotheses` | knowledge | orchestrator over four method teams, team parameters set by the orchestrator, study plan |
 | 11 | `code-review` | knowledge | parallel bug and security review, fix with tests, ZIP input |
-| 12 | `contract-review` | administration | contract structure, check against a company contract playbook (knowledge), critical-clause branch |
+| 12 | `contract-review` | administration | contract structure, check against a company contract playbook (knowledge), branch on the listed critical clauses |
 | 13 | `learning-plan` | knowledge | persistent memory of the learner's progress, course material as input, parallel tutor and quiz |
 | 14 | `household-budget` | private | budget recalculation, savings, structured reality check |
 | 15 | `travel-plan` | private | input form, date tool, abroad branch from a form value |
@@ -43,6 +43,15 @@ Six examples are marked `sensitive` (finance, personnel, law, administration): t
 the gallery labels them, and their results are working aids for a qualified person. None of the examples acts
 outside Nodestro: they write texts and result files, never emails, bookings or database changes. The two optional
 connections only read (see [Integrations](#integrations-mcp)).
+
+Key figures that a decision or a money amount rests on are never the model's own arithmetic. Their result fields
+declare `"source": "tool"`, so the runtime accepts them only as the result of a tool call of the step or an earlier
+one (the calculator, `table_totals`, `days_between`): `downtime_share_percent` in `production-downtime` (which the
+3 % decision reads; the totals come from `table_totals` over the whole log), `monthly_surplus` and
+`savings_potential` in `household-budget`, `total_margin_eur` in `farm-planning` and `delay_days` in
+`construction-delay`. A value that no tool computed is sent back to the agent once, then the step stops with
+`run.value_unverified`. `contract-review` decides on the list of critical clauses instead of a separately counted
+number. Figures inside free text (prices in an offer, margins in a menu) are not checked this way.
 
 Every guide explains the problem, the flow, input, result and how to adapt the example, and since format 2 also
 **who decides what** (`control`: what is decided automatically, which limits apply, when a person steps in) and

@@ -32,6 +32,7 @@
       "icon": "calculator",
       "task": "tool_agent",
       "tools": [
+        "table_totals",
         "calculator"
       ],
       "output_name": "Downtime",
@@ -42,7 +43,8 @@
         },
         {
           "name": "downtime_share_percent",
-          "type": "number"
+          "type": "number",
+          "source": "tool"
         }
       ]
     },

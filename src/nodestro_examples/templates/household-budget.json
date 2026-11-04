@@ -56,17 +56,19 @@
       "y": 160,
       "role": "review",
       "icon": "check",
-      "task": "judge",
+      "task": "analysis",
       "effort": "low",
       "output_name": "BudgetCheck",
       "output_fields": [
         {
           "name": "monthly_surplus",
-          "type": "number"
+          "type": "number",
+          "source": "tool"
         },
         {
           "name": "savings_potential",
-          "type": "number"
+          "type": "number",
+          "source": "tool"
         },
         {
           "name": "measures",
@@ -80,6 +82,9 @@
           "name": "caveats",
           "type": "string_list"
         }
+      ],
+      "tools": [
+        "calculator"
       ]
     },
     {

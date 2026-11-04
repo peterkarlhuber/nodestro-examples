@@ -13,7 +13,7 @@
 | P1 High | 0 |
 | P2 Medium | 0 |
 | P3 Low | 5 |
-| P4 Optional | 4 |
+| P4 Optional | 5 |
 
 **Release blockers:** None for this repository.
 
@@ -125,7 +125,17 @@ None known.
 
 ## Later optimizations
 
-None known.
+### EX-012 · Figures inside free-text results are not checked
+
+- **Priority:** P4 · **Status:** Open · **Area:** templates
+- Since the downtime fix, the key figures that a gate decides on or that report money or days come from a tool and the
+  runtime checks them (`source="tool"`): `production-downtime` (`downtime_share_percent`), `household-budget`
+  (`monthly_surplus`, `savings_potential`), `farm-planning` (`total_margin_eur`) and `construction-delay`
+  (`delay_days`); `contract-review` lists its critical clauses instead of counting them. Numbers written inside a
+  free-text answer (`sales-offer`, `restaurant-menu`, `supplier-comparison`, `financial-analysis`) are still the
+  model's own; their reviewers and quality checks read them, but no tool verifies them.
+- **Next step:** move the totals these templates report into numeric result fields with `source="tool"` where a later
+  step relies on them.
 
 ## Accepted risks
 
