@@ -150,6 +150,7 @@ None known.
 
 | This repo item | Other repo | Other item | Relation |
 |---|---|---|---|
+| (pointer) | nodestro-studio | ST-052 (Dependabot policy: weekly groups, cooldown, manual merge; auto-merge prerequisites) | Full entry in studio |
 | EX-003 | nodestro-studio | ST-031 (AD-18) | Studio shows the offline badge; this repo provides the marker. |
 | EX-003 | nodestro-runtime | RT-055 (origin of an example copy) | Runtime stores the origin and offline connections; the marker builds on it. |
 | EX-005 | nodestro-runtime, nodestro-studio | RT-016, ST-030 (MCP scope) | Wider MCP use needs an owner decision and a new review. |
