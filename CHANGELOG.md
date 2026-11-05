@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Pin nodestro-runtime 57b40d2 (runtime #116: strict offline mode refuses cloud models outside runs too, orchestrator effort only where the model takes one (RT-004), expired budget decisions end a run `failed`, semantic index `unavailable` without sqlite-vec). The MCP demo setup texts (customer-service, supplier-comparison) name the computer where Nodestro runs instead of internal switch names.
 - Pin nodestro-runtime 40c8c06 (runtime #113, backend audit round 3: key-figure checks, event-loop safety, cancel of local model requests, `reindex_required`, catalog `license_source`; orkexa e9c2147, axentra 0a1d1cc). No change to this package.
 - Pin nodestro-runtime c6f0240 (runtime #111: RT-054 TODO; #112: orkexa 22f2910, the Ollama runtime of another
   platform for portable packages). No change to the examples.
