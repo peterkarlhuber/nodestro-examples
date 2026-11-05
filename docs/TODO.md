@@ -3,7 +3,7 @@
 > Open work for this repository: release blockers, known bugs, security follow-ups, technical debt and planned improvements.
 > GitHub issues are the source of truth for details; this file is the entry point and summary.
 >
-> **Last full review:** 2026-11-04 against `master` at `64e534a` (UX round 3 and backend audit 3).
+> **Last full review:** 2026-11-05 against `master` at `94ae19a` (quality round 3 close-out; TODO consolidated).
 
 ## Summary
 
@@ -15,13 +15,15 @@
 | P3 Low | 3 |
 | P4 Optional | 5 |
 
-**Release blockers:** None for this repository.
+**Release blockers:** None for this repository; every entry below is not a release blocker.
 
 The 24 examples (format 2, six languages) build, run and pass their 49 test cases in all languages with deterministic
-doubles, and the generated studio chapter `beispiele.md` is current at studio `0a6a320`. Key figures that a gate
+doubles, and the generated studio chapter `beispiele.md` is current on studio master (last regenerated with the `64e534a` pin,
+studio `85a7f3d`). Key figures that a gate
 decides on or that report money or days come from a tool and are checked by the runtime (live-tested for
 `production-downtime` and `household-budget` with `qwen3.5:4b`). Result fields and team tags are labeled in the example's language (UX round 3). Open work is
-mostly typography polish, one stale documentation note, and checks that need real providers.
+mostly typography polish (EX-008), the offline marker on copies (EX-003, needs nodestro-runtime RT-055), a stale
+Dependabot comment (EX-010), and checks that need real providers (EX-006).
 
 ## Priorities and statuses
 
@@ -70,7 +72,8 @@ None known.
   agent prompt; editor and run views show no label, and `Made.offline` is not stored with the workflow.
 - **Next step:** Choose a visible first description line or a workflow marker field (runtime/API) set by
   `instantiate()`; the studio then shows a badge.
-- **Depends on:** nodestro-studio (badge); nodestro-runtime and nodestro-api if a marker field is chosen
+- **Depends on:** nodestro-studio ST-031 (badge); nodestro-runtime RT-055 (origin of an example copy, including its
+  offline connections; UX round 3 examples handover B-1), exposed read-only by nodestro-api
 
 ### EX-007 · Separate memory spaces per copy
 
@@ -102,7 +105,7 @@ None known.
 
 ### EX-008 · Typographic apostrophes in French texts
 
-- **Priority:** P4 Optional · **Status:** Open · **Refs:** identified in this inventory; studio decision 7dff7f5 (ST-026)
+- **Priority:** P4 Optional · **Status:** Open · **Refs:** identified in this inventory; studio decision 7dff7f5 (former studio ST-026, done)
 - **What:** The French example texts use straight apostrophes only (about 1,570), while the studio converted all
   French UI texts to typographic ones and now enforces that with a test, so French gallery cards and guides mix
   both styles. English stays with straight apostrophes like the studio; Italian has no decision yet (the studio
@@ -115,14 +118,14 @@ None known.
 
 ### EX-012 · Figures inside free-text results are not checked
 
-- **Priority:** P4 · **Status:** Open · **Area:** templates
-- Since the downtime fix, the key figures that a gate decides on or that report money or days come from a tool and the
+- **Priority:** P4 Optional · **Status:** Open · **Refs:** templates (checked figures, `source="tool"`)
+- **What:** Since the downtime fix, the key figures that a gate decides on or that report money or days come from a tool and the
   runtime checks them (`source="tool"`): `production-downtime` (`downtime_share_percent`), `household-budget`
   (`monthly_surplus`, `savings_potential`), `farm-planning` (`total_margin_eur`) and `construction-delay`
   (`delay_days`); `contract-review` lists its critical clauses instead of counting them. Numbers written inside a
   free-text answer (`sales-offer`, `restaurant-menu`, `supplier-comparison`, `financial-analysis`) are still the
   model's own; their reviewers and quality checks read them, but no tool verifies them.
-- **Next step:** move the totals these templates report into numeric result fields with `source="tool"` where a later
+- **Next step:** Move the totals these templates report into numeric result fields with `source="tool"` where a later
   step relies on them.
 
 ## Accepted risks
@@ -148,7 +151,9 @@ None known.
 | This repo item | Other repo | Other item | Relation |
 |---|---|---|---|
 | EX-003 | nodestro-studio | ST-031 (AD-18) | Studio shows the offline badge; this repo provides the marker. |
+| EX-003 | nodestro-runtime | RT-055 (origin of an example copy) | Runtime stores the origin and offline connections; the marker builds on it. |
 | EX-005 | nodestro-runtime, nodestro-studio | RT-016, ST-030 (MCP scope) | Wider MCP use needs an owner decision and a new review. |
+| (pointer) | nodestro-runtime | RT-056 (test double cannot finish orchestrators; UX round 3 examples handover B-3) | The three orchestrated examples cannot be run end to end with the test double; full entry in runtime. |
 | — | nodestro-studio | `make example-docs` | Regenerate `beispiele.md` on every examples pin bump. |
 
 ## Maintaining this file
