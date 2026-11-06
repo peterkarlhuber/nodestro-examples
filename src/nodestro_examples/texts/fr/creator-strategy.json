@@ -5,15 +5,15 @@
   "start": "Profil du créateur",
   "output": "Plan de contenu",
   "file_name": "Calendrier éditorial",
-  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nCréatrice : « Cuisiner avec Kim » (fictif), Instagram 8 400 abonnés, TikTok 3 100 abonnés, pas de chaîne YouTube\nContenus jusqu'ici : recettes rapides après le travail, irrégulièrement 1–2 publications par semaine\nMeilleures publications : pâtes en 15 minutes (reel, 92 000 vues), meal prep pour la semaine (carrousel, 1 400 enregistrements)\nAudience selon les statistiques : 25–40 ans, majoritairement actifs, 70 % de femmes\nObjectif dans trois mois : 15 000 abonnés sur Instagram et une première collaboration avec une marque régionale\nTemps : environ 6 heures par semaine pour planifier, filmer et monter\nDate de début du plan : lundi 2026-05-04",
+  "input": "DONNÉES D’EXEMPLE SYNTHÉTIQUES – entièrement fictives, uniquement pour essayer.\n\nCréatrice : « Cuisiner avec Kim » (fictif), Instagram 8 400 abonnés, TikTok 3 100 abonnés, pas de chaîne YouTube\nContenus jusqu’ici : recettes rapides après le travail, irrégulièrement 1–2 publications par semaine\nMeilleures publications : pâtes en 15 minutes (reel, 92 000 vues), meal prep pour la semaine (carrousel, 1 400 enregistrements)\nAudience selon les statistiques : 25–40 ans, majoritairement actifs, 70 % de femmes\nObjectif dans trois mois : 15 000 abonnés sur Instagram et une première collaboration avec une marque régionale\nTemps : environ 6 heures par semaine pour planifier, filmer et monter\nDate de début du plan : lundi 2026-05-04",
   "guide": {
     "problem": "Publier régulièrement demande une direction claire et un plan adapté à son propre budget temps. Le workflow déduit une stratégie des statistiques, rassemble des idées adaptées et planifie la publication.",
-    "flow": "Une chaîne de trois agents : l'agent de stratégie définit le positionnement, les piliers de contenu et les objectifs et analyse pour cela les statistiques jointes, le développeur d'idées formule des idées de publication concrètes avec une accroche, et le planificateur de contenu les répartit sur quatre semaines. Le développeur d'idées garde ses propositions en mémoire pour que les exécutions suivantes ne répètent pas les idées. Un contrôle qualité vérifie que la fréquence et le mix sont réalistes.",
-    "input": "Profil avec plateformes, chiffres, publications à succès, audience, objectifs, temps disponible et date de début. Vous pouvez aussi joindre des statistiques en captures d'écran ou en export CSV/Excel ; le fichier d'exemple est un tel export.",
-    "result": "Un calendrier éditorial sur quatre semaines avec date, plateforme, format, idée, accroche et appel à l'action, précédé d'un court résumé de la stratégie, aussi en fichier Excel pour continuer la planification.",
-    "adapt": "Saisissez votre profil et vos chiffres ou joignez des captures de vos statistiques. Ajoutez votre style de marque et vos sujets tabous dans le prompt système du développeur d'idées. La mémoire « creator-ideas » se trouve sous Mémoire ; videz-la si vous voulez repartir de zéro. Pour un plan mensuel, vous pouvez planifier la copie.",
-    "control": "Automatique : le développeur d'idées lit la mémoire « creator-ideas » avant de commencer et, à la fin de chaque exécution, y enregistre lui-même les titres provisoires de ses nouvelles idées, sans étape de confirmation ; vous pouvez consulter ou vider la mémoire sous Mémoire. Une vérification qualité par un second modèle confronte le calendrier du planificateur de contenu à trois critères (fréquence adaptée au temps disponible, piliers équilibrés, objectifs soutenus) ; si l'un échoue, le calendrier est révisé une fois et le résultat de la vérification est consigné avec l'exécution. Aucune étape n'attend une personne et aucun budget propre n'est défini (le budget par défaut de votre espace de travail s'applique). Rien n'est publié : le plan est un projet que vous ajustez et publiez vous-même.",
-    "why": "Stratégie, idées et calendrier s'appuient strictement les uns sur les autres : une chaîne de trois agents suffit donc ; le planificateur de contenu reçoit en plus la stratégie directement pour mesurer le mix à l'aune des piliers. Seul le développeur d'idées a une mémoire, car les idées répétées sont le vrai problème des exécutions mensuelles, alors que la stratégie doit être tirée à chaque fois des chiffres actuels. Volontairement non utilisées : une recherche web de tendances en direct et une connexion aux plateformes, car les résultats de tendances changent chaque jour et rendraient les exécutions ni reproductibles ni transposables, et un projet de plan ne doit pas être publié automatiquement ; la stratégie repose plutôt sur vos propres statistiques."
+    "flow": "Une chaîne de trois agents : l’agent de stratégie définit le positionnement, les piliers de contenu et les objectifs et analyse pour cela les statistiques jointes, le développeur d’idées formule des idées de publication concrètes avec une accroche, et le planificateur de contenu les répartit sur quatre semaines. Le développeur d’idées garde ses propositions en mémoire pour que les exécutions suivantes ne répètent pas les idées. Un contrôle qualité vérifie que la fréquence et le mix sont réalistes.",
+    "input": "Profil avec plateformes, chiffres, publications à succès, audience, objectifs, temps disponible et date de début. Vous pouvez aussi joindre des statistiques en captures d’écran ou en export CSV/Excel ; le fichier d’exemple est un tel export.",
+    "result": "Un calendrier éditorial sur quatre semaines avec date, plateforme, format, idée, accroche et appel à l’action, précédé d’un court résumé de la stratégie, aussi en fichier Excel pour continuer la planification.",
+    "adapt": "Saisissez votre profil et vos chiffres ou joignez des captures de vos statistiques. Ajoutez votre style de marque et vos sujets tabous dans le prompt système du développeur d’idées. La mémoire « creator-ideas » se trouve sous Mémoire ; videz-la si vous voulez repartir de zéro. Pour un plan mensuel, vous pouvez planifier la copie.",
+    "control": "Automatique : le développeur d’idées lit la mémoire « creator-ideas » avant de commencer et, à la fin de chaque exécution, y enregistre lui-même les titres provisoires de ses nouvelles idées, sans étape de confirmation ; vous pouvez consulter ou vider la mémoire sous Mémoire. Une vérification qualité par un second modèle confronte le calendrier du planificateur de contenu à trois critères (fréquence adaptée au temps disponible, piliers équilibrés, objectifs soutenus) ; si l’un échoue, le calendrier est révisé une fois et le résultat de la vérification est consigné avec l’exécution. Aucune étape n’attend une personne et aucun budget propre n’est défini (le budget par défaut de votre espace de travail s’applique). Rien n’est publié : le plan est un projet que vous ajustez et publiez vous-même.",
+    "why": "Stratégie, idées et calendrier s’appuient strictement les uns sur les autres : une chaîne de trois agents suffit donc ; le planificateur de contenu reçoit en plus la stratégie directement pour mesurer le mix à l’aune des piliers. Seul le développeur d’idées a une mémoire, car les idées répétées sont le vrai problème des exécutions mensuelles, alors que la stratégie doit être tirée à chaque fois des chiffres actuels. Volontairement non utilisées : une recherche web de tendances en direct et une connexion aux plateformes, car les résultats de tendances changent chaque jour et rendraient les exécutions ni reproductibles ni transposables, et un projet de plan ne doit pas être publié automatiquement ; la stratégie repose plutôt sur vos propres statistiques."
   },
   "agents": {
     "strategy": {
@@ -23,15 +23,15 @@
       "task": "Développe la stratégie pour ce profil :\n\n{{run.input}}"
     },
     "ideas": {
-      "name": "Développeur d'idées",
+      "name": "Développeur d’idées",
       "description": "Développe des idées de publications concrètes avec accroche et format.",
-      "system": "Tu es un développeur de contenu créatif. Pour chaque pilier de contenu, développe quatre idées de publications concrètes avec un titre de travail, un format, une accroche pour les trois premières secondes et un appel à l'action. Vise la variété et des idées réalisables avec peu d'effort. Signale les idées qui conviennent à une collaboration avec une marque. Utilise ta mémoire : avant de développer des idées, lis celles déjà proposées lors des exécutions précédentes et évite les répétitions. À la fin, enregistre les titres provisoires des nouvelles idées avec la date. Si la mémoire est vide, commence simplement à zéro.",
+      "system": "Tu es un développeur de contenu créatif. Pour chaque pilier de contenu, développe quatre idées de publications concrètes avec un titre de travail, un format, une accroche pour les trois premières secondes et un appel à l’action. Vise la variété et des idées réalisables avec peu d’effort. Signale les idées qui conviennent à une collaboration avec une marque. Utilise ta mémoire : avant de développer des idées, lis celles déjà proposées lors des exécutions précédentes et évite les répétitions. À la fin, enregistre les titres provisoires des nouvelles idées avec la date. Si la mémoire est vide, commence simplement à zéro.",
       "task": "Développe des idées de publications pour cette stratégie :\n\n{{node:strategy}}"
     },
     "calendar": {
       "name": "Planificateur de contenu",
       "description": "Répartit les idées dans un plan réaliste sur quatre semaines.",
-      "system": "Tu planifies des calendriers éditoriaux. Commence par un résumé de la stratégie en trois phrases. Crée ensuite un plan sur quatre semaines à partir de la date de début, sous forme de tableau avec date, jour de la semaine, plateforme, format, idée, accroche et appel à l'action. Planifie la production pour qu'elle tienne dans le budget temps, par exemple avec des journées de tournage pour plusieurs publications.",
+      "system": "Tu planifies des calendriers éditoriaux. Commence par un résumé de la stratégie en trois phrases. Crée ensuite un plan sur quatre semaines à partir de la date de début, sous forme de tableau avec date, jour de la semaine, plateforme, format, idée, accroche et appel à l’action. Planifie la production pour qu’elle tienne dans le budget temps, par exemple avec des journées de tournage pour plusieurs publications.",
       "task": "Crée le calendrier éditorial.\n\nStratégie :\n{{node:strategy}}\n\nIdées :\n{{node:ideas}}",
       "criteria": {
         "realistic_frequency": "La fréquence de publication correspond au budget temps indiqué.",
@@ -43,7 +43,7 @@
   "form": {
     "insights": {
       "label": "Statistiques",
-      "description": "Facultatif : captures d'écran de vos statistiques (PNG, JPEG, WebP) ou un export en CSV ou Excel, jusqu'à 6 fichiers. Sans fichier, les chiffres du texte font foi."
+      "description": "Facultatif : captures d’écran de vos statistiques (PNG, JPEG, WebP) ou un export en CSV ou Excel, jusqu’à 6 fichiers. Sans fichier, les chiffres du texte font foi."
     }
   },
   "samples": {
@@ -57,7 +57,7 @@
           "Format",
           "Sujet",
           "Vues",
-          "J'aime",
+          "J’aime",
           "Enregistrements",
           "Commentaires",
           "Nouveaux abonnés"

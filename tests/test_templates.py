@@ -23,7 +23,7 @@ SYNTHETIC = {
     "de": "SYNTHETISCHE BEISPIELDATEN",
     "en": "SYNTHETIC SAMPLE DATA",
     "es": "DATOS DE EJEMPLO SINTÉTICOS",
-    "fr": "DONNÉES D'EXEMPLE SYNTHÉTIQUES",
+    "fr": "DONNÉES D\u2019EXEMPLE SYNTHÉTIQUES",
     "pt-BR": "DADOS DE EXEMPLO SINTÉTICOS",
     "it": "DATI DI ESEMPIO SINTETICI",
 }
@@ -394,6 +394,34 @@ def test_sample_data_has_the_same_figures_in_every_language() -> None:
         for language in LANGUAGES:
             for sample_id, sample in library.texts(template_id, language).samples.items():
                 assert numbers(sample.content) == numbers(english[sample_id].content), (language, template_id)
+
+
+#: A straight apostrophe between two letters ("l'outil"); French uses the typographic one (U+2019).
+STRAIGHT_APOSTROPHE = re.compile(r"(?<=[^\W\d_])'(?=[^\W\d_])")
+CODE_SPAN = re.compile(r"```.*?```|`[^`]*`", re.S)
+
+
+def _straight_apostrophes(value: Any, key: str = "") -> list[str]:
+    """Text values with a straight apostrophe, except file names, keys (sheet names) and code spans."""
+    if isinstance(value, dict):
+        return [found for name, item in value.items() for found in _straight_apostrophes(item, name)]
+    if isinstance(value, list):
+        return [found for item in value for found in _straight_apostrophes(item, key)]
+    if isinstance(value, str) and key != "file_name" and STRAIGHT_APOSTROPHE.search(CODE_SPAN.sub("", value)):
+        return [f"{key}: {value[:80]}"]
+    return []
+
+
+def test_french_texts_use_typographic_apostrophes() -> None:
+    """Like the studio's French texts (EX-008); file names stay straight, code is left alone."""
+    folder = Path(library.__file__).parent / "texts" / "fr"
+    found = {
+        str(path.relative_to(folder)): straight
+        for path in sorted(folder.rglob("*.json"))
+        if (straight := _straight_apostrophes(json.loads(path.read_text("utf-8"))))
+    }
+    assert found == {}
+    assert _straight_apostrophes({"a": "l'outil", "file_name": "Plan d'actions", "b": "`it's`"}) == ["a: l'outil"]
 
 
 def test_builds_are_independent_of_each_other_and_of_the_template() -> None:
