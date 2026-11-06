@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Pins nodestro-runtime b29b738 (runtime #121: semantic reindex as a server job, RT-046; TODO abatement round 3).
 - EX-003 closed: a copy's `origin.offline` (nodestro-runtime RT-055) is the offline marker; the studio shows a sample
   data badge from it in the editor and run headers (ST-031), so no separate marker field or description line is needed.
 - EX-007 done: nodestro-api's library copy route takes `memory_space` (checked with the runtime's space name rule
