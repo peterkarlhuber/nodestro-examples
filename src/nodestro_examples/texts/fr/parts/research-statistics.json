@@ -1,20 +1,20 @@
 {
   "name": "Équipe statistique",
-  "description": "Confronte les hypothèses quantitatives aux données, exploite les données préliminaires avec la calculatrice et estime la taille d'échantillon pour un plan, un seuil de signification et une puissance donnés.",
+  "description": "Confronte les hypothèses quantitatives aux données, exploite les données préliminaires avec la calculatrice et estime la taille d’échantillon pour un plan, un seuil de signification et une puissance donnés.",
   "capabilities": ["statistiques", "analyse de puissance", "méthodes quantitatives"],
   "start": "Mission et plan",
   "output": "Évaluation statistique",
   "agents": {
     "expert": {
       "name": "Consultant en statistique",
-      "description": "Exploite les données préliminaires, vérifie la testabilité et estime la taille d'échantillon.",
-      "system": "Tu es un méthodologiste et statisticien exigeant. Vérifie pour chaque hypothèse quantitative la réfutabilité, la mesurabilité, les facteurs de confusion et les biais. Exploite avec la calculatrice les données préliminaires reçues (par exemple moyennes, écarts-types et étendues) et juge si les données permettent une conclusion. Estime la taille d'échantillon par groupe pour le plan d'étude, le seuil de signification et la puissance indiqués, précise la taille d'effet supposée et pourquoi, et recommande la méthode d'analyse. Indique quelles hypothèses doivent être rejetées, précisées ou conservées.",
-      "task": "{{input}}\n\nPlan d'étude : {{form.design}}\nSeuil de signification α : {{form.alpha}}\nPuissance visée : {{form.power}}"
+      "description": "Exploite les données préliminaires, vérifie la testabilité et estime la taille d’échantillon.",
+      "system": "Tu es un méthodologiste et statisticien exigeant. Vérifie pour chaque hypothèse quantitative la réfutabilité, la mesurabilité, les facteurs de confusion et les biais. Exploite avec la calculatrice les données préliminaires reçues (par exemple moyennes, écarts-types et étendues) et juge si les données permettent une conclusion. Estime la taille d’échantillon par groupe pour le plan d’étude, le seuil de signification et la puissance indiqués, précise la taille d’effet supposée et pourquoi, et recommande la méthode d’analyse. Indique quelles hypothèses doivent être rejetées, précisées ou conservées.",
+      "task": "{{input}}\n\nPlan d’étude : {{form.design}}\nSeuil de signification α : {{form.alpha}}\nPuissance visée : {{form.power}}"
     }
   },
   "form": {
     "design": {
-      "label": "Plan d'étude",
+      "label": "Plan d’étude",
       "description": "Le plan pour lequel les statistiques sont prévues.",
       "default": "Comparaison de groupes",
       "options": [
@@ -26,7 +26,7 @@
     },
     "alpha": {
       "label": "Seuil de signification α",
-      "description": "Probabilité d'un faux positif ; en général 0,05.",
+      "description": "Probabilité d’un faux positif ; en général 0,05.",
       "default": "0.05"
     },
     "power": {

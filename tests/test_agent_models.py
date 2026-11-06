@@ -381,3 +381,27 @@ def test_the_gallery_shows_the_task() -> None:
         "security": "coding",
         "fix": "coding",
     }
+
+
+def _spaces(workflow: WorkflowIn) -> set[str]:
+    return {str(node.agent.memory.space) for node in workflow.nodes if node.agent and node.agent.memory.mode != "none"}
+
+
+def test_a_copy_can_have_a_memory_space_of_its_own() -> None:
+    """EX-007: by default every copy shares the template's space; ``memory_space`` separates them."""
+    assert _spaces(library.build("learning-plan", "en")) == {"learning-progress"}
+    assert _spaces(library.build("learning-plan", "en", memory_space="learning-progress Anna")) == {
+        "learning-progress Anna"
+    }
+    host = _Host()
+    made = library.instantiate("creator-strategy", "fr", host, memory_space="creator-ideas.podcast")
+    assert _spaces(made.workflow) == {"creator-ideas.podcast"}
+    # Templates without memory are unchanged.
+    assert _spaces(library.build("blog-article", "en", memory_space="other")) == set()
+    host = _Host()
+    for bad in ("", "-leading", "a/b", "x" * 65):
+        with pytest.raises(ValueError, match="memory space"):
+            library.build("learning-plan", "en", memory_space=bad)
+        with pytest.raises(ValueError, match="memory space"):
+            library.instantiate("learning-plan", "en", host, memory_space=bad)
+    assert host.saved == []

@@ -1,57 +1,57 @@
 {
   "name": "Vérifier un budget familial et économiser",
   "field": "Particuliers – finances",
-  "description": "Évaluer les revenus et les dépenses d'un foyer et trouver des pistes d'économies réalistes.",
+  "description": "Évaluer les revenus et les dépenses d’un foyer et trouver des pistes d’économies réalistes.",
   "start": "Budget du foyer",
   "output": "Bilan budgétaire",
   "file_name": "Budget familial",
-  "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – un foyer entièrement fictif, uniquement pour essayer.\n\nFoyer : deux adultes, un enfant (7 ans), appartement en location\nRevenus nets par mois : 2 900 EUR + 1 450 EUR (temps partiel) + 255 EUR d'allocations familiales\nObjectif : épargner 400 EUR par mois pour constituer en deux ans une réserve de trois mois de revenus nets.\n\nCharges fixes par mois :\n- Loyer chauffage compris 1 380 EUR, électricité 95 EUR, internet et mobile (3 contrats) 112 EUR\n- Voiture : mensualité de crédit 289 EUR, assurance 74 EUR, taxes 18 EUR\n- Assurances : responsabilité civile 7 EUR, habitation 14 EUR, prévoyance invalidité 68 EUR\n- Garderie/périscolaire 210 EUR, club de sport de l'enfant 25 EUR\n- Streaming et abonnements : 4 services, 52 EUR au total ; salle de sport 2 × 39 EUR (une inutilisée depuis 5 mois)\n\nDépenses variables, moyenne des 3 derniers mois :\n- Courses 780 EUR, restaurants et livraisons 240 EUR, carburant 160 EUR\n- Vêtements 130 EUR, loisirs 150 EUR, divers 260 EUR\nSolde actuel du compte épargne : 1 800 EUR",
+  "input": "DONNÉES D’EXEMPLE SYNTHÉTIQUES – un foyer entièrement fictif, uniquement pour essayer.\n\nFoyer : deux adultes, un enfant (7 ans), appartement en location\nRevenus nets par mois : 2 900 EUR + 1 450 EUR (temps partiel) + 255 EUR d’allocations familiales\nObjectif : épargner 400 EUR par mois pour constituer en deux ans une réserve de trois mois de revenus nets.\n\nCharges fixes par mois :\n- Loyer chauffage compris 1 380 EUR, électricité 95 EUR, internet et mobile (3 contrats) 112 EUR\n- Voiture : mensualité de crédit 289 EUR, assurance 74 EUR, taxes 18 EUR\n- Assurances : responsabilité civile 7 EUR, habitation 14 EUR, prévoyance invalidité 68 EUR\n- Garderie/périscolaire 210 EUR, club de sport de l’enfant 25 EUR\n- Streaming et abonnements : 4 services, 52 EUR au total ; salle de sport 2 × 39 EUR (une inutilisée depuis 5 mois)\n\nDépenses variables, moyenne des 3 derniers mois :\n- Courses 780 EUR, restaurants et livraisons 240 EUR, carburant 160 EUR\n- Vêtements 130 EUR, loisirs 150 EUR, divers 260 EUR\nSolde actuel du compte épargne : 1 800 EUR",
   "guide": {
-    "problem": "En fin de mois, il reste souvent moins que prévu. Le workflow recalcule un budget familial, trouve des potentiels d'économies et vérifie si les propositions sont réalistes au quotidien.",
-    "flow": "L'analyste budgétaire calcule totaux, excédent et parts par catégorie avec la calculatrice. Le conseiller en économies estime des économies concrètes, également recalculées. Le contrôle de réalisme reçoit les deux résultats, vérifie la faisabilité et livre un résultat structuré.",
-    "input": "Les revenus, les dépenses fixes et variables d'un foyer et un objectif d'épargne. Au lieu de tout saisir, vous pouvez joindre des relevés bancaires ou un cahier de comptes en fichier CSV ou Excel ; le fichier d'exemple contient un mois fictif.",
-    "result": "Un bilan budgétaire structuré avec l'excédent mensuel actuel, le potentiel d'économies, des mesures, des premières étapes rapides et des remarques, aussi en fichier Excel. Il ne remplace pas un conseil financier ni un accompagnement en cas de surendettement.",
+    "problem": "En fin de mois, il reste souvent moins que prévu. Le workflow recalcule un budget familial, trouve des potentiels d’économies et vérifie si les propositions sont réalistes au quotidien.",
+    "flow": "L’analyste budgétaire calcule totaux, excédent et parts par catégorie avec la calculatrice. Le conseiller en économies estime des économies concrètes, également recalculées. Le contrôle de réalisme reçoit les deux résultats, vérifie la faisabilité et livre un résultat structuré.",
+    "input": "Les revenus, les dépenses fixes et variables d’un foyer et un objectif d’épargne. Au lieu de tout saisir, vous pouvez joindre des relevés bancaires ou un cahier de comptes en fichier CSV ou Excel ; le fichier d’exemple contient un mois fictif.",
+    "result": "Un bilan budgétaire structuré avec l’excédent mensuel actuel, le potentiel d’économies, des mesures, des premières étapes rapides et des remarques, aussi en fichier Excel. Il ne remplace pas un conseil financier ni un accompagnement en cas de surendettement.",
     "adapt": "Joignez vos propres relevés bancaires ou saisissez vos chiffres ; ajoutez vos priorités personnelles, comme « on garde la voiture », dans le texte. Les relevés bancaires contiennent des données personnelles : ils restent chez vous et ne sont transmis au modèle que pour cette exécution.",
-    "control": "Automatique : l'analyste budgétaire et le conseiller en économies calculent chaque total avec la calculatrice, et le contrôle de réalisme renvoie des champs fixes (excédent mensuel, potentiel d'économies, mesures, premières étapes, remarques) repris dans le fichier Excel. L'excédent mensuel et le potentiel d'économies doivent être des résultats de la calculatrice ; Nodestro le vérifie avant d'utiliser le résultat. L'exemple est marqué comme sensible : chaque agent a pour consigne de nommer les points qu'une personne qualifiée doit vérifier et de ne pas paraître plus sûr que les données ne le permettent. Il n'y a ni étape de validation ni révision automatique ; aucun budget propre n'est défini (le budget par défaut de votre espace de travail s'applique). Rien n'est viré, résilié ni réservé : le résultat est une aide pour vos propres décisions, pas un conseil financier ni un accompagnement en cas de surendettement.",
-    "why": "Chaque étape s'appuie sur la précédente : les économies ne peuvent être estimées qu'une fois le budget connu, et vérifiées qu'une fois les deux disponibles, une chaîne fixe suffit donc. La calculatrice garantit des chiffres calculés plutôt que devinés, et les champs structurés rendent l'excédent et le potentiel comparables d'une exécution à l'autre. Plutôt qu'une boucle, un contrôle de réalisme distinct et léger a été choisi, car son rôle est d'écarter les idées irréalistes, pas de peaufiner le texte. Volontairement non utilisés : une connexion bancaire et une mémoire, afin que les données de compte personnelles ne soient transmises que sous forme de fichier pour cette seule exécution et ne soient pas conservées d'une exécution à l'autre."
+    "control": "Automatique : l’analyste budgétaire et le conseiller en économies calculent chaque total avec la calculatrice, et le contrôle de réalisme renvoie des champs fixes (excédent mensuel, potentiel d’économies, mesures, premières étapes, remarques) repris dans le fichier Excel. L’excédent mensuel et le potentiel d’économies doivent être des résultats de la calculatrice ; Nodestro le vérifie avant d’utiliser le résultat. L’exemple est marqué comme sensible : chaque agent a pour consigne de nommer les points qu’une personne qualifiée doit vérifier et de ne pas paraître plus sûr que les données ne le permettent. Il n’y a ni étape de validation ni révision automatique ; aucun budget propre n’est défini (le budget par défaut de votre espace de travail s’applique). Rien n’est viré, résilié ni réservé : le résultat est une aide pour vos propres décisions, pas un conseil financier ni un accompagnement en cas de surendettement.",
+    "why": "Chaque étape s’appuie sur la précédente : les économies ne peuvent être estimées qu’une fois le budget connu, et vérifiées qu’une fois les deux disponibles, une chaîne fixe suffit donc. La calculatrice garantit des chiffres calculés plutôt que devinés, et les champs structurés rendent l’excédent et le potentiel comparables d’une exécution à l’autre. Plutôt qu’une boucle, un contrôle de réalisme distinct et léger a été choisi, car son rôle est d’écarter les idées irréalistes, pas de peaufiner le texte. Volontairement non utilisés : une connexion bancaire et une mémoire, afin que les données de compte personnelles ne soient transmises que sous forme de fichier pour cette seule exécution et ne soient pas conservées d’une exécution à l’autre."
   },
   "agents": {
     "budget": {
       "name": "Analyste budgétaire",
       "description": "Calcule revenus, dépenses, excédent et parts avec la calculatrice.",
-      "system": "Tu es conseiller en budget familial. Utilise la calculatrice pour calculer : total des revenus, total des charges fixes et variables, excédent mensuel, taux d'épargne et part de chaque catégorie dans le revenu net. Compare avec l'objectif d'épargne et montre l'écart. Présente les résultats dans un tableau clair.",
+      "system": "Tu es conseiller en budget familial. Utilise la calculatrice pour calculer : total des revenus, total des charges fixes et variables, excédent mensuel, taux d’épargne et part de chaque catégorie dans le revenu net. Compare avec l’objectif d’épargne et montre l’écart. Présente les résultats dans un tableau clair.",
       "task": "Évalue ce budget familial :\n\n{{run.input}}"
     },
     "savings": {
       "name": "Conseiller en économies",
-      "description": "Trouve des pistes d'économies concrètes et estime leur effet.",
-      "system": "Tu es conseiller en consommation. Trouve des pistes d'économies concrètes : contrats inutilisés, changements de tarif, dépenses variables avec de la marge et habitudes. Estime prudemment l'économie mensuelle de chaque mesure et additionne-les avec la calculatrice. Ne recommande ni produits financiers, ni crédits, ni placements, et ne propose pas de résilier des assurances importantes.",
-      "task": "Trouve des pistes d'économies à partir de cette évaluation et des informations du foyer.\n\nInformations du foyer :\n{{run.input}}\n\nÉvaluation :\n{{node:budget}}"
+      "description": "Trouve des pistes d’économies concrètes et estime leur effet.",
+      "system": "Tu es conseiller en consommation. Trouve des pistes d’économies concrètes : contrats inutilisés, changements de tarif, dépenses variables avec de la marge et habitudes. Estime prudemment l’économie mensuelle de chaque mesure et additionne-les avec la calculatrice. Ne recommande ni produits financiers, ni crédits, ni placements, et ne propose pas de résilier des assurances importantes.",
+      "task": "Trouve des pistes d’économies à partir de cette évaluation et des informations du foyer.\n\nInformations du foyer :\n{{run.input}}\n\nÉvaluation :\n{{node:budget}}"
     },
     "check": {
       "name": "Contrôle de réalisme",
       "description": "Vérifie la faisabilité des propositions et les résume.",
-      "system": "Tu vérifies des plans d'économies sous l'angle du quotidien. Contrôle les chiffres, écarte les propositions irréalistes et classe les autres par effort. Indique en euros l'excédent mensuel actuel et le potentiel d'économies réaliste. Nomme les limites de l'analyse et indique quand un conseil financier indépendant ou un accompagnement en surendettement est utile. Reprends l'excédent mensuel actuel exactement comme le résultat de la calculatrice dans l'analyse du budget, et additionne avec la calculatrice le potentiel d'économies des mesures que tu gardes. Nodestro n'accepte les deux montants que comme résultats d'outils.",
-      "task": "Vérifie le plan d'économies.\n\nÉvaluation budgétaire :\n{{node:budget}}\n\nPropositions d'économies :\n{{node:savings}}",
+      "system": "Tu vérifies des plans d’économies sous l’angle du quotidien. Contrôle les chiffres, écarte les propositions irréalistes et classe les autres par effort. Indique en euros l’excédent mensuel actuel et le potentiel d’économies réaliste. Nomme les limites de l’analyse et indique quand un conseil financier indépendant ou un accompagnement en surendettement est utile. Reprends l’excédent mensuel actuel exactement comme le résultat de la calculatrice dans l’analyse du budget, et additionne avec la calculatrice le potentiel d’économies des mesures que tu gardes. Nodestro n’accepte les deux montants que comme résultats d’outils.",
+      "task": "Vérifie le plan d’économies.\n\nÉvaluation budgétaire :\n{{node:budget}}\n\nPropositions d’économies :\n{{node:savings}}",
       "fields": {
         "monthly_surplus": "Excédent actuel par mois en euros",
-        "savings_potential": "Potentiel d'économies par mois : supplémentaire et réaliste, en euros",
+        "savings_potential": "Potentiel d’économies par mois : supplémentaire et réaliste, en euros",
         "measures": "Mesures avec économie estimée",
         "quick_wins": "Étapes réalisables dès cette semaine",
-        "caveats": "Limites de l'analyse et remarques"
+        "caveats": "Limites de l’analyse et remarques"
       }
     }
   },
   "form": {
     "transactions": {
       "label": "Relevés bancaires ou cahier de comptes",
-      "description": "Facultatif : un export de la banque en ligne ou de votre cahier de comptes en CSV ou Excel, jusqu'à 6 fichiers de 10 Mo chacun. Sans fichier, les indications du texte font foi."
+      "description": "Facultatif : un export de la banque en ligne ou de votre cahier de comptes en CSV ou Excel, jusqu’à 6 fichiers de 10 Mo chacun. Sans fichier, les indications du texte font foi."
     }
   },
   "samples": {
     "transactions": {
       "name": "Releve_bancaire_mars_2026",
-      "description": "Opérations bancaires fictives d'un mois avec catégories en CSV, correspondant au foyer de la tâche de test.",
+      "description": "Opérations bancaires fictives d’un mois avec catégories en CSV, correspondant au foyer de la tâche de test.",
       "content": [
         [
           "Date",
@@ -115,7 +115,7 @@
         ],
         [
           "2026-03-05",
-          "Club de sport de l'enfant",
+          "Club de sport de l’enfant",
           "Enfants",
           -25.0
         ],
@@ -242,7 +242,7 @@
     },
     "transactions_file": {
       "name": "Relevé bancaire en CSV",
-      "input": "DONNÉES D'EXEMPLE SYNTHÉTIQUES – un foyer entièrement fictif, uniquement pour essayer.\n\nFoyer : deux adultes, un enfant (7 ans), appartement en location\nObjectif : épargner 400 EUR par mois pour constituer en deux ans une réserve de trois mois de revenus nets.\nLes opérations bancaires du mois dernier sont jointes en fichier CSV. Taxes et assurances prélevées une fois par an : taxe auto 216 EUR, responsabilité civile 84 EUR, habitation 168 EUR, prévoyance invalidité 816 EUR."
+      "input": "DONNÉES D’EXEMPLE SYNTHÉTIQUES – un foyer entièrement fictif, uniquement pour essayer.\n\nFoyer : deux adultes, un enfant (7 ans), appartement en location\nObjectif : épargner 400 EUR par mois pour constituer en deux ans une réserve de trois mois de revenus nets.\nLes opérations bancaires du mois dernier sont jointes en fichier CSV. Taxes et assurances prélevées une fois par an : taxe auto 216 EUR, responsabilité civile 84 EUR, habitation 168 EUR, prévoyance invalidité 816 EUR."
     }
   }
 }

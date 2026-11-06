@@ -3,7 +3,7 @@
 > Open work for this repository: release blockers, known bugs, security follow-ups, technical debt and planned improvements.
 > GitHub issues are the source of truth for details; this file is the entry point and summary.
 >
-> **Last full review:** 2026-11-05 against `master` at `94ae19a` (quality round 3 close-out; TODO consolidated).
+> **Last full review:** 2026-11-06 against `master` at `9920b74` (TODO abatement round).
 
 ## Summary
 
@@ -13,7 +13,7 @@
 | P1 High | 0 |
 | P2 Medium | 0 |
 | P3 Low | 3 |
-| P4 Optional | 5 |
+| P4 Optional | 4 |
 
 **Release blockers:** None for this repository; every entry below is not a release blocker.
 
@@ -21,9 +21,9 @@ The 24 examples (format 2, six languages) build, run and pass their 49 test case
 doubles, and the generated studio chapter `beispiele.md` is current on studio master (last regenerated with the `64e534a` pin,
 studio `85a7f3d`). Key figures that a gate
 decides on or that report money or days come from a tool and are checked by the runtime (live-tested for
-`production-downtime` and `household-budget` with `qwen3.5:4b`). Result fields and team tags are labeled in the example's language (UX round 3). Open work is
-mostly typography polish (EX-008), the offline marker on copies (EX-003, needs nodestro-runtime RT-055), a stale
-Dependabot comment (EX-010), and checks that need real providers (EX-006).
+`production-downtime` and `household-budget` with `qwen3.5:4b`). Result fields and team tags are labeled in the example's language (UX round 3). French texts use typographic apostrophes (EX-008, done 2026-11-06). Open work is
+mostly the offline marker on copies (EX-003, needs nodestro-runtime RT-055), offering a memory space per copy in the
+studio (EX-007), and checks that need real providers (EX-006).
 
 ## Priorities and statuses
 
@@ -75,12 +75,15 @@ None known.
 - **Depends on:** nodestro-studio ST-031 (badge); nodestro-runtime RT-055 (origin of an example copy, including its
   offline connections; UX round 3 examples handover B-1), exposed read-only by nodestro-api
 
-### EX-007 · Separate memory spaces per copy
+### EX-007 · Offer a memory space of its own per copy
 
 - **Priority:** P4 Optional · **Status:** Open · **Refs:** README "Known limitations"
 - **What:** All copies of `creator-strategy` share the memory space `creator-ideas`, and all copies of `learning-plan`
-  share `learning-progress`, so two learners or projects mix their memory.
-- **Next step:** Consider an optional space suffix chosen when copying (e.g. from the copy name).
+  share `learning-progress`, so two learners or projects mix their memory. Since 2026-11-06 `build()` and
+  `instantiate()` take `memory_space=` (checked against the runtime's space name rule); nothing passes it yet.
+- **Next step:** nodestro-api's copy route and the studio's copy dialog offer an optional space name (for example
+  prefilled from the copy name); needs a new examples pin.
+- **Depends on:** nodestro-api (copy route), nodestro-studio (copy dialog)
 
 ## Tests and quality assurance
 
@@ -103,30 +106,23 @@ None known.
 
 ## Technical debt
 
-### EX-008 · Typographic apostrophes in French texts
-
-- **Priority:** P4 Optional · **Status:** Open · **Refs:** identified in this inventory; studio decision 7dff7f5 (former studio ST-026, done)
-- **What:** The French example texts use straight apostrophes only (about 1,570), while the studio converted all
-  French UI texts to typographic ones and now enforces that with a test, so French gallery cards and guides mix
-  both styles. English stays with straight apostrophes like the studio; Italian has no decision yet (the studio
-  locale mixes both).
-- **Next step:** Convert the French texts in one pass, leaving code, placeholders and file names unchanged; add a
-  test that keeps the style. This needs a new examples pin and `make example-docs` in the studio afterwards.
-- **Depends on:** nothing
+None known.
 
 ## Later optimizations
 
 ### EX-012 · Figures inside free-text results are not checked
 
-- **Priority:** P4 Optional · **Status:** Open · **Refs:** templates (checked figures, `source="tool"`)
+- **Priority:** P4 Optional · **Status:** Needs decision · **Refs:** templates (checked figures, `source="tool"`)
 - **What:** Since the downtime fix, the key figures that a gate decides on or that report money or days come from a tool and the
   runtime checks them (`source="tool"`): `production-downtime` (`downtime_share_percent`), `household-budget`
   (`monthly_surplus`, `savings_potential`), `farm-planning` (`total_margin_eur`) and `construction-delay`
   (`delay_days`); `contract-review` lists its critical clauses instead of counting them. Numbers written inside a
   free-text answer (`sales-offer`, `restaurant-menu`, `supplier-comparison`, `financial-analysis`) are still the
   model's own; their reviewers and quality checks read them, but no tool verifies them.
-- **Next step:** Move the totals these templates report into numeric result fields with `source="tool"` where a later
-  step relies on them.
+  Checked 2026-11-06: no condition or other automated step of these four templates decides on such a figure (they
+  have no numeric result fields); only people and reviewers read them, for example the approval of the sales offer.
+- **Next step:** Decide whether a figure a person approves (the offer total) should be a checked numeric field too;
+  that turns the offer from free text into a structured result and needs texts in all six languages.
 
 ## Accepted risks
 
@@ -142,9 +138,9 @@ None known.
 - **Priority:** P4 Optional · **Status:** Accepted risk · **Refs:** `.github/dependabot.yml`, `.github/workflows/ci.yml`
 - **What:** Dependabot updates only GitHub Actions; the Nodestro dependencies are pinned by Git commit.
 - **Reason:** Pins move with the platform's pin cascade, and the blocking `pip-audit` step in CI catches known
-  vulnerabilities. The original reason (private Git URLs) no longer applies now that all repositories are public;
-  re-evaluate a pip ecosystem entry (CI no longer needs the `NODESTRO_READ` token) and fix the stale comment in
-  `dependabot.yml`.
+  vulnerabilities. The original reason (private Git URLs) no longer applies now that all repositories are public
+  (the comment in `dependabot.yml` says so); a pip ecosystem entry can be re-evaluated (CI no longer needs the
+  `NODESTRO_READ` token).
 
 ## Cross-repository dependencies
 
@@ -153,6 +149,7 @@ None known.
 | (pointer) | nodestro-studio | ST-052 (Dependabot policy: weekly groups, cooldown, manual merge; auto-merge prerequisites) | Full entry in studio |
 | EX-003 | nodestro-studio | ST-031 (AD-18) | Studio shows the offline badge; this repo provides the marker. |
 | EX-003 | nodestro-runtime | RT-055 (origin of an example copy) | Runtime stores the origin and offline connections; the marker builds on it. |
+| EX-007 | nodestro-api, nodestro-studio | copy route and dialog | Pass `memory_space=` to `instantiate()`. |
 | EX-005 | nodestro-runtime, nodestro-studio | RT-016, ST-030 (MCP scope) | Wider MCP use needs an owner decision and a new review. |
 | (pointer) | nodestro-runtime | RT-056 (test double cannot finish orchestrators; UX round 3 examples handover B-3) | The three orchestrated examples cannot be run end to end with the test double; full entry in runtime. |
 | — | nodestro-studio | `make example-docs` | Regenerate `beispiele.md` on every examples pin bump. |

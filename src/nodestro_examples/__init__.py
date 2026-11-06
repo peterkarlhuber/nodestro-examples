@@ -66,6 +66,7 @@ from typing import Any, Literal, Protocol
 
 from nodestro_runtime.file_formats import FORMATS, accepted
 from nodestro_runtime.local_models import TASKS, TIER_TASKS
+from nodestro_runtime.memory_spaces import SPACE_PATTERN
 from nodestro_runtime.providers import provider_of
 from nodestro_runtime.schemas import (
     LANGUAGES,
@@ -872,6 +873,8 @@ class _Context:
     knowledge: Mapping[str, str]
     #: The part being built (``None``: the template's own workflow); it scopes the agent keys.
     part: str | None = None
+    #: The memory space of every agent with persistent memory (``None``: the template's own space).
+    memory_space: str | None = None
 
     def model(self, node: NodeSpec) -> str:
         """The agent's own model of the copy, else the template's fixed model (format 1), else its tier's."""
@@ -1069,7 +1072,11 @@ def _build_nodes(
                     knowledge_proposals=KnowledgeProposalConfig(
                         enabled=item.proposals is not None, content_kind=item.proposals or "generated"
                     ),
-                    memory=MemoryConfig(mode="persistent", space=item.memory.space) if item.memory else MemoryConfig(),
+                    memory=(
+                        MemoryConfig(mode="persistent", space=context.memory_space or item.memory.space)
+                        if item.memory
+                        else MemoryConfig()
+                    ),
                 ),
             )
         )
@@ -1088,8 +1095,17 @@ def _context(
     connections: Mapping[str, Mapping[str, str]] | None,
     knowledge: Mapping[str, str] | None,
     part: str | None = None,
+    memory_space: str | None = None,
 ) -> _Context:
-    return _Context(models=models or ModelChoice(), connections=connections or {}, knowledge=knowledge or {}, part=part)
+    if memory_space is not None and not SPACE_PATTERN.fullmatch(memory_space):
+        raise ValueError(f"{memory_space!r} is not a valid memory space name (letters, digits, space, _ . -; 1 to 64)")
+    return _Context(
+        models=models or ModelChoice(),
+        connections=connections or {},
+        knowledge=knowledge or {},
+        part=part,
+        memory_space=memory_space,
+    )
 
 
 def build(
@@ -1099,6 +1115,7 @@ def build(
     models: ModelChoice | None = None,
     connections: Mapping[str, Mapping[str, str]] | None = None,
     knowledge: Mapping[str, str] | None = None,
+    memory_space: str | None = None,
 ) -> WorkflowIn:
     """The workflow a template describes, in one language (a fresh object every time).
 
@@ -1107,11 +1124,13 @@ def build(
     integration, the agent tool name of each of its server tools (:func:`connect`); integrations without one run
     in offline mode. ``knowledge`` maps the template's knowledge files to stored knowledge file ids. Until a copy
     resolves them, sub-workflow and team references read ``library-part:<id>`` and knowledge files
-    ``library-knowledge:<id>``.
+    ``library-knowledge:<id>``. ``memory_space`` gives the copy's agents with persistent memory a space of its
+    own (by default every copy of a template shares the template's space, e.g. ``learning-progress``); an
+    invalid name raises :class:`ValueError`.
     """
     spec = structure(template_id)
     text = texts(template_id, language)
-    context = _context(models, connections, knowledge)
+    context = _context(models, connections, knowledge, memory_space=memory_space)
     nodes, edges = _build_nodes(
         spec.nodes,
         spec.edges,
@@ -1308,6 +1327,7 @@ def instantiate(
     *,
     models: ModelChoice | None = None,
     connections: Mapping[str, Mapping[str, str]] | None = None,
+    memory_space: str | None = None,
 ) -> Copy:
     """Everything a copy of a template needs, created through ``host``; the copy itself is returned unsaved.
 
@@ -1315,8 +1335,11 @@ def instantiate(
     own (parts used by other parts first) and every reference is pinned to the saved version. ``connections``
     comes from :func:`connect`; integrations without a connection run in offline mode. A key of ``models.agents``
     that names no agent of the template (:func:`agent_plan`) raises :class:`KeyError` before anything is created.
+    ``memory_space`` is passed to :func:`build` (checked before anything is created).
     """
     from .samples import render_knowledge
+
+    _context(None, None, None, memory_space=memory_space)
 
     spec = structure(template_id)
     text = texts(template_id, language)
@@ -1343,7 +1366,9 @@ def instantiate(
     for part_id in part_ids(template_id):
         built = build_part(part_id, language, sensitive=spec.sensitive, models=models)
         copies[part_id] = host.save_workflow(link_parts(built, copies))
-    workflow = build(template_id, language, models=models, connections=connections, knowledge=stored)
+    workflow = build(
+        template_id, language, models=models, connections=connections, knowledge=stored, memory_space=memory_space
+    )
     return Copy(
         workflow=link_parts(workflow, copies),
         parts=copies,
