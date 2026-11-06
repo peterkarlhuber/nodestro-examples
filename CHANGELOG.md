@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- EX-003 closed: a copy's `origin.offline` (nodestro-runtime RT-055) is the offline marker; the studio shows a sample
+  data badge from it in the editor and run headers (ST-031), so no separate marker field or description line is needed.
+- EX-007 done: nodestro-api's library copy route takes `memory_space` (checked with the runtime's space name rule
+  before anything is stored) and passes it to `instantiate()`; the studio's copy dialog offers it, prefilled from the
+  copy's name. Empty keeps the shared space. No new examples pin was needed.
 - French texts use the typographic apostrophe (`l’outil`), like the studio's French texts; result file names
   (`file_name`), sheet names and code stay unchanged, and a test keeps the style (EX-008). The French sample-data
   marker is now `DONNÉES D’EXEMPLE SYNTHÉTIQUES`. Needs a new examples pin and `make example-docs` in the studio.
