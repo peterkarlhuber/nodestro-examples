@@ -264,7 +264,9 @@ Open work (release blockers, known gaps, follow-ups) is listed in [docs/TODO.md]
 ## Known limitations
 
 - `creator-strategy` remembers ideas in the memory space `creator-ideas` and `learning-plan` the learner's progress in
-  `learning-progress`; every copy of the same example shares its space.
+  `learning-progress`; by default every copy of the same example shares its space. `build()` and `instantiate()`
+  take `memory_space="<name>"` to give one copy a space of its own (a valid Nodestro space name, else
+  `ValueError`); the studio does not offer that choice yet.
 - Teams of an orchestrator receive a text task, not the run's files; the orchestrated examples summarize attached
   files in the step before the orchestrator.
 - The MCP integrations depend on the platform's MCP support, whose independent security review is still open; a
