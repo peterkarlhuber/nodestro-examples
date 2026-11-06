@@ -3,7 +3,7 @@
 > Open work for this repository: release blockers, known bugs, security follow-ups, technical debt and planned improvements.
 > GitHub issues are the source of truth for details; this file is the entry point and summary.
 >
-> **Last full review:** 2026-11-06 against `master` at `9920b74` (TODO abatement round).
+> **Last full review:** 2026-11-06 against `master` at `2f05f4c` (TODO abatement round 2).
 
 ## Summary
 
@@ -12,8 +12,8 @@
 | P0 Critical | 0 |
 | P1 High | 0 |
 | P2 Medium | 0 |
-| P3 Low | 3 |
-| P4 Optional | 4 |
+| P3 Low | 2 |
+| P4 Optional | 3 |
 
 **Release blockers:** None for this repository; every entry below is not a release blocker.
 
@@ -22,8 +22,7 @@ doubles, and the generated studio chapter `beispiele.md` is current on studio ma
 studio `85a7f3d`). Key figures that a gate
 decides on or that report money or days come from a tool and are checked by the runtime (live-tested for
 `production-downtime` and `household-budget` with `qwen3.5:4b`). Result fields and team tags are labeled in the example's language (UX round 3). French texts use typographic apostrophes (EX-008, done 2026-11-06). Open work is
-mostly the offline marker on copies (EX-003, needs nodestro-runtime RT-055), offering a memory space per copy in the
-studio (EX-007), and checks that need real providers (EX-006).
+mostly checks that need real providers (EX-006).
 
 ## Priorities and statuses
 
@@ -64,26 +63,6 @@ None known.
 None known.
 
 ## Features and enhancements
-
-### EX-003 · Mark the offline (sample data) mode on copies
-
-- **Priority:** P3 Low · **Status:** Needs decision · **Refs:** #39, UX audit AD-18
-- **What:** Unconnected copies of examples 3 and 8 mention offline mode only at the end of the description and in the
-  agent prompt; editor and run views show no label, and `Made.offline` is not stored with the workflow.
-- **Next step:** Choose a visible first description line or a workflow marker field (runtime/API) set by
-  `instantiate()`; the studio then shows a badge.
-- **Depends on:** nodestro-studio ST-031 (badge); nodestro-runtime RT-055 (origin of an example copy, including its
-  offline connections; UX round 3 examples handover B-1), exposed read-only by nodestro-api
-
-### EX-007 · Offer a memory space of its own per copy
-
-- **Priority:** P4 Optional · **Status:** Open · **Refs:** README "Known limitations"
-- **What:** All copies of `creator-strategy` share the memory space `creator-ideas`, and all copies of `learning-plan`
-  share `learning-progress`, so two learners or projects mix their memory. Since 2026-11-06 `build()` and
-  `instantiate()` take `memory_space=` (checked against the runtime's space name rule); nothing passes it yet.
-- **Next step:** nodestro-api's copy route and the studio's copy dialog offer an optional space name (for example
-  prefilled from the copy name); needs a new examples pin.
-- **Depends on:** nodestro-api (copy route), nodestro-studio (copy dialog)
 
 ## Tests and quality assurance
 
@@ -147,9 +126,6 @@ None known.
 | This repo item | Other repo | Other item | Relation |
 |---|---|---|---|
 | (pointer) | nodestro-studio | ST-052 (Dependabot policy: weekly groups, cooldown, manual merge; auto-merge prerequisites) | Full entry in studio |
-| EX-003 | nodestro-studio | ST-031 (AD-18) | Studio shows the offline badge; this repo provides the marker. |
-| EX-003 | nodestro-runtime | RT-055 (origin of an example copy) | Runtime stores the origin and offline connections; the marker builds on it. |
-| EX-007 | nodestro-api, nodestro-studio | copy route and dialog | Pass `memory_space=` to `instantiate()`. |
 | EX-005 | nodestro-runtime, nodestro-studio | RT-016, ST-030 (MCP scope) | Wider MCP use needs an owner decision and a new review. |
 | (pointer) | nodestro-runtime | RT-056 (test double cannot finish orchestrators; UX round 3 examples handover B-3) | The three orchestrated examples cannot be run end to end with the test double; full entry in runtime. |
 | — | nodestro-studio | `make example-docs` | Regenerate `beispiele.md` on every examples pin bump. |
