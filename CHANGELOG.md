@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Pins nodestro-runtime d9c3d6e (runtime #136: MUP-ONA B2, orkexa 028faa1 with the SQLite backends in `orkexa.backends.sqlite`; #135 Axentra 60d83b3 with the A8 fixes; #134 PostgreSQL reindex switch under load; #133 real-daemon image tests).
 - Pins nodestro-runtime 099f4d4 (runtime #130/#131/#132: MUP-ONA B1 orkexa conformance suite with orkexa b3d6fae, B3 PostgreSQL ranking drift fixes and bounded reindex switch, new error `agent.VectorError` and query limit `query.too_long`; sandbox gateway keeps attached streams alive).
 - Pins nodestro-runtime de56875 (runtime #127: MUP-ONA A1, PDF text read in a separate process with page, character, time and memory limits, new code `document.too_complex`; B0, one Axentra commit for every extra; orkexa f89102c).
 - Pins nodestro-runtime f26dac4 (runtime #128: the legacy fixture restore test skips without psycopg instead of erroring; includes MUP-ONA A11 runtime #123; TODO abatement round 4).
