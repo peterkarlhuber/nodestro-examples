@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "comment": "Mandatory checks (S2) per CI-FAST. A PR is ok only if every listed check ran on the PR head SHA and succeeded. Changing this list needs a reason in the PR.",
+  "pull_request": {
+    "ci.yml": [
+      "test (3.11)",
+      "test (3.13)",
+      "package"
+    ]
+  },
+  "nightly": {
+    "nightly.yml": [
+      "report"
+    ]
+  }
+}
