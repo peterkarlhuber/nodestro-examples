@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Pins nodestro-runtime f26dac4 (runtime #128: the legacy fixture restore test skips without psycopg instead of erroring; includes MUP-ONA A11 runtime #123; TODO abatement round 4).
 - Pins nodestro-runtime 5f8c0f0 (runtime #126: a busy sandbox image build stays `checking` (LD-020), Bedrock region in usage, registry facts before a download, `pgvector_status()`; includes the price-table date fix of runtime #125; TODO abatement round 4).
 - Pins nodestro-runtime b29b738 (runtime #121: semantic reindex as a server job, RT-046; TODO abatement round 3).
 - EX-003 closed: a copy's `origin.offline` (nodestro-runtime RT-055) is the offline marker; the studio shows a sample
