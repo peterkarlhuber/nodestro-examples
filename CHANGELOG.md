@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Pins nodestro-runtime 81b0f55 (runtime #140: MUP-ONA B6, the knowledge base, file store and memory run on orkexa's `orkexa.backends.postgres` (orkexa 792a041); `pg_generic` and `sqlcheck_rules` are removed, the tenant SQL check runs on `orkexa.testing.sqlcheck`, and a start check refuses a deviating knowledge schema with `storage.schema_mismatch`; no DDL, no schema change).
 - Pins nodestro-runtime df4aeb3 (runtime #139: the B4 SQL rendering tests skip without psycopg, for the desktop profile; behavior unchanged).
 - Pins nodestro-runtime 76f9cb2 (runtime #137/#138: MUP-ONA B4, the tenant SQL rule engine as `sqlcheck_rules`, the generic PostgreSQL part `pg_generic` with a statement catalog and a partition guard (`partition.missing`); behavior unchanged).
 - Pins nodestro-runtime d9c3d6e (runtime #136: MUP-ONA B2, orkexa 028faa1 with the SQLite backends in `orkexa.backends.sqlite`; #135 Axentra 60d83b3 with the A8 fixes; #134 PostgreSQL reindex switch under load; #133 real-daemon image tests).
