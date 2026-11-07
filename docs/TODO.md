@@ -3,7 +3,7 @@
 > Open work for this repository: release blockers, known bugs, security follow-ups, technical debt and planned improvements.
 > GitHub issues are the source of truth for details; this file is the entry point and summary.
 >
-> **Last full review:** 2026-11-06 against `master` at `2f05f4c` (TODO abatement round 2).
+> **Last full review:** 2026-11-06 against master at 23fcb85 (TODO abatement round)
 
 ## Summary
 
