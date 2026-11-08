@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- Pins nodestro-runtime f5da80d (runtime #143: TABRION JQ-1..JQ-3, RT2-03, writes are never repeated after a lost connection; no schema change, no public signature change; the reserved payload key `_enqueue_token` is removed from `Job.payload`; Axentra 9c4666f with the B-06-1 log redaction, axentra #61). Final pin of pin wave W7 (TABRION JQ-4).
 - Pins nodestro-runtime 81b0f55 (runtime #140: MUP-ONA B6, the knowledge base, file store and memory run on orkexa's `orkexa.backends.postgres` (orkexa 792a041); `pg_generic` and `sqlcheck_rules` are removed, the tenant SQL check runs on `orkexa.testing.sqlcheck`, and a start check refuses a deviating knowledge schema with `storage.schema_mismatch`; no DDL, no schema change).
 - Pins nodestro-runtime df4aeb3 (runtime #139: the B4 SQL rendering tests skip without psycopg, for the desktop profile; behavior unchanged).
 - Pins nodestro-runtime 76f9cb2 (runtime #137/#138: MUP-ONA B4, the tenant SQL rule engine as `sqlcheck_rules`, the generic PostgreSQL part `pg_generic` with a statement catalog and a partition guard (`partition.missing`); behavior unchanged).
