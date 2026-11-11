@@ -3,7 +3,7 @@
 > Open work for this repository: release blockers, known bugs, security follow-ups, technical debt and planned improvements.
 > GitHub issues are the source of truth for details; this file is the entry point and summary.
 >
-> **Last full review:** 2026-11-06 against master at 23fcb85 (TODO abatement round)
+> **Last full review:** 2026-11-06 against master at 23fcb85 (TODO abatement round); EX-006 updated 2026-11-11 (local live runs)
 
 ## Summary
 
@@ -76,8 +76,17 @@ None known.
 - **What:** Tests prove data flow, decisions, approvals, files and checks with doubles; answer quality, the 49 test
   cases with a real model, the three orchestrated examples (10, 16, 19) with real orchestrator decisions and tier
   mapping for non-Anthropic providers are unverified. The demo MCP server was used with the desktop only.
+- **Local live runs (2026-11-11, RT-067 regression order):** first test case through the API with fresh-install defaults
+  (automatic model choice picked `qwen3.5:9b` for every agent), Ollama 0.40.14, 4 vCPU CPU container, no GPU, about
+  2.5 tokens/s: `production-downtime` de passed 4/4 checks (4162 s), `code-review` en passed (1578 s),
+  `household-budget` de finished with 3/4 checks (the model miscalculated the monthly surplus), `construction-delay` de
+  failed with `run.value_unverified` (the model stated delay days no tool had computed; the runtime check caught it),
+  `customer-service` fr was stopped after 70 min by the test environment's time limit. No run hit `MaxToolRoundsError`
+  or `max_tokens`, and no step reported `limits_handled`. The other 19 examples, `qwen3.5:4b` as agent model, Apple
+  Silicon, GPUs and Windows are still unverified live.
 - **Next step:** Run each copy's test series once per supported provider (costs tokens; needs owner approval) and
-  record results; fix prompts or limits where cases fail.
+  record results; fix prompts or limits where cases fail. Run the remaining examples on local models on faster
+  hardware (a GPU or Apple Silicon) and look at `construction-delay` and `household-budget` prompts for small models.
 
 ## Documentation
 
