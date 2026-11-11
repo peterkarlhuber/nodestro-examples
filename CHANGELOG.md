@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Pins nodestro-runtime 979c11c (runtime #150 and #145, tests only: botocore 1.44's default retry mode in the Bedrock
+  test, rollback snapshot tools for TABRION QA-13), so the platform components job is green again.
 - Pins nodestro-runtime 2b8690e (runtime #148, RT-067: agent steps answer at the tool-round limit and after a
   thinking overflow instead of failing, `NodeRun.limits_handled`, `IncompleteResponseError` causes; orkexa 840add4
   (orkexa #71): on Ollama only the latest thinking is sent back, the root cause of the local max_tokens and tool-loop
