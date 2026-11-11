@@ -2,6 +2,10 @@
 
 ## Unreleased
 
+- Pins nodestro-runtime 2b8690e (runtime #148, RT-067: agent steps answer at the tool-round limit and after a
+  thinking overflow instead of failing, `NodeRun.limits_handled`, `IncompleteResponseError` causes; orkexa 840add4
+  (orkexa #71): on Ollama only the latest thinking is sent back, the root cause of the local max_tokens and tool-loop
+  failures since 2026-11-06).
 - Pins nodestro-runtime f5da80d (runtime #143: TABRION JQ-1..JQ-3, RT2-03, writes are never repeated after a lost connection; no schema change, no public signature change; the reserved payload key `_enqueue_token` is removed from `Job.payload`; Axentra 9c4666f with the B-06-1 log redaction, axentra #61). Final pin of pin wave W7 (TABRION JQ-4).
 - Pins nodestro-runtime 81b0f55 (runtime #140: MUP-ONA B6, the knowledge base, file store and memory run on orkexa's `orkexa.backends.postgres` (orkexa 792a041); `pg_generic` and `sqlcheck_rules` are removed, the tenant SQL check runs on `orkexa.testing.sqlcheck`, and a start check refuses a deviating knowledge schema with `storage.schema_mismatch`; no DDL, no schema change).
 - Pins nodestro-runtime df4aeb3 (runtime #139: the B4 SQL rendering tests skip without psycopg, for the desktop profile; behavior unchanged).
