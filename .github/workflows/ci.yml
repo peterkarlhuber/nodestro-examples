@@ -33,9 +33,14 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
           cache: pip
+      # The Nodestro components and orkexa are version ranges in pyproject.toml; the studio lock pins their exact
+      # commits (without this package's own line). pip 26.1 or later applies it to the git requirements.
       - name: Install
         run: |
-          pip install -e ".[dev]"
+          set -o pipefail
+          python -m pip install "pip>=26.1"
+          curl -fsSL https://raw.githubusercontent.com/peterkarlhuber/nodestro-studio/master/platform/internal-server.txt | grep -v '^nodestro-examples ' > "$RUNNER_TEMP/lock.txt"
+          pip install -c "$RUNNER_TEMP/lock.txt" -e ".[dev]"
       - run: ruff check .
       - run: ruff format --check .
       - run: mypy
@@ -67,8 +72,11 @@ jobs:
       - run: python -m build
       - name: Install the wheel into a fresh environment
         run: |
+          set -o pipefail
+          curl -fsSL https://raw.githubusercontent.com/peterkarlhuber/nodestro-studio/master/platform/internal-server.txt | grep -v '^nodestro-examples ' > "$RUNNER_TEMP/lock.txt"
           python -m venv "$RUNNER_TEMP/wheel"
-          "$RUNNER_TEMP/wheel/bin/pip" install dist/*.whl
+          "$RUNNER_TEMP/wheel/bin/python" -m pip install "pip>=26.1"
+          "$RUNNER_TEMP/wheel/bin/pip" install -c "$RUNNER_TEMP/lock.txt" dist/*.whl
       - name: Check the contents of the installed wheel
         run: |
           cp scripts/check_package.py "$RUNNER_TEMP/"

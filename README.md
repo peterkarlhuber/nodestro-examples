@@ -60,11 +60,14 @@ Every guide explains the problem, the flow, input, result and how to adapt the e
 ## Installation
 
 ```bash
-pip install "nodestro-examples @ git+https://github.com/peterkarlhuber/nodestro-examples.git@<commit>"
+pip install -r https://raw.githubusercontent.com/peterkarlhuber/nodestro-studio/master/platform/internal-server.txt
 ```
 
-The runtime and orkexa are pinned to exact commits; the combination tested together is listed in
-`nodestro-studio/platform/versions.json`. Python 3.11 to 3.13.
+The PyPI names of the Nodestro components are not registered, so a plain `pip install nodestro-examples` cannot
+work; the studio lock (`nodestro-studio/platform/internal-server.txt`) names the exact commits tested together.
+`pyproject.toml` only declares version ranges (`nodestro-runtime>=0.2.0,<0.3`). To install just this package and
+its dependencies, use the lock as constraints (pip 26.1 or later): `pip install -c <lock URL> nodestro-examples`.
+Python 3.11 to 3.13.
 
 ## Usage
 
@@ -223,7 +226,9 @@ data where a result is a number (for example the downtime share of 4.62 % or the
 ## Development
 
 ```bash
-pip install -e ".[dev]"
+python -m pip install "pip>=26.1"
+curl -fsSL https://raw.githubusercontent.com/peterkarlhuber/nodestro-studio/master/platform/internal-server.txt | grep -v '^nodestro-examples ' > lock.txt
+pip install -c lock.txt -e ".[dev]"
 ruff check . && ruff format --check . && mypy && pytest
 ```
 
@@ -256,8 +261,8 @@ python -m nodestro_examples.docs --root ../nodestro-studio --check  # exit code 
 To add an example: add `templates/<id>.json` with the next number and a `texts/<language>/<id>.json` for every
 language, then run the tests; they name every missing key, placeholder or reference.
 
-CI needs no secret: orkexa and the Nodestro repositories are public, and `pip install` reads the pinned
-dependencies anonymously.
+CI needs no secret: orkexa and the Nodestro repositories are public, and `pip install` reads the commits named by
+the studio lock anonymously.
 
 Open work (release blockers, known gaps, follow-ups) is listed in [docs/TODO.md](docs/TODO.md).
 
