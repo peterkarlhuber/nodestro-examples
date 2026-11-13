@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Pins nodestro-runtime 2455aa9 (runtime #157, NAL-A1: built-in tool specs and service connections, ADR-0001;
+  `AgentConfig.tool_settings` is optional, so every example stays valid).
 - Pins nodestro-runtime 979c11c (runtime #150 and #145, tests only: botocore 1.44's default retry mode in the Bedrock
   test, rollback snapshot tools for TABRION QA-13), so the platform components job is green again.
 - Pins nodestro-runtime 2b8690e (runtime #148, RT-067: agent steps answer at the tool-round limit and after a
