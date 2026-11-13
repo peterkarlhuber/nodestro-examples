@@ -39,7 +39,8 @@ jobs:
         run: |
           set -o pipefail
           python -m pip install "pip>=26.1"
-          curl -fsSL https://raw.githubusercontent.com/peterkarlhuber/nodestro-studio/master/platform/internal-server.txt | grep -v '^nodestro-examples ' > "$RUNNER_TEMP/lock.txt"
+          curl -fsSL https://raw.githubusercontent.com/peterkarlhuber/nodestro-studio/master/platform/internal-server.txt -o "$RUNNER_TEMP/lock-all.txt" # no pipe: a failed download must fail the step
+          grep -v '^nodestro-examples ' "$RUNNER_TEMP/lock-all.txt" > "$RUNNER_TEMP/lock.txt"
           pip install -c "$RUNNER_TEMP/lock.txt" -e ".[dev]"
       - run: ruff check .
       - run: ruff format --check .
@@ -73,7 +74,8 @@ jobs:
       - name: Install the wheel into a fresh environment
         run: |
           set -o pipefail
-          curl -fsSL https://raw.githubusercontent.com/peterkarlhuber/nodestro-studio/master/platform/internal-server.txt | grep -v '^nodestro-examples ' > "$RUNNER_TEMP/lock.txt"
+          curl -fsSL https://raw.githubusercontent.com/peterkarlhuber/nodestro-studio/master/platform/internal-server.txt -o "$RUNNER_TEMP/lock-all.txt" # no pipe: a failed download must fail the step
+          grep -v '^nodestro-examples ' "$RUNNER_TEMP/lock-all.txt" > "$RUNNER_TEMP/lock.txt"
           python -m venv "$RUNNER_TEMP/wheel"
           "$RUNNER_TEMP/wheel/bin/python" -m pip install "pip>=26.1"
           "$RUNNER_TEMP/wheel/bin/pip" install -c "$RUNNER_TEMP/lock.txt" dist/*.whl
