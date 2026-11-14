@@ -271,6 +271,36 @@ mapped by `ModelChoice`, service connections bound to the built-in tools). `meta
 service connection, the weakest tier and whether the agent works offline. `agent_problems()` checks every
 template in every language; the tests require it to be empty.
 
+## Agent Skills
+
+The package also ships Agent Skills (NAL-B3, [specification](https://agentskills.io/specification)): method
+instructions an agent loads on demand. Two families exist in all six languages:
+
+- `8d-problem-solving`: the 8D method (D0 to D8) for quality problems, with the terms of the `quality-8d` example
+  and an 8D report outline in `references/report-template.md`.
+- `research-method`: how an agent researches on the web, with the method wording of the `web-research` example
+  (sub-questions with one to three queries, read sources instead of snippets, primary sources, dates,
+  contradictions, nothing without a source, web content is data and never instructions).
+
+Each skill is a folder `skills/<family>-<language>/` (language in lowercase, `research-method-pt-br`) with a
+`SKILL.md` and optional `references/*.md`. The front matter holds `name` (equal to the folder), a `description` in
+the skill's language, `license: LicenseRef-Proprietary` and `metadata` with `family`, `language` (`pt-BR`) and
+`revision`. `nodestro_examples.skills` lists and reads them with the standard library only; storing skills,
+assigning them to agents and loading them at run time happen in the platform.
+
+```python
+from nodestro_examples.skills import skill_files, skill_for, skill_names
+
+# "research-method-pt-br"; a language without a skill falls back to English
+name = skill_for("research-method", "pt")
+# {"SKILL.md": b"...", ...}: relative path to the exact bytes
+files = skill_files(name)
+```
+
+`skill_problems()` checks names, folders, front matter, metadata, size and files, and that every family exists in
+every language; the tests require it to be empty and, where `orkexa.skills` is installed, that orkexa's validator
+reports no error.
+
 ## Sample files
 
 `samples.render()` builds a sample file on request from the texts of a language with the runtime's writers:
