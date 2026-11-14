@@ -99,10 +99,13 @@ def test_the_cases_are_complete_and_their_checks_name_existing_results() -> None
         output = next(node.id for node in spec.nodes if node.type == "output")
         sources = data_sources(workflow, output)
         nodes = {node.id: node for node in spec.nodes}
+        # Variants of one agent sit on exclusive branches: exactly one of them delivers the result.
+        originals = {node.variant_of or node.id for node in spec.nodes if node.id in sources}
+        single = sources[0] if len(sources) == 1 else next(iter(originals)) if len(originals) == 1 else None
         for case in spec.tests:
             assert case.checks, (template_id, case.id)
             for check in case.checks:
-                node_id = check.node or (sources[0] if len(sources) == 1 else None)
+                node_id = check.node or single
                 if node_id is None:
                     # Several results can arrive: without a node a check can only look at the whole result.
                     assert check.field == "", (template_id, case.id, check)

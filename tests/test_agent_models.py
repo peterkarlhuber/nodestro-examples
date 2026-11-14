@@ -92,6 +92,7 @@ EXPECTED: dict[str, dict[str, str]] = {
     "sme-swot": {"internal": "analysis", "external": "analysis", "strategy": "analysis", "critic": "judge"},
     "supplier-comparison": {"cost": "tool_agent", "risk": "tool_agent", "recommendation": "analysis"},
     "travel-plan": {"itinerary": "write", "budget": "tool_agent", "organizer": "write", "documents": "write"},
+    "web-research": {"research": "tool_agent", "research_thorough": "tool_agent"},
 }
 
 
@@ -111,7 +112,7 @@ def _spec_nodes() -> list[tuple[str, library.NodeSpec]]:
 
 def test_every_agent_names_a_task_that_fits_its_tier() -> None:
     agents = [(owner, node) for owner, node in _spec_nodes() if node.type in ("agent", "orchestrator")]
-    assert len(agents) == 97
+    assert len(agents) == 99
     for owner, node in agents:
         assert node.task in library.AGENT_TASKS, (owner, node.id)
         assert library.tier_fits(node.tier, node.task), (owner, node.id, node.tier, node.task)

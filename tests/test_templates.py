@@ -7,10 +7,10 @@ from pathlib import Path
 import re
 from typing import Any, get_args
 
-from nodestro_runtime.builtin_tools import BUILTIN_TOOLS
 from nodestro_runtime.engine import check_workflow
 from nodestro_runtime.graph import comment_sources, data_sources, loop_bodies
 from nodestro_runtime.schemas import LANGUAGES, Workflow
+from nodestro_runtime.tool_spec import BUILTIN_SPECS
 from pydantic import ValidationError
 import pytest
 
@@ -55,10 +55,10 @@ def keys_of(value: Any, prefix: str = "") -> set[str]:
     return {prefix}
 
 
-def test_the_library_has_24_templates_across_all_categories() -> None:
-    assert len(IDS) == 24
+def test_the_library_has_25_templates_across_all_categories() -> None:
+    assert len(IDS) == 25
     specs = [library.structure(template_id) for template_id in IDS]
-    assert [spec.number for spec in specs] == list(range(1, 25))
+    assert [spec.number for spec in specs] == list(range(1, 26))
     assert {spec.category for spec in specs} == set(library.CATEGORIES)
     # The two examples Nodestro shipped before are part of the library.
     assert {"financial-analysis", "blog-article"} <= set(IDS)
@@ -113,6 +113,12 @@ def test_every_text_exists_in_every_language(language: str) -> None:
         assert set(model.integrations) == {item.id for item in spec.integrations}, (language, template_id)
         output = next(node for node in spec.nodes if node.type == "output")
         assert set(model.contract) == {field.name for field in output.contract}, (language, template_id)
+        # A variant agent has its own name and description only; prompt, task and fields are its original's.
+        variants = {node.id: node.variant_of for node in spec.nodes if node.variant_of}
+        assert set(model.variants) == set(variants), (language, template_id)
+        for node_id, original in variants.items():
+            assert model.agents[node_id].system == model.agents[original].system
+            assert model.agents[node_id].name != model.agents[original].name
         for node in spec.nodes:
             if node.condition is not None:
                 assert set(model.steps[node.id].branches) == {rule.id for rule in node.condition.rules}
@@ -151,7 +157,13 @@ def test_every_text_exists_in_every_language(language: str) -> None:
         def strings(value: Any) -> list[str]:
             if isinstance(value, dict):
                 return [item for inner in value.values() for item in strings(inner)]
+            if isinstance(value, list):
+                return [item for inner in value for item in strings(inner)]
             return [value]
+
+        for name, field in model.form.items():
+            # The choices of a selection field are words of the language, one per choice of the original.
+            assert len(field.options) == len(library.texts(template_id, "de").form[name].options), (language, name)
 
         assert all(isinstance(item, str) and item.strip() for item in strings(texts)), (language, template_id)
         if language != "de":
@@ -200,7 +212,8 @@ def test_every_result_field_has_a_label_in_the_language(language: str) -> None:
 
 
 def test_templates_only_use_what_nodestro_offers() -> None:
-    tools = {tool.name for tool in BUILTIN_TOOLS}
+    # Nodestro's built-in tools, the web tools included (NAL-A2).
+    tools = set(BUILTIN_SPECS)
     for template_id in IDS:
         parts = [library.part(part_id) for part_id in library.part_ids(template_id)]
         nodes = [*library.structure(template_id).nodes, *(node for part in parts for node in part.nodes)]
