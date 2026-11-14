@@ -2,6 +2,22 @@
 
 ## Unreleased
 
+- Added building blocks as gallery entries (NAL-B3): `all_part_ids()`, `part_summaries(language)`,
+  `part_summary(id, language)` (`PartSummary`: name, description, capability tags, number of agent steps, the parts
+  it runs and the templates that use it), `part_detail(id, language)` (`PartDetail`, plus the workflow a copy gets)
+  and `instantiate_part(id, language, host, models=)`, which saves the parts a part runs first, pins every reference
+  and returns the part's workflow unsaved, like `instantiate()`.
+- Added shipped Agent Skills (NAL-B3, https://agentskills.io/specification): `skills/<name>/SKILL.md` with optional
+  `references/*.md`, two families in all six languages (12 skills, named `<family>-<language>` with the language in
+  lowercase, such as `research-method-pt-br`). `8d-problem-solving` covers the 8D method D0 to D8 for quality
+  problems with the terms of the `quality-8d` example, plus an 8D report outline in `references/report-template.md`;
+  `research-method` describes web research with the method wording of the `web-research` example. Each front matter
+  has `name`, a localized `description`, `license: LicenseRef-Proprietary` and `metadata` (`family`, `language`,
+  `revision: "1"`). The new module `nodestro_examples.skills` (standard library only) offers `SKILL_FAMILIES`,
+  `SKILL_LANGUAGES`, `skill_names()`, `skill_files(name)` (exact bytes per relative path), `skill_for(family,
+  language)` (English fallback; `pt-BR`, `pt-br` and `pt` give Brazilian Portuguese) and `skill_problems()`. The
+  wheel check and the sdist check in CI cover the skill files; a test validates every skill with `orkexa.skills`
+  and is skipped while the pinned orkexa has no skills module.
 - Added agent templates (NAL-B1): `agents/<id>.json` and `texts/<lang>/agents/<id>.json`, read by
   `nodestro_examples.agents` (`agent_ids`, `agent_structure`, `agent_texts`, `build_agent`, `agent_meta`,
   `agent_services`, `agent_origin`, `agent_problems`). The first five are web research (taken over from the example's

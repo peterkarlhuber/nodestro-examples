@@ -90,6 +90,8 @@ jobs:
           grep -q "src/nodestro_examples/templates/parts/quality-check.json" contents.txt
           grep -q "src/nodestro_examples/texts/pt-BR/_common.json" contents.txt
           grep -q "src/nodestro_examples/samples/real-estate/floor-plan.png" contents.txt
+          grep -q "src/nodestro_examples/skills/research-method-pt-br/SKILL.md" contents.txt
+          grep -q "src/nodestro_examples/skills/8d-problem-solving-de/references/report-template.md" contents.txt
           grep -q "tests/test_cases.py" contents.txt
       - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:

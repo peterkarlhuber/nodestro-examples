@@ -11,7 +11,7 @@ import sys
 from nodestro_runtime.schemas import LANGUAGES
 
 import nodestro_examples as examples
-from nodestro_examples import samples
+from nodestro_examples import samples, skills
 
 
 def main() -> int:
@@ -34,8 +34,12 @@ def main() -> int:
                 built += 1
     # The evaluation set of the web research example (fixtures for the test search provider) is package data too.
     assert examples.evaluation_set("web-research").questions
+    # The shipped Agent Skills (SKILL.md and references/) are package data too.
+    assert len(skills.skill_names()) == len(skills.SKILL_FAMILIES) * len(skills.SKILL_LANGUAGES)
+    assert skills.skill_problems() == [], skills.skill_problems()
+    assert "references/report-template.md" in skills.skill_files("8d-problem-solving-pt-br")
     print(f"{examples.__name__} {examples.__version__}: {len(ids)} templates in {len(LANGUAGES)} languages, ", end="")
-    print(f"{built} sample files built, format {examples.FORMAT_VERSION}")
+    print(f"{built} sample files built, {len(skills.skill_names())} skills, format {examples.FORMAT_VERSION}")
     return 0
 
 

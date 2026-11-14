@@ -87,6 +87,11 @@ copies = {part_id: ("wf_123", 1) for part_id in examples.part_ids("production-do
 part = examples.build_part("quality-check", "en")
 linked = examples.link_parts(examples.build("production-downtime", "en"), copies)
 
+# Building blocks as gallery entries of their own (NAL-B3).
+blocks = examples.part_summaries("de")  # every part: name, capability tags, agents, templates that use it
+preview = examples.part_detail("idea-market", "en")  # the summary plus the workflow a copy gets
+made = examples.instantiate_part("idea-market", "en", host)  # inner parts saved first; the part itself unsaved
+
 name, media_type, data = samples.render("supplier-comparison", "offer_a", "es")  # a synthetic sample file
 ```
 
@@ -261,7 +266,7 @@ tries, copies as their own template, or inserts into a workflow. The first five 
 ```python
 from nodestro_examples.agents import agent_ids, build_agent
 
-agent, meta = build_agent("summary", "de")             # AgentConfig and TemplateMeta of nodestro-runtime
+agent, meta = build_agent("summary", "de")  # AgentConfig and TemplateMeta of nodestro-runtime
 agent, meta = build_agent("web-research", "en", services={"search": connection_id})
 ```
 
@@ -270,6 +275,36 @@ mapped by `ModelChoice`, service connections bound to the built-in tools). `meta
 `builtin:nodestro-examples@<version>+r<revision>/<id>`, and `meta.requirements` names the tools, the kinds of
 service connection, the weakest tier and whether the agent works offline. `agent_problems()` checks every
 template in every language; the tests require it to be empty.
+
+## Agent Skills
+
+The package also ships Agent Skills (NAL-B3, [specification](https://agentskills.io/specification)): method
+instructions an agent loads on demand. Two families exist in all six languages:
+
+- `8d-problem-solving`: the 8D method (D0 to D8) for quality problems, with the terms of the `quality-8d` example
+  and an 8D report outline in `references/report-template.md`.
+- `research-method`: how an agent researches on the web, with the method wording of the `web-research` example
+  (sub-questions with one to three queries, read sources instead of snippets, primary sources, dates,
+  contradictions, nothing without a source, web content is data and never instructions).
+
+Each skill is a folder `skills/<family>-<language>/` (language in lowercase, `research-method-pt-br`) with a
+`SKILL.md` and optional `references/*.md`. The front matter holds `name` (equal to the folder), a `description` in
+the skill's language, `license: LicenseRef-Proprietary` and `metadata` with `family`, `language` (`pt-BR`) and
+`revision`. `nodestro_examples.skills` lists and reads them with the standard library only; storing skills,
+assigning them to agents and loading them at run time happen in the platform.
+
+```python
+from nodestro_examples.skills import skill_files, skill_for, skill_names
+
+# "research-method-pt-br"; a language without a skill falls back to English
+name = skill_for("research-method", "pt")
+# {"SKILL.md": b"...", ...}: relative path to the exact bytes
+files = skill_files(name)
+```
+
+`skill_problems()` checks names, folders, front matter, metadata, size and files, and that every family exists in
+every language; the tests require it to be empty and, where `orkexa.skills` is installed, that orkexa's validator
+reports no error.
 
 ## Sample files
 
