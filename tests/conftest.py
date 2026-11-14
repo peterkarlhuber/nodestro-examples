@@ -14,6 +14,7 @@ import threading
 from types import SimpleNamespace
 from typing import Any
 
+from nodestro_runtime.connections import ConnectionIn
 from nodestro_runtime.run_views import approvals_of_tree
 from nodestro_runtime.schemas import Run, RunIn, Workflow, WorkflowIn
 from nodestro_runtime.testing import SAMPLE_NUMBERS, AnswerAll, Parsed, computing_call, sample_instance, text, tool_use
@@ -39,11 +40,43 @@ class Host:
         ).id
 
 
+#: The search service of the tests: the runtime's deterministic test provider (no network, no cost).
+TEST_SEARCH = "test"
+
+
+@pytest.fixture(autouse=True)
+def _vault_key(monkeypatch: pytest.MonkeyPatch) -> None:
+    """A key for the workspaces' secret vault: the test search service needs a (made-up) secret."""
+    monkeypatch.setenv("NODESTRO_VAULT_KEY", "a" * 44)
+
+
+def search_service(workspace: Workspace) -> str:
+    """A search connection with the test provider (created once per workspace), like the one a person sets up."""
+    for item in workspace.connections.connections(type="search"):
+        if item.provider == TEST_SEARCH:
+            return item.id
+    made = workspace.connections.create(
+        ConnectionIn(type="search", name="Test search", provider=TEST_SEARCH, settings={})
+    )
+    workspace.connections.set_secret(made.id, "test-key-not-real")
+    workspace.connections.check(made.id)
+    return made.id
+
+
 def instantiate(
-    workspace: Workspace, template_id: str, language: str, connections: dict[str, dict[str, str]] | None = None
+    workspace: Workspace,
+    template_id: str,
+    language: str,
+    connections: dict[str, dict[str, str]] | None = None,
+    services: dict[str, str] | None = None,
 ) -> tuple[Workflow, library.Copy]:
-    """A template as an ordinary saved workflow with its parts and knowledge files (like the gallery's copy)."""
-    made = library.instantiate(template_id, language, Host(workspace), connections=connections)
+    """A template as an ordinary saved workflow with its parts and knowledge files (like the gallery's copy).
+
+    A template whose tools need a search service gets the test provider's connection unless ``services`` says
+    otherwise (``{}``: none, as before a person chose one)."""
+    if services is None:
+        services = {"search": search_service(workspace)} if "search" in library.services(template_id) else {}
+    made = library.instantiate(template_id, language, Host(workspace), connections=connections, services=services)
     saved = workspace.save_workflow(made.workflow)
     learn = getattr(getattr(workspace, "fake", None), "learn_parts", None)
     if learn is not None:
@@ -88,12 +121,24 @@ class Scenario(AnswerAll):
         self._known = threading.Lock()
 
     def learn(self, workflow: Workflow | WorkflowIn) -> None:
-        """Remember how to recognize the agents and orchestrators of ``workflow``."""
+        """Remember how to recognize the agents and orchestrators of ``workflow``.
+
+        A web researcher (``search_web``) searches once and cites the first hit, unless the scenario says otherwise:
+        its statements must cite sources of the run (``ledger_cited``)."""
         with self._known:
             for node in workflow.nodes:
                 if node.agent is not None:
                     self.prompts[node.agent.system_prompt.split("\n\n")[0]] = node.id
                     self.tools[node.id] = list(node.agent.tools)
+                    if "search_web" in node.agent.tools:
+                        self.tool_calls.setdefault(node.id, [("search_web", {"query": "example question"})])
+                        cited = {
+                            field.name: ["A statement from the first hit [S1]."]
+                            for field in node.agent.output.fields
+                            if field.source == "ledger_cited"
+                        }
+                        if isinstance(self.answers.get(node.id), dict) or node.id not in self.answers:
+                            self.answers[node.id] = {**cited, **(self.answers.get(node.id) or {})}
                 if node.orchestrator is not None:
                     self.orchestrators[node.orchestrator.instructions.split("\n")[0]] = (node.id, node.orchestrator)
 

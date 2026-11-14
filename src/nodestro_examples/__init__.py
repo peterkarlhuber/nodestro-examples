@@ -99,9 +99,11 @@ from nodestro_runtime.schemas import (
     ResultFileSpec,
     StartConfig,
     SubworkflowConfig,
+    ToolSettings,
     WorkflowIn,
     WorkflowLimits,
 )
+from nodestro_runtime.tool_spec import BUILTIN_SPECS, settings_problems
 from pydantic import BaseModel, Field, model_validator
 
 try:
@@ -243,12 +245,18 @@ class _Strict(BaseModel):
     model_config = {"extra": "forbid"}
 
 
+FieldSource = Literal["model", "tool", "ledger", "ledger_cited", "ledger_list", "ledger_range"]
+
+
 class FieldSpec(_Strict):
     name: str
     type: OutputFieldType = "string"
     required: bool = True
     #: ``tool``: a key figure that must be the result of a tool call (nodestro-runtime ``value_checks``).
-    source: Literal["model", "tool"] = "model"
+    #: ``ledger``, ``ledger_cited``: values that name, or statements that cite, sources of the run's source ledger;
+    #: ``ledger_list``, ``ledger_range``: filled by the runtime from the ledger, never by the model
+    #: (nodestro-runtime ``source_ledger``, ``docs/web-tools.md``).
+    source: FieldSource = "model"
 
 
 class RuleSpec(_Strict):
@@ -385,11 +393,52 @@ class NodeSpec(_Strict):
     knowledge: KnowledgeUse | None = None
     #: Agents: tools of integrations, bound only while a copy is connected.
     mcp: list[McpUse] = Field(default_factory=list)
+    #: Agents: binding parameters of built-in tools (``ToolSettings.params``, e.g. ``{"search_web": {"max_calls":
+    #: 3}}``), validated against the tool's parameter schema. The service connection a tool needs (a search
+    #: service) is never part of a template: the person chooses it when copying (:func:`services`).
+    tool_params: dict[str, dict[str, Any]] = Field(default_factory=dict)
+    #: Agents: the same agent as the named agent node with other settings (tool limits on another branch). It uses
+    #: that agent's texts (prompt, task, field descriptions, criteria) except its own name and description
+    #: (``variants`` in the texts), so the prompt is kept once per language.
+    variant_of: str | None = None
 
 
 #: ``[source, target]``, ``[source, target, branch]`` or ``[source, target, branch, loop]``: a loop
 #: (``{"max_iterations": n, "on_exhausted": "fail" | "continue"}``) leads from a branch back to an earlier step.
 Connection = tuple[str, str] | tuple[str, str, str] | tuple[str, str, str, EdgeLoop]
+
+
+def _tool_param_problems(nodes: list[NodeSpec]) -> list[str]:
+    """Binding parameters only for built-in tools the agent has, valid for the tool."""
+    found: list[str] = []
+    for node in nodes:
+        for name, params in node.tool_params.items():
+            spec = BUILTIN_SPECS.get(name)
+            if name not in node.tools or spec is None:
+                found.append(f"{node.id} sets parameters of {name}, which is no built-in tool of the agent")
+                continue
+            found += [
+                f"{node.id}: {problem.message}"
+                for problem in settings_problems(name, spec, ToolSettings(params=params))
+            ]
+    return found
+
+
+def _variant_problems(nodes: list[NodeSpec]) -> list[str]:
+    """A variant names an agent of its own kind: same task, tier, tools, result fields and criteria."""
+    found: list[str] = []
+    by_id = {node.id: node for node in nodes}
+    for node in nodes:
+        if node.variant_of is None:
+            continue
+        original = by_id.get(node.variant_of)
+        if node.type != "agent" or original is None or original.type != "agent" or original.variant_of is not None:
+            found.append(f"{node.id} is a variant of {node.variant_of}, which is no agent of its own")
+            continue
+        same = ("task", "tier", "tools", "output_name", "output_fields", "criteria", "knowledge", "mcp", "memory")
+        if any(getattr(node, key) != getattr(original, key) for key in same):
+            found.append(f"{node.id} differs from {original.id} in more than its settings")
+    return found
 
 
 def _is_loop(connection: Connection) -> bool:
@@ -630,6 +679,8 @@ class TemplateSpec(_Strict):
                     for tool in use.tools
                     if tool not in integrations[use.integration]
                 ]
+        problems += _tool_param_problems(self.nodes)
+        problems += _variant_problems(self.nodes)
         problems += [f"knowledge file {item} is not used" for item in sorted(knowledge - used_knowledge)]
         problems += [f"integration {item} is not used" for item in sorted(set(integrations) - used_integrations)]
         for part_id in _referenced_parts(self.nodes):
@@ -728,6 +779,13 @@ class IntegrationTexts(_Strict):
     offline: str
 
 
+class VariantTexts(_Strict):
+    """The own texts of an agent that is a variant of another (:attr:`NodeSpec.variant_of`)."""
+
+    name: str
+    description: str
+
+
 class CaseTexts(_Strict):
     name: str
     #: The free text of a case with ``input: own``.
@@ -755,6 +813,8 @@ class TemplateTexts(_Strict):
     knowledge: dict[str, SampleTexts] = Field(default_factory=dict)
     integrations: dict[str, IntegrationTexts] = Field(default_factory=dict)
     tests: dict[str, CaseTexts] = Field(default_factory=dict)
+    #: Name and description of each agent that is a variant of another; :func:`texts` adds them to ``agents``.
+    variants: dict[str, VariantTexts] = Field(default_factory=dict)
 
 
 class PartTexts(_Strict):
@@ -802,8 +862,17 @@ def language_of(language: str | None) -> str:
 
 @cache
 def texts(template_id: str, language: str) -> TemplateTexts:
+    """The texts of a template in a language; every variant agent (:attr:`NodeSpec.variant_of`) gets the texts of
+    its original agent with its own name and description."""
     path = _ROOT / "texts" / language_of(language) / f"{template_id}.json"
-    return TemplateTexts.model_validate(json.loads(path.read_text("utf-8")))
+    found = TemplateTexts.model_validate(json.loads(path.read_text("utf-8")))
+    for node in structure(template_id).nodes:
+        if node.variant_of is not None:
+            own = found.variants[node.id]
+            found.agents[node.id] = found.agents[node.variant_of].model_copy(
+                update={"name": own.name, "description": own.description}
+            )
+    return found
 
 
 @cache
@@ -875,6 +944,8 @@ class _Context:
     part: str | None = None
     #: The memory space of every agent with persistent memory (``None``: the template's own space).
     memory_space: str | None = None
+    #: connection type (``search``) -> the id of the service connection the copy's built-in tools use.
+    services: Mapping[str, str] = field(default_factory=dict)
 
     def model(self, node: NodeSpec) -> str:
         """The agent's own model of the copy, else the template's fixed model (format 1), else its tier's."""
@@ -1049,6 +1120,7 @@ def _build_nodes(
                 citations=item.knowledge.citations,
             )
         server_tools = list(item.server_tools) if provider_of(model) == _SERVER_TOOL_PROVIDER else []
+        tool_settings = _tool_settings(item, context.services)
         nodes.append(
             Node(
                 id=item.id,
@@ -1063,6 +1135,7 @@ def _build_nodes(
                     system_prompt=_system_prompt(system, rules, sensitive=sensitive, files=item.id in with_files),
                     task_template=task(own.task),
                     tools=tools,
+                    tool_settings=tool_settings,
                     server_tools=server_tools,
                     effort=item.effort,
                     max_tokens=item.max_tokens,
@@ -1090,12 +1163,37 @@ def _build_nodes(
     return nodes, built_edges
 
 
+def _tool_settings(node: NodeSpec, services: Mapping[str, str]) -> dict[str, ToolSettings]:
+    """The bindings of a node's built-in tools: the template's parameters and the copy's service connection."""
+    found: dict[str, ToolSettings] = {}
+    for name in node.tools:
+        spec = BUILTIN_SPECS.get(name)
+        connection = services.get(spec.connection_type) if spec is not None and spec.connection_type else None
+        params = node.tool_params.get(name, {})
+        if connection is not None or params:
+            found[name] = ToolSettings(connection_id=connection, params=dict(params))
+    return found
+
+
+def services(template_id: str) -> list[str]:
+    """The kinds of service connection (``search``) the built-in tools of a template need; a copy works only once a
+    connection of each kind is chosen (``services`` of :func:`build`), the workflow check names a missing one."""
+    found = {
+        BUILTIN_SPECS[name].connection_type
+        for node in _all_nodes(structure(template_id))
+        for name in node.tools
+        if name in BUILTIN_SPECS
+    }
+    return sorted(kind for kind in found if kind)
+
+
 def _context(
     models: ModelChoice | None,
     connections: Mapping[str, Mapping[str, str]] | None,
     knowledge: Mapping[str, str] | None,
     part: str | None = None,
     memory_space: str | None = None,
+    services: Mapping[str, str] | None = None,
 ) -> _Context:
     if memory_space is not None and not SPACE_PATTERN.fullmatch(memory_space):
         raise ValueError(f"{memory_space!r} is not a valid memory space name (letters, digits, space, _ . -; 1 to 64)")
@@ -1105,6 +1203,7 @@ def _context(
         knowledge=knowledge or {},
         part=part,
         memory_space=memory_space,
+        services=dict(services or {}),
     )
 
 
@@ -1116,6 +1215,7 @@ def build(
     connections: Mapping[str, Mapping[str, str]] | None = None,
     knowledge: Mapping[str, str] | None = None,
     memory_space: str | None = None,
+    services: Mapping[str, str] | None = None,
 ) -> WorkflowIn:
     """The workflow a template describes, in one language (a fresh object every time).
 
@@ -1126,11 +1226,13 @@ def build(
     resolves them, sub-workflow and team references read ``library-part:<id>`` and knowledge files
     ``library-knowledge:<id>``. ``memory_space`` gives the copy's agents with persistent memory a space of its
     own (by default every copy of a template shares the template's space, e.g. ``learning-progress``); an
-    invalid name raises :class:`ValueError`.
+    invalid name raises :class:`ValueError`. ``services`` maps a kind of service connection (``search``,
+    :func:`services`) to the connection the copy's built-in tools use; without one the workflow check names it
+    (``check.connection_missing``) and the copy does not start.
     """
     spec = structure(template_id)
     text = texts(template_id, language)
-    context = _context(models, connections, knowledge, memory_space=memory_space)
+    context = _context(models, connections, knowledge, memory_space=memory_space, services=services)
     nodes, edges = _build_nodes(
         spec.nodes,
         spec.edges,
@@ -1328,6 +1430,7 @@ def instantiate(
     models: ModelChoice | None = None,
     connections: Mapping[str, Mapping[str, str]] | None = None,
     memory_space: str | None = None,
+    services: Mapping[str, str] | None = None,
 ) -> Copy:
     """Everything a copy of a template needs, created through ``host``; the copy itself is returned unsaved.
 
@@ -1335,7 +1438,8 @@ def instantiate(
     own (parts used by other parts first) and every reference is pinned to the saved version. ``connections``
     comes from :func:`connect`; integrations without a connection run in offline mode. A key of ``models.agents``
     that names no agent of the template (:func:`agent_plan`) raises :class:`KeyError` before anything is created.
-    ``memory_space`` is passed to :func:`build` (checked before anything is created).
+    ``memory_space`` and ``services`` (the service connections of built-in tools) are passed to :func:`build`
+    (the memory space is checked before anything is created).
     """
     from .samples import render_knowledge
 
@@ -1367,7 +1471,13 @@ def instantiate(
         built = build_part(part_id, language, sensitive=spec.sensitive, models=models)
         copies[part_id] = host.save_workflow(link_parts(built, copies))
     workflow = build(
-        template_id, language, models=models, connections=connections, knowledge=stored, memory_space=memory_space
+        template_id,
+        language,
+        models=models,
+        connections=connections,
+        knowledge=stored,
+        memory_space=memory_space,
+        services=services,
     )
     return Copy(
         workflow=link_parts(workflow, copies),
@@ -1605,6 +1715,8 @@ class TemplateDetail(TemplateSummary):
     integrations: list[TemplateIntegration] = Field(default_factory=list)
     knowledge: list[TemplateKnowledge] = Field(default_factory=list)
     budget_usd: float | None = None
+    #: The kinds of service connection a copy must be given before it can run (``search``; :func:`services`).
+    services: list[str] = Field(default_factory=list)
     #: The workflow exactly as a copy would get it (offline, with Nodestro's default models); shown read-only.
     workflow: WorkflowIn
 
@@ -1844,6 +1956,7 @@ def detail(template_id: str, language: str) -> TemplateDetail:
             for item in spec.knowledge
         ],
         budget_usd=spec.budget_usd,
+        services=services(template_id),
         workflow=workflow,
     )
 
