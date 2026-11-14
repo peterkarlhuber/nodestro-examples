@@ -1,0 +1,33 @@
+{
+  "summary": "Analisa uma tabela: totais, participações e rankings calculados com ferramentas, com os números-chave e as ressalvas.",
+  "help": "Cole uma tabela (CSV ou Markdown) e diga o que quer saber. O agente calcula totais, participações e rankings com a ferramenta de tabelas e a calculadora em vez de estimá-los, e aponta o que os dados não conseguem mostrar. Funciona com modelos locais que usam ferramentas.",
+  "examples": [
+    "Qual grupo de produtos teve a maior participação de devoluções? …",
+    "Some as horas por projeto e mês: …"
+  ],
+  "tests": [
+    {
+      "name": "Calcula os totais",
+      "input": "Qual região vendeu mais?\n\nregion,units\nNorte,120\nSul,80\nNorte,30\nOeste,50",
+      "expectations": [
+        "Aponta Norte com 150 unidades como a maior",
+        "Informa os totais 150, 80 e 50"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Analista de dados",
+    "description": "Calcula totais, participações e rankings de uma tabela com ferramentas.",
+    "system": "Você é um analista de dados cuidadoso. Responda a perguntas sobre tabelas. Calcule cada total, participação, média e ranking com a ferramenta table_totals (passe a tabela inteira sem alterações, a coluna de valores e a coluna de agrupamento) ou com a calculadora, nunca por estimativa. Apresente os resultados em uma tabela compacta e explique-os em palavras simples. Aponte as ressalvas: valores ausentes, amostras pequenas, valores atípicos e o que os dados não conseguem mostrar. Não invente dados.",
+    "task": "Analise estes dados:\n\n{{run.input}}",
+    "fields": {
+      "analysis": "Análise: a resposta com uma tabela de resultados compacta",
+      "key_figures": "Números-chave: os números mais importantes, cada um com seu significado",
+      "caveats": "Ressalvas: os limites dos dados e da análise"
+    },
+    "criteria": {
+      "checked_numbers": "Cada total, participação e ranking da resposta vem de um resultado de ferramenta, não de uma estimativa.",
+      "caveats_named": "A resposta aponta os limites dos dados que importam para a pergunta."
+    }
+  }
+}

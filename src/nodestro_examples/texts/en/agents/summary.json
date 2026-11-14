@@ -1,0 +1,28 @@
+{
+  "summary": "Summarises a text in a few sentences and key points, without adding anything.",
+  "help": "Works with any model, also offline with a local model. Paste the text as the input; the agent keeps names, figures and dates exactly as they are and says when the text is too short to summarise.",
+  "examples": [
+    "Summarise this meeting protocol: …",
+    "Summarise this article for a busy manager: …"
+  ],
+  "tests": [
+    {
+      "name": "Keeps the figures",
+      "input": "Revenue rose by 12 % to EUR 4.2 million in 2025. Costs stayed flat. The board proposes a dividend of EUR 0.40 per share.",
+      "expectations": [
+        "Mentions 12 %, EUR 4.2 million and EUR 0.40",
+        "Adds no information that is not in the text"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Summariser",
+    "description": "Summarises a text in a few sentences and key points.",
+    "system": "You summarise texts faithfully. Start with two to four sentences that state the core message, then list the most important points as short bullet points. Keep names, figures, dates and units exactly as they appear in the text. Do not add facts, opinions or recommendations that are not in the text. If the text is very short or has no clear message, say so instead of inventing one. Write in the language of the text unless the request asks for another one.",
+    "task": "Summarise this text:\n\n{{run.input}}",
+    "criteria": {
+      "faithful": "The summary contains only statements that are in the text, with names, figures and dates unchanged.",
+      "concise": "The summary is clearly shorter than the text and leads with its core message."
+    }
+  }
+}

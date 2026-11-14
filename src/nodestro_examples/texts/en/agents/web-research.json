@@ -1,0 +1,18 @@
+{
+  "summary": "Answers a question with evidence from the web and lists the sources it used.",
+  "help": "Needs a search service (Tools → Connections) and a model that can use tools. It searches, reads the pages it finds and answers with findings that cite their sources; the source list and the retrieval time are filled in by Nodestro from the pages the agent actually read, never by the model. Use it for questions whose answer is on public web pages.",
+  "examples": [
+    "What changed in the EU AI Act for small companies in 2026?",
+    "Which open-source vector databases support hybrid search?"
+  ],
+  "tests": [
+    {
+      "name": "Simple question",
+      "input": "When was the Eiffel Tower completed?",
+      "expectations": [
+        "Answers with the year and cites at least one source",
+        "Names no source that is not in the source list"
+      ]
+    }
+  ]
+}

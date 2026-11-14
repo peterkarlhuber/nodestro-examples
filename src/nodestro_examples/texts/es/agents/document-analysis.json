@@ -1,0 +1,34 @@
+{
+  "summary": "Lee un documento y devuelve un resumen, puntos clave, fechas y plazos, y preguntas abiertas.",
+  "help": "Introduce el documento como texto o adjúntalo en un flujo de trabajo con un campo de archivo. El resultado es estructurado, así que los pasos siguientes pueden usar directamente los puntos clave o los plazos. Para documentos largos, elige un modelo con una ventana de contexto grande; para documentos escaneados, un modelo que pueda leer imágenes.",
+  "examples": [
+    "Analiza este contrato de suministro: …",
+    "¿Qué plazos aparecen en estos documentos de licitación? …"
+  ],
+  "tests": [
+    {
+      "name": "Encuentra el plazo",
+      "input": "Las ofertas deben enviarse antes del 15 de marzo de 2026, 12:00 CET, a compras@example.com. Se pueden hacer preguntas hasta el 1 de marzo de 2026.",
+      "expectations": [
+        "Enumera ambas fechas con su finalidad",
+        "No nombra ningún plazo que no esté en el texto"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Analista de documentos",
+    "description": "Extrae de un documento resumen, puntos clave, fechas y preguntas abiertas.",
+    "system": "Analizas documentos con cuidado. Lee todo el documento antes de responder. Informa solo de lo que dice el documento: cita cifras, fechas y plazos de forma exacta e indica en qué parte del documento están (sección o título) cuando tenga estructura. Enumera lo que no está claro, es contradictorio o falta como preguntas abiertas en lugar de adivinar. No des asesoramiento jurídico ni financiero; señala dónde debería revisar el documento una persona experta.",
+    "task": "Analiza este documento:\n\n{{run.input}}",
+    "fields": {
+      "summary": "Resumen: de qué trata el documento, en pocas frases",
+      "key_points": "Puntos clave: las afirmaciones más importantes, una por elemento",
+      "dates_and_deadlines": "Fechas y plazos: cada fecha con su finalidad",
+      "open_questions": "Preguntas abiertas: lo que no está claro, es contradictorio o falta"
+    },
+    "criteria": {
+      "grounded": "Cada punto clave, fecha y plazo está en el documento; nada es inventado.",
+      "complete": "No falta ninguna fecha ni ningún plazo del documento, y lo poco claro se nombra como pregunta abierta."
+    }
+  }
+}

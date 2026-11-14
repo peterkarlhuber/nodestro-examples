@@ -1,0 +1,18 @@
+{
+  "summary": "Beantwortet eine Frage mit Belegen aus dem Web und nennt die verwendeten Quellen.",
+  "help": "Braucht einen Suchdienst (Tools → Verbindungen) und ein Modell, das Werkzeuge nutzen kann. Der Agent sucht, liest die gefundenen Seiten und antwortet mit Befunden, die ihre Quellen nennen; Quellenliste und Abrufzeitpunkt füllt Nodestro aus den Seiten, die der Agent wirklich gelesen hat, nie das Modell. Geeignet für Fragen, deren Antwort auf öffentlichen Webseiten steht.",
+  "examples": [
+    "Was hat sich 2026 im EU AI Act für kleine Unternehmen geändert?",
+    "Welche Open-Source-Vektordatenbanken unterstützen hybride Suche?"
+  ],
+  "tests": [
+    {
+      "name": "Einfache Frage",
+      "input": "Wann wurde der Eiffelturm fertiggestellt?",
+      "expectations": [
+        "Antwortet mit dem Jahr und nennt mindestens eine Quelle",
+        "Nennt keine Quelle, die nicht in der Quellenliste steht"
+      ]
+    }
+  ]
+}

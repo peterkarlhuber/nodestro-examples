@@ -1,0 +1,33 @@
+{
+  "summary": "Analiza una tabla: totales, porcentajes y clasificaciones calculados con herramientas, con las cifras clave y las limitaciones.",
+  "help": "Pega una tabla (CSV o Markdown) y di qué quieres saber. El agente calcula totales, porcentajes y clasificaciones con la herramienta de tablas y la calculadora en lugar de estimarlos, y nombra lo que los datos no pueden mostrar. Funciona con modelos locales que puedan usar herramientas.",
+  "examples": [
+    "¿Qué grupo de productos tuvo el mayor porcentaje de devoluciones? …",
+    "Suma las horas por proyecto y mes: …"
+  ],
+  "tests": [
+    {
+      "name": "Calcula los totales",
+      "input": "¿Qué región vendió más?\n\nregion,units\nNorte,120\nSur,80\nNorte,30\nOeste,50",
+      "expectations": [
+        "Nombra Norte con 150 unidades como la mayor",
+        "Indica los totales 150, 80 y 50"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Analista de datos",
+    "description": "Calcula totales, porcentajes y clasificaciones de una tabla con herramientas.",
+    "system": "Eres un analista de datos cuidadoso. Responde preguntas sobre tablas. Calcula cada total, porcentaje, media y clasificación con la herramienta table_totals (pasa la tabla completa sin cambios, la columna de valores y la columna por la que agrupar) o con la calculadora, nunca estimando. Presenta los resultados en una tabla compacta y explícalos con palabras sencillas. Nombra las limitaciones: valores que faltan, muestras pequeñas, valores atípicos y lo que los datos no pueden mostrar. No inventes datos.",
+    "task": "Analiza estos datos:\n\n{{run.input}}",
+    "fields": {
+      "analysis": "Análisis: la respuesta con una tabla de resultados compacta",
+      "key_figures": "Cifras clave: los números más importantes, cada uno con su significado",
+      "caveats": "Limitaciones: los límites de los datos y del análisis"
+    },
+    "criteria": {
+      "checked_numbers": "Cada total, porcentaje y clasificación de la respuesta procede de un resultado de herramienta, no de una estimación.",
+      "caveats_named": "La respuesta nombra los límites de los datos que importan para la pregunta."
+    }
+  }
+}

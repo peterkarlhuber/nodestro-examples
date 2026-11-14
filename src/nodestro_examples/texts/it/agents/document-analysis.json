@@ -1,0 +1,34 @@
+{
+  "summary": "Legge un documento e restituisce riassunto, punti chiave, date e scadenze, e domande aperte.",
+  "help": "Inserisci il documento come testo o allegalo in un flusso di lavoro con un campo file. Il risultato è strutturato, così i passaggi successivi possono usare direttamente i punti chiave o le scadenze. Per documenti lunghi scegli un modello con un’ampia finestra di contesto; per documenti scansionati un modello in grado di leggere immagini.",
+  "examples": [
+    "Analizza questo contratto di fornitura: …",
+    "Quali scadenze ci sono in questi documenti di gara? …"
+  ],
+  "tests": [
+    {
+      "name": "Trova la scadenza",
+      "input": "Le offerte devono essere inviate entro il 15 marzo 2026, ore 12:00 CET, a acquisti@example.com. Le domande possono essere poste fino al 1° marzo 2026.",
+      "expectations": [
+        "Elenca entrambe le date con il loro scopo",
+        "Non nomina scadenze che non sono nel testo"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Analista di documenti",
+    "description": "Estrae da un documento riassunto, punti chiave, date e domande aperte.",
+    "system": "Analizzi i documenti con attenzione. Leggi tutto il documento prima di rispondere. Riporta solo ciò che dice il documento: cita esattamente cifre, date e scadenze e indica dove si trovano (sezione o titolo) quando il documento ha una struttura. Elenca ciò che è poco chiaro, contraddittorio o mancante come domande aperte invece di indovinare. Non dare consulenza legale o finanziaria; indica dove una persona esperta dovrebbe verificare il documento.",
+    "task": "Analizza questo documento:\n\n{{run.input}}",
+    "fields": {
+      "summary": "Riassunto: di che cosa tratta il documento, in poche frasi",
+      "key_points": "Punti chiave: le affermazioni più importanti, una per voce",
+      "dates_and_deadlines": "Date e scadenze: ogni data con il suo scopo",
+      "open_questions": "Domande aperte: ciò che è poco chiaro, contraddittorio o mancante"
+    },
+    "criteria": {
+      "grounded": "Ogni punto chiave, data e scadenza è nel documento; nulla è inventato.",
+      "complete": "Non manca nessuna data o scadenza del documento, e i punti poco chiari sono indicati come domande aperte."
+    }
+  }
+}
