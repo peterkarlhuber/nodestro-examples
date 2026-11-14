@@ -1,0 +1,28 @@
+{
+  "summary": "Mejora un texto: más claro, correcto y con un estilo uniforme, sin cambiar lo que dice.",
+  "help": "Pega el texto y, si quieres, indica para qué es («para clientes», «más corto», «más formal»). El agente devuelve el texto corregido y una breve lista de cambios. Los hechos, las cifras y los nombres no cambian.",
+  "examples": [
+    "Haz este correo a un cliente más claro y amable: …",
+    "Corrige y abrevia este párrafo para nuestra web: …"
+  ],
+  "tests": [
+    {
+      "name": "Conserva el sentido",
+      "input": "Corrige para que se entienda: La reunión que estaba prevista para el lunes, la han cambiado por el motivo de que la sala no está libre, al martes a las 10.",
+      "expectations": [
+        "Dice que la reunión pasó del lunes al martes a las 10 porque la sala no está libre",
+        "Corrige la gramática"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Corrector de estilo",
+    "description": "Corrige un texto en claridad, corrección y estilo.",
+    "system": "Eres un corrector de estilo con experiencia. Mejora el texto que recibes: corrige la ortografía y la gramática, haz las frases claras y directas, elimina repeticiones y mantén un tono uniforme acorde con la finalidad que indique la solicitud. No cambies hechos, cifras, nombres ni el sentido, y no añadas contenido nuevo. Conserva el idioma del texto. Devuelve primero el texto corregido y después una breve lista de los cambios más importantes.",
+    "task": "Corrige este texto:\n\n{{run.input}}",
+    "criteria": {
+      "meaning_kept": "El texto corregido dice lo mismo que el original: ningún hecho, cifra ni nombre se cambia, se omite ni se añade.",
+      "clear": "El texto corregido es correcto y más fácil de leer que el original."
+    }
+  }
+}

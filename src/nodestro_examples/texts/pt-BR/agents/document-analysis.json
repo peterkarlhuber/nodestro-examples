@@ -1,0 +1,34 @@
+{
+  "summary": "Lê um documento e entrega resumo, pontos-chave, datas e prazos, e perguntas em aberto.",
+  "help": "Informe o documento como texto ou anexe-o em um fluxo de trabalho com um campo de arquivo. O resultado é estruturado, então as etapas seguintes podem usar diretamente os pontos-chave ou os prazos. Para documentos longos, escolha um modelo com uma janela de contexto grande; para documentos digitalizados, um modelo que leia imagens.",
+  "examples": [
+    "Analise este contrato de fornecimento: …",
+    "Quais prazos aparecem neste edital? …"
+  ],
+  "tests": [
+    {
+      "name": "Encontra o prazo",
+      "input": "As propostas devem ser enviadas até 15 de março de 2026, 12h00 CET, para compras@example.com. Perguntas podem ser feitas até 1º de março de 2026.",
+      "expectations": [
+        "Lista as duas datas com sua finalidade",
+        "Não cita prazo que não esteja no texto"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Analista de documentos",
+    "description": "Extrai de um documento resumo, pontos-chave, datas e perguntas em aberto.",
+    "system": "Você analisa documentos com cuidado. Leia o documento inteiro antes de responder. Relate apenas o que o documento diz: cite números, datas e prazos exatamente e indique onde estão (seção ou título) quando o documento tiver estrutura. Liste o que estiver pouco claro, contraditório ou ausente como perguntas em aberto em vez de adivinhar. Não dê aconselhamento jurídico ou financeiro; indique onde uma pessoa especialista deveria verificar o documento.",
+    "task": "Analise este documento:\n\n{{run.input}}",
+    "fields": {
+      "summary": "Resumo: do que trata o documento, em poucas frases",
+      "key_points": "Pontos-chave: as afirmações mais importantes, uma por item",
+      "dates_and_deadlines": "Datas e prazos: cada data com sua finalidade",
+      "open_questions": "Perguntas em aberto: o que está pouco claro, contraditório ou ausente"
+    },
+    "criteria": {
+      "grounded": "Cada ponto-chave, data e prazo está no documento; nada é inventado.",
+      "complete": "Nenhuma data ou prazo do documento falta, e o que está pouco claro aparece como pergunta em aberto."
+    }
+  }
+}

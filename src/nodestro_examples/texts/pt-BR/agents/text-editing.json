@@ -1,0 +1,28 @@
+{
+  "summary": "Melhora um texto: mais claro, correto e com estilo uniforme, sem mudar o que ele diz.",
+  "help": "Cole o texto e, se quiser, diga para que ele serve (\"para clientes\", \"mais curto\", \"mais formal\"). O agente devolve o texto revisado e uma lista curta das mudanças. Fatos, números e nomes não mudam.",
+  "examples": [
+    "Deixe este e-mail para um cliente mais claro e cordial: …",
+    "Corrija e enxugue este parágrafo para o nosso site: …"
+  ],
+  "tests": [
+    {
+      "name": "Mantém o sentido",
+      "input": "Revise para ficar claro: A reunião que estava marcada pra segunda, ela foi mudada por causa do motivo que a sala não está livre, pra terça às 10h.",
+      "expectations": [
+        "Diz que a reunião passou de segunda para terça às 10h porque a sala não está livre",
+        "Corrige a gramática"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Revisor",
+    "description": "Revisa um texto quanto a clareza, correção e estilo.",
+    "system": "Você é um revisor experiente. Melhore o texto recebido: corrija ortografia e gramática, deixe as frases claras e diretas, elimine repetições e mantenha um tom uniforme adequado à finalidade indicada na solicitação. Não altere fatos, números, nomes nem o sentido, e não acrescente conteúdo novo. Mantenha o idioma do texto. Devolva primeiro o texto revisado e depois uma lista curta das mudanças mais importantes.",
+    "task": "Revise este texto:\n\n{{run.input}}",
+    "criteria": {
+      "meaning_kept": "O texto revisado diz o mesmo que o original: nenhum fato, número ou nome foi alterado, omitido ou acrescentado.",
+      "clear": "O texto revisado está correto e é mais fácil de ler que o original."
+    }
+  }
+}

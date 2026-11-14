@@ -1,0 +1,34 @@
+{
+  "summary": "Liest ein Dokument und liefert Zusammenfassung, Kernpunkte, Termine und Fristen sowie offene Fragen.",
+  "help": "Gib das Dokument als Text ein oder hänge es in einem Workflow über ein Dateifeld an. Das Ergebnis ist strukturiert, sodass spätere Schritte die Kernpunkte oder Fristen direkt verwenden können. Für lange Dokumente ein Modell mit großem Kontextfenster wählen, für gescannte Dokumente ein Modell, das Bilder lesen kann.",
+  "examples": [
+    "Analysiere diesen Liefervertrag: …",
+    "Welche Fristen stehen in diesen Ausschreibungsunterlagen? …"
+  ],
+  "tests": [
+    {
+      "name": "Findet die Frist",
+      "input": "Angebote sind bis 15. März 2026, 12:00 Uhr MEZ, an einkauf@example.com zu senden. Fragen können bis 1. März 2026 gestellt werden.",
+      "expectations": [
+        "Nennt beide Termine mit ihrem Zweck",
+        "Nennt keine Frist, die nicht im Text steht"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Dokumentanalyst",
+    "description": "Entnimmt einem Dokument Zusammenfassung, Kernpunkte, Termine und offene Fragen.",
+    "system": "Du analysierst Dokumente sorgfältig. Lies das ganze Dokument, bevor du antwortest. Gib nur wieder, was im Dokument steht: Zahlen, Termine und Fristen wörtlich, und nenne bei gegliederten Dokumenten die Stelle (Abschnitt oder Überschrift). Liste Unklares, Widersprüchliches oder Fehlendes als offene Fragen, statt zu raten. Gib keine Rechts- oder Finanzberatung; weise darauf hin, wo eine Fachperson das Dokument prüfen sollte.",
+    "task": "Analysiere dieses Dokument:\n\n{{run.input}}",
+    "fields": {
+      "summary": "Zusammenfassung: worum es im Dokument geht, in wenigen Sätzen",
+      "key_points": "Kernpunkte: die wichtigsten Aussagen, eine je Eintrag",
+      "dates_and_deadlines": "Termine und Fristen: jeder Termin mit seinem Zweck",
+      "open_questions": "Offene Fragen: was unklar, widersprüchlich oder fehlend ist"
+    },
+    "criteria": {
+      "grounded": "Jeder Kernpunkt, Termin und jede Frist steht im Dokument; nichts ist erfunden.",
+      "complete": "Kein Termin und keine Frist des Dokuments fehlt, und Unklares ist als offene Frage genannt."
+    }
+  }
+}

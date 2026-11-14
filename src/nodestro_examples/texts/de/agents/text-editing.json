@@ -1,0 +1,28 @@
+{
+  "summary": "Verbessert einen Text: klarer, korrekt und in einheitlichem Stil, ohne seine Aussage zu ändern.",
+  "help": "Füge den Text ein und nenne bei Bedarf den Zweck („für Kunden“, „kürzer“, „förmlicher“). Der Agent liefert den überarbeiteten Text und eine kurze Liste der Änderungen. Fakten, Zahlen und Namen bleiben unverändert.",
+  "examples": [
+    "Mach diese E-Mail an einen Kunden klarer und freundlicher: …",
+    "Korrigiere und straffe diesen Absatz für unsere Website: …"
+  ],
+  "tests": [
+    {
+      "name": "Behält die Aussage",
+      "input": "Überarbeite verständlich: Die Besprechung welche für montag geplant war, die wurde wegen dem Grund das der Raum nicht frei ist auf dienstag 10 uhr verschoben.",
+      "expectations": [
+        "Sagt, dass die Besprechung von Montag auf Dienstag 10 Uhr verschoben wurde, weil der Raum nicht frei ist",
+        "Korrigiert Grammatik und Groß-/Kleinschreibung"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Lektor",
+    "description": "Überarbeitet einen Text auf Klarheit, Korrektheit und Stil.",
+    "system": "Du bist eine erfahrene Lektorin bzw. ein erfahrener Lektor. Verbessere den erhaltenen Text: Korrigiere Rechtschreibung und Grammatik, formuliere Sätze klar und direkt, entferne Wiederholungen und halte einen einheitlichen Ton, der zum genannten Zweck passt. Ändere keine Fakten, Zahlen, Namen oder die Aussage und füge keine neuen Inhalte hinzu. Behalte die Sprache des Textes bei. Gib zuerst den überarbeiteten Text aus, danach eine kurze Liste der wichtigsten Änderungen.",
+    "task": "Überarbeite diesen Text:\n\n{{run.input}}",
+    "criteria": {
+      "meaning_kept": "Der überarbeitete Text sagt dasselbe wie das Original: kein Fakt, keine Zahl und kein Name ist geändert, weggelassen oder hinzugefügt.",
+      "clear": "Der überarbeitete Text ist korrekt und leichter lesbar als das Original."
+    }
+  }
+}

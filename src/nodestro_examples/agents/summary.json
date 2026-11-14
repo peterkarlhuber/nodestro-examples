@@ -1,0 +1,18 @@
+{
+  "id": "summary",
+  "number": 2,
+  "category": "text",
+  "revision": 1,
+  "agent": {
+    "id": "summary",
+    "type": "agent",
+    "x": 0,
+    "y": 0,
+    "icon": "file",
+    "tier": "fast",
+    "task": "write",
+    "effort": "low",
+    "max_tokens": 4000,
+    "criteria": ["faithful", "concise"]
+  }
+}
