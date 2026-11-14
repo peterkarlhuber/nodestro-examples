@@ -1,0 +1,24 @@
+{
+  "id": "document-analysis",
+  "number": 3,
+  "category": "analysis",
+  "revision": 1,
+  "capabilities": ["structured_output", "long_context"],
+  "agent": {
+    "id": "document_analysis",
+    "type": "agent",
+    "x": 0,
+    "y": 0,
+    "icon": "search",
+    "tier": "standard",
+    "task": "extract",
+    "output_name": "DocumentAnalysis",
+    "output_fields": [
+      {"name": "summary"},
+      {"name": "key_points", "type": "string_list"},
+      {"name": "dates_and_deadlines", "type": "string_list", "required": false},
+      {"name": "open_questions", "type": "string_list", "required": false}
+    ],
+    "criteria": ["grounded", "complete"]
+  }
+}

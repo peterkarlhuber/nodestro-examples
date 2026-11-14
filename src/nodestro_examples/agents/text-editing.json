@@ -1,0 +1,16 @@
+{
+  "id": "text-editing",
+  "number": 4,
+  "category": "text",
+  "revision": 1,
+  "agent": {
+    "id": "editor",
+    "type": "agent",
+    "x": 0,
+    "y": 0,
+    "icon": "pen",
+    "tier": "standard",
+    "task": "write",
+    "criteria": ["meaning_kept", "clear"]
+  }
+}

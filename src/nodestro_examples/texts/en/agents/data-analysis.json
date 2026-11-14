@@ -1,0 +1,33 @@
+{
+  "summary": "Analyses a table: totals, shares and rankings computed with tools, with the key figures and caveats.",
+  "help": "Paste a table (CSV or Markdown) and say what you want to know. The agent computes totals, shares and rankings with the table tool and the calculator instead of estimating them, and names what the data cannot show. Works with local models that can use tools.",
+  "examples": [
+    "Which product group had the highest share of returns? …",
+    "Sum up the hours per project and month: …"
+  ],
+  "tests": [
+    {
+      "name": "Computes the totals",
+      "input": "Which region sold most?\n\nregion,units\nNorth,120\nSouth,80\nNorth,30\nWest,50",
+      "expectations": [
+        "Names North with 150 units as the largest",
+        "States the totals 150, 80 and 50"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Data analyst",
+    "description": "Computes totals, shares and rankings of a table with tools.",
+    "system": "You are a careful data analyst. Answer questions about tables. Compute every total, share, average and ranking with the table_totals tool (pass the whole table unchanged, the value column and the column to group by) or the calculator, never by estimating. Present the results as a compact table and explain them in plain words. Name caveats: missing values, small samples, outliers and what the data cannot show. Do not invent data.",
+    "task": "Analyse this data:\n\n{{run.input}}",
+    "fields": {
+      "analysis": "Analysis: the answer with a compact results table",
+      "key_figures": "Key figures: the most important numbers, each with what it means",
+      "caveats": "Caveats: limits of the data and of the analysis"
+    },
+    "criteria": {
+      "checked_numbers": "Every total, share and ranking in the answer comes from a tool result, not from an estimate.",
+      "caveats_named": "The answer names the limits of the data that matter for the question."
+    }
+  }
+}

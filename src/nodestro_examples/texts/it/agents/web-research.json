@@ -1,0 +1,18 @@
+{
+  "summary": "Risponde a una domanda con prove dal web ed elenca le fonti usate.",
+  "help": "Richiede un servizio di ricerca (Strumenti → Connessioni) e un modello in grado di usare strumenti. Cerca, legge le pagine trovate e risponde con risultati che citano le loro fonti; l’elenco delle fonti e l’ora di consultazione li compila Nodestro dalle pagine che l’agente ha davvero letto, mai il modello. Usalo per domande la cui risposta si trova su pagine web pubbliche.",
+  "examples": [
+    "Che cosa è cambiato nel 2026 nell’AI Act dell’UE per le piccole imprese?",
+    "Quali database vettoriali open source supportano la ricerca ibrida?"
+  ],
+  "tests": [
+    {
+      "name": "Domanda semplice",
+      "input": "Quando è stata completata la Torre Eiffel?",
+      "expectations": [
+        "Risponde con l’anno e cita almeno una fonte",
+        "Non nomina fonti che non sono nell’elenco delle fonti"
+      ]
+    }
+  ]
+}

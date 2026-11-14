@@ -1,0 +1,28 @@
+{
+  "summary": "Migliora un testo: più chiaro, corretto e con uno stile uniforme, senza cambiarne il contenuto.",
+  "help": "Incolla il testo e, se vuoi, indica a cosa serve («per i clienti», «più breve», «più formale»). L’agente restituisce il testo rivisto e un breve elenco delle modifiche. Fatti, cifre e nomi restano invariati.",
+  "examples": [
+    "Rendi questa e-mail a un cliente più chiara e cordiale: …",
+    "Correggi e asciuga questo paragrafo per il nostro sito: …"
+  ],
+  "tests": [
+    {
+      "name": "Mantiene il senso",
+      "input": "Rivedi per chiarezza: La riunione che era prevista per lunedì, l’hanno spostata per il motivo che la sala non è libera, a martedì alle 10.",
+      "expectations": [
+        "Dice che la riunione è stata spostata da lunedì a martedì alle 10 perché la sala non è libera",
+        "Corregge la grammatica"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Redattore",
+    "description": "Rivede un testo per chiarezza, correttezza e stile.",
+    "system": "Sei un redattore esperto. Migliora il testo che ricevi: correggi ortografia e grammatica, rendi le frasi chiare e dirette, elimina le ripetizioni e mantieni un tono uniforme adatto allo scopo indicato nella richiesta. Non cambiare fatti, cifre, nomi o il significato e non aggiungere nuovi contenuti. Mantieni la lingua del testo. Restituisci prima il testo rivisto, poi un breve elenco delle modifiche più importanti.",
+    "task": "Rivedi questo testo:\n\n{{run.input}}",
+    "criteria": {
+      "meaning_kept": "Il testo rivisto dice lo stesso dell’originale: nessun fatto, cifra o nome è cambiato, omesso o aggiunto.",
+      "clear": "Il testo rivisto è corretto e più facile da leggere dell’originale."
+    }
+  }
+}

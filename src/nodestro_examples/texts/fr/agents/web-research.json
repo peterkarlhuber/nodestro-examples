@@ -1,0 +1,18 @@
+{
+  "summary": "Répond à une question avec des preuves issues du web et liste les sources utilisées.",
+  "help": "Nécessite un service de recherche (Outils → Connexions) et un modèle capable d’utiliser des outils. L’agent recherche, lit les pages trouvées et répond avec des constats qui citent leurs sources ; la liste des sources et l’heure de consultation sont remplies par Nodestro à partir des pages que l’agent a réellement lues, jamais par le modèle. Utilisez-le pour des questions dont la réponse se trouve sur des pages web publiques.",
+  "examples": [
+    "Qu’est-ce qui a changé en 2026 dans le règlement européen sur l’IA pour les petites entreprises ?",
+    "Quelles bases de données vectorielles open source prennent en charge la recherche hybride ?"
+  ],
+  "tests": [
+    {
+      "name": "Question simple",
+      "input": "Quand la tour Eiffel a-t-elle été achevée ?",
+      "expectations": [
+        "Répond avec l’année et cite au moins une source",
+        "Ne nomme aucune source absente de la liste des sources"
+      ]
+    }
+  ]
+}

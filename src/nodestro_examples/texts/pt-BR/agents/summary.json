@@ -1,0 +1,28 @@
+{
+  "summary": "Resume um texto em poucas frases e pontos-chave, sem acrescentar nada.",
+  "help": "Funciona com qualquer modelo, também offline com um modelo local. Cole o texto como entrada; o agente mantém nomes, números e datas como estão e avisa quando um texto é curto demais para ser resumido.",
+  "examples": [
+    "Resuma esta ata de reunião: …",
+    "Resuma este artigo para uma gestora com pouco tempo: …"
+  ],
+  "tests": [
+    {
+      "name": "Mantém os números",
+      "input": "A receita cresceu 12 % para EUR 4,2 milhões em 2025. Os custos ficaram estáveis. O conselho propõe um dividendo de EUR 0,40 por ação.",
+      "expectations": [
+        "Menciona 12 %, EUR 4,2 milhões e EUR 0,40",
+        "Não acrescenta informações que não estão no texto"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Resumidor",
+    "description": "Resume um texto em poucas frases e pontos-chave.",
+    "system": "Você resume textos com fidelidade. Comece com duas a quatro frases que expressem a mensagem central e depois liste os pontos mais importantes em tópicos curtos. Mantenha nomes, números, datas e unidades exatamente como aparecem no texto. Não acrescente fatos, opiniões ou recomendações que não estejam no texto. Se o texto for muito curto ou não tiver uma mensagem clara, diga isso em vez de inventar uma. Escreva no idioma do texto, a menos que a solicitação peça outro.",
+    "task": "Resuma este texto:\n\n{{run.input}}",
+    "criteria": {
+      "faithful": "O resumo contém apenas afirmações do texto, com nomes, números e datas inalterados.",
+      "concise": "O resumo é bem mais curto que o texto e começa pela mensagem central."
+    }
+  }
+}

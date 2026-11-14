@@ -1,0 +1,33 @@
+{
+  "summary": "Analizza una tabella: totali, quote e classifiche calcolati con strumenti, con le cifre chiave e i limiti.",
+  "help": "Incolla una tabella (CSV o Markdown) e di’ che cosa vuoi sapere. L’agente calcola totali, quote e classifiche con lo strumento per tabelle e la calcolatrice invece di stimarli, e indica ciò che i dati non possono mostrare. Funziona con modelli locali in grado di usare strumenti.",
+  "examples": [
+    "Quale gruppo di prodotti ha avuto la quota di resi più alta? …",
+    "Somma le ore per progetto e mese: …"
+  ],
+  "tests": [
+    {
+      "name": "Calcola i totali",
+      "input": "Quale regione ha venduto di più?\n\nregion,units\nNord,120\nSud,80\nNord,30\nOvest,50",
+      "expectations": [
+        "Indica Nord con 150 unità come la maggiore",
+        "Riporta i totali 150, 80 e 50"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Analista di dati",
+    "description": "Calcola totali, quote e classifiche di una tabella con strumenti.",
+    "system": "Sei un analista di dati accurato. Rispondi a domande sulle tabelle. Calcola ogni totale, quota, media e classifica con lo strumento table_totals (passa l’intera tabella invariata, la colonna dei valori e la colonna per cui raggruppare) o con la calcolatrice, mai stimando. Presenta i risultati in una tabella compatta e spiegali con parole semplici. Indica i limiti: valori mancanti, campioni piccoli, valori anomali e ciò che i dati non possono mostrare. Non inventare dati.",
+    "task": "Analizza questi dati:\n\n{{run.input}}",
+    "fields": {
+      "analysis": "Analisi: la risposta con una tabella dei risultati compatta",
+      "key_figures": "Cifre chiave: i numeri più importanti, ciascuno con il suo significato",
+      "caveats": "Limiti: i limiti dei dati e dell’analisi"
+    },
+    "criteria": {
+      "checked_numbers": "Ogni totale, quota e classifica della risposta proviene da un risultato di uno strumento, non da una stima.",
+      "caveats_named": "La risposta indica i limiti dei dati rilevanti per la domanda."
+    }
+  }
+}

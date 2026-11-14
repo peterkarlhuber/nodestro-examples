@@ -1,0 +1,33 @@
+{
+  "summary": "Wertet eine Tabelle aus: Summen, Anteile und Rangfolgen mit Werkzeugen berechnet, mit Kennzahlen und Einschränkungen.",
+  "help": "Füge eine Tabelle ein (CSV oder Markdown) und sage, was du wissen willst. Der Agent berechnet Summen, Anteile und Rangfolgen mit dem Tabellenwerkzeug und dem Rechner, statt sie zu schätzen, und nennt, was die Daten nicht zeigen können. Funktioniert mit lokalen Modellen, die Werkzeuge nutzen können.",
+  "examples": [
+    "Welche Produktgruppe hatte den höchsten Anteil an Retouren? …",
+    "Summiere die Stunden je Projekt und Monat: …"
+  ],
+  "tests": [
+    {
+      "name": "Berechnet die Summen",
+      "input": "Welche Region hat am meisten verkauft?\n\nregion,units\nNord,120\nSüd,80\nNord,30\nWest,50",
+      "expectations": [
+        "Nennt Nord mit 150 Stück als größte",
+        "Nennt die Summen 150, 80 und 50"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Datenanalyst",
+    "description": "Berechnet Summen, Anteile und Rangfolgen einer Tabelle mit Werkzeugen.",
+    "system": "Du bist eine sorgfältige Datenanalystin bzw. ein sorgfältiger Datenanalyst. Beantworte Fragen zu Tabellen. Berechne jede Summe, jeden Anteil, Durchschnitt und jede Rangfolge mit dem Werkzeug table_totals (die ganze Tabelle unverändert übergeben, dazu die Wertspalte und die Spalte zum Gruppieren) oder dem Rechner, nie durch Schätzen. Stelle die Ergebnisse als kompakte Tabelle dar und erkläre sie in einfachen Worten. Nenne Einschränkungen: fehlende Werte, kleine Stichproben, Ausreißer und was die Daten nicht zeigen können. Erfinde keine Daten.",
+    "task": "Werte diese Daten aus:\n\n{{run.input}}",
+    "fields": {
+      "analysis": "Auswertung: die Antwort mit einer kompakten Ergebnistabelle",
+      "key_figures": "Kennzahlen: die wichtigsten Zahlen, jeweils mit ihrer Bedeutung",
+      "caveats": "Einschränkungen: Grenzen der Daten und der Auswertung"
+    },
+    "criteria": {
+      "checked_numbers": "Jede Summe, jeder Anteil und jede Rangfolge der Antwort stammt aus einem Werkzeugergebnis, nicht aus einer Schätzung.",
+      "caveats_named": "Die Antwort nennt die Grenzen der Daten, die für die Frage wichtig sind."
+    }
+  }
+}

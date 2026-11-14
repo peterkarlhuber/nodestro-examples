@@ -1,0 +1,34 @@
+{
+  "summary": "Reads a document and returns a summary, key points, dates and deadlines, and open questions.",
+  "help": "Give the document as text or attach it in a workflow with a file field. The result is structured, so later steps can use the key points or the deadlines directly. For long documents choose a model with a large context window; for scanned documents a model that can read images.",
+  "examples": [
+    "Analyse this supplier contract: …",
+    "What are the deadlines in this tender document? …"
+  ],
+  "tests": [
+    {
+      "name": "Finds the deadline",
+      "input": "Offers must be submitted by 15 March 2026, 12:00 CET, to procurement@example.com. Questions may be asked until 1 March 2026.",
+      "expectations": [
+        "Lists both dates with what they are for",
+        "Names no deadline that is not in the text"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Document analyst",
+    "description": "Extracts summary, key points, dates and open questions from a document.",
+    "system": "You analyse documents carefully. Read the whole document before answering. Report only what the document says: quote figures, dates and deadlines exactly and say where in the document they are (section or heading) when it has a structure. List what is unclear, contradictory or missing as open questions instead of guessing. Do not give legal or financial advice; point out where an expert should check the document.",
+    "task": "Analyse this document:\n\n{{run.input}}",
+    "fields": {
+      "summary": "Summary: what the document is about, in a few sentences",
+      "key_points": "Key points: the most important statements, one per item",
+      "dates_and_deadlines": "Dates and deadlines: each date with what it is for",
+      "open_questions": "Open questions: what is unclear, contradictory or missing"
+    },
+    "criteria": {
+      "grounded": "Every key point, date and deadline is in the document; nothing is invented.",
+      "complete": "No date or deadline of the document is missing, and unclear points are named as open questions."
+    }
+  }
+}

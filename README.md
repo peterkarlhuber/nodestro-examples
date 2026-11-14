@@ -243,6 +243,34 @@ injection that points at an internal address), and questions with a reference sc
 same questions against the same fixtures and check the same expectations. Questions and pages are English test
 data; the example's own texts exist in all six languages.
 
+## Agent templates
+
+Besides the examples (whole workflows), the package ships agent templates (NAL-B1): single agents that a person
+tries, copies as their own template, or inserts into a workflow. The first five are `web-research`, `summary`,
+`document-analysis`, `text-editing` and `data-analysis`.
+
+- `agents/<id>.json` (`AgentSpec`) holds the language-neutral structure: number, category (`research`, `text`,
+  `analysis`), `revision`, what the model must support (`capabilities`), whether the agent works offline, and the
+  agent itself in the same form as an agent node of an example (`NodeSpec`: tier, task profile, tools, output
+  fields, quality criteria). An agent taken over from an example names it instead (`"example": {"template":
+  "web-research", "node": "research"}`), so its prompt is kept once.
+- `texts/<lang>/agents/<id>.json` (`AgentTexts`) holds the summary, help text, example requests and test cases, and
+  the agent's texts (name, description, system prompt, task, field descriptions, criteria) unless they come from
+  the example.
+
+```python
+from nodestro_examples.agents import agent_ids, build_agent
+
+agent, meta = build_agent("summary", "de")             # AgentConfig and TemplateMeta of nodestro-runtime
+agent, meta = build_agent("web-research", "en", services={"search": connection_id})
+```
+
+`build_agent` builds the agent exactly like the agents of the examples (common rules in the system prompt, tiers
+mapped by `ModelChoice`, service connections bound to the built-in tools). `meta.origin` is
+`builtin:nodestro-examples@<version>+r<revision>/<id>`, and `meta.requirements` names the tools, the kinds of
+service connection, the weakest tier and whether the agent works offline. `agent_problems()` checks every
+template in every language; the tests require it to be empty.
+
 ## Sample files
 
 `samples.render()` builds a sample file on request from the texts of a language with the runtime's writers:

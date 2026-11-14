@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- Added agent templates (NAL-B1): `agents/<id>.json` and `texts/<lang>/agents/<id>.json`, read by
+  `nodestro_examples.agents` (`agent_ids`, `agent_structure`, `agent_texts`, `build_agent`, `agent_meta`,
+  `agent_services`, `agent_origin`, `agent_problems`). The first five are web research (taken over from the example's
+  agent, so the prompt is kept once), summary, document analysis, text editing and data analysis, each with a
+  summary, help text, example requests and a test case in all six languages. `build_agent` returns the runtime's
+  `AgentConfig` (with its task profile) and `TemplateMeta` (category, requirements, origin
+  `builtin:nodestro-examples@<version>+r<revision>/<id>`). Needs nodestro-runtime with NAL-B1 (`TemplateMeta`).
 - Added example 25 `web-research` (NAL-B2, knowledge, featured): a question answered with sources from the web by one
   research agent with `search_web` and `fetch_web_page`; a decision on the form's "Thorough research" box chooses
   between two variants of the agent with tool limits of 3 searches and 4 page reads or 8 and 12; budget USD 1;

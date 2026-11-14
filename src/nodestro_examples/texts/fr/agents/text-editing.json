@@ -1,0 +1,28 @@
+{
+  "summary": "Améliore un texte : plus clair, correct et d’un style homogène, sans changer ce qu’il dit.",
+  "help": "Collez le texte et, si vous le souhaitez, indiquez son usage (« pour des clients », « plus court », « plus formel »). L’agent renvoie le texte révisé et une courte liste des modifications. Les faits, chiffres et noms restent inchangés.",
+  "examples": [
+    "Rendez ce courriel à un client plus clair et plus aimable : …",
+    "Corrigez et resserrez ce paragraphe pour notre site web : …"
+  ],
+  "tests": [
+    {
+      "name": "Conserve le sens",
+      "input": "Révisez pour la clarté : La réunion qui était prévue pour lundi, elle a été déplacée à cause de la raison que la salle n’est pas libre, à mardi 10 h.",
+      "expectations": [
+        "Dit que la réunion a été déplacée de lundi à mardi 10 h parce que la salle n’est pas libre",
+        "Corrige la grammaire"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Réviseur",
+    "description": "Révise un texte pour la clarté, la correction et le style.",
+    "system": "Vous êtes un réviseur expérimenté. Améliorez le texte reçu : corrigez l’orthographe et la grammaire, rendez les phrases claires et directes, supprimez les répétitions et gardez un ton homogène adapté à l’usage indiqué dans la demande. Ne modifiez ni les faits, ni les chiffres, ni les noms, ni le sens, et n’ajoutez aucun contenu nouveau. Conservez la langue du texte. Renvoyez d’abord le texte révisé, puis une courte liste des principales modifications.",
+    "task": "Révisez ce texte :\n\n{{run.input}}",
+    "criteria": {
+      "meaning_kept": "Le texte révisé dit la même chose que l’original : aucun fait, chiffre ou nom n’est modifié, omis ou ajouté.",
+      "clear": "Le texte révisé est correct et plus facile à lire que l’original."
+    }
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "summary": "Improves a text: clearer, correct and in a consistent style, without changing what it says.",
+  "help": "Paste the text and, if you like, say what it is for (\"for customers\", \"shorter\", \"more formal\"). The agent returns the edited text and a short list of what it changed. Facts, figures and names stay as they are.",
+  "examples": [
+    "Make this email to a customer clearer and friendlier: …",
+    "Correct and tighten this paragraph for our website: …"
+  ],
+  "tests": [
+    {
+      "name": "Keeps the meaning",
+      "input": "Edit for clarity: The meeting which was planned for monday, it has been moved because of the reason that the room is not available, to tuesday 10 am.",
+      "expectations": [
+        "Says that the meeting moved from Monday to Tuesday 10 am because the room is not available",
+        "Fixes the grammar and capitalisation"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Editor",
+    "description": "Edits a text for clarity, correctness and style.",
+    "system": "You are an experienced editor. Improve the text you receive: correct spelling and grammar, make sentences clear and direct, remove repetition and keep a consistent tone that fits the purpose the request names. Do not change facts, figures, names or the meaning, and do not add new content. Keep the language of the text. Return the edited text first, then a short list of the most important changes.",
+    "task": "Edit this text:\n\n{{run.input}}",
+    "criteria": {
+      "meaning_kept": "The edited text says the same as the original: no fact, figure or name is changed, left out or added.",
+      "clear": "The edited text is correct and easier to read than the original."
+    }
+  }
+}

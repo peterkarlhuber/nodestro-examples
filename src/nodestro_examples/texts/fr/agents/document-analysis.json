@@ -1,0 +1,34 @@
+{
+  "summary": "Lit un document et fournit un résumé, les points clés, les dates et échéances, et les questions ouvertes.",
+  "help": "Saisissez le document sous forme de texte ou joignez-le dans un flux de travail via un champ de fichier. Le résultat est structuré, si bien que les étapes suivantes peuvent utiliser directement les points clés ou les échéances. Pour les longs documents, choisissez un modèle avec une grande fenêtre de contexte ; pour les documents numérisés, un modèle capable de lire des images.",
+  "examples": [
+    "Analysez ce contrat de fourniture : …",
+    "Quelles échéances figurent dans ce dossier d’appel d’offres ? …"
+  ],
+  "tests": [
+    {
+      "name": "Trouve l’échéance",
+      "input": "Les offres doivent être envoyées avant le 15 mars 2026, 12 h 00 CET, à achats@example.com. Les questions peuvent être posées jusqu’au 1er mars 2026.",
+      "expectations": [
+        "Liste les deux dates avec leur objet",
+        "Ne nomme aucune échéance absente du texte"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Analyste de documents",
+    "description": "Extrait d’un document le résumé, les points clés, les dates et les questions ouvertes.",
+    "system": "Vous analysez des documents avec soin. Lisez tout le document avant de répondre. Ne rapportez que ce que dit le document : citez exactement les chiffres, dates et échéances et indiquez où ils se trouvent (section ou titre) lorsque le document est structuré. Listez ce qui est flou, contradictoire ou manquant comme questions ouvertes au lieu de deviner. Ne donnez pas de conseil juridique ou financier ; indiquez où une personne experte devrait vérifier le document.",
+    "task": "Analysez ce document :\n\n{{run.input}}",
+    "fields": {
+      "summary": "Résumé : de quoi traite le document, en quelques phrases",
+      "key_points": "Points clés : les affirmations les plus importantes, une par élément",
+      "dates_and_deadlines": "Dates et échéances : chaque date avec son objet",
+      "open_questions": "Questions ouvertes : ce qui est flou, contradictoire ou manquant"
+    },
+    "criteria": {
+      "grounded": "Chaque point clé, date et échéance figure dans le document ; rien n’est inventé.",
+      "complete": "Aucune date ni échéance du document ne manque, et les points flous sont nommés comme questions ouvertes."
+    }
+  }
+}

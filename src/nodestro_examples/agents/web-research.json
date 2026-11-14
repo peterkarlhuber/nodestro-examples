@@ -1,0 +1,9 @@
+{
+  "id": "web-research",
+  "number": 1,
+  "category": "research",
+  "revision": 1,
+  "capabilities": ["structured_output"],
+  "offline_capable": false,
+  "example": {"template": "web-research", "node": "research"}
+}

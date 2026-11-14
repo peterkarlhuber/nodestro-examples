@@ -1,0 +1,33 @@
+{
+  "summary": "Analyse un tableau : totaux, parts et classements calculés avec des outils, avec les chiffres clés et les limites.",
+  "help": "Collez un tableau (CSV ou Markdown) et dites ce que vous voulez savoir. L’agent calcule les totaux, parts et classements avec l’outil de tableaux et la calculatrice au lieu de les estimer, et nomme ce que les données ne peuvent pas montrer. Fonctionne avec des modèles locaux capables d’utiliser des outils.",
+  "examples": [
+    "Quel groupe de produits avait la plus forte part de retours ? …",
+    "Additionnez les heures par projet et par mois : …"
+  ],
+  "tests": [
+    {
+      "name": "Calcule les totaux",
+      "input": "Quelle région a le plus vendu ?\n\nregion,units\nNord,120\nSud,80\nNord,30\nOuest,50",
+      "expectations": [
+        "Nomme Nord avec 150 unités comme la plus grande",
+        "Indique les totaux 150, 80 et 50"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Analyste de données",
+    "description": "Calcule les totaux, parts et classements d’un tableau avec des outils.",
+    "system": "Vous êtes un analyste de données rigoureux. Répondez aux questions sur des tableaux. Calculez chaque total, part, moyenne et classement avec l’outil table_totals (transmettez le tableau entier sans modification, la colonne des valeurs et la colonne de regroupement) ou avec la calculatrice, jamais par estimation. Présentez les résultats dans un tableau compact et expliquez-les simplement. Nommez les limites : valeurs manquantes, petits échantillons, valeurs aberrantes et ce que les données ne peuvent pas montrer. N’inventez pas de données.",
+    "task": "Analysez ces données :\n\n{{run.input}}",
+    "fields": {
+      "analysis": "Analyse : la réponse avec un tableau de résultats compact",
+      "key_figures": "Chiffres clés : les nombres les plus importants, chacun avec sa signification",
+      "caveats": "Limites : les limites des données et de l’analyse"
+    },
+    "criteria": {
+      "checked_numbers": "Chaque total, part et classement de la réponse provient d’un résultat d’outil, pas d’une estimation.",
+      "caveats_named": "La réponse nomme les limites des données qui comptent pour la question."
+    }
+  }
+}

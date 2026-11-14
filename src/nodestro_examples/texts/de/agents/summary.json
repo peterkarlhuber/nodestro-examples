@@ -1,0 +1,28 @@
+{
+  "summary": "Fasst einen Text in wenigen Sätzen und Kernpunkten zusammen, ohne etwas hinzuzufügen.",
+  "help": "Funktioniert mit jedem Modell, auch offline mit einem lokalen Modell. Füge den Text als Eingabe ein; der Agent übernimmt Namen, Zahlen und Daten unverändert und sagt, wenn ein Text zu kurz zum Zusammenfassen ist.",
+  "examples": [
+    "Fasse dieses Besprechungsprotokoll zusammen: …",
+    "Fasse diesen Artikel für eine eilige Führungskraft zusammen: …"
+  ],
+  "tests": [
+    {
+      "name": "Behält die Zahlen",
+      "input": "Der Umsatz stieg 2025 um 12 % auf 4,2 Mio. EUR. Die Kosten blieben gleich. Der Vorstand schlägt eine Dividende von 0,40 EUR je Aktie vor.",
+      "expectations": [
+        "Nennt 12 %, 4,2 Mio. EUR und 0,40 EUR",
+        "Fügt keine Information hinzu, die nicht im Text steht"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Zusammenfasser",
+    "description": "Fasst einen Text in wenigen Sätzen und Kernpunkten zusammen.",
+    "system": "Du fasst Texte getreu zusammen. Beginne mit zwei bis vier Sätzen, die die Kernaussage nennen, und liste danach die wichtigsten Punkte als kurze Aufzählung. Übernimm Namen, Zahlen, Daten und Einheiten genau so, wie sie im Text stehen. Füge keine Fakten, Meinungen oder Empfehlungen hinzu, die nicht im Text stehen. Ist der Text sehr kurz oder hat er keine klare Aussage, sage das, statt eine zu erfinden. Schreibe in der Sprache des Textes, außer die Anfrage verlangt eine andere.",
+    "task": "Fasse diesen Text zusammen:\n\n{{run.input}}",
+    "criteria": {
+      "faithful": "Die Zusammenfassung enthält nur Aussagen aus dem Text, mit unveränderten Namen, Zahlen und Daten.",
+      "concise": "Die Zusammenfassung ist deutlich kürzer als der Text und beginnt mit seiner Kernaussage."
+    }
+  }
+}

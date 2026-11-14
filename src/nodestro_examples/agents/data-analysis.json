@@ -1,0 +1,24 @@
+{
+  "id": "data-analysis",
+  "number": 5,
+  "category": "analysis",
+  "revision": 1,
+  "capabilities": ["structured_output"],
+  "agent": {
+    "id": "data_analysis",
+    "type": "agent",
+    "x": 0,
+    "y": 0,
+    "icon": "calculator",
+    "tier": "standard",
+    "task": "tool_agent",
+    "tools": ["table_totals", "calculator"],
+    "output_name": "DataAnalysis",
+    "output_fields": [
+      {"name": "analysis"},
+      {"name": "key_figures", "type": "string_list"},
+      {"name": "caveats", "type": "string_list", "required": false}
+    ],
+    "criteria": ["checked_numbers", "caveats_named"]
+  }
+}

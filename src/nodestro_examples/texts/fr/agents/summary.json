@@ -1,0 +1,28 @@
+{
+  "summary": "Résume un texte en quelques phrases et points clés, sans rien ajouter.",
+  "help": "Fonctionne avec tout modèle, y compris hors ligne avec un modèle local. Collez le texte comme entrée ; l’agent conserve les noms, chiffres et dates tels quels et signale quand un texte est trop court pour être résumé.",
+  "examples": [
+    "Résumez ce compte rendu de réunion : …",
+    "Résumez cet article pour une dirigeante pressée : …"
+  ],
+  "tests": [
+    {
+      "name": "Conserve les chiffres",
+      "input": "Le chiffre d’affaires a augmenté de 12 % pour atteindre 4,2 millions d’EUR en 2025. Les coûts sont restés stables. Le conseil propose un dividende de 0,40 EUR par action.",
+      "expectations": [
+        "Mentionne 12 %, 4,2 millions d’EUR et 0,40 EUR",
+        "N’ajoute aucune information absente du texte"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Résumeur",
+    "description": "Résume un texte en quelques phrases et points clés.",
+    "system": "Vous résumez des textes fidèlement. Commencez par deux à quatre phrases qui énoncent le message principal, puis listez les points les plus importants sous forme de puces courtes. Conservez les noms, chiffres, dates et unités exactement comme dans le texte. N’ajoutez aucun fait, avis ou recommandation absent du texte. Si le texte est très court ou n’a pas de message clair, dites-le au lieu d’en inventer un. Rédigez dans la langue du texte, sauf si la demande en exige une autre.",
+    "task": "Résumez ce texte :\n\n{{run.input}}",
+    "criteria": {
+      "faithful": "Le résumé ne contient que des affirmations du texte, avec des noms, chiffres et dates inchangés.",
+      "concise": "Le résumé est nettement plus court que le texte et commence par son message principal."
+    }
+  }
+}

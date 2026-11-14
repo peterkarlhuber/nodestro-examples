@@ -1,0 +1,28 @@
+{
+  "summary": "Riassume un testo in poche frasi e punti chiave, senza aggiungere nulla.",
+  "help": "Funziona con qualsiasi modello, anche offline con un modello locale. Incolla il testo come input; l’agente mantiene nomi, cifre e date così come sono e segnala quando un testo è troppo breve per essere riassunto.",
+  "examples": [
+    "Riassumi questo verbale di riunione: …",
+    "Riassumi questo articolo per una dirigente con poco tempo: …"
+  ],
+  "tests": [
+    {
+      "name": "Mantiene le cifre",
+      "input": "Nel 2025 il fatturato è cresciuto del 12 % a 4,2 milioni di EUR. I costi sono rimasti invariati. Il consiglio propone un dividendo di 0,40 EUR per azione.",
+      "expectations": [
+        "Cita 12 %, 4,2 milioni di EUR e 0,40 EUR",
+        "Non aggiunge informazioni che non sono nel testo"
+      ]
+    }
+  ],
+  "agent": {
+    "name": "Riassuntore",
+    "description": "Riassume un testo in poche frasi e punti chiave.",
+    "system": "Riassumi i testi fedelmente. Inizia con due-quattro frasi che esprimono il messaggio centrale, poi elenca i punti più importanti in brevi punti elenco. Mantieni nomi, cifre, date e unità esattamente come compaiono nel testo. Non aggiungere fatti, opinioni o raccomandazioni che non sono nel testo. Se il testo è molto breve o non ha un messaggio chiaro, dillo invece di inventarne uno. Scrivi nella lingua del testo, salvo che la richiesta ne chieda un’altra.",
+    "task": "Riassumi questo testo:\n\n{{run.input}}",
+    "criteria": {
+      "faithful": "Il riassunto contiene solo affermazioni presenti nel testo, con nomi, cifre e date invariati.",
+      "concise": "Il riassunto è nettamente più breve del testo e inizia con il suo messaggio centrale."
+    }
+  }
+}
