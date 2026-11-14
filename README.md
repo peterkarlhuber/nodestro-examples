@@ -281,4 +281,4 @@ Open work (release blockers, known gaps, follow-ups) is listed in [docs/TODO.md]
 ## Origin and license
 
 Extracted from `nodestro` 0.1 (15e2076, `backend/src/nodestro/library/`), see [PROVENANCE.md](PROVENANCE.md).
-MIT, see [LICENSE](LICENSE).
+Proprietary: Copyright (c) 2026 Levuvo. All rights reserved. See [LICENSE](LICENSE).
