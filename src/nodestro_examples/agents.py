@@ -128,6 +128,11 @@ def _node_and_texts(agent_id: str, language: str) -> tuple[NodeSpec, NodeTexts]:
     return spec.agent, own
 
 
+def agent_node(agent_id: str, language: str = "en") -> tuple[NodeSpec, NodeTexts]:
+    """The agent of a template as an agent node of an example, with its texts in a language."""
+    return _node_and_texts(agent_id, language)
+
+
 def agent_version(agent_id: str) -> str:
     """The version of a shipped template: the package version and the template's revision (``0.3.0+r1``)."""
     return f"{__version__}+r{agent_structure(agent_id).revision}"
