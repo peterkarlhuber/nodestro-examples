@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+- Added (QA-17 (AC-2): dependency policy check, 2026-11-14): `dependency-policy.json` is this repository's copy of the
+  dependency policy K-33 from nodestro-studio (only its outgoing edges: `nodestro-runtime` in the core), and
+  `scripts/check_dependency_policy.py` is the unchanged checker from there; `scripts/DEPENDENCY_POLICY_SOURCE.md`
+  records their origin and SHA-256. `python scripts/check_dependency_policy.py` checks `pyproject.toml` (core, every
+  extra and dependency group) against the copy. `tests/test_dependency_policy.py` checks the checksums, runs the
+  checker and probes forbidden requirements (Orkexa, the core edge with extras, the wrong extra, the studio, an
+  unknown Levuvo package). Ruff skips the vendored script (it is linted in nodestro-studio). No CI workflow change.
+
 - Added building blocks as gallery entries (NAL-B3): `all_part_ids()`, `part_summaries(language)`,
   `part_summary(id, language)` (`PartSummary`: name, description, capability tags, number of agent steps, the parts
   it runs and the templates that use it), `part_detail(id, language)` (`PartDetail`, plus the workflow a copy gets)
