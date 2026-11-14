@@ -55,10 +55,10 @@ def keys_of(value: Any, prefix: str = "") -> set[str]:
     return {prefix}
 
 
-def test_the_library_has_24_templates_across_all_categories() -> None:
-    assert len(IDS) == 24
+def test_the_library_has_25_templates_across_all_categories() -> None:
+    assert len(IDS) == 25
     specs = [library.structure(template_id) for template_id in IDS]
-    assert [spec.number for spec in specs] == list(range(1, 25))
+    assert [spec.number for spec in specs] == list(range(1, 26))
     assert {spec.category for spec in specs} == set(library.CATEGORIES)
     # The two examples Nodestro shipped before are part of the library.
     assert {"financial-analysis", "blog-article"} <= set(IDS)

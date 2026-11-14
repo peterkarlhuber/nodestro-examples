@@ -1978,3 +1978,143 @@ def raw_part_texts(part_id: str, language: str) -> dict[str, Any]:
     """A part's text file as stored (used by tests to compare languages)."""
     path = _ROOT / "texts" / language_of(language) / "parts" / f"{part_id}.json"
     return json.loads(path.read_text("utf-8"))  # type: ignore[no-any-return]
+
+
+# ---- evaluation sets -------------------------------------------------------------
+
+
+class EvaluationHit(_Strict):
+    """A search hit the test search provider returns for a query of the evaluation set."""
+
+    title: str
+    url: str
+    snippet: str = ""
+    published_at: str | None = None
+
+
+class EvaluationPage(_Strict):
+    """A page served instead of the web: its answer, or a failure (``network``: the connection breaks)."""
+
+    status: int = 200
+    type: str = "text/html; charset=utf-8"
+    body: str = ""
+    fails: Literal["network"] | None = None
+
+
+class EvaluationStep(_Strict):
+    """One step of a reference script: a tool call, or the agent's final structured answer (its last step)."""
+
+    tool: str | None = None
+    input: dict[str, Any] = Field(default_factory=dict)
+    answer: dict[str, Any] | None = None
+
+    @model_validator(mode="after")
+    def _one_kind(self) -> EvaluationStep:
+        if (self.tool is None) == (self.answer is None):
+            raise ValueError("a step is either a tool call or the answer")
+        return self
+
+
+class EvaluationExpect(_Strict):
+    """What a correct run of a question shows (checked for the reference script and for a live model alike)."""
+
+    status: Literal["succeeded", "failed"] = "succeeded"
+    #: The step's error code when the run fails.
+    error_code: str | None = None
+    #: Addresses the result's source list must contain (by the run's source ledger).
+    cited_urls: list[str] = Field(default_factory=list)
+    #: Addresses the source list must not contain.
+    not_cited_urls: list[str] = Field(default_factory=list)
+    #: Error codes that tool calls of the run must have returned.
+    tool_errors: list[str] = Field(default_factory=list)
+    #: Addresses that must never be requested (an injected instruction's target).
+    not_fetched: list[str] = Field(default_factory=list)
+    #: Texts that must not appear anywhere in the result.
+    not_in_result: list[str] = Field(default_factory=list)
+    #: Words the answer must mention (case-insensitive; English questions).
+    mentions: list[str] = Field(default_factory=list)
+    #: Whether contradictions or gaps must be named.
+    contradictions: bool = False
+    gaps: bool = False
+    #: The language the search must have asked for.
+    search_language: str | None = None
+
+
+EvaluationKind = Literal[
+    "simple",
+    "multi_step",
+    "ambiguous",
+    "source_language",
+    "provider_unavailable",
+    "empty_results",
+    "contradiction",
+    "prompt_injection",
+    "invalid_url",
+    "network_failure",
+    "call_limit",
+    "foreign_source",
+]
+
+
+class EvaluationQuestion(_Strict):
+    id: str
+    kind: EvaluationKind
+    question: str
+    #: The form's "thorough research" value (the thorough researcher and its higher tool limits).
+    thorough: bool = False
+    source_language: str | None = None
+    #: ``down``: the search provider is unavailable for this question.
+    provider: Literal["up", "down"] = "up"
+    #: What a careful model does: tool calls in order, then its answer.
+    script: list[EvaluationStep] = Field(min_length=1)
+    expect: EvaluationExpect = Field(default_factory=EvaluationExpect)
+
+    @model_validator(mode="after")
+    def _answer_last(self) -> EvaluationQuestion:
+        answers = [index for index, step in enumerate(self.script) if step.answer is not None]
+        if answers != [len(self.script) - 1]:
+            raise ValueError(f"question {self.id}: the script ends with exactly one answer")
+        return self
+
+
+class EvaluationSet(_Strict):
+    """Fixtures and questions to evaluate an example with the deterministic test search provider: no network and no
+    paid service. Questions, pages and expectations are test data in one language (``language``), not texts of the
+    example (those exist in every language)."""
+
+    template: str
+    about: str
+    language: str
+    #: query -> hits (the test provider compares queries case-insensitively; a query without hits finds nothing).
+    searches: dict[str, list[EvaluationHit]]
+    pages: dict[str, EvaluationPage]
+    questions: list[EvaluationQuestion] = Field(min_length=1)
+
+    @model_validator(mode="after")
+    def _valid(self) -> EvaluationSet:
+        problems: list[str] = []
+        ids = [question.id for question in self.questions]
+        if len(set(ids)) != len(ids):
+            problems.append("question ids are not unique")
+        tools = {name for node in structure(self.template).nodes for name in node.tools}
+        for question in self.questions:
+            problems += [
+                f"question {question.id} calls {step.tool}, which the example's agents do not have"
+                for step in question.script
+                if step.tool is not None and step.tool not in tools
+            ]
+        if problems:
+            raise ValueError("; ".join(problems))
+        return self
+
+
+@cache
+def evaluation_set(template_id: str) -> EvaluationSet:
+    """The evaluation set of a template (``evaluation/<id>.json``); :class:`KeyError` when it has none."""
+    path = _ROOT / "evaluation" / f"{template_id}.json"
+    if not re.fullmatch(r"[a-z0-9-]+", template_id) or not path.is_file():
+        raise KeyError(template_id)
+    found = EvaluationSet.model_validate(json.loads(path.read_text("utf-8")))
+    if found.template != template_id:
+        raise ValueError(f"{path}: the evaluation set belongs to {found.template}")
+    return found

@@ -32,7 +32,7 @@ LANGUAGES = ("de", "en", "es", "fr", "pt-BR", "it")
 
 _LABELS: dict[str, dict[str, str]] = {
     "de": {
-        "overview": "Alle 24 Beispiele auf einen Blick",
+        "overview": "Alle {count} Beispiele auf einen Blick",
         "overview_text": "Jedes Beispiel steht in der Galerie und hat unten einen eigenen Abschnitt.",
         "number": "Nr.",
         "example": "Beispiel",
@@ -71,7 +71,7 @@ _LABELS: dict[str, dict[str, str]] = {
         "yes": "ja",
     },
     "en": {
-        "overview": "All 24 examples at a glance",
+        "overview": "All {count} examples at a glance",
         "overview_text": "Every example is in the gallery and has its own section below.",
         "number": "No.",
         "example": "Example",
@@ -109,7 +109,7 @@ _LABELS: dict[str, dict[str, str]] = {
         "yes": "yes",
     },
     "es": {
-        "overview": "Los 24 ejemplos de un vistazo",
+        "overview": "Los {count} ejemplos de un vistazo",
         "overview_text": "Cada ejemplo está en la galería y tiene su propia sección más abajo.",
         "number": "N.º",
         "example": "Ejemplo",
@@ -148,7 +148,7 @@ _LABELS: dict[str, dict[str, str]] = {
         "yes": "sí",
     },
     "fr": {
-        "overview": "Les 24 exemples en un coup d'œil",
+        "overview": "Les {count} exemples en un coup d'œil",
         "overview_text": "Chaque exemple se trouve dans la galerie et a sa propre section ci-dessous.",
         "number": "N°",
         "example": "Exemple",
@@ -187,7 +187,7 @@ _LABELS: dict[str, dict[str, str]] = {
         "yes": "oui",
     },
     "pt-BR": {
-        "overview": "Os 24 exemplos em resumo",
+        "overview": "Os {count} exemplos em resumo",
         "overview_text": "Cada exemplo está na galeria e tem sua própria seção abaixo.",
         "number": "Nº",
         "example": "Exemplo",
@@ -226,7 +226,7 @@ _LABELS: dict[str, dict[str, str]] = {
         "yes": "sim",
     },
     "it": {
-        "overview": "I 24 esempi in sintesi",
+        "overview": "I {count} esempi in sintesi",
         "overview_text": "Ogni esempio si trova nella galleria e ha una propria sezione qui sotto.",
         "number": "N.",
         "example": "Esempio",
@@ -417,7 +417,8 @@ def render(language: str) -> str:
     # French puts a space before a colon, as the hand-written chapters do.
     c = " :" if language == "fr" else ":"
     examples = [detail(template_id, language) for template_id in template_ids()]
-    lines = [START, "", f"## {labels['overview']} {{#uebersicht}}", "", labels["overview_text"], ""]
+    overview = labels["overview"].replace("{count}", str(len(examples)))
+    lines = [START, "", f"## {overview} {{#uebersicht}}", "", labels["overview_text"], ""]
     lines.append(
         f"| {labels['number']} | {labels['example']} | {labels['field']} | {labels['agents']} | {labels['pattern']} |"
     )

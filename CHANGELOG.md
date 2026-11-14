@@ -2,6 +2,23 @@
 
 ## Unreleased
 
+- Added example 25 `web-research` (NAL-B2, knowledge, featured): a question answered with sources from the web by one
+  research agent with `search_web` and `fetch_web_page`; a decision on the form's "Thorough research" box chooses
+  between two variants of the agent with tool limits of 3 searches and 4 page reads or 8 and 12; budget USD 1;
+  structured result `answer`, `findings` and `contradictions` (statements cite the run's source ids, `[S1]`, checked
+  by the runtime), `gaps`, and `sources` and `retrieved`, filled by the runtime from the run's source ledger; quality
+  criteria: every statement has a source, no source counted twice, uncertainty named; texts in all six languages;
+  three test cases. Needs a nodestro-runtime with the web tools (NAL-A2) and the ledger fields of NAL-B2.
+- Format 2, additive: `FieldSpec.source` takes `ledger`, `ledger_cited`, `ledger_list` and `ledger_range`;
+  `NodeSpec.tool_params` (binding parameters of built-in tools, validated against the tool's schema);
+  `NodeSpec.variant_of` with `TemplateTexts.variants` (an agent that shares another agent's texts except name and
+  description); `services(template_id)`, `TemplateDetail.services` and `services=` of `build()`/`instantiate()`
+  (the service connection a copy's built-in tools use; a template never names one).
+- Evaluation sets: `evaluation/web-research.json` and `evaluation_set()` (search fixtures for the runtime's `test`
+  provider, synthetic pages with a prompt-injection page, questions with reference scripts and expected outcomes);
+  `tests/test_web_research.py` replays them without network. The docs chapter's overview heading counts the examples
+  instead of naming 24.
+
 - Pins nodestro-runtime 979c11c (runtime #150 and #145, tests only: botocore 1.44's default retry mode in the Bedrock
   test, rollback snapshot tools for TABRION QA-13), so the platform components job is green again.
 - Pins nodestro-runtime 2b8690e (runtime #148, RT-067: agent steps answer at the tool-round limit and after a

@@ -1,0 +1,258 @@
+{
+  "id": "web-research",
+  "number": 25,
+  "category": "knowledge",
+  "level": "beginner",
+  "featured": true,
+  "nodes": [
+    {
+      "id": "start",
+      "type": "start",
+      "x": 0,
+      "y": 160,
+      "form": [
+        {
+          "name": "question",
+          "type": "textarea",
+          "required": true
+        },
+        {
+          "name": "thorough",
+          "type": "boolean"
+        },
+        {
+          "name": "source_language",
+          "type": "text"
+        },
+        {
+          "name": "time_range",
+          "type": "select"
+        }
+      ]
+    },
+    {
+      "id": "depth",
+      "type": "condition",
+      "x": 340,
+      "y": 160,
+      "condition": {
+        "source": "start",
+        "rules": [
+          {
+            "id": "thorough",
+            "field": "thorough",
+            "operator": "is_true"
+          }
+        ]
+      }
+    },
+    {
+      "id": "research",
+      "type": "agent",
+      "x": 680,
+      "y": 40,
+      "role": "research",
+      "icon": "globe",
+      "tier": "standard",
+      "task": "tool_agent",
+      "tools": [
+        "search_web",
+        "fetch_web_page"
+      ],
+      "tool_params": {
+        "search_web": {
+          "max_calls": 3
+        },
+        "fetch_web_page": {
+          "max_calls": 4
+        }
+      },
+      "output_name": "WebResearch",
+      "output_fields": [
+        {
+          "name": "answer"
+        },
+        {
+          "name": "findings",
+          "type": "string_list",
+          "source": "ledger_cited"
+        },
+        {
+          "name": "contradictions",
+          "type": "string_list",
+          "source": "ledger_cited"
+        },
+        {
+          "name": "gaps",
+          "type": "string_list"
+        },
+        {
+          "name": "retrieved",
+          "source": "ledger_range"
+        },
+        {
+          "name": "sources",
+          "type": "string_list",
+          "source": "ledger_list"
+        }
+      ],
+      "criteria": [
+        "sourced",
+        "independent_sources",
+        "uncertainty"
+      ]
+    },
+    {
+      "id": "research_thorough",
+      "type": "agent",
+      "x": 680,
+      "y": 300,
+      "role": "research",
+      "icon": "globe",
+      "tier": "standard",
+      "task": "tool_agent",
+      "variant_of": "research",
+      "tools": [
+        "search_web",
+        "fetch_web_page"
+      ],
+      "tool_params": {
+        "search_web": {
+          "max_calls": 8
+        },
+        "fetch_web_page": {
+          "max_calls": 12
+        }
+      },
+      "output_name": "WebResearch",
+      "output_fields": [
+        {
+          "name": "answer"
+        },
+        {
+          "name": "findings",
+          "type": "string_list",
+          "source": "ledger_cited"
+        },
+        {
+          "name": "contradictions",
+          "type": "string_list",
+          "source": "ledger_cited"
+        },
+        {
+          "name": "gaps",
+          "type": "string_list"
+        },
+        {
+          "name": "retrieved",
+          "source": "ledger_range"
+        },
+        {
+          "name": "sources",
+          "type": "string_list",
+          "source": "ledger_list"
+        }
+      ],
+      "criteria": [
+        "sourced",
+        "independent_sources",
+        "uncertainty"
+      ]
+    },
+    {
+      "id": "output",
+      "type": "output",
+      "x": 1020,
+      "y": 160,
+      "files": [
+        "md"
+      ]
+    }
+  ],
+  "edges": [
+    [
+      "start",
+      "depth"
+    ],
+    [
+      "depth",
+      "research_thorough",
+      "thorough"
+    ],
+    [
+      "depth",
+      "research",
+      "default"
+    ],
+    [
+      "research",
+      "output"
+    ],
+    [
+      "research_thorough",
+      "output"
+    ]
+  ],
+  "budget_usd": 1.0,
+  "tests": [
+    {
+      "id": "quick_question",
+      "checks": [
+        {
+          "field": "answer",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "findings",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "sources",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "retrieved",
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "thorough_question",
+      "input": "own",
+      "values": {
+        "thorough": true
+      },
+      "checks": [
+        {
+          "field": "answer",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "findings",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "sources",
+          "operator": "is_not_empty"
+        }
+      ]
+    },
+    {
+      "id": "source_language",
+      "input": "own",
+      "values": {
+        "source_language": "de"
+      },
+      "checks": [
+        {
+          "field": "answer",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "sources",
+          "operator": "is_not_empty"
+        }
+      ]
+    }
+  ]
+}

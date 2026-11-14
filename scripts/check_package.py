@@ -20,7 +20,7 @@ def main() -> int:
         print(f"error: nodestro_examples is not installed but imported from {location}", file=sys.stderr)
         return 1
     ids = examples.template_ids()
-    assert len(ids) == 24, ids
+    assert len(ids) == 25, ids
     built = 0
     for language in LANGUAGES:
         for template_id in ids:
@@ -32,6 +32,8 @@ def main() -> int:
                 _name, _media_type, data = samples.render(template_id, sample_id, language)
                 assert data, (template_id, sample_id, language)
                 built += 1
+    # The evaluation set of the web research example (fixtures for the test search provider) is package data too.
+    assert examples.evaluation_set("web-research").questions
     print(f"{examples.__name__} {examples.__version__}: {len(ids)} templates in {len(LANGUAGES)} languages, ", end="")
     print(f"{built} sample files built, format {examples.FORMAT_VERSION}")
     return 0

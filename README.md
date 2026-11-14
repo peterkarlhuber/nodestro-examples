@@ -1,6 +1,6 @@
 # Nodestro Examples
 
-The 24 example multi-agent workflows of [Nodestro](https://github.com/peterkarlhuber/nodestro-studio) in six
+The 25 example multi-agent workflows of [Nodestro](https://github.com/peterkarlhuber/nodestro-studio) in six
 languages (de, en, es, fr, pt-BR, it), with synthetic sample files and prepared test cases. The studio gallery and
 `GET /api/library` of the [API](https://github.com/peterkarlhuber/nodestro-api) show them; nothing is created
 automatically, a workflow only exists once a person copies an example.
@@ -38,11 +38,13 @@ pydantic; it has no engine, HTTP API or agent orchestration of its own.
 | 22 | `club-event` | private | schedule and budget in parallel, board paper |
 | 23 | `nonprofit-campaign` | private | campaign, impact model, credibility review that sends the campaign back (at most twice) |
 | 24 | `citizen-inquiry` | administration | municipal rules searched with citations, approval with revision, sanitized reply file |
+| 25 | `web-research` | knowledge | one research agent with web search and page reading, depth decision with tool limits, every statement checked against the run's source ledger, source list and retrieval period filled from the ledger |
 
 Six examples are marked `sensitive` (finance, personnel, law, administration): their agents add a caution rule,
 the gallery labels them, and their results are working aids for a qualified person. None of the examples acts
 outside Nodestro: they write texts and result files, never emails, bookings or database changes. The two optional
-connections only read (see [Integrations](#integrations-mcp)).
+connections only read (see [Integrations](#integrations-mcp)), and `web-research` only searches and reads web pages
+through a search service the person chooses (see [Web research](#web-research)).
 
 Key figures that a decision or a money amount rests on are never the model's own arithmetic. Their result fields
 declare `"source": "tool"`, so the runtime accepts them only as the result of a tool call of the step or an earlier
@@ -75,7 +77,7 @@ Python 3.11 to 3.13.
 import nodestro_examples as examples
 from nodestro_examples import samples
 
-ids = examples.template_ids()  # the 24 ids, in gallery order
+ids = examples.template_ids()  # the 25 ids, in gallery order
 card = examples.summary("financial-analysis", "fr")  # what the gallery shows; unknown languages fall back to "en"
 detail = examples.detail("quality-8d", "de")  # guide, agents, sample files, test cases and the workflow a copy gets
 workflow = examples.build("financial-analysis", "en")  # a new, independent WorkflowIn on every call
@@ -181,6 +183,18 @@ What format 2 adds, all optional and validated when a template is loaded:
   "fail" | "continue"}`), **output contracts** (`contract` on the result node), **sanitized files**
   (`{"format": "docx", "sanitize": true}`), **budget** (`budget_usd`) and **limits** (`limits`).
 - **Integrations**: see below.
+- **Built-in tool settings** (`tool_params`): binding parameters of a built-in tool per agent, validated against the
+  tool's parameter schema (`{"search_web": {"max_calls": 3}}`). A service connection a tool needs (a search service)
+  is never part of a template: `services(template_id)` and `TemplateDetail.services` name the kinds a copy needs
+  (`["search"]`), and `build()`/`instantiate()` take `services={"search": "<connection id>"}`. Without one the
+  pre-check names the missing connection (`check.connection_missing`) and the copy does not start.
+- **Variants** (`variant_of`): an agent that is the same agent as another with other settings, for example on
+  another branch with other tool limits. It shares that agent's prompt, task, field descriptions and criteria; its own
+  name and description are in `texts/<language>/<id>.json` → `variants`. Variants sit on exclusive branches, so only
+  one of them delivers a result: a test case checks their fields without naming a node.
+- **Fields from the source ledger** (`source` of a field, NAL-B2): `ledger_cited` (every statement cites the run's
+  source ids, `[S1]`, checked by the runtime), `ledger_list` and `ledger_range` (filled by the runtime from the run's
+  source ledger after the step, never written by the model), besides `ledger` (values that name sources).
 
 The models (`TemplateSpec`, `TemplateTexts`, …) are strict: unknown keys are refused, and a template is checked when
 it is loaded (unique node ids, connections between existing nodes, valid branch handles, no cycles, every node on a
@@ -206,6 +220,28 @@ person (schedules, test series, batches, published APIs) may not call MCP tools 
 `http://127.0.0.1:8765/mcp` (desktop: connect it under Tools → Connected services with the consent for a local
 development server). It serves exactly the synthetic data of the two sample exports, marked as demo data, and keeps
 no state. A real ERP or shop system can take its place when its MCP server offers tools with the same names.
+
+## Web research
+
+`web-research` answers a question with sources from the web: one agent with `search_web` and `fetch_web_page`
+(runtime NAL-A2) and a structured result: `answer` (Markdown), `findings` and `contradictions` (each statement ends
+with the source ids it rests on, `[S1, S3]`; checked against the run's source ledger), `gaps`, and `sources` and
+`retrieved`, which the runtime fills from the ledger after the step (id, title, address and retrieval time of every
+cited source; the retrieval period), so the model supplies ids only. The form's "Thorough research" box chooses
+between two variants of the researcher on a decision node: 3 searches and 4 page reads, or 8 and 12 (tool limits,
+not prompt rules); the copy's budget is USD 1. The criteria of the quality check: every statement has a source, no
+source is counted twice, uncertainty is named. The agent has no tool that writes.
+
+A copy needs a search service (`services={"search": ...}`, in the studio a connection under Tools → Connections);
+none is chosen automatically. Copies run on the desktop and in Local Docker; on a server the web tools are off unless
+the operator enables them (runtime `NODESTRO_WEB_TOOLS_SERVER`).
+
+`evaluation/web-research.json` (`evaluation_set("web-research")`) is the example's evaluation set: search fixtures for
+the runtime's deterministic `test` provider, synthetic pages served instead of the web (one of them carries a prompt
+injection that points at an internal address), and questions with a reference script and the expected outcome.
+`tests/test_web_research.py` replays every script with a scripted model; a live evaluation can ask a real model the
+same questions against the same fixtures and check the same expectations. Questions and pages are English test
+data; the example's own texts exist in all six languages.
 
 ## Sample files
 
@@ -237,12 +273,13 @@ runs use the real engine, pre-check and Orkexa agents.
 
 | Test file | What it proves |
 | --- | --- |
-| `tests/test_templates.py` | structure: 24 templates, the same keys and placeholders in every language, valid graphs, files, models, tools, figures equal across languages, invalid templates refused |
-| `tests/test_runs.py` | runtime: every example runs in every language (144 runs); agents that read the input keep the text when a file is attached; the pre-check asks for exactly the providers the example uses |
-| `tests/test_cases.py` | test cases and branches: all 49 cases run in all six languages with an answer that solves them and pass their checks; an empty answer fails at least one check of every case; every decision opens its branch and its default; every approval releases the result files and stops or revises after a rejection |
+| `tests/test_templates.py` | structure: 25 templates, the same keys and placeholders in every language, valid graphs, files, models, tools, figures equal across languages, invalid templates refused |
+| `tests/test_runs.py` | runtime: every example runs in every language (150 runs); agents that read the input keep the text when a file is attached; the pre-check asks for exactly the providers the example uses |
+| `tests/test_cases.py` | test cases and branches: all 52 cases run in all six languages with an answer that solves them and pass their checks; an empty answer fails at least one check of every case; every decision opens its branch and its default; every approval releases the result files and stops or revises after a rejection |
 | `tests/test_agent_models.py` | models per agent: every agent's task is the reviewed one and fits its tier, tool users and image readers need tools and vision, orchestrators orchestrate; the agent plan names every agent a copy creates in every language; `ModelChoice.agents` and `judge` reach the agents of the template and its parts, the rest keeps the tiers; unknown keys and tasks are refused |
 | `tests/test_format2.py` | format 2: tiers follow the workspace provider; teams, limits, parameters, contracts and approvals of the orchestrated examples; copies pin parts and store knowledge once; orchestration on the runtime with scripted decisions (staffing, parallel teams, team parameters, a rejected sign-off inside a team stops the run, the decision budget ends a runaway orchestrator); integrations need approved read-only tools; online and offline prompts |
 | `tests/test_demo_mcp.py` | the demo MCP server over Streamable HTTP: data equals the sample exports in every language, all tools read-only; a connected copy calls the server in a real run; write-classified or unapproved tools are refused; offline copies never call it; unattended runs of a connected copy are refused |
+| `tests/test_web_research.py` | the web research example with the test search provider and served pages, no network: every question of its evaluation set replayed by a scripted model (simple, multi-step, ambiguous, other source language, provider unavailable, no hits, contradicting sources, prompt injection, invalid address, network failure, call limit of the quick depth, a made-up source refused); a model that obeys the injected instruction is stopped by the egress guard; the depth sets the tool limits; a copy without a search service, in strict offline mode or with a local model without tool calls is refused before the start |
 | `tests/test_docs.py` | the generated documentation chapter: complete, idempotent, handwritten text kept, broken markers refused |
 
 What the tests do not prove: the quality of real model answers. A simulated run shows that data flows, decisions,

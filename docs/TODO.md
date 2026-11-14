@@ -17,7 +17,7 @@
 
 **Release blockers:** None for this repository; every entry below is not a release blocker.
 
-The 24 examples (format 2, six languages) build, run and pass their 49 test cases in all languages with deterministic
+The 25 examples (format 2, six languages) build, run and pass their 52 test cases in all languages with deterministic
 doubles, and the generated studio chapter `beispiele.md` is current on studio master (last regenerated with the `64e534a` pin,
 studio `85a7f3d`). Key figures that a gate
 decides on or that report money or days come from a tool and are checked by the runtime (live-tested for
@@ -73,9 +73,12 @@ None known.
 ### EX-006 · Examples not verified with real providers
 
 - **Priority:** P3 Low · **Status:** Open · **Refs:** README "Development", UX final review (OB-17)
-- **What:** Tests prove data flow, decisions, approvals, files and checks with doubles; answer quality, the 49 test
+- **What:** Tests prove data flow, decisions, approvals, files and checks with doubles; answer quality, the 52 test
   cases with a real model, the three orchestrated examples (10, 16, 19) with real orchestrator decisions and tier
-  mapping for non-Anthropic providers are unverified. The demo MCP server was used with the desktop only.
+  mapping for non-Anthropic providers are unverified. The demo MCP server was used with the desktop only. The web
+  research example (25) was tested with the deterministic test search provider and scripted models only; its live
+  evaluation (10 questions with real models and a real search service, judge plus a person's sample, small local
+  models separately) needs the owner's approval (NAL-B2).
 - **Local live runs (2026-11-11, RT-067 regression order):** first test case through the API with fresh-install defaults
   (automatic model choice picked `qwen3.5:9b` for every agent), Ollama 0.40.14, 4 vCPU CPU container, no GPU, about
   2.5 tokens/s: `production-downtime` de passed 4/4 checks (4162 s), `code-review` en passed (1578 s),
