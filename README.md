@@ -87,6 +87,11 @@ copies = {part_id: ("wf_123", 1) for part_id in examples.part_ids("production-do
 part = examples.build_part("quality-check", "en")
 linked = examples.link_parts(examples.build("production-downtime", "en"), copies)
 
+# Building blocks as gallery entries of their own (NAL-B3).
+blocks = examples.part_summaries("de")  # every part: name, capability tags, agents, templates that use it
+preview = examples.part_detail("idea-market", "en")  # the summary plus the workflow a copy gets
+made = examples.instantiate_part("idea-market", "en", host)  # inner parts saved first; the part itself unsaved
+
 name, media_type, data = samples.render("supplier-comparison", "offer_a", "es")  # a synthetic sample file
 ```
 

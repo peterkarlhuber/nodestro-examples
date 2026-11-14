@@ -2,6 +2,11 @@
 
 ## Unreleased
 
+- Added building blocks as gallery entries (NAL-B3): `all_part_ids()`, `part_summaries(language)`,
+  `part_summary(id, language)` (`PartSummary`: name, description, capability tags, number of agent steps, the parts
+  it runs and the templates that use it), `part_detail(id, language)` (`PartDetail`, plus the workflow a copy gets)
+  and `instantiate_part(id, language, host, models=)`, which saves the parts a part runs first, pins every reference
+  and returns the part's workflow unsaved, like `instantiate()`.
 - Added shipped Agent Skills (NAL-B3, https://agentskills.io/specification): `skills/<name>/SKILL.md` with optional
   `references/*.md`, two families in all six languages (12 skills, named `<family>-<language>` with the language in
   lowercase, such as `research-method-pt-br`). `8d-problem-solving` covers the 8D method D0 to D8 for quality

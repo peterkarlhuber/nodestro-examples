@@ -1350,6 +1350,95 @@ def link_parts(workflow: WorkflowIn, copies: Mapping[str, tuple[str, int | None]
     return workflow
 
 
+# ---- parts in the gallery (NAL-B3) -------------------------------------------------
+
+
+@cache
+def all_part_ids() -> tuple[str, ...]:
+    """Every part id, sorted: the building blocks the gallery lists as entries of their own."""
+    return tuple(sorted(path.stem for path in (_ROOT / "templates" / "parts").glob("*.json")))
+
+
+def _part_closure(part_id: str) -> list[str]:
+    """The parts a part runs (parts used by other parts first), then the part itself."""
+    ordered: list[str] = []
+
+    def add(current: str, path: tuple[str, ...]) -> None:
+        if current in path:
+            raise ValueError(f"the parts call each other in a cycle at {current}")
+        for inner in _referenced_parts(part(current).nodes):
+            add(inner, (*path, current))
+        if current not in ordered:
+            ordered.append(current)
+
+    add(part_id, ())
+    return ordered
+
+
+class PartSummary(BaseModel):
+    """A building block as the gallery lists it: a small workflow that templates run as a team or sub-workflow."""
+
+    id: str
+    language: str
+    name: str
+    description: str
+    #: The capability tags in the language.
+    capabilities: list[str]
+    #: Agent and orchestrator steps of the part itself.
+    agents: int
+    #: The parts this part runs; a copy stores them first, as workflows of their own.
+    parts: list[str]
+    #: The templates that use the part, in the order of their numbers.
+    templates: list[str]
+
+
+class PartDetail(PartSummary):
+    #: The workflow a copy would get (a preview: the inner parts are referenced by ``part:<id>``).
+    workflow: WorkflowIn
+
+
+@cache
+def _part_users() -> dict[str, tuple[str, ...]]:
+    users: dict[str, list[str]] = {}
+    for template_id in template_ids():
+        for part_id in part_ids(template_id):
+            users.setdefault(part_id, []).append(template_id)
+    return {part_id: tuple(found) for part_id, found in users.items()}
+
+
+def part_summary(part_id: str, language: str) -> PartSummary:
+    spec = part(part_id)
+    text = part_texts(part_id, language)
+    return PartSummary(
+        id=part_id,
+        language=language_of(language),
+        name=text.name,
+        description=text.description,
+        capabilities=list(text.capabilities),
+        agents=sum(1 for node in spec.nodes if node.type in ("agent", "orchestrator")),
+        parts=_part_closure(part_id)[:-1],
+        templates=list(_part_users().get(part_id, ())),
+    )
+
+
+def part_summaries(language: str) -> list[PartSummary]:
+    return [part_summary(part_id, language) for part_id in all_part_ids()]
+
+
+def part_detail(part_id: str, language: str) -> PartDetail:
+    return PartDetail(**part_summary(part_id, language).model_dump(), workflow=build_part(part_id, language))
+
+
+def instantiate_part(part_id: str, language: str, host: CopyHost, *, models: ModelChoice | None = None) -> Copy:
+    """A copy of a building block: the parts it runs are saved first, as workflows of their own, with every
+    reference pinned to the saved version; the part's own workflow is returned unsaved, like :func:`instantiate`."""
+    order = _part_closure(part_id)
+    copies: dict[str, tuple[str, int | None]] = {}
+    for inner in order[:-1]:
+        copies[inner] = host.save_workflow(link_parts(build_part(inner, language, models=models), copies))
+    return Copy(workflow=link_parts(build_part(part_id, language, models=models), copies), parts=copies)
+
+
 # ---- integrations and copies -------------------------------------------------------
 
 
