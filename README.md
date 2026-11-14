@@ -261,7 +261,7 @@ tries, copies as their own template, or inserts into a workflow. The first five 
 ```python
 from nodestro_examples.agents import agent_ids, build_agent
 
-agent, meta = build_agent("summary", "de")             # AgentConfig and TemplateMeta of nodestro-runtime
+agent, meta = build_agent("summary", "de")  # AgentConfig and TemplateMeta of nodestro-runtime
 agent, meta = build_agent("web-research", "en", services={"search": connection_id})
 ```
 
