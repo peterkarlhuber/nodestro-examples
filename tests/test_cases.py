@@ -10,6 +10,7 @@ answer; the empty double proves they fail for a useless one. Real model quality 
 
 from __future__ import annotations
 
+import json
 from typing import Any
 
 from conftest import Scenario, copy, finish, start_request
@@ -18,7 +19,7 @@ from nodestro_runtime.graph import data_sources
 from nodestro_runtime.problems import NodestroError
 from nodestro_runtime.reports import file_name
 from nodestro_runtime.run_views import approvals_of_tree
-from nodestro_runtime.schemas import LANGUAGES, ConditionRule, RunIn, Workflow
+from nodestro_runtime.schemas import LANGUAGES, ConditionRule, Run, RunIn, Workflow
 from nodestro_runtime.workspace import Workspace
 import pytest
 
@@ -266,6 +267,13 @@ async def test_an_approval_releases_the_result_files(make_workspace: Any, templa
     assert all(entry.error_code is None and entry.size > 0 for entry in written)
 
 
+def assert_comment_unread(workspace: Workspace, run: Run, comment: str) -> None:
+    """No step's prompt and no model request contains the reviewer's comment (it is for people only)."""
+    assert not [key for key, item in run.nodes.items() if comment in (item.prompt or "")]
+    requests = json.dumps(workspace.fake.calls, ensure_ascii=False, default=str)  # type: ignore[attr-defined]
+    assert workspace.fake.calls and comment not in requests  # type: ignore[attr-defined]
+
+
 @pytest.mark.parametrize("language", LANGUAGES)
 @pytest.mark.parametrize(("template_id", "node_id"), APPROVALS)
 async def test_a_rejection_stops_or_revises_as_configured(
@@ -282,20 +290,24 @@ async def test_a_rejection_stops_or_revises_as_configured(
         with pytest.raises(NodestroError) as refused:
             workspace.decide(run.id, node_id, "rejected", "  ")
         assert refused.value.code == "approval.comment_required"
-    comment = "Please name the delivery date."
-    workspace.decide(run.id, node_id, "rejected", comment)
+    # The comment is for people only; the change request reaches the agents only as the note (E-0R-1 A).
+    comment = "Rejected in the weekly review, reason on file."
+    note = "Please name the delivery date."
+    workspace.decide(run.id, node_id, "rejected", comment, agent_note=note)
     done = await workspace.wait(run.id, timeout=60)
     edges = library.structure(template_id).edges
     loops = [edge[1] for edge in edges if edge[0] == node_id and edge[2:3] == ("rejected",) and len(edge) == 4]
     if loops:
-        # A loop sends the drafts back: they are revised with the comment and wait for approval again.
+        # A loop sends the drafts back: they are revised with the note and wait for approval again.
         assert done.status == "paused" and done.nodes[node_id].status == "awaiting_approval"
         assert done.nodes[node_id].iteration == [1]
         for target in loops:
-            assert done.nodes[target].iteration == [1] and comment in (done.nodes[target].prompt or "")
+            assert done.nodes[target].iteration == [1] and note in (done.nodes[target].prompt or "")
+        assert_comment_unread(workspace, done, comment)
         workspace.decide(run.id, node_id, "approved", "")
         done = await workspace.wait(run.id, timeout=60)
         assert done.status == "succeeded", (template_id, done.error)
+        assert_comment_unread(workspace, done, comment)
         return
     # A decided approval cannot be decided again.
     with pytest.raises(NodestroError):
@@ -309,7 +321,8 @@ async def test_a_rejection_stops_or_revises_as_configured(
         assert revisers and done.status == "succeeded"
         for target in revisers:
             assert done.nodes[target].status == "succeeded"
-            assert comment in (done.nodes[target].prompt or "")
+            assert note in (done.nodes[target].prompt or "")
+    assert_comment_unread(workspace, done, comment)
 
 
 # ---- result files ----------------------------------------------------------------------

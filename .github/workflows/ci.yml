@@ -35,12 +35,18 @@ jobs:
           cache: pip
       # The Nodestro components and orkexa are version ranges in pyproject.toml; the studio lock pins their exact
       # commits (without this package's own line). pip 26.1 or later applies it to the git requirements.
+      # A pull request reads the lock of the studio branch with its own name when there is one, else the studio
+      # master's; a paired lock is shown as a warning and diffed in the job summary (scripts/studio_lock.sh, the same
+      # file as in nodestro-runtime and nodestro-api).
       - name: Install
+        env:
+          GH_TOKEN: ${{ github.token }} # read-only; scripts/studio_lock.sh asks GitHub for lock lag
         run: |
           set -o pipefail
           python -m pip install "pip>=26.1"
-          curl -fsSL https://raw.githubusercontent.com/peterkarlhuber/nodestro-studio/master/platform/internal-server.txt -o "$RUNNER_TEMP/lock-all.txt" # no pipe: a failed download must fail the step
+          bash scripts/studio_lock.sh "$RUNNER_TEMP/lock-all.txt"
           grep -v '^nodestro-examples ' "$RUNNER_TEMP/lock-all.txt" > "$RUNNER_TEMP/lock.txt"
+          echo "lock: $(grep '^nodestro-runtime ' "$RUNNER_TEMP/lock.txt")"
           pip install -c "$RUNNER_TEMP/lock.txt" -e ".[dev]"
       - run: ruff check .
       - run: ruff format --check .
@@ -72,9 +78,11 @@ jobs:
       - run: pip install build==1.6.1
       - run: python -m build
       - name: Install the wheel into a fresh environment
+        env:
+          GH_TOKEN: ${{ github.token }} # read-only; scripts/studio_lock.sh asks GitHub for lock lag
         run: |
           set -o pipefail
-          curl -fsSL https://raw.githubusercontent.com/peterkarlhuber/nodestro-studio/master/platform/internal-server.txt -o "$RUNNER_TEMP/lock-all.txt" # no pipe: a failed download must fail the step
+          bash scripts/studio_lock.sh "$RUNNER_TEMP/lock-all.txt" # paired studio lock on pull requests, as in the test job
           grep -v '^nodestro-examples ' "$RUNNER_TEMP/lock-all.txt" > "$RUNNER_TEMP/lock.txt"
           python -m venv "$RUNNER_TEMP/wheel"
           "$RUNNER_TEMP/wheel/bin/python" -m pip install "pip>=26.1"

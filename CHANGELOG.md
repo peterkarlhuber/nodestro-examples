@@ -2,6 +2,20 @@
 
 ## Unreleased
 
+- Changed (E-0R-1 A, nodestro-runtime a05eef4: approval comments are for people only, 2026-11-20): an approval's
+  comment no longer reaches any model; the only decision text later agents read is the note to the agent
+  (`agent_note`). `ApprovalSpec` has `allow_agent_note` (default `True`), passed to `ApprovalConfig`, so the built-in
+  examples are saved with an explicit value and the runtime's check `check.approval_comment_not_forwarded` does not
+  apply to them. The approval instructions and the flow and control descriptions of `sales-offer`,
+  `customer-service` and `citizen-inquiry` in all six languages now say to write the change request into the note to
+  the agent and that the comment is only for people (terms: en "note to the agent", de "Notiz an den Agenten", es
+  "nota para el agente", fr "note à l’agent", it "nota per l'agente", pt-BR "nota para o agente"). The rejection test
+  passes the change request as `agent_note`, checks that it reaches the revised agent and that the comment appears in
+  no step's prompt and no model request; `tests/test_templates.py` uses `note_sources` (formerly `comment_sources`).
+- Changed (CI): the test and package jobs read the studio lock through `scripts/studio_lock.sh` (the same file as in
+  nodestro-runtime and nodestro-api): a pull request uses the lock of the studio branch with its own name when there
+  is one, else the studio master's, so a change that needs newer components is tested with its paired studio bump.
+
 - Added (QA-17 (AC-2): dependency policy check, 2026-11-14): `dependency-policy.json` is this repository's copy of the
   dependency policy K-33 from nodestro-studio (only its outgoing edges: `nodestro-runtime` in the core), and
   `scripts/check_dependency_policy.py` is the unchanged checker from there; `scripts/DEPENDENCY_POLICY_SOURCE.md`
