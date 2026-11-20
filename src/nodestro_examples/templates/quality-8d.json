@@ -150,6 +150,7 @@
       "x": 1700,
       "y": 160,
       "approval": {
+        "allow_agent_note": false,
         "on_reject": "stop",
         "show": [
           "report"

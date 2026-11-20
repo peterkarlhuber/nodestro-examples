@@ -293,6 +293,12 @@ async def test_a_rejection_stops_or_revises_as_configured(
     # The comment is for people only; the change request reaches the agents only as the note (E-0R-1 A).
     comment = "Rejected in the weekly review, reason on file."
     note = "Please name the delivery date."
+    if not spec.allow_agent_note:
+        # No agent reads a note here (the run stops), so the approval takes none.
+        with pytest.raises(NodestroError) as refused:
+            workspace.decide(run.id, node_id, "rejected", comment, agent_note=note)
+        assert refused.value.code == "approval.agent_note_disabled"
+        note = ""
     workspace.decide(run.id, node_id, "rejected", comment, agent_note=note)
     done = await workspace.wait(run.id, timeout=60)
     edges = library.structure(template_id).edges
@@ -315,6 +321,7 @@ async def test_a_rejection_stops_or_revises_as_configured(
     revisers = [edge[1] for edge in edges if edge[0] == node_id and edge[2:] == ("rejected",)]
     if spec.on_reject == "stop":
         assert not revisers
+        assert not spec.allow_agent_note, "no agent would read a note here; leave the field out of the dialog"
         assert done.status != "succeeded" and done.error_code == "run.approval_rejected", (template_id, done.status)
         assert workspace.files.list(run.id) == []
     else:
