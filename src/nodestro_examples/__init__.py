@@ -277,6 +277,10 @@ class ConditionSpec(_Strict):
 class ApprovalSpec(_Strict):
     on_reject: Literal["branch", "stop"] = "branch"
     require_comment_on_reject: bool = False
+    #: Whether the person may write a note to the later agents (the only decision text a model reads; the comment is
+    #: for people only). Saved explicitly, so the runtime's check for workflows saved before the note existed
+    #: (``check.approval_comment_not_forwarded``) does not apply to the examples.
+    allow_agent_note: bool = True
     show: list[str] = Field(default_factory=list)
 
 
@@ -1043,6 +1047,7 @@ def _build_nodes(
                 show=list(spec.show),
                 on_reject=spec.on_reject,
                 require_comment_on_reject=spec.require_comment_on_reject,
+                allow_agent_note=spec.allow_agent_note,
             )
             nodes.append(
                 Node(id=item.id, type="approval", label=steps[item.id].name, position=position, approval=approval)

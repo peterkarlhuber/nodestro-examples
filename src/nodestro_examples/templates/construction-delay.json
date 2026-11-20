@@ -96,6 +96,7 @@
       "x": 1440,
       "y": 180,
       "approval": {
+        "allow_agent_note": false,
         "on_reject": "stop",
         "require_comment_on_reject": true,
         "show": [
